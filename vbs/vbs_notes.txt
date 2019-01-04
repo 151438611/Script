@@ -1,0 +1,70 @@
+' 学习网址：http://www.w3school.com.cn/asp/index.asp 、https://www.jb51.net/shouce/vbscript/index.html
+' VBScript 是ASP (Active Server Pages)默认使用的脚本语言
+' 注意：在VBScript中对变量、方法、函数和对象的引用是不区分大小写的，多个变量合并使用(dim1 & dim2)
+
+On Error Resume Next                        '此行表示如果出现错误，忽略继续运行； On Error GoTo 0 表示不忽略错误
+'Option Explicit      '此行表示强制要求变量显示声明，隐式未声明的变量将出现报错
+'---------------命令、详解、注释--------------------------------------
+Dim dira,dirb,hfs,frps,frpsini      'dim 显示声明变量, 也可以隐示、不声明(如下面的obj,fs)，变量的调用方法(dim1)
+dir = "C:\Windows\System32\"
+hfs = dir & "hfs.exe"
+frps = "frps.exe"
+
+Set obj = CreateObject("Wscript.Shell")             '创建一个shell对象,用来运行执行程序，例如:hfs、frp、QQ
+' CreateObject函数创建一个文件系统的对象，语法：CreateObject(servername.typename[,location])，用来处理文件、目录的操作(移动、复制、删除)
+Set fs = CreateObject("Scripting.FileSystemObject") 
+  ' Call调用Function或Sub，，也可以调用不加Call的话后面就不需要用()括号，用双引号
+  Call GetName()          '调用Function
+Function GetName()
+    MsgBox "John"          '输出字符串
+    GetName = return aaaaa    ' Function和Sub的区别是Function可以有返回值，而Sub没有，只能执行过程命令
+End Function
+  Call GetName("John")      '调用Sub，也可以写成 GetName "John"
+Sub GetName(name)
+    MsgBox name '输出字符串
+End Sub
+  常数	    值	描述
+  Normal	  0	普通文件。没有设置任何属性。
+  ReadOnly	1	只读文件。可读写。
+  Hidden	   2	隐藏文件。可读写。
+  System  	 4	系统文件。可读写。
+  Directory 	16	文件夹或目录。只读。
+  Archive	 32	上次备份后已更改的文件。可读写。
+  Alias	 1024	链接或快捷方式。只读。
+Compressed	2048	压缩文件。只读。
+  
+  ' 条件判断语法格式： if..elseif..elseif....else..end if;   : 冒号表示换行   _ 下划线表示续行(和bash中的\一样)
+If Not fs.FileExists(dira & "tools") Then
+    fs.CreateFolder(dira & "tools") : fs.CreateTextFile(dira & "test.txt")
+    fs.DeleteFile(dira & "test.txt") : fs.DeleteFolder(dira & "tools")
+End If
+
+' 拷贝文件CopyFile格式：CreateObject("Scripting.FileSystemObject").CopyFile 原文件, 目的文件[, True/False] ; 默认true表示文件存在则覆盖,flase表示不覆盖---------------------
+fs.CopyFile (dirb & hfs), (dira & hfs), False
+
+' ------判断系统进程是否存在，存在不操作，不存在就启动程序-------------------------------
+Set proc = GetObject("winmgmts:\\.\root\cimv2")
+frpc_run = "E:\Download\frps_windows_for_lungkae\test\frpc.exe"
+Set procfrps = proc.ExecQuery("select * from win32_process where name = '(frpc_run)'")
+For Each pf In procfrps
+  frpsProcess = True 
+Next
+Set ObjShell = WScript.CreateObject("WScript.Shell")
+If Not frpsProcess Then ObjShell.Run (dir_run & frps_run & " -c " & dir_run & frpsini_run), 0 End If
+
+' -----------------判断系统是x86还是x64位---------------------------
+Function X86orX64()     
+    On Error Resume Next  
+    strComputer = "."  
+    Set objWMIService = GetObject("winmgmts:\\" & strComputer & "\root\cimv2")  
+    Set colItems = objWMIService.ExecQuery("Select * from Win32_ComputerSystem",,48)      
+    For Each objItem in colItems  
+          
+       If InStr(objItem.SystemType, "64") <> 0 Then  
+            X86orX64 = "x64"         
+        Else  
+           X86orX64 = "x86"  
+        End If  
+		msgbox X86orX64
+    Next  
+End Function
