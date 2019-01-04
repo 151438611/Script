@@ -6,7 +6,7 @@ frpc="/usr/local/apps/frp/frpc" ; frpcini="/usr/local/apps/frp/frpc.ini"
 ip_addr=$(ifconfig eth0 | awk '$0~"inet addr"{print $2}' | cut -d: -f2)
 old_addr=$(awk '$0~"local_ip = 192.168" {print $3}' $frpcini | head -n1)
 
-[ "$ip_addr" = "$old_addr" ] || sed -i 's/'"$old_addr"'/'"$ip_addr"'/g' $frpcini
+[ -n "$ip_addr" -a "$ip_addr" != "$old_addr" ] && sed -i 's/'"$old_addr"'/'"$ip_addr"'/g' $frpcini
 
 if [ -z "$(pidof frpc)" ] ; then
   $frpc -c $frpcini &
