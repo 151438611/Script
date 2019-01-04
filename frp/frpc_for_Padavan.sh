@@ -29,7 +29,6 @@ md5_frpc="$md5_frpc1 $md5_frpc2 $md5_frpc3"
 frpc="$udisk/frpc" ; frpcini=/tmp/frpc.ini
 frpcini="$bin_dir/frpc.ini" 
 
-
 # -------------------------- ttyd ---------------------------------------------------
 download_ttyd() {
   killall -q ttyd ; rm -f $ttyd ; wget -O $ttyd $ttyd_url ; chmod 555 $ttyd
