@@ -1,4 +1,4 @@
-&#10161; [Padavan官网](https://bitbucket.org/padavan/rt-n56u/) 、 [荒野无灯](http://files.80x86.io/router/rom/)
+&#10161; [Padavan官网](https://bitbucket.org/padavan/rt-n56u/) 、 [荒野无灯](http://files.80x86.io/router/rom/) &#127801;
 
 &#10161; -----------------------frp客户端配置------------------------------------------
 - 路由器自动下载并执行frpc脚本（下发时把frpc.sh填写完整并放在服务端目录/tools/frp中,然后重启路由器即可）：<br>
