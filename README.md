@@ -1,10 +1,10 @@
-[Padavan官网](https://bitbucket.org/padavan/rt-n56u/) 、 [荒野无灯](http://files.80x86.io/router/rom/)
+&#10161; [Padavan官网](https://bitbucket.org/padavan/rt-n56u/) 、 [荒野无灯](http://files.80x86.io/router/rom/)
 
-### -----------------------frp客户端配置------------------------------------------
+&#10161; -----------------------frp客户端配置------------------------------------------
 - 路由器自动下载并执行frpc脚本（下发时把frpc.sh填写完整并放在服务端目录/tools/frp中,然后重启路由器即可）：<br>
 `wget -P /tmp/ http://xiongxinyi.cn:2015/tools/frp/frpc_padavan.sh && mv -f /tmp/frpc_padavan.sh /etc/storage/bin/frpc.sh ; sh /etc/storage/bin/frpc.sh`
 
-### -----------------------使用说明-----------------------------------------------
+&#10161; -----------------------使用说明-----------------------------------------------
 - MT7620、MT7621属于`mipsle`架构 , BCM4709属于`arm`架构 , AR9344属于`mips`架构
 - 服务端公网IP：14.116.146.**  43.225.157.*** 路由器默认密码：***
 - 注意：1、http配置local_ip = 127.0.0.1，访问web页面将不需要登陆密码； 2、SSH配置local_ip = 127.0.0.1 无影响
@@ -20,7 +20,7 @@
 20 5 * * *   sh /etc/storage/bin/cronConWifi.sh
 ```
 
-### ===============padavan 弱信号剔除设置========================
+&#10161; padavan 弱信号剔除设置========================
 - 自带的弱信号剔除不稳定无效果，所以改用命令实现效果更好
 - k2p_2.4G是rax0 ; k2p_5G是ra0 ; k2_2.4G是ra0 ; k2_5G是rai0 ； 下面用K2P示例：
 ```
@@ -33,7 +33,7 @@ iwpriv ra0 set AssocReqRssiThres=-88         #5G弱信号禁止连接
 `echo "iwpriv rax0 set KickStaRssiLow=-93 ; iwpriv rax0 set AssocReqRssiThres=-88" >> /etc/storage/started_script.sh` <br>
 说明：剔除值要小于禁止连接值，相差大于5db为好，否则当出现弱信号时会一直连接即剔除，拖垮整个无线网络
 
-### =============Padavan MAC地址访问控制命令======================
+&#10161; Padavan MAC地址访问控制命令======================
 ```
 macfilter_enable_x=0              # 启用MAC过滤功能：0表示不启用，1表示允许模式(白名单)，2表示拒绝模式(黑名单)
 fw_mac_drop=0                     # 禁止访问路由器主机：0表示不开启，1表示开启
