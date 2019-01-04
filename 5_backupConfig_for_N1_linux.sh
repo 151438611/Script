@@ -8,7 +8,10 @@ phpini=/opt/etc/php.ini
 php_fpm_conf=/opt/etc/php-fpm.conf
 www_conf=/opt/etc/php7-fpm.d/www.conf
 
-sourse="$rc_local $cron $nginx_conf $phpini $php_fpm_conf $www_conf "
+frpcini=/usr/local/apps/frp/frpc.ini
+frpcsh=/usr/local/apps/frp/frpc.sh
+
+sourse="$rc_local $cron $nginx_conf $phpini $php_fpm_conf $www_conf $frpcini $frpcsh"
 dest_dir=/media/sda1/Data/Config_bak ; [ -d "$dest_dir" ] || mkdir -p $dest_dir
 
 func_backupConfig() {
