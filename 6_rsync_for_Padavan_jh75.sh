@@ -17,7 +17,7 @@ backup_dir="$netac_udisk/backup" ; [ -d "$backup_dir" ] || mkdir -p $backup_dir
 rsync_fun() {
 # $1表示备份的源目录 , $2表示备份的目的目录
   /opt/bin/rsync -trv $1 $2
-  [ $? -ne 0 ] && echo "$(date +"%F %T") rsync $1 fail！" >> $rsynclog || echo "$(date +"%F %T") rsync $1 success !" >> $rsynclog
+  [ $? -eq 0 ] && echo "$(date +"%F %T") rsync success $1" >> $rsynclog || echo "$(date +"%F %T") rsync fail--- $1" >> $rsynclog
 }
 # =================== start rsync file ====================================
 rsync_fun $src_dir1 $backup_dir/
