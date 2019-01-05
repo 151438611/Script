@@ -22,7 +22,7 @@ backup_dir=/media/sda1/Data/Config_bak ; [ -d "$backup_dir" ] || mkdir -p $backu
 
 rsync_fun() {
 # $1表示备份的源文件/目录 , $2表示备份的目的目录
-  /usr/bin/rsync -trv $1 $2
+  /usr/bin/rsync -tr $1 $2
   [ $? -eq 0 ] && echo "$(date +"%F %T") rsync success $1" >> $rsynclog || echo "$(date +"%F %T") rsync fail--- $1" >> $rsynclog
 }
 # =================== start rsync file/dir ====================================
