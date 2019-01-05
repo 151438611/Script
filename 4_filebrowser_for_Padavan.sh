@@ -7,7 +7,7 @@ grep -qi $(basename $0) $cron || echo "40 * * * * [ \$(date +%k) -eq 5 ] && kill
 
 # ----- filebrowser_mipsle的下载地址 ------------------------------------
 fb_url="http://opt.cn2qq.com/opt-file/filemanager" && md5_fb="957c409aba8623ff6a5b6ed4b8b6045d"
-port=2018
+port=2019
 
 udisk=$(mount | awk '$1~"/dev/" && $3~"/media/"{print $3}' | head -n1)
 [ -z "$udisk" ] && echo "U_disk is not exist !" >> /tmp/filebrowser.log && exit
