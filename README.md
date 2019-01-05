@@ -14,7 +14,7 @@
 - 子域名sudomain设定规则：地址缩写(多个后面+1)+网关(SN后2位)，示例：`sz20、jh28...`
 - 定时任务汇总：
 ```
-5 5 * * * [ $(date +%e) -eq 1 -o $(date +%e) -eq 15 ] && reboot || ping -c2 -w5 114.114.114.114 || reboot
+5 5 * * * [ -n "$(date +%e | grep -E "1|10|20")" ] && reboot || ping -c2 -w5 114.114.114.114 || reboot
 10 * * * * [ $(date +%k) -eq 6 ] && killall frpc ; sh /etc/storage/bin/frpc.sh
 */30 * * * * sh /etc/storage/bin/autoChangeAp.sh
 20 5 * * *   sh /etc/storage/bin/cronConWifi.sh
