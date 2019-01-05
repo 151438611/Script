@@ -5,7 +5,7 @@ bin_dir="/etc/storage/bin" ; [ -d "$bin_dir" ] || mkdir -p $bin_dir
 user=$(nvram get http_username) ; frpc_sh="http://xiongxinyi.cn:2015/tools/frp/frpc_padavan.sh"
 cron="/etc/storage/cron/crontabs/$user" ; startup="/etc/storage/started_script.sh" ; 
 grep -qi $(basename $0) $startup || echo "sleep 50 ; wget -P /tmp/ $frpc_sh && mv -f /tmp/frpc_padavan.sh $bin_dir/$(basename $0) ; sh $bin_dir/$(basename $0)" >> $startup
-grep -qi "reboot" $cron || echo "5 5 * * * [ \$(date +%e) -eq 1 -o \$(date +%e) -eq 15 ] && reboot || ping -c2 -w5 114.114.114.114 || reboot" >> $cron
+grep -qi "reboot" $cron || echo "5 5 * * * [ -n "\$(date +%e | grep -E "1|10|20")" ] && reboot || ping -c2 -w5 114.114.114.114 || reboot" >> $cron
 grep -qi $(basename $0) $cron || echo "50 * * * * [ \$(date +%k) -eq 5 ] && killall -q frpc ttyd ; sleep 8 && sh $bin_dir/$(basename $0)" >> $cron
 
 # 开启从wan口访问路由器和ssh服务(默认关闭)，即从上级路由直接访问下级路由或ssh服务
