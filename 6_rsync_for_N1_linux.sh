@@ -29,3 +29,6 @@ for src in $source
 do
   rsync_fun $src $backup_dir
 done
+
+# ===temp use===
+[ $(date +%e) -eq 1 -o $(date +%e) -eq 15 ] && tar -zcf $backup_dir/opt_all.tgz /opt
