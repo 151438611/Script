@@ -36,7 +36,7 @@ done
 # === temp use ==============
 if [ -n "$(date +%e | grep -E "1|8|15|22")" ] ; then
   tar -zcf $backup_dir/opt_all.tgz /opt --exclude kodexplorer --exclude tmp
-  cd $dest && tar -zcf szN1_Conf_backup.tgz * --exclude *.tgz --exclude *.tar.gz
+  cd $dest && tar -zcvf ../Script/szN1_Conf_backup.tgz * --exclude *.tgz
 fi
 
 mv $dest/$(basename $cron) $dest/crontab.txt
