@@ -1,10 +1,10 @@
 #!/bin/bash
 # Author Xj date:20180728 ; For padavan firmware by huangyewudeng
 # 支持2.4G和5G的多个不同频段Wifi中继自动切换功能,静态指定WAN地址，中继更快速
-cron="/etc/storage/cron/crontabs/$(nvram get http_username)" ; startup="/etc/storage/started_script.sh"
+cron=/etc/storage/cron/crontabs/$(nvram get http_username) ; startup=/etc/storage/started_script.sh
 grep -qi $(basename $0) $cron || echo "*/30 * * * * sh /etc/storage/bin/$(basename $0)" >> $cron
 #grep -qi $(basename $0) $startup || echo "sleep 40 ; sh /etc/storage/bin/$(basename $0)" >> $startup
-aplog="/tmp/autoChangeAp.log" && [ -f "$aplog" ] || touch $aplog
+aplog=/tmp/autoChangeAp.log && [ -f "$aplog" ] || touch $aplog
 
 # ===1、设置路由器型号k2p和k2(youku-L1/newifi3的2.4G接口名为ra0，和k2相同),因为k2和k2p的无线接口名称不一样==========
 router=k2p ; [ "$router" = k2 -o "$router" = k2p ] || exit
@@ -13,7 +13,7 @@ aplist="2+AVP-LINK+12345678+10   2+UNION-2F+13316870528+0
 2+xiaodangjia+zlp18300022392+0
 "
 # ======3、设置检测网络的IP，若检测局域网状态，设成网关(192.168.x.1)===============
-ip1="1.2.4.8" ; ip2="114.114.114.114"
+ip1=1.2.4.8 ; ip2=114.114.114.114
 
 aplist=$(echo "$aplist" | awk '{for(apl=1 ; apl<=NF ; apl++){print $apl}}')
 apssidlist=$(echo "$aplist" | awk -F+ '{print $2}')
