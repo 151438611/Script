@@ -26,17 +26,17 @@ rsync_fun() {
   /usr/bin/rsync -tr $1 $2
   [ $? -eq 0 ] && echo "$(date +"%F %T") rsync success $1" >> $rsynclog || echo "$(date +"%F %T") rsync fail--- $1" >> $rsynclog
 }
-# =================== start rsync file ====================================
+
+# === start rsync file/dir ==============
 for src in $source
 do
   rsync_fun $src $dest
 done
 
-# ===temp use===
-[ -n "$(date +%e | grep -E "1|8|15|22")" ] && tar -zcf $backup_dir/opt_all.tgz /opt --exclude kodexplorer --exclude tmp
+# === temp use ==============
+if [ -n "$(date +%e | grep -E "1|8|15|22")" ] ; then
+  tar -zcf $backup_dir/opt_all.tgz /opt --exclude kodexplorer --exclude tmp
+  cd $dest && tar -zcf szN1_Conf_backup.tgz * --exclude *.tgz --exclude *.tar.gz
+fi
 
-# mount -t cifs -o username=admin,password=administrator //192.168.20.200/Public /media/hwnas
-mount_user=admin ; mount_pw=administrator
-mount_src=//192.168.20.200/Public
-mount_dest=/media/hwnas ; [ -d $mount_dest ] || mkdir -p $mount_dest
-[ -z "$(mount | grep $mount_src)" ] && mount -t cifs -o username=$mount_user,password=$mount_pw $mount_src $mount_dest
+mv $dest/$(basename $cron) $dest/crontab.txt
