@@ -1,9 +1,9 @@
 #!/bin/bash
 # Author Xj date:20180728 ; For padavan firmware by huangyewudeng ; 
 # 支持2.4G和5G多个不同频段Wifi中继自动切换功能,静态指定WAN地址，中继更快速.
-cron="/etc/storage/cron/crontabs/$(nvram get http_username)" ; startup="/etc/storage/bin/started_script.sh"
+cron=/etc/storage/cron/crontabs/$(nvram get http_username) ; startup=/etc/storage/bin/started_script.sh
 grep -qi $(basename $0) $cron || echo "*/30 * * * * sh /etc/storage/bin/$(basename $0)" >> $cron
-aplog="/tmp/autoChangeAp.log" && [ -f "$aplog" ] || touch $aplog
+aplog=/tmp/autoChangeAp.log && [ -f "$aplog" ] || touch $aplog
 
 # ===1、输入被中继的wifi帐号密码,格式{ 无线频段(2|5)+ssid+password+wan_ip(可不填) },多个用空格或回车隔开,默认加密方式为WPA2PSK/AES===
 aplist="
@@ -18,7 +18,7 @@ elif [ $rt -eq 0 -a $wl -ne 0 ] ; then apssid=$(nvram get wl_sta_ssid) ; band_ol
 elif [ $rt -eq 0 -a $wl -eq 0 ] ; then apssid=null ; band_old=0 ; echo "$(date +"%F %T") -----AP is disable ; It will enable if needed !-----" >> $aplog
 fi
 # ====2、设置检测网络IP、域名，若检测局域网状态，设成网关(192.168.x.1)==============
-ip1="1.2.4.8" ; ip2="114.114.114.114"
+ip1=1.2.4.8 ; ip2=114.114.114.114
 
 # ping : check internet status 
 ping_timeout=$(ping -c2 -w5 $ip1 | awk -F "/" '$0~"min/avg/max"{print int($4)}')
