@@ -6,4 +6,4 @@ bin_dir="/etc/storage/bin"
 cp -f $cron $bin_dir/crontab.txt
 
 cd $bin_dir 
-tar -zcvf /tmp/$(nvram get computer_name)_Conf_backup.tgz *
+tar -zcvf /tmp/Conf_backup_$(nvram get computer_name).tgz *
