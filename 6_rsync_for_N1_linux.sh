@@ -1,6 +1,5 @@
 #!/bin/sh
 # 
-
 cron=/etc/cron/crontabs/root
 grep -qi $(basename $0) $cron || echo -e "\n35 3 * * * sh /usr/local/apps/$(basename $0)" >> $cron
 rsynclog=/tmp/rsync.log ; echo "" >> $rsynclog
