@@ -3,7 +3,6 @@
 
 cron=/etc/storage/cron/crontabs/$(nvram get http_username) 
 grep -qi $(basename $0) $cron || echo "35 3 * * * sh /etc/storage/bin/$(basename $0)" >> $cron
-rsync_cmd=/opt/bin/rsync
 rsynclog=/tmp/rsync.log ; echo "" >> $rsynclog
 
 # mount_smb on local
@@ -24,7 +23,7 @@ source="$src0 $src1 $src2"
 
 fun_rsync() {
 # $1表示备份的源目录 $2表示备份的目的目录
-  $rsync_cmd -trv $1 $2
+  /opt/bin/rsync_cmd -trv $1 $2
   [ $? -eq 0 ] && echo "$(date +"%F %T") rsync success $1" >> $rsynclog || echo "$(date +"%F %T") rsync fail--- $1" >> $rsynclog
 }
 
