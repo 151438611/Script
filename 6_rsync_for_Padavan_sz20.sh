@@ -30,7 +30,7 @@ fun_rsync() {
 
 dest="$m_dest/udisk_backup" ; [ -d "$dest" ] || mkdir -p $dest
 # === start rsync file =========
-for src in source
+for src in $source
 do
   fun_rsync $src $dest
 done
