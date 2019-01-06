@@ -7,7 +7,7 @@ redhat=$(grep -iE "centos|redhat" /etc/*release)
 debian=$(grep -i "debian" /etc/*release)
 other_os="仅支持centos、redhat、debian,不能在此系统中运行！！！"
 [ -z "$redhat" -a -z "$debian" ] && echo -e "$other_os \n" && exit
-[ -n "$redhat" ] && . /etc/init.d/functions && PATH="$PATH:/usr/local/sbin:/usr/local/bin"
+[ -n "$redhat" ] && . /etc/init.d/functions && PATH=$PATH:/usr/local/sbin:/usr/local/bin
 ! grep -qi "^nameserver" /etc/resolv.conf && echo "nameserver 114.114.114.114" >> /etc/resolv.conf
 
 [ -n "$debian" ] && [ -e /bin/sh ] &&  ! ls -l /bin/sh | grep -q bash && \
