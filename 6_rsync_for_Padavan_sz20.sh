@@ -23,7 +23,7 @@ source="$src0 $src1 $src2"
 
 fun_rsync() {
 # $1表示备份的源目录 $2表示备份的目的目录
-  /opt/bin/rsync_cmd -trv $1 $2
+  /opt/bin/rsync_cmd -tr $1 $2
   [ $? -eq 0 ] && echo "$(date +"%F %T") rsync success $1" >> $rsynclog || echo "$(date +"%F %T") rsync fail--- $1" >> $rsynclog
 }
 
