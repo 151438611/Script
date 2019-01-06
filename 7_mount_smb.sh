@@ -9,15 +9,15 @@ fun_mount() {
 }
 
 # === mount 1 ==========================
-src0=//192.168.20.200/Public
-dest0=/media/hwnas
 user0=admin
 password0=administrator
+src0=//192.168.20.200/Public
+dest0=/media/hwnas
 fun_mount $user0 $password0 $src0 $dest0
 
 # === mount 2 ==========================
-#src1=
-#dest1=
-#user1=
+#user1= 
 #password1=
+#src1= 
+#dest1=
 #fun_mount $user1 $password1 $src1 $dest1 
