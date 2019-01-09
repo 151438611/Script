@@ -34,7 +34,7 @@ for src in $source
 rsync -tr $cron $dest/crontab.txt
 
 if [ -n "$(date +%e | grep -E "1|8|15|22")" ] ; then
-  cd $dest && tar -zcf ../Script/N1_armbian_Conf_backup.tgz * --exclude *.tgz
+  cd $dest && tar -zcf ../Script/N1_armbian_Conf_backup.tgz * --exclude kodexplorer4.37.tgz
 fi
 
 chown -R www-data.www-data /media/sda1
