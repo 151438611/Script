@@ -39,4 +39,4 @@ if [ -n "$(date +%e | grep -E "1|8|15|22")" ] ; then
   cd $dest && tar -zcvf ../Script/N1_armbian_Conf_backup.tgz * --exclude *.tgz
 fi
 
-chown -R www-data.www-data /media/sda1/*
+chown -R www-data.www-data /media/sda1
