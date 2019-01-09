@@ -2,8 +2,8 @@
 PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
 
 cron=/var/spool/cron/crontabs/root
-grep -qi $(basename $0) $cron || echo -e "\n15 * * * * [ \$(date +\\%k) -eq 5 ] && killall frpc ; sleep 8 && sh /opt/frp/$(basename $0)" >> $cron
-grep -qi reboot $cron || echo -e "\n5 5 * * * [ -n \"\$(date +\\%e | grep -E \"1|10|20\")\" ] && reboot || ping -c2 -w5 114.114.114.114 || reboot" >> $cron
+grep -qi $(basename $0) $cron || echo -e "\n15 * * * * [ \$(date +\\%k) -eq 5 ] && /usr/bin/killall frpc ; sleep 8 && sh /opt/frp/$(basename $0)" >> $cron
+grep -qi reboot $cron || echo -e "\n5 5 * * * [ -n \"\$(date +\\%e | grep -E \"1|10|20\")\" ] && /sbin/reboot || ping -c2 -w5 114.114.114.114 || reboot" >> $cron
 
 frpc="/opt/frp/frpc" ; frpcini="/opt/frp/frpc.ini"
 [ -x "$frpc" -a -f "$frpcini"  ] || exit 1
