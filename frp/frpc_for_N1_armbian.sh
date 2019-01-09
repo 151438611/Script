@@ -4,7 +4,7 @@ cron=/etc/cron/crontabs/root
 grep -qi $(basename $0) $cron || echo -e "\n15 * * * * [ \$(date +\\%k) -eq 5 ] && killall frpc ; sleep 8 && sh /opt/frp/$(basename $0)" >> $cron
 grep -qi reboot $cron || echo -e "\n5 5 * * * [ -n \"\$(date +\\%e | grep -E \"1|10|20\")\" ] && reboot || ping -c2 -w5 114.114.114.114 || reboot" >> $cron
 
-frpc="/usr/local/apps/frp/frpc" ; frpcini="/usr/local/apps/frp/frpc.ini"
+frpc="/opt/frp/frpc" ; frpcini="/opt/frp/frpc.ini"
 [ -x "$frpc" -a -f "$frpcini"  ] || exit 1
 
 ip_addr=$(ifconfig eth0 | awk '$0~"inet addr"{print $2}' | cut -d: -f2)
