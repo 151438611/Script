@@ -32,7 +32,6 @@ for src in $source
  do
    rsync_fun $src $dest
  done
-
 /usr/bin/rsync -tr $cron $dest/crontab.txt
 
 if [ -n "$(date +%e | grep -E "1|8|15|22")" ] ; then
