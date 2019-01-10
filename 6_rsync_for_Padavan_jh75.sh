@@ -6,8 +6,8 @@ grep -qi $(basename $0) $cron || echo "35 3 * * * sh /etc/storage/bin/$(basename
 rsynclog="/tmp/rsync.log" ; echo "" >> $rsynclog
 
 # toshiba_udisk is source_udisk ;--backup to-->; netac_udisk is dest_udisk
-netac_udisk=$(mount | awk '$1~"/dev/" && $3~"/media/"{print $3}' | head -n1)
-toshiba_udisk=$(mount | awk '$1~"/dev/" && $3~"/media/"{print $3}' | tail -n1)
+netac_udisk=$(mount | awk '/dev/ && /media/{print $3}' | head -n1)
+toshiba_udisk=$(mount | awk '/dev/ && /media/{print $3}' | tail -n1)
 [ "$netac_udisk" = "$toshiba_udisk" ] && echo "$(date +"%F %T") someone udisk is Invalid !---exit" >> $rsynclog && exit
 
 src_dir1="$toshiba_udisk/data"
