@@ -22,7 +22,7 @@ dest=/media/sda1/Data/Config_bak ; [ -d "$dest" ] || mkdir -p $dest
 
 rsync_fun() {
 # $1表示备份的源文件/目录src , $2表示备份的目的目录dest
-  rsync -tr $1 $2 &> /dev/null
+  rsync -tvr $1 $2
   [ $? -eq 0 ] && echo "$(date +"%F %T") rsync success $1" >> $rsynclog || echo "$(date +"%F %T") rsync fail--- $1" >> $rsynclog
 }
 
@@ -34,7 +34,7 @@ for src in $source
    rsync_fun $cron $dest/crontab.txt
 
 if [ -n "$(date +%e | grep -E "1|8|15|22")" ] ; then
-  cd $dest && tar -zcf ../Script/N1_armbian_Conf_backup.tgz * --exclude kodexplorer4.37.tgz
+  cd $dest && tar -zcvf ../Script/N1_armbian_Conf_backup.tgz * --exclude kodexplorer4.37.tgz
 fi
 
 chown -R armbian.armbian /media/sda1
@@ -43,7 +43,7 @@ chown -R armbian.armbian /media/sda1
 sh /opt/mount_smb.sh
 if [ -n "$(mount | grep 10gtek)" ] ; then
   cd /media/sda1
-  tar -zcf /media/10gtek/backup$(date +%Y%m%d).tgz *
+  tar -zcvf /media/10gtek/backup$(date +%Y%m%d).tgz *
   [ `echo $?` -eq 0 ] && echo "$(date +"%F %T") backup to 10gtek success ! " >> $rsynclog
   find /media/10gtek -type f -name "backup*" -ctime +5 -exec rm -f {} \; 
 else
