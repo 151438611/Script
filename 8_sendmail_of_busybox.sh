@@ -1,7 +1,7 @@
 #!/bin/sh
 # Sendmail in Busybox Guide
 cron=/etc/storage/cron/crontabs/$(nvram get http_username) 
-grep -qi $(basename $0) $cron || echo "12 12 * * * sh /etc/storage/bin/$(basename $0)" >> $cron
+grep -qi $(basename $0) $cron || echo -e "\n12 12 * * * sh /etc/storage/bin/$(basename $0)" >> $cron
 
 from_add=xiongjun0928@163.com
 username=${from_add%@*}
