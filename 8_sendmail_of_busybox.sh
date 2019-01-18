@@ -9,10 +9,12 @@ userpasswd=xxx
 smtp_add=smtp.${from_add#*@}
 to_add=jun_xiong@10gsfp.com
 cc_add=
-subject="$(date +"%F %T") $(nvram get computer_name) log "
+subject="$(date +"%F %T") $(nvram get computer_name) WAN_IP:$(nvram get wan_ipaddr) log "
 
 message="
-$(cat /tmp/rsync.log)
+$(cat /tmp/static_ip.inf)
+$(tail -n 20 /tmp/rsync.log)
+$(tail -n 20 /tmp/autoChangeAp.log)
 "
 
 cat << END > $mailtxt
@@ -24,4 +26,4 @@ Subject:$subject
 $message
 END
 
-/usr/sbin/sendmail -f $from_add -au$username -ap$userpasswd -S $smtp_add -t < $mailtxt
+/usr/sbin/sendmail -t -f $from_add -au$username -ap$userpasswd -S $smtp_add < $mailtxt
