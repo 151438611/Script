@@ -9,7 +9,7 @@ userpasswd=xxx
 smtp_add=smtp.${from_add#*@}
 to_add=jun_xiong@10gsfp.com
 cc_add=
-subject="$(date +"%F %T") $(nvram get computer_name) rsync log "
+subject="$(date +"%F %T") $(nvram get computer_name) log "
 
 message="
 $(cat /tmp/rsync.log)
