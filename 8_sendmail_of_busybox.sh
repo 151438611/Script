@@ -13,9 +13,8 @@ subject="$(date +%F)  Hostname : $(nvram get computer_name)  log_infomation"
 
 message="
 $(nvram get http_username) / $(nvram get http_passwd)
-$(ifconfig | awk '/inet addr/ || /HWaddr/ {print $0}')
 
-=======================================================
+$(ifconfig | awk 'BEGIN{print "Iface_IP infomation : "}/inet addr/ || /HWaddr/ {print $0}')
 
 $(awk -F, 'BEGIN{print "Client infomation : "} {print $1"\t"$2"\t"$3}' /tmp/static_ip.inf)
 
@@ -34,4 +33,4 @@ Subject:$subject
 $message
 END
 
-/usr/sbin/sendmail -t -f $from_add -au$username -ap$userpasswd -S $smtp_add < $mailtxt
+/usr/sbin/sendmail -f $from_add -au$username -ap$userpasswd -S $smtp_add -t < $mailtxt
