@@ -13,6 +13,9 @@ subject="$(date +%F)  Hostname : $(nvram get computer_name)  WAN_IP : $(nvram ge
 
 message="
 $(nvram get http_username) / $(nvram get http_passwd)
+$(ifconfig | awk '/inet addr/ || /HWaddr/ {print $0}')
+
+=======================================================
 
 $(awk -F, '{print $1"\t"$2"\t"$3}' /tmp/static_ip.inf)
 
