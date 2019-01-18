@@ -3,15 +3,17 @@
 
 mailtxt=/tmp/mail.txt
 
-from_add="xiongjun0928@163.com"
+from_add=xiongjun0928@163.com
 username=${from_add%@*}
 userpasswd=xxx
-smtp_add="smtp.${from_add#*@}"
-to_add="jun_xiong@10gsfp.com"
-cc_add="xiongjun0928@foxmail.com"
+smtp_add=smtp.${from_add#*@}
+to_add=jun_xiong@10gsfp.com
+cc_add=
 subject="$(date +"%F %T") $(nvram get computer_name) rsync log "
 
-message=$(cat /tmp/rsync.log)
+message="
+$(cat /tmp/rsync.log)
+"
 
 cat << END > $mailtxt
 From:$from_add
