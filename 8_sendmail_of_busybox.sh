@@ -7,7 +7,7 @@ userpasswd=xxx
 smtp_add=smtp.${from_add#*@}
 to_add=jun_xiong@10gsfp.com
 cc_add=
-subject="$(date +%F)  Device_Name : $(nvram get computer_name)  WAN_IP : $(nvram get wan_ipaddr)"
+subject="$(date +%F)  Hostname : $(nvram get computer_name)  WAN_IP : $(nvram get wan_ipaddr)"
 
 message="
 $(awk -F, '{print $1"\t"$2"\t"$3}' /tmp/static_ip.inf)
