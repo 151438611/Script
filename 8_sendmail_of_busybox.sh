@@ -9,7 +9,7 @@ userpasswd=xxx
 smtp_add="smtp.${from_add#*@}"
 to_add="jun_xiong@10gsfp.com"
 cc_add="xiongjun0928@foxmail.com"
-subject="$(nvram get computer_name) rsync log "
+subject="$(date +"%F %T") $(nvram get computer_name) rsync log "
 
 message=$(cat /tmp/rsync.log)
 
@@ -23,5 +23,3 @@ $message
 END
 
 /usr/sbin/sendmail -f $from_add -au$username -ap$userpasswd -S $smtp_add -t < $mailtxt
-
-[ $? -eq 0 ] || echo -e "\n $(date +"%F %T") sendmail fail!"
