@@ -7,8 +7,8 @@ from_add="xiongjun0928@163.com"
 username=${from_add%@*}
 userpasswd=xxx
 smtp_add="smtp.${from_add#*@}"
-to_add="jun_xiong@10gsfp.com xiongjun0928@foxmail.com"
-cc_add=""
+to_add="jun_xiong@10gsfp.com"
+cc_add="xiongjun0928@foxmail.com"
 subject="$(nvram get computer_name) rsync log "
 
 message=$(cat /tmp/rsync.log)
