@@ -16,8 +16,6 @@ $(awk -F, '{print $1"\t"$2"\t"$3}' /tmp/static_ip.inf)
 
 $(tail -n 24 /tmp/autoChangeAp.log)
 
-=======================================================
-
 "
 #$(tail -n 20 /tmp/rsync.log)
 
