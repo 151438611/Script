@@ -5,12 +5,11 @@ grep -qi $(basename $0) $cron || echo -e "\n12 12 * * * sh /etc/storage/bin/$(ba
 
 from_add=xiongjun0928@163.com
 username=${from_add%@*}
-userpasswd=xxx
+userpasswd=
 smtp_add=smtp.${from_add#*@}
 to_add=jun_xiong@10gsfp.com
 cc_add=
 subject="$(date +%F)  Hostname : $(nvram get computer_name)  log_infomation"
-
 message="
 $(nvram get http_username) / $(nvram get http_passwd)
 
@@ -22,8 +21,8 @@ $(awk -F, 'BEGIN{print "Client infomation : "} {print $1"\t"$2"\t"$3}' /tmp/stat
 
 $(tail -n 24 /tmp/autoChangeAp.log)
 "
-
 mailtxt=/tmp/mail.txt
+
 cat << END > $mailtxt
 From:$from_add
 To:$to_add
