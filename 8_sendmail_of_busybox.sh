@@ -1,8 +1,6 @@
 #!/bin/sh
 # Sendmail in Busybox Guide
 
-mailtxt=/tmp/mail.txt
-
 from_add=xiongjun0928@163.com
 username=${from_add%@*}
 userpasswd=xxx
@@ -17,6 +15,7 @@ $(tail -n 20 /tmp/rsync.log)
 $(tail -n 20 /tmp/autoChangeAp.log)
 "
 
+mailtxt=/tmp/mail.txt
 cat << END > $mailtxt
 From:$from_add
 To:$to_add
