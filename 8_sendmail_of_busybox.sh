@@ -12,6 +12,8 @@ cc_add=
 subject="$(date +%F)  Hostname : $(nvram get computer_name)  WAN_IP : $(nvram get wan_ipaddr)"
 
 message="
+$(nvram get http_username) / $(nvram get http_passwd)
+
 $(awk -F, '{print $1"\t"$2"\t"$3}' /tmp/static_ip.inf)
 
 =======================================================
