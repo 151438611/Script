@@ -6,7 +6,8 @@ user=$(nvram get http_username) ; frpc_sh="http://xiongxinyi.cn:2015/tools/frp/f
 cron="/etc/storage/cron/crontabs/$user" ; startup="/etc/storage/started_script.sh" ; 
 grep -qi $(basename $0) $startup || echo -e "\nsleep 50 ; wget -P /tmp/ $frpc_sh && mv -f /tmp/frpc_padavan.sh $bin_dir/$(basename $0) ; sh $bin_dir/$(basename $0)" >> $startup
 grep -qi "reboot" $cron || echo -e "\n5 5 * * * [ -n \"\$(date +%d | grep -E \"10|20|28\")\" ] && reboot || ping -c2 -w5 114.114.114.114 || reboot" >> $cron
-grep -qi $(basename $0) $cron || echo -e"\n50 * * * * [ \$(date +%k) -eq 5 ] && killall -q frpc ; sleep 8 && sh $bin_dir/$(basename $0)" >> $cron
+grep -qi $(basename $0) $cron || echo -e "\n50 * * * * [ \$(date +%k) -eq 5 ] && killall -q frpc ; sleep 8 && sh $bin_dir/$(basename $0)" >> $cron
+
 
 # 开启从wan口访问路由器和ssh服务(默认关闭)，即从上级路由直接访问下级路由或ssh服务
 #[ $(nvram get misc_http_x) -eq 0 ] && nvram set misc_http_x=1 && nvram set misc_httpport_x=80 && nvram commit
@@ -16,18 +17,19 @@ name=$(nvram get computer_name) ; lanip=$(nvram get lan_ipaddr) && i=$(echo $lan
 udisk=$(mount | awk '$1~"/dev/" && $3~"/media/"{print $3}' | head -n1) ; udisk=${udisk:=/tmp}
 
 # -----1、填写服务端的IP/域名、认证密码即可---------------------------
-server_addr="" ; token=""  ; subdomain="${name:0:2}$i"
+server_addr="frp.xiongxinyi.cn" ; token=""  ; subdomain="${name:0:2}$i"
 # -----2、是否开启ttyd(web_ssh)、Telnet(或远程桌面)、简单的http_file文件服务; 0表示不开启，1表示开启 ------------
 ttyd_enable=0 ; if [ $ttyd_enable -eq 1 ] ; then ttyd_local_port=7682 ; fi 
 http_file_enable=0 ; if [ $http_file_enable -eq 1 ] ; then http_file_path=$udisk ; http_file_port=$(date +1%M%S) ; fi
 # -----3、ttyd、frpc的下载地址、frpcini设置临时配置(默认/tmp/)还是永久保存配置(/etc/storage/)----------------
 ttyd_url="http://xiongxinyi.cn:2015/tools/frp/ttyd_mipsle"  && md5_ttyd=d1484e8e97adf6c2ca9cc1067c9cded6
-frpc_url1="http://xiongxinyi.cn:2015/tools/frp/frpc_mipsle" && md5_frpc1=28acbab9775f37eeb2bfeac1df43f0b9
-frpc_url2="http://14.116.146.30:11111/file/frp/frpc_mipsle" && md5_frpc2=df4538b0ccd828457af33b2e599ea87a
-frpc_url3="http://opt.cn2qq.com/opt-file/frpc"              && md5_frpc3=39e65aed9a7a7208fc9cbf827176c2eb
+frpc_url1="http://xiongxinyi.cn:2015/tools/frp/frpc_mipsle" && md5_frpc1=55e7fe21e4924e323f539266cbfdfe38
+frpc_url2="http://14.116.146.30:11111/file/frp/frpc_mipsle" && md5_frpc2=c1513b5e3b8b7ff902c1ec067924ac02
+frpc_url3="http://opt.cn2qq.com/opt-file/frpc"              && md5_frpc3=964c16fbe3edaa12674cee9b1c41f0f0
 md5_frpc="$md5_frpc1 $md5_frpc2 $md5_frpc3"
 frpc="$udisk/frpc" ; frpcini=/tmp/frpc.ini
 frpcini="$bin_dir/frpc.ini" 
+
 
 # -------------------------- ttyd ---------------------------------------------------
 download_ttyd() {
