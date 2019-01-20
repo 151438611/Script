@@ -15,7 +15,7 @@ user=admin
 password=administrator
 src=//192.168.20.200/Public
 dest=/media/hwnas
-fun_mount $user $password $src $dest
+#fun_mount $user $password $src $dest
 
 # === mount 2 ==========================
 user=GCB01 
