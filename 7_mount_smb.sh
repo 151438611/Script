@@ -1,6 +1,6 @@
 #!/bin/sh
 # 
-export PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
+export PATH=/bin:/sbin:/usr/bin:/usr/sbin
 
 fun_mount() {
 # $1:username $2:password $3:mount_src $4:mount_dest 
@@ -17,8 +17,8 @@ dest0=/media/hwnas
 fun_mount $user0 $password0 $src0 $dest0
 
 # === mount 2 ==========================
-#user1= 
-#password1=
-#src1= 
-#dest1=
+user1=GCB01 
+password1="*WGQGf"
+src1=//192.168.1.250/gc-fae/2018/20181001 
+dest1=/media/10gtek
 #fun_mount $user1 $password1 $src1 $dest1 
