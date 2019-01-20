@@ -8,6 +8,7 @@ grep -qi reboot $cron || echo -e "\n5 5 * * * [ \$(date +\\%u) -eq 6 ] && /sbin/
 # -----1、填写服务端的IP/域名、认证密码即可---------------------------
 server_addr=frp.xiongxinyi.cn ; token=administrator
 name=Phicomm_N1 ; subdomain=kodexplorer
+
 frpc=/opt/frp/frpc ; frpcini=/opt/frp/frpc.ini
 frpc_url=http://14.116.146.30:11111/file/frp/frpc_linux_arm64 && md5_frpc=6c0ed666fe51b6216d22531824567986
 
