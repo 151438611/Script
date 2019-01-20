@@ -16,7 +16,7 @@ download_frpc() {
   rm -f $frpc ; wget -O $frpc $frpc_url &
   sleep 60 ; killall -q wget curl
 }
-[ "$(md5sum $frpc | cut -d " " -f 1)" = "$md5_frpc"] || download_frpc ; chmod 555 $frpc
+[ "$(md5sum $frpc | cut -d " " -f 1)" = "$md5_frpc" ] || download_frpc ; chmod 555 $frpc
 
 if [ ! -f "$frpcini" ] ; then
 cat << END > $frpcini
@@ -46,6 +46,7 @@ remote_port = 0
 use_encryption = false
 use_compression = true
 END
+fi
 
 ip_addr=$(ifconfig eth0 | awk '/inet/ && /netmask/ && /broadcast/{print $2}')
 old_addr=$(awk '$0~"local_ip = 192.168" {print $3}' $frpcini | head -n1)
