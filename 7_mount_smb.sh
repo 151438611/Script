@@ -6,6 +6,7 @@ fun_mount() {
 # $1:username $2:password $3:mount_src $4:mount_dest 
  [ -d "$4" ] || mkdir -p $4
  [ -z "$(mount | grep "$3 on $4")" ] && \
+ mount -t cifs -o username=$1,password=$2 $3 $4 || \
  mount -t cifs -o username=$1,password=$2,vers=2.0 $3 $4
 }
 
