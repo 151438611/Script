@@ -11,15 +11,15 @@ fun_mount() {
 }
 
 # === mount 1 ==========================
-user0=admin
-password0=administrator
-src0=//192.168.20.200/Public
-dest0=/media/hwnas
-fun_mount $user0 $password0 $src0 $dest0
+user=admin
+password=administrator
+src=//192.168.20.200/Public
+dest=/media/hwnas
+fun_mount $user $password $src $dest
 
 # === mount 2 ==========================
-user1=GCB01 
-password1="*WGQGf"
-src1=//192.168.1.250/gc-fae/2018/20181001 
-dest1=/media/10gtek
-#fun_mount $user1 $password1 $src1 $dest1 
+user=GCB01 
+password="*WGQGf"
+src=//192.168.1.250/gc-fae/2018/20181001 
+dest=/media/10gtek
+#fun_mount $user $password $src $dest 
