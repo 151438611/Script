@@ -45,7 +45,7 @@ if [ -n "$(mount | grep 10gtek)" ] ; then
   cd /media/sda1
   tar -zcvf /media/10gtek/backup$(date +%Y%m%d).tgz *
   [ `echo $?` -eq 0 ] && echo "$(date +"%F %T") backup to 10gtek success ! " >> $rsynclog
-  find /media/10gtek -type f -name "backup*" -ctime +5 -exec rm -f {} \; 
+  sleep 60 && find /media/10gtek -type f -name "backup*" -ctime +5 -exec rm -f {} \; 
 else
   echo -e "\n$(date +"%F %T") 10gtek is not mount , rsync backup to 10gtek failse !" >> $rsynclog
 fi
