@@ -47,7 +47,7 @@ if [ "$apssid_old" != "$apssid" ] ; then
     nvram set ${channel_x}=$channel
     nvram set ${sta_auto}=1
     nvram set ${sta_ssid}=$apssid
-    nvram set ${sta_auth_mode}=psk
+    [ "$appasswd" = "null" ] && nvram set ${sta_auth_mode}=open || nvram set ${sta_auth_mode}=psk
     nvram set ${sta_wpa_mode}=2
     nvram set ${sta_crypto}=aes
     nvram set ${sta_wpa_psk}=$appasswd
