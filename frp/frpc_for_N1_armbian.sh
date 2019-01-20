@@ -1,5 +1,5 @@
 #!/bin/sh
-PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
+PATH=$PATH:/usr/local/bin:/usr/local/sbin
 
 cron=/var/spool/cron/crontabs/root
 grep -qi $(basename $0) $cron || echo -e "\n15 * * * * [ \$(date +\\%k) -eq 5 ] && /usr/bin/killall frpc ; sleep 8 && sh /opt/frp/$(basename $0)" >> $cron
