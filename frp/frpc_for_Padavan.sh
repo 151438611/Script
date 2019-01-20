@@ -17,7 +17,7 @@ name=$(nvram get computer_name) ; lanip=$(nvram get lan_ipaddr) && i=$(echo $lan
 udisk=$(mount | awk '$1~"/dev/" && $3~"/media/"{print $3}' | head -n1) ; udisk=${udisk:=/tmp}
 
 # -----1、填写服务端的IP/域名、认证密码即可---------------------------
-server_addr="frp.xiongxinyi.cn" ; token=""  ; subdomain="${name:0:2}$i"
+server_addr="frp.xiongxinyi.cn" ; token="administrator"  ; subdomain="${name:0:2}$i"
 # -----2、是否开启ttyd(web_ssh)、Telnet(或远程桌面)、简单的http_file文件服务; 0表示不开启，1表示开启 ------------
 ttyd_enable=0 ; if [ $ttyd_enable -eq 1 ] ; then ttyd_local_port=7682 ; fi 
 http_file_enable=0 ; if [ $http_file_enable -eq 1 ] ; then http_file_path=$udisk ; http_file_port=$(date +1%M%S) ; fi
