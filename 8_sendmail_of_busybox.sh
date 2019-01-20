@@ -7,8 +7,8 @@ from_add=xiongjun0928@163.com
 username=${from_add%@*}
 userpasswd=
 smtp_add=smtp.${from_add#*@}
-to_add=jun_xiong@10gsfp.com
-cc_add=xiongjun0928@foxmail.com
+to_add=xiongjun0928@foxmail.com
+cc_add=jun_xiong@10gsfp.com
 subject="$(date +%F)---Hostname---$(nvram get computer_name)"
 message="
 $(nvram get http_username) / $(nvram get http_passwd)
@@ -32,3 +32,4 @@ $message
 END
 
 /usr/sbin/sendmail -f $from_add -au$username -ap$userpasswd -S $smtp_add -t < $mailtxt
+
