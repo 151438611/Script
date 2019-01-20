@@ -16,8 +16,8 @@ server_addr="" ; token="" ; ssh_remote_port=$(date +1%M%S) ; subdomain="${name:0
 # -----2、是否添加Telnet(远程桌面)、简单的http_file文件服务: 0表示不开启，1表示开启 ; 如果开启后面的参数都需要更改-----
 telnet_enable=0 ; if [ $telnet_enable -eq 1 ] ; then telnet_local_ip=192.168.11.10 ; telnet_local_port=23 ; telnet_remote_port=0 ; fi
 # -----3、frpc的下载地址、frpcini设置临时配置(默认/tmp/重启自动更新)还是永久保存配置(/etc/storage/，需取消注释#)-----
-frpc_url1="http://xiongxinyi.cn:2015/tools/frp/frpc_mips" && md5_frpc1="725e8b74dfb21178e8ff195239c58342"
-frpc_url2="http://xiongxinyi.cn:11111/file/frp/frpc_mips" && md5_frpc2="61332efe403117a8eedc21c623468804"
+frpc_url1=http://xiongxinyi.cn:2015/tools/frp/frpc_mips && md5_frpc1=
+frpc_url2=http://14.116.146.30:11111/file/frp/frpc_mips && md5_frpc2=
 md5_frpc="$md5_frpc1 $md5_frpc2"
 
 frpcini="/tmp/frpc.ini" ; frpc="/tmp/frpc"
