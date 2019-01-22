@@ -6,10 +6,13 @@ grep -qi $(basename $0) $cron || echo "*/30 * * * * sh /etc/storage/bin/$(basena
 aplog=/tmp/autoChangeAp.log && [ -f "$aplog" ] || touch $aplog
 
 # ===1、输入被中继的wifi帐号密码,格式{ 无线频段(2|5)+ssid+password+wan_ip(可不填) },多个用空格或回车隔开,默认加密方式为WPA2PSK/AES===
-aplist="
-2+AVP-LINK+12345678+10  2+UNION-2F+13316870528+0  2+ChinaNet-zCW7+edjxehm4+1
+aplist="2+AVP-LINK+12345678+10
+2+TP-LINK_LSF+lsf13689557108+1
+2+TP-LINK_2646+null+1
 2+xiaodangjia+zlp18300022392+0
+2+UNION-2F+13316870528+0
 "
+
 aplist=$(echo "$aplist" | awk '{for(apl=1 ; apl<=NF ; apl++){print $apl}}')
 apssidlist=$(echo "$aplist" | awk -F+ '{print $2}')
 rt=$(nvram get rt_mode_x) ; wl=$(nvram get wl_mode_x)
@@ -62,7 +65,7 @@ printf "%-10s %-8s %-20s %-12s\n" $(date +"%F %T") SSID:$apssid Netstat:DOWN >> 
   nvram set ${sta_auto}=1
   nvram set ${sta_ssid}=$apssid
 # "rt/wl_sta_auth_mode": open表示无加密 ; psk表示有加密
-  nvram set ${sta_auth_mode}=psk
+  [ "$appasswd" = "null" ] && nvram set ${sta_auth_mode}=open || nvram set ${sta_auth_mode}=psk
 # "rt/wl_sta_wpa_mode":加密类型：1=[WPA_Personal]  2=[WPA2_Personal]
   nvram set ${sta_wpa_mode}=2
   nvram set ${sta_crypto}=aes
