@@ -13,6 +13,12 @@ name=armbian_N1 ; subdomain=kodexplorer
 frpc=/opt/frp/frpc ; frpcini=/opt/frp/frpc.ini
 frpc_url=http://14.116.146.30:11111/file/frp/frpc_linux_arm64 && md5_frpc=6c0ed666fe51b6216d22531824567986
 
+ttyd=/opt/ttyd ; ttyd_url=http://14.116.146.30:11111/file/frp/ttyd_linux.aarch64
+if [ -z $(pidof ttyd) ] ; then
+  [ -f "$ttyd" ] || wget -O $ttyd $ttyd_url ; chmod 555 $ttyd
+  $ttyd -p 5000 -m 5 -d 1 /bin/login &
+fi
+
 download_frpc() {
   rm -f $frpc ; wget -O $frpc $frpc_url &
   sleep 60 ; killall -q wget curl
