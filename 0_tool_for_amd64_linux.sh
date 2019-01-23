@@ -35,9 +35,9 @@ case $mode in
 #case $del_yum in	y|yes) rm -rf /etc/yum.repos.d/* ;;	esac
 cat << END > /etc/yum.repos.d/centos7_epel-webtatic.repo && yum clean all && yum makecache && action "更新EPEL源" /bin/true || action "更新yum源" /bin/false
 [base]
-name=CentOS-7.5.1804 - Base - mirrors.aliyun.com
+name=CentOS-7.6.1810 - Base - mirrors.aliyun.com
 failovermethod=priority
-baseurl=http://mirrors.aliyun.com/centos/7.5.1804/os/x86_64/
+baseurl=http://mirrors.aliyun.com/centos/7.6.1810/os/x86_64/
 enabled=1
 gpgcheck=1
 gpgkey=http://mirrors.aliyun.com/centos/RPM-GPG-KEY-CentOS-7
