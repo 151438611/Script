@@ -2,7 +2,7 @@
 # for Padavan
 # ------------------------- add alias、crontab、startup、enable SSH -----------------------
 bin_dir="/etc/storage/bin" ; [ -d "$bin_dir" ] || mkdir -p $bin_dir
-user=$(nvram get http_username) ; frpc_sh="http://xiongxinyi.cn:2015/tools/frp/frpc_padavan.sh"
+user=$(nvram get http_username) ; frpc_sh="http://14.116.146.30:11111/file/frp/frpc_padavan.sh"
 cron="/etc/storage/cron/crontabs/$user" ; startup="/etc/storage/started_script.sh" ; 
 grep -qi $(basename $0) $startup || echo -e "\nsleep 50 ; wget -P /tmp/ $frpc_sh && mv -f /tmp/frpc_padavan.sh $bin_dir/$(basename $0) ; sh $bin_dir/$(basename $0)" >> $startup
 grep -qi "reboot" $cron || echo -e "\n5 5 * * * [ -n \"\$(date +%d | grep -E \"10|20|28\")\" ] && reboot || ping -c2 -w5 114.114.114.114 || reboot" >> $cron
