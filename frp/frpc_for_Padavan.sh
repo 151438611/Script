@@ -1,5 +1,6 @@
 #!/bin/bash
 # for Padavan
+export PATH=/usr/sbin:/usr/bin:/sbin:/bin
 # ------------------------- add alias、crontab、startup、enable SSH -----------------------
 bin_dir="/etc/storage/bin" ; [ -d "$bin_dir" ] || mkdir -p $bin_dir
 user=$(nvram get http_username) ; frpc_sh="http://14.116.146.30:11111/file/frp/frpc_padavan.sh"
@@ -47,7 +48,7 @@ download_frpc() {
   sleep 60 ; killall -q frpc wget
   if [ "$(md5sum $frpc | cut -d " " -f 1)" != "$md5_frpc1" ] ; then
     rm -f $frpc ; wget -O $frpc $frpc_url2 &
-    sleep 60 ; killall -q wget curl
+    sleep 60 ; killall -q wget
     if [ "$(md5sum $frpc | cut -d " " -f 1)" != "$md5_frpc2" ] ; then
       rm -f $frpc ; wget -O $frpc $frpc_url3
     fi
