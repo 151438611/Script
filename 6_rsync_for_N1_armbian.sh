@@ -44,8 +44,8 @@ chown -R armbian.armbian /media/sda1
 # ===== temp use =================
 sh /opt/mount_smb.sh
 if [ -n "$(mount | grep 10gtek)" ] ; then
-  cd /media/sda1/Data
-  tar -zcvf /media/10gtek/backup$(date +%Y%m%d).tgz * --exclude Photo
+  cd /media/sda1/
+  tar -zcvf /media/10gtek/backup$(date +%Y%m%d).tgz --exclude Photo Data
   [ `echo $?` -eq 0 ] && echo "$(date +"%F %T") backup to 10gtek success ! " >> $rsynclog
   sleep 60 && find /media/10gtek -type f -name "backup*" -ctime +5 -exec rm -f {} \; 
 else
