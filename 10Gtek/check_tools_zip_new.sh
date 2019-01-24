@@ -306,6 +306,7 @@ HP-2910
 HP-5900
 Huawei-S3700
 Huawei-S5700
+Huawei-CE6855
 IBM-G8264
 Juniper-QFX5100"
 ;;
@@ -321,6 +322,7 @@ H3C-S5120
 HP-2910
 HP-5900
 Huawei-S5700
+Huawei-CE6855
 IBM-G8264
 Juniper-QFX5100"
 ;;
@@ -333,6 +335,7 @@ Dell-ForceS4810
 Edgecore-5712
 Edgecore-7712
 HP-5900
+Huawei-CE6855
 IBM-G8264
 Juniper-QFX5200
 Juniper-QFX5100"
