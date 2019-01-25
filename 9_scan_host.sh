@@ -1,7 +1,7 @@
 #!/bin/sh
 export PATH=/bin:/sbin:/usr/bin:/usr/sbin
 
-subnet=192.168.3.
+subnet="192.168.3."
 hosts=/tmp/online_host.txt ; echo "$(arp -n | head -n1)" > $hosts
 
 a=$1 ; b=$2
