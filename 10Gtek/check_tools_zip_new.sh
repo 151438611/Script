@@ -285,9 +285,7 @@ case $speed in
 "100m")
 swtich="Cisco-2960
 Cisco-2960G
-Cisco-3560
 H3C-S3100V2
-HP-2910
 Huawei-S3700
 Huawei-S5700"
 ;;
@@ -298,6 +296,7 @@ Cisco-2960G
 Cisco-3560
 Cisco-3064
 Cisco-5548
+Cisco-92160
 Dell-ForceS4810
 Edgecore-5712
 H3C-S3100V2
@@ -315,6 +314,7 @@ swtich="Arista-7050
 Cisco-3064
 Cisco-5548
 Cisco-3232C
+Cisco-92160
 Dell-ForceS4810
 Edgecore-5712
 Edgecore-7712
@@ -331,6 +331,7 @@ swtich="Arista-7050
 Cisco-3064
 Cisco-5548
 Cisco-3232C
+Cisco-92160
 Dell-ForceS4810
 Edgecore-5712
 Edgecore-7712
@@ -342,7 +343,7 @@ Juniper-QFX5100"
 ;;
 "100g")
 swtich="Cisco-3232C
-Cisco-3064
+Cisco-92160
 Arista-7050
 Edgecore-7712
 Edgecore-5712
