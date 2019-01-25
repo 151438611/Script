@@ -13,9 +13,9 @@ if [ "$a" = 0 ] ; then unset a
 elif [ "$b" = 0 ] ; then unset b
 elif [ -n "$b" ] ; then 
   [ "$a" -gt "$b" ] && c=$a && a=$b && b=$c
-  [ "$b" -ge 255 ] && echo "It's cann't grate than 255" && exit
+  [ "$b" -ge 255 ] && echo "It's MaxNum cann't grate than 255" && exit
 fi
-[ "$a" -ge 255 ] && echo "It's cann't grate than 255" && exit
+[ "$a" -ge 255 ] && echo "It's MinNum cann't grate than 255" && exit
 
 for x in `seq $a $b`
 do
