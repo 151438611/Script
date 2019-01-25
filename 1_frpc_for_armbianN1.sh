@@ -11,7 +11,7 @@ server_addr=frp.xiongxinyi.cn ; token=administrator
 name=armbian_N1 ; subdomain=kodexplorer
 
 frpc=/opt/frp/frpc ; frpcini=/opt/frp/frpc.ini
-frpc_url=http://14.116.146.30:11111/file/frp/frpc_linux_arm64 && md5_frpc=6c0ed666fe51b6216d22531824567986
+frpc_url=http://14.116.146.30:11111/file/frp/frpc_linux_arm64 && md5_frpc=1610d1011fece9d806c8e3ba5dd2ad8f
 
 ttyd=/opt/ttyd ; ttyd_url=http://14.116.146.30:11111/file/frp/ttyd_linux.aarch64
 if [ -z $(pidof ttyd) ] ; then
@@ -65,3 +65,4 @@ if [ -z "$(pidof frpc)" ] ; then
 else
   echo "$(date +"%F %T") frpc is runing, Don't do anything !" >> /tmp/frpc.log
 fi
+
