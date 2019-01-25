@@ -23,11 +23,11 @@ server_addr="frp.xiongxinyi.cn" ; token="administrator"  ; subdomain="${name:0:2
 ttyd_enable=0 ; if [ $ttyd_enable -eq 1 ] ; then ttyd_local_port=7682 ; fi 
 http_file_enable=0 ; if [ $http_file_enable -eq 1 ] ; then http_file_path=$udisk ; http_file_port=$(date +1%M%S) ; fi
 # -----3、ttyd、frpc的下载地址、frpcini设置临时配置(默认/tmp/)还是永久保存配置(/etc/storage/)----------------
-ttyd_url="http://14.116.146.30:11111/file/frp/ttyd_mipsle"  && md5_ttyd=d1484e8e97adf6c2ca9cc1067c9cded6
-frpc_url1="http://14.116.146.30:11111/file/frp/frpc_mipsle" && md5_frpc1=c1513b5e3b8b7ff902c1ec067924ac02
-frpc_url2="http://14.116.146.30:12222/file/frp/frpc_mipsle" && md5_frpc2=c1513b5e3b8b7ff902c1ec067924ac02
+ttyd_url="http://14.116.146.30:11111/file/frp/ttyd_linux_mipsle"  && md5_ttyd=d1484e8e97adf6c2ca9cc1067c9cded6
+frpc_url1="http://14.116.146.30:11111/file/frp/frpc_linux_mipsle" && md5_frpc1=2bced9b3084f251b3fd2ca42cc472f6c
+frpc_url2="http://14.116.146.30:12222/file/frp/frpc_linux_mipsle" && md5_frpc2=2bced9b3084f251b3fd2ca42cc472f6c
 frpc_url3="http://opt.cn2qq.com/opt-file/frpc"              && md5_frpc3=964c16fbe3edaa12674cee9b1c41f0f0
-md5_frpc="$md5_frpc1 $md5_frpc2 $md5_frpc3 55e7fe21e4924e323f539266cbfdfe38"
+md5_frpc="$md5_frpc1 $md5_frpc2 $md5_frpc3 df4538b0ccd828457af33b2e599ea87a"
 frpc="$udisk/frpc" ; frpcini=/tmp/frpc.ini
 frpcini="$bin_dir/frpc.ini" 
 
@@ -105,3 +105,4 @@ if [ -z "$(pidof frpc)" ] ; then
      $frpc -c $frpcini &
 else logger -t frpc "frpc is running ; Don't do anything !"
 fi
+
