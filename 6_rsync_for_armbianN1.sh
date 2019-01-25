@@ -7,8 +7,8 @@ grep -qi $(basename $0) $cron || echo -e "\n35 3 * * * sh /opt/$(basename $0)" >
 rsynclog=/tmp/rsync.log ; echo "" >> $rsynclog
 
 src0=/etc/rc.local
-src1=/etc/nginx
-src2=/etc/php
+src1=
+src2=
 src3=
 src4=/etc/samba/smb.conf
 src5=/opt/frp
