@@ -2,7 +2,7 @@
 export PATH=/bin:/sbin:/usr/bin:/usr/sbin
 
 subnet="192.168.3."
-hosts=/tmp/online_host.txt ; echo "$(arp -n | head -n1)" > $hosts
+hosts=/tmp/online_host.txt ; echo echo $(date +"%F %T") > $hosts
 
 a=$1 ; b=$2
 
@@ -20,5 +20,5 @@ fi
 for x in `seq $a $b`
 do
   ping -w 1 $subnet$x 
-  [ $? -eq 0 ] && echo "$(arp -n | awk '$1=="'$subnet$x'"{print $0}')" >> $hosts
+  [ $? -eq 0 ] && echo "$(arp -an | awk -F [\(\)] '$2=="'$subnet$x'" {print $0}')" >> $hosts
 done
