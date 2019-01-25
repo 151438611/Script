@@ -12,8 +12,8 @@ if [ "$a" = 0 ] ; then unset a
   [ -z "$b" -o "$b" = 0 ] && echo "please input not zero Number" && exit
 elif [ "$b" = 0 ] ; then unset b
 elif [ -n "$b" ] ; then 
-	[ "$a" -gt "$b" ] && c=$a && a=$b && b=$c
-    [ "$b" -ge 255 ] && echo "It's cann't grate than 255" && exit
+  [ "$a" -gt "$b" ] && c=$a && a=$b && b=$c
+  [ "$b" -ge 255 ] && echo "It's cann't grate than 255" && exit
 fi
 [ "$a" -ge 255 ] && echo "It's cann't grate than 255" && exit
 
