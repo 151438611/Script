@@ -9,7 +9,6 @@ grep -qi $(basename $0) $startup || echo -e "\nsleep 50 ; wget -P /tmp/ $frpc_sh
 grep -qi "reboot" $cron || echo -e "\n5 5 * * * [ -n \"\$(date +%d | grep -E \"10|20|28\")\" ] && reboot || ping -c2 -w5 114.114.114.114 || reboot" >> $cron
 grep -qi $(basename $0) $cron || echo -e "\n50 * * * * [ \$(date +%k) -eq 5 ] && killall -q frpc ; sleep 8 && sh $bin_dir/$(basename $0)" >> $cron
 
-
 # 开启从wan口访问路由器和ssh服务(默认关闭)，即从上级路由直接访问下级路由或ssh服务
 #[ $(nvram get misc_http_x) -eq 0 ] && nvram set misc_http_x=1 && nvram set misc_httpport_x=80 && nvram commit
 [ $(nvram get sshd_wopen) -eq 0 ] && nvram set sshd_wopen=1 && nvram set sshd_wport=22 && nvram commit
@@ -30,7 +29,6 @@ frpc_url3="http://opt.cn2qq.com/opt-file/frpc"              && md5_frpc3=964c16f
 md5_frpc="$md5_frpc1 $md5_frpc2 $md5_frpc3 df4538b0ccd828457af33b2e599ea87a"
 frpc="$udisk/frpc" ; frpcini=/tmp/frpc.ini
 frpcini="$bin_dir/frpc.ini" 
-
 
 # -------------------------- ttyd ---------------------------------------------------
 download_ttyd() {
@@ -105,4 +103,3 @@ if [ -z "$(pidof frpc)" ] ; then
      $frpc -c $frpcini &
 else logger -t frpc "frpc is running ; Don't do anything !"
 fi
-
