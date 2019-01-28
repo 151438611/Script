@@ -21,7 +21,7 @@ fi
 
 download_frpc() {
   rm -f $frpc ; wget -O $frpc $frpc_url &
-  sleep 60 ; killall -q wget curl
+  sleep 60 ; killall -q wget
 }
 [ "$(md5sum $frpc | cut -d " " -f 1)" = "$md5_frpc" ] || download_frpc ; chmod 555 $frpc
 
