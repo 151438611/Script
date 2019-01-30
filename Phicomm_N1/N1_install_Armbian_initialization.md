@@ -250,7 +250,7 @@ write list=root,armbian
 ```
 [root@aml ~]# cat /etc/rc.local
 [ -b /dev/sda1 ] && mount /dev/sda1 /media/sda1
-[ -z "$(pidof ttyd)" ] && /opt/ttyd -p 5000 -m 5 -d 1 /bin/login &
+[ -z "$(pidof ttyd)" ] && /opt/ttyd -p 7682 -m 5 -d 1 /bin/login &
 sh /opt/frpc/frpc.sh
 exit 0
 ```
