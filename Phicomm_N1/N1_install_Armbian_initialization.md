@@ -1,7 +1,7 @@
 [ARMBIAN Linux下载地址](https://yadi.sk/d/pHxaRAs-tZiei)  
 ## &#10161;N1安装完`Armbian 5.71`后initialization初始化配置过程记录
 
-- armbian 5.71-20190122使用5.19.dtb负载正常，armbian 5.72保持负载2.0,暂不要使用
+- armbian 5.72保持负载2.0,暂不要使用,可使用armbian Next 5.0版本
 ### &#10174;`armbian`基于`deian`,操作方式一样
 - &#10174; 修改`/bin/sh -> /bin/bash`
 - &#10174; 修改时区:`timedatectl set-timezone Asia/Shanghai`
