@@ -2,7 +2,7 @@
 export PATH=/bin:/sbin:/usr/bin:/usr/sbin
 
 subnet="192.168.3."
-hosts=/tmp/online_host.txt ; echo "$(date +"%F %T") start scan ...... " > $hosts
+hosts=/tmp/online_host.txt ; echo -e "$(date +"%F %T") start scan ...... \n" > $hosts
 
 a=$1 ; b=$2
 
