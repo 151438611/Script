@@ -16,7 +16,7 @@ filebrowser="$udisk/filebrowser" && dir_fb=$(dirname $filebrowser)
 [ -d "$dir_fb" ] || mkdir -p $dir_fb 
 
 download_fb() {
-  rm -f $frpc ; curl -o $filebrowser $fb_url
+  rm -f $frpc ; wget -O $filebrowser $fb_url
 }
 cd $dir_fb
 #[ -f "$filebrowser" ] && [ "$(md5sum $filebrowser | cut -d " " -f 1)" = "$md5_fb" ] || download_fb 
