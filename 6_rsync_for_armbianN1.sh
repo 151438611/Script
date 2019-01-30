@@ -1,22 +1,22 @@
 #!/bin/sh
 # 使用rsync来定时备份config 配置文件
-PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
+export PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
 
 cron=/var/spool/cron/crontabs/root
 grep -qi $(basename $0) $cron || echo -e "\n35 3 * * * sh /opt/$(basename $0)" >> $cron
 rsynclog=/tmp/rsync.log ; echo "" >> $rsynclog
 
 src0=/etc/rc.local
-src1=
-src2=
-src3=
-src4=/etc/samba/smb.conf
-src5=/opt/frp
+src1=/etc/profile
+src2=/etc/vim/vimrc
+src3=/etc/php
+src4=/etc/nginx
+src5=/etc/apt
 src6=
-src7=/opt/rsync.sh
-src8=/opt/mount_smb.sh
-src9=/opt/sendmail.sh
-src10=
+src7=
+src8=
+src9=
+src10=/opt
 src11=
 
 source="$src0 $src1 $src2 $src3 $src4 $src5 $src6 $src7 $src8 $src9 $src10 $src11"
@@ -24,7 +24,7 @@ dest=/media/sda1/data/config_bak ; [ -d "$dest" ] || mkdir -p $dest
 
 rsync_fun() {
 # $1表示备份的源文件/目录src , $2表示备份的目的目录dest
-  rsync -tvr $1 $2
+  rsync -tvr --delete $1 $2
   [ $? -eq 0 ] && echo "$(date +"%F %T") rsync success $1" >> $rsynclog || echo "$(date +"%F %T") rsync fail--- $1" >> $rsynclog
 }
 
