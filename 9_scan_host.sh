@@ -19,6 +19,6 @@ fi
 
 for x in `seq $a $b`
 do
-  ping -w 1 $subnet$x 
-  [ $? -eq 0 ] && echo "$(arp -an | awk -F [\(\)] '$2=="'$subnet$x'" {print $0}')" >> $hosts
+  ping -w 1 $subnet$x && \
+  echo "$(arp -an | awk -F [\(\)] '$2=="'$subnet$x'" {print $0}')" >> $hosts
 done
