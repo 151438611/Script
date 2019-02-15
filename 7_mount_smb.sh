@@ -7,7 +7,7 @@ fun_mount() {
  [ -d "$4" ] || mkdir -p $4
  if [ -z "$(mount | grep "$3 on $4")" ] ; then
    mount -t cifs -o username=$1,password=$2,rw,file_mode=0777,dir_mode=0777 $3 $4 &> /dev/null || \
-   mount -t cifs -o username=$1,password=$2,vers=2.0,rw,file_mode=0777,dir_mode=0777 $3 $4
+   mount -t cifs -o username=$1,password=$2,rw,file_mode=0777,dir_mode=0777,vers=2.0 $3 $4
  fi
 }
 
