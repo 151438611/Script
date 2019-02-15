@@ -1,7 +1,7 @@
 #!/bin/sh
 export PATH=/bin:/sbin:/usr/bin:/usr/sbin
 
-subnet="192.168.3."
+subnet="192.168.1."
 hosts=/tmp/scan_host.log ; echo -e "$(date +"%F %T") start scan ...... \n" > $hosts
 
 a=$1 ; b=$2
