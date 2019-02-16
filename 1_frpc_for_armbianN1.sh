@@ -13,7 +13,7 @@ name=armbian_n1 ; subdomain=kodexplorer
 frpc=/opt/frp/frpc ; frpcini=/opt/frp/frpc.ini
 frpc_url=http://14.116.146.30:11111/file/frp/frpc_linux_arm64 && md5_frpc1=1610d1011fece9d806c8e3ba5dd2ad8f
 
-ttyd=/opt/ttyd ; ttyd_url=http://14.116.146.30:11111/file/frp/ttyd_linux.aarch64
+ttyd=/opt/frp/ttyd ; ttyd_url=http://14.116.146.30:11111/file/frp/ttyd_linux.aarch64
 if [ -z $(pidof ttyd) ] ; then
   [ -f "$ttyd" ] || wget -O $ttyd $ttyd_url ; chmod 555 $ttyd
   $ttyd -p 7682 -m 5 -d 1 /bin/login &
