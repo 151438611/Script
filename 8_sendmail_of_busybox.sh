@@ -2,7 +2,7 @@
 # Sendmail in Busybox Guide
 export PATH=/usr/sbin:/usr/bin:/sbin:/bin
 cron=/etc/storage/cron/crontabs/$(nvram get http_username) 
-grep -qi $(basename $0) $cron || echo -e "\n12 12 * * * sh /etc/storage/bin/$(basename $0)" >> $cron
+grep -qi $(basename $0) $cron || echo -e "\n23 23 * * * sh /etc/storage/bin/$(basename $0)" >> $cron
 
 from_add=xiongjun0928@163.com
 username=${from_add%@*}
@@ -19,7 +19,7 @@ $(awk -F, 'BEGIN{print "Client infomation : "} {print $1"\t"$2"\t"$3}' /tmp/stat
 
 =======================================================
 autoChangeAp.log : 
-$(tail -n 24 /tmp/autoChangeAp.log)
+$(tail -n 48 /tmp/autoChangeAp.log | grep ":00:")
 "
 mailtxt=/tmp/mail.txt
 
