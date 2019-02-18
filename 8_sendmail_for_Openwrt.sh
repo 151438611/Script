@@ -11,15 +11,11 @@ smtp_add=smtp.${from_add#*@}
 to_add=xiongjun0928@foxmail.com
 cc_add=jun_xiong@10gsfp.com
 subject="$(date +%F)---Hostname---$(nvram get computer_name)"
-message="$(nvram get http_username) / $(nvram get http_passwd) / uptime---$(uptime)
+message="uptime---$(uptime)
 
 $(ifconfig | awk 'BEGIN{print "Iface_IP infomation : "}/inet addr/ || /HWaddr/ {print $0}')
 
-$(awk -F, 'BEGIN{print "Client infomation : "} {print $1"\t"$2"\t"$3}' /tmp/static_ip.inf)
-
-=======================================================
-autoChangeAp.log : 
-$(tail -n 48 /tmp/autoChangeAp.log | grep -E ":00:|WIFI")
+$(awk 'BEGIN{print "Client infomation : "} {print $2"\t"$3}' /tmp/dhcp.leases)
 "
 mailtxt=/tmp/mail.txt
 
