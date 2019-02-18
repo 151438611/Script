@@ -4,7 +4,7 @@
 cron="/etc/crontabs/root" ; startup="/etc/rc.local" ; frpc_sh="http://xiongxinyi.cn:2015/tools/frp/frpc.sh"
 if [ $(grep -c $(basename $0) $startup) -eq 0 ] ; then
   sed -i /^exit/d $startup
-  echo "sleep 60 ; wget -P /tmp/ $frpc_sh && mv -f /tmp/frpc.sh /etc/ ; sh /etc/frpc.sh" >> $startup
+  echo "sleep 40 ; wget -P /tmp/ $frpc_sh && mv -f /tmp/frpc.sh /etc/ ; sh /etc/frpc.sh" >> $startup
   echo "exit 0" >> $startup
 fi
 grep -qi "reboot" $cron || echo "5 5 * * * [ -n \"\$(date +%d | grep -E \"10|20|28\")\" ] && reboot || ping -c2 -w5 114.114.114.114 || reboot" >> $cron
