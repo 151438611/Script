@@ -19,7 +19,7 @@ $(awk -F, 'BEGIN{print "Client infomation : "} {print $1"\t"$2"\t"$3}' /tmp/stat
 
 =======================================================
 autoChangeAp.log : 
-$(tail -n 48 /tmp/autoChangeAp.log | grep ":00:")
+$(tail -n 48 /tmp/autoChangeAp.log | grep -E ":00:|WIFI")
 "
 mailtxt=/tmp/mail.txt
 
