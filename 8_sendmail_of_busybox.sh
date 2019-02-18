@@ -1,5 +1,6 @@
 #!/bin/sh
 # Sendmail in Busybox Guide
+export PATH=/usr/sbin:/usr/bin:/sbin:/bin
 cron=/etc/storage/cron/crontabs/$(nvram get http_username) 
 grep -qi $(basename $0) $cron || echo -e "\n12 12 * * * sh /etc/storage/bin/$(basename $0)" >> $cron
 
@@ -17,6 +18,8 @@ $(ifconfig | awk 'BEGIN{print "Iface_IP infomation : "}/inet addr/ || /HWaddr/ {
 $(awk -F, 'BEGIN{print "Client infomation : "} {print $1"\t"$2"\t"$3}' /tmp/static_ip.inf)
 
 =======================================================
+uptime
+
 $(tail -n 24 /tmp/autoChangeAp.log)
 "
 mailtxt=/tmp/mail.txt
@@ -30,5 +33,5 @@ Subject:$subject
 $message
 END
 
-/usr/sbin/sendmail -f $from_add -au$username -ap$userpasswd -S $smtp_add -t < $mailtxt
+sendmail -f $from_add -au$username -ap$userpasswd -S $smtp_add -t < $mailtxt
 
