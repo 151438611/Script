@@ -1,7 +1,7 @@
 #!/bin/bash
 # add crontab,定时强制连接某个指定Wifi，适用于gx5 K2路由器场景
 cron=/etc/storage/cron/crontabs/$(nvram get http_username)
-grep -qi $(basename $0) $cron || echo "50 5 * * * sh /etc/storage/bin/$(basename $0)" >> $cron
+grep -qi $(basename $0) $cron || echo "55 5 * * * sh /etc/storage/bin/$(basename $0)" >> $cron
 aplog=/tmp/autoChangeAp.log ; [ -f "$aplog" ] || touch $aplog
 
 # ===1、设置路由器型号k2p和k2(youku-L1的2.4G接口名为ra0，和k2相同),因为k2和k2p的无线接口名称不一样==========
