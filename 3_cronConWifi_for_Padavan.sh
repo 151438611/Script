@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 # add crontab,定时强制连接某个指定Wifi，适用于gx5 K2路由器场景
 cron=/etc/storage/cron/crontabs/$(nvram get http_username)
 grep -qi $(basename $0) $cron || echo "55 5 * * * sh /etc/storage/bin/$(basename $0)" >> $cron
