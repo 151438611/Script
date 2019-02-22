@@ -3,7 +3,7 @@
 export PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
 
 cron=/var/spool/cron/crontabs/root
-grep -qi $(basename $0) $cron || echo -e "\n35 3 * * * sh /opt/$(basename $0)" >> $cron
+grep -qi $(basename $0) $cron || echo -e "\n40 1 * * * sh /opt/$(basename $0)" >> $cron
 rsynclog=/tmp/rsync.log ; echo "" >> $rsynclog
 
 src0=/etc/rc.local
