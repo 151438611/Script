@@ -2,7 +2,7 @@
 # 使用scp配合ssh公钥私钥，用来将armbian中的文件同步到jhk2p路由器中保存
 
 export PATH=/bin:/sbin:/usr/bin:/usr/sbin
-scplog=/tmp/scp.log ; echo "" >> $rsynclog
+scplog=/tmp/scp.log ; echo "" >> $scplog
 
 src0=/media/sda1/data/script
 src1=/media/sda1/data/document
