@@ -6,7 +6,7 @@ scplog=/tmp/scp.log ; echo "" >> $scplog
 
 src0=/media/sda1/data/script
 src1=/media/sda1/data/document
-src2=/media/sda1/data/config_bak
+src2=
 src3=
 src4=
 src5=
