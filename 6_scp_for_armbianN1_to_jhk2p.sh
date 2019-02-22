@@ -24,7 +24,7 @@ dest_port=17500
 
 scp_fun() {
 # $1表示备份的源文件/目录src , $2表示备份的目的目录dest
-  scp -r -o "StrictHostKeyChecking no" -P $dest_port $1 $2
+  scp -C -r -o "StrictHostKeyChecking no" -P $dest_port $1 $2
   [ $? -eq 0 ] && echo "$(date +"%F %T") scp success $1" >> $scplog || echo "$(date +"%F %T") scp fail--- $1" >> $scplog
 }
 
