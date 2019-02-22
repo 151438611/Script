@@ -1,7 +1,6 @@
 #!/bin/sh
 #
-#
-#
+
 export PATH=/bin:/sbin:/usr/bin:/usr/sbin
 
 src=/opt/frp/frpc
