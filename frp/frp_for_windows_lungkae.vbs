@@ -17,8 +17,8 @@ End Function
 
 CopyFileFun (dir_run & frp_run),(dir_bak & frp),(dir_run & frp_run)
 CopyFileFun (dir_run & frpini_run),(dir_bak & frpini),(dir_run & frpini_run)
-startup_dir = "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Startup\"
-CopyFileFun (startup_dir & "sys_startup.vbs"),(dir_bak & "frp_windows.vbs"),(startup_dir & "sys_startup.vbs")
+'startup_dir = "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Startup\" ---系统启动目录无权限操作，手动复制操作
+'CopyFileFun (startup_dir & "sys_startup.vbs"),(dir_bak & "frp_windows.vbs"),(startup_dir & "sys_startup.vbs") 
 Set fsObj = Nothing
 
   ' ------ 判断系统进程是否存在 -------------------------------
