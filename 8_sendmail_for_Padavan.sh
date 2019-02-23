@@ -1,6 +1,6 @@
 #!/bin/sh
 # Sendmail in Busybox Guide
-export PATH=/usr/sbin:/usr/bin:/sbin:/bin
+
 cron=/etc/storage/cron/crontabs/$(nvram get http_username) 
 grep -qi $(basename $0) $cron || echo -e "\n23 23 * * * sh /etc/storage/bin/$(basename $0)" >> $cron
 
