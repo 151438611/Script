@@ -1,7 +1,6 @@
 #!/bin/sh
 # 使用rsync来定时备份config 配置文件
 export PATH=/bin:/sbin:/usr/bin:/usr/sbin:$PATH
-
 cron=/var/spool/cron/crontabs/root
 grep -qi $(basename $0) $cron || echo -e "\n40 1 * * * sh /opt/$(basename $0)" >> $cron
 rsynclog=/tmp/rsync.log ; echo "" >> $rsynclog
