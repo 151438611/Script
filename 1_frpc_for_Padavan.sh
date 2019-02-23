@@ -24,16 +24,16 @@ host_name=$(nvram get computer_name)
 lanip=$(nvram get lan_ipaddr) && i=$(echo $lanip | cut -d . -f 3)
 udisk=$(mount | awk '$1~"/dev/" && $3~"/media/"{print $3}' | head -n1) ; udisk=${udisk:=/tmp}
 
-# -----1、填写服务端的IP/域名、认证密码即可---------------------------
+# ----- 1、填写服务端的IP/域名、认证密码即可-----------------------------------
 server_addr=frp.xiongxinyi.cn ; token=administrator  ; subdomain=$host_name$i
 
-# -----2、是否开启ttyd(web_ssh)、Telnet(或远程桌面)、简单的http_file文件服务; 0表示不开启，1表示开启 ------------
+# ----- 2、是否开启ttyd(web_ssh)、Telnet(或远程桌面)、简单的http_file文件服务; 0表示不开启，1表示开启 -----
 ttyd_enable=0
 if [ $ttyd_enable -eq 1 ] ; then ttyd_port=7682 ; fi 
 http_file_enable=0
 if [ $http_file_enable -eq 1 ] ; then http_file_path=$udisk ; http_file_port=$(date +1%M%S) ; fi
 
-# -----3、ttyd、frpc的下载地址、frpcini设置临时配置(默认/tmp/)还是永久保存配置(/etc/storage/)----------------
+# ----- 3、ttyd、frpc的下载地址、frpcini设置临时配置(默认/tmp/)还是永久保存配置(/etc/storage/) ------
 ttyd_url=http://14.116.146.30:11111/file/frp/ttyd_linux_mipsle  && md5_ttyd=d1484e8e97adf6c2ca9cc1067c9cded6
 frpc_url1=http://14.116.146.30:11111/file/frp/frpc_linux_mipsle && md5_frpc1=2bced9b3084f251b3fd2ca42cc472f6c
 frpc_url2=http://14.116.146.30:12222/file/frp/frpc_linux_mipsle && md5_frpc2=2bced9b3084f251b3fd2ca42cc472f6c
