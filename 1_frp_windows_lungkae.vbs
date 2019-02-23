@@ -21,7 +21,7 @@ CopyFileFun (dir_run & frpini_run),(dir_bak & frpini),(dir_run & frpini_run)
 
 Set fsObj = Nothing
 
-  ' ------ 判断系统进程是否存在 -------------------------------
+' ------ 判断系统进程是否存在 -------------------------------
 Dim proc,procfrp,frpProcess
 Set proc = GetObject("winmgmts:\\.\root\cimv2")
 ' ------ 注意此处查询进程是否存在时需要手动输入进程名，使用变量运行失败-----待解决
