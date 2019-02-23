@@ -1,7 +1,7 @@
 ' support windows ; for my_commputer , not other's device
 On Error Resume Next
 
-Dim frp,frpini,proc,procfrp,frpProcess
+Dim frp,frpini
 frp = "C:\Download\PerfLogs\frpc.exe"
 frpini = "C:\Download\PerfLogs\frpc.ini"
 
