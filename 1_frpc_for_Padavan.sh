@@ -5,9 +5,14 @@ export PATH=/usr/sbin:/usr/bin:/sbin:/bin
 bin_dir="/etc/storage/bin" ; [ -d "$bin_dir" ] || mkdir -p $bin_dir
 user=$(nvram get http_username) ; frpc_sh="http://14.116.146.30:11111/file/frp/frpc_padavan.sh"
 cron="/etc/storage/cron/crontabs/$user" ; startup="/etc/storage/started_script.sh" ; 
-grep -qi "reboot" $cron || echo -e "\n5 5 * * * [ -n \"\$(date +%d | grep 5)\" ] && reboot || ping -c2 -w5 114.114.114.114 || reboot" >> $cron
-grep -qi $(basename $0) $startup || echo -e "\nsleep 50 ; wget -P /tmp/ $frpc_sh && mv -f /tmp/frpc_padavan.sh $bin_dir/$(basename $0) ; sh $bin_dir/$(basename $0)" >> $startup
-grep -qi $(basename $0) $cron || echo -e "\n6 * * * * [ \$(date +%k) -eq 6 ] && killall -q frpc ; sleep 8 && sh $bin_dir/$(basename $0)" >> $cron
+
+cron_reboot="5 5 * * * [ -n \"\$(date +%d | grep 5)\" ] && reboot || ping -c2 -w5 114.114.114.114 || reboot"
+startup_frpc="sleep 60 ; wget -P /tmp/ $frpc_sh && mv -f /tmp/frpc_padavan.sh $bin_dir/$(basename $0) ; sh $bin_dir/$(basename $0)"
+cron_frpc="6 * * * * [ \$(date +%k) -eq 6 ] && killall -q frpc ; sleep 8 && sh $bin_dir/$(basename $0)"
+
+grep -qi "reboot" $cron || echo -e "\n$cron_reboot" >> $cron
+grep -qi $(basename $0) $startup || echo -e "\n$startup_frpc" >> $startup
+grep -qi $(basename $0) $cron || echo -e "\n$cron_frpc" >> $cron
 
 # 开启从wan口访问路由器和ssh服务(默认关闭)，即从上级路由直接访问下级路由或ssh服务
 #[ $(nvram get misc_http_x) -eq 0 ] && nvram set misc_http_x=1 && nvram set misc_httpport_x=80 && nvram commit
