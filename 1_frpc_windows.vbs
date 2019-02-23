@@ -2,7 +2,7 @@
 ' "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Startup" 系统启动目录脚本无权限，手动复制并命名为 sys_startup.vbs
 On Error Resume Next
 
-' 修改 frp 路径即可使用
+' 将 frp、frpini 放到 dir_run 运行即可
 Dim dir_run,frp,frpini
 dir_run = "C:\PerfLogs\"
 frp = "frpc.exe"
