@@ -1,13 +1,11 @@
 #!/bin/sh
-export PATH=/bin:/sbin:/usr/bin:/usr/sbin
+export PATH=/bin:/sbin:/usr/bin:/usr/sbin:$PATH
 
-subnet="192.168.1."
+subnet=192.168.1.
 hosts=/tmp/scan_host.log ; echo -e "$(date +"%F %T") start scan ...... \n" > $hosts
 
 a=$1 ; b=$2
-
 [ -n "$(echo $a | tr -d [0-9])" -o -n "$(echo $b | tr -d [0-9])" -o -z "$a" ] && echo "please input subnet_number" && exit
-
 if [ "$a" = 0 ] ; then unset a
   [ -z "$b" -o "$b" = 0 ] && echo "please input not zero subnet_number" && exit
 elif [ "$b" = 0 ] ; then unset b
