@@ -30,12 +30,12 @@ http_file_enable=0 ; if [ $http_file_enable -eq 1 ] ; then http_file_path=$udisk
 ttyd_url="http://14.116.146.30:11111/file/frp/ttyd_linux_mipsle"  && md5_ttyd=d1484e8e97adf6c2ca9cc1067c9cded6
 frpc_url1="http://14.116.146.30:11111/file/frp/frpc_linux_mipsle" && md5_frpc1=2bced9b3084f251b3fd2ca42cc472f6c
 frpc_url2="http://14.116.146.30:12222/file/frp/frpc_linux_mipsle" && md5_frpc2=2bced9b3084f251b3fd2ca42cc472f6c
-frpc_url3="http://opt.cn2qq.com/opt-file/frpc"              && md5_frpc3=964c16fbe3edaa12674cee9b1c41f0f0
+frpc_url3="http://opt.cn2qq.com/opt-file/frpc" && md5_frpc3=964c16fbe3edaa12674cee9b1c41f0f0
 md5_frpc="$md5_frpc1 $md5_frpc2 $md5_frpc3 df4538b0ccd828457af33b2e599ea87a"
-frpc="$udisk/frpc" ; frpcini=/tmp/frpc.ini
+frpc="$udisk/frpc"
 frpcini="$bin_dir/frpc.ini" 
 
-# -------------------------- ttyd ---------------------------------------------------
+# -------------------------- ttyd ----------------------------------------
 download_ttyd() {
   killall -q ttyd ; rm -f $ttyd ; wget -O $ttyd $ttyd_url ; chmod 555 $ttyd
 }
@@ -45,7 +45,7 @@ if [ $ttyd_enable -eq 1 ] ; then
       $ttyd -p $ttyd_local_port -r 10 -m 3 -d 1 /bin/login &
   fi
 fi
-# -------------------------- frpc ---------------------------------------------------
+# -------------------------- frpc -----------------------------------------
 download_frpc() {
   rm -f $frpc ; wget -O $frpc $frpc_url1 &
   sleep 60 ; killall -q frpc wget
@@ -59,7 +59,7 @@ download_frpc() {
 }
 [ -f "$frpc" ] && frpc_md5sum=$(md5sum $frpc | cut -d " " -f 1) && \
 [ -n "$(echo "$md5_frpc" | grep ${frpc_md5sum:-null})" ] || download_frpc ; chmod 555 $frpc
-# ------------------------- frpc.ini ------------------------------------------------
+# ------------------------- frpc.ini -----------------------------------
 if [ ! -f "$frpcini" ] ; then
 cat << END > $frpcini
 [common]
@@ -71,7 +71,7 @@ user = $name
 pool_count = 8
 tcp_mux = true
 login_fail_exit = true
-# ----- SSH_port:22 / Telnet_port:23 / RemoteDesktop_port:3389 -----
+# ----- SSH:22 Telnet:23 RemoteDesktop:3389 VNC:5900 -----
 [ssh]
 type = tcp
 local_ip = 127.0.0.1
@@ -79,7 +79,7 @@ local_port = 22
 remote_port = 0
 use_encryption = false
 use_compression = true
-# ---------------- http Tunnel config ---------------- 
+# ---------------- http Tunnel config -------------------- 
 [$subdomain]
 type = tcp
 local_ip = $lanip
@@ -87,8 +87,8 @@ local_port = 80
 remote_port = 0
 use_encryption = false
 use_compression = true
-
 END
+
   if [ $ttyd_enable -eq 1 ] ; then 
 echo -e "[ttyd] \ntype = tcp \nlocal_ip = 127.0.0.1 " >> $frpcini
 echo -e "local_port = $ttyd_local_port \nremote_port = 0 " >> $frpcini
@@ -101,7 +101,7 @@ echo -e "plugin_local_path = $http_file_path \nplugin_strip_prefix = file " >> $
 echo -e "plugin_http_user = \nplugin_http_passwd = \n" >> $frpcini
   fi
 fi
-# ------------------------- start frpc ----------------------------------------------
+# ------------------------- start frpc ---------------------------------
 ping -c2 -w5 114.114.114.114 && \
 if [ -z "$(pidof frpc)" ] ; then
      logger -t frpc "frpc is not running ; starting frpc......"
