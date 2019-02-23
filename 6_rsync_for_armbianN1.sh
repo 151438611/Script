@@ -1,6 +1,6 @@
 #!/bin/sh
 # 使用rsync来定时备份config 配置文件
-export PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
+export PATH=/bin:/sbin:/usr/bin:/usr/sbin:$PATH
 
 cron=/var/spool/cron/crontabs/root
 grep -qi $(basename $0) $cron || echo -e "\n40 1 * * * sh /opt/$(basename $0)" >> $cron
@@ -17,10 +17,8 @@ src7=
 src8=
 src9=
 src10=/opt
-src11=
-
-source="$src0 $src1 $src2 $src3 $src4 $src5 $src6 $src7 $src8 $src9 $src10 $src11"
-dest=/media/sda1/data/config_bak ; [ -d "$dest" ] || mkdir -p $dest
+source="$src0 $src1 $src2 $src3 $src4 $src5 $src6 $src7 $src8 $src9 $src10"
+dest=/media/sda1/data/config_bak && [ -d "$dest" ] || mkdir -p $dest
 
 rsync_fun() {
 # $1表示备份的源文件/目录src , $2表示备份的目的目录dest
@@ -33,7 +31,7 @@ for src in $source
  do
    rsync_fun $src $dest
  done
-   rsync_fun $cron $dest/crontab.txt
+rsync_fun $cron $dest/crontab.txt
 
 if [ -n "$(date +%u | grep 5)" ] ; then
   cd $dest && tar -zcvf ../script/conf_backup_armbian_n1.tgz *
