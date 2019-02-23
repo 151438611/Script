@@ -1,5 +1,5 @@
 #!/bin/sh
-# Sendmail in Busybox Guide
+# Sendmail in Busybox Guide------------此脚本还未完美，暂无法使用
 export PATH=/usr/sbin:/usr/bin:/sbin:/bin
 cron=/etc/crontabs/root
 grep -qi $(basename $0) $cron || echo -e "\n23 23 * * * sh /etc/storage/bin/$(basename $0)" >> $cron
