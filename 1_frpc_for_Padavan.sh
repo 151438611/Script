@@ -29,7 +29,7 @@ server_addr="frp.xiongxinyi.cn" ; token="administrator"  ; subdomain="${host_nam
 
 # -----2、是否开启ttyd(web_ssh)、Telnet(或远程桌面)、简单的http_file文件服务; 0表示不开启，1表示开启 ------------
 ttyd_enable=0
-if [ $ttyd_enable -eq 1 ] ; then ttyd_local_port=7682 ; fi 
+if [ $ttyd_enable -eq 1 ] ; then ttyd_port=7682 ; fi 
 http_file_enable=0
 if [ $http_file_enable -eq 1 ] ; then http_file_path=$udisk ; http_file_port=$(date +1%M%S) ; fi
 
@@ -50,7 +50,7 @@ download_ttyd() {
 if [ $ttyd_enable -eq 1 ] ; then 
   ttyd=$(which ttyd) ; [ -f "${ttyd:=$bin_dir/ttyd}" ] || download_ttyd
   if [ -z "$(pidof ttyd)" ] ; then
-      $ttyd -p $ttyd_local_port -r 10 -m 3 -d 1 /bin/login &
+      $ttyd -p $ttyd_port -r 10 -m 3 -d 1 /bin/login &
   fi
 fi
 # -------------------------- frpc -----------------------------------------
