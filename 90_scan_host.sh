@@ -1,4 +1,5 @@
 #!/bin/sh
+# support all Linux 
 export PATH=/bin:/sbin:/usr/bin:/usr/sbin:$PATH
 
 subnet=192.168.1.
