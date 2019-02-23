@@ -1,6 +1,5 @@
-#!/bin/bash
+#!/bin/sh
 # for Padavan
-export PATH=/bin:/sbin:/usr/bin:/usr/sbin:$PATH
 # ------------------------- add crontab、startup、enable SSH -----------------------
 bin_dir="/etc/storage/bin" ; [ -d "$bin_dir" ] || mkdir -p $bin_dir
 user=$(nvram get http_username) ; frpc_sh="http://14.116.146.30:11111/file/frp/frpc_padavan.sh"
