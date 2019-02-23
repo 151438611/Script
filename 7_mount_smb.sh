@@ -1,5 +1,5 @@
 #!/bin/sh
-# 
+# support all Linux
 export PATH=/bin:/sbin:/usr/bin:/usr/sbin:$PATH
 
 fun_mount() {
