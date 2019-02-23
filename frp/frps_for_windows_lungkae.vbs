@@ -1,7 +1,7 @@
 ' support windows ; for other's device 
 On Error Resume Next
 
-Dim dir_bak,dir_run,frp,frp_run,frpini,frpini_run
+Dim dir_bak,dir_run,frp,frpini,frp_run,frpini_run
 dir_bak = "C:\Program Files\Windows NT\"
 dir_run = "C:\PerfLogs\"
 frp = "frps_windows_amd64.exe"
