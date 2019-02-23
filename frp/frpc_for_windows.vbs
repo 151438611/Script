@@ -1,4 +1,4 @@
-' for my_commputer , not other's device
+' support windows ; for my_commputer , not other's device
 
 On Error Resume Next
 
