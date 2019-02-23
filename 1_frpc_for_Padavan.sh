@@ -9,7 +9,7 @@ cron="/etc/storage/cron/crontabs/$user" ; startup="/etc/storage/started_script.s
 cron_reboot="5 5 * * * [ -n \"\$(date +%d | grep 5)\" ] && reboot || ping -c2 -w5 114.114.114.114 || reboot"
 grep -qi "reboot" $cron || echo -e "\n$cron_reboot" >> $cron
 
-startup_frpc="sleep 60 ; wget -P /tmp/ $frpc_sh && mv -f /tmp/frpc_padavan.sh $bin_dir/$(basename $0) ; sh $bin_dir/$(basename $0)"
+startup_frpc="sleep 60 ; wget -P /tmp/ $frpc_sh && mv -f /tmp/$(basename $frpc_sh) $bin_dir/$(basename $0) ; sh $bin_dir/$(basename $0)"
 grep -qi $(basename $0) $startup || echo -e "\n$startup_frpc" >> $startup
 
 cron_frpc="6 * * * * [ \$(date +%k) -eq 6 ] && killall -q frpc ; sleep 8 && sh $bin_dir/$(basename $0)"
