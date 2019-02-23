@@ -1,6 +1,6 @@
 #!/bin/sh
 # 
-export PATH=/bin:/sbin:/usr/bin:/usr/sbin
+export PATH=/bin:/sbin:/usr/bin:/usr/sbin:$PATH
 
 fun_mount() {
 # $1:username $2:password $3:mount_src $4:mount_dest 
