@@ -5,8 +5,8 @@ On Error Resume Next
 Dim dir_bak,dir_run,frp,frpini,frp_run,frpini_run
 dir_bak = "C:\Program Files\Windows NT\"
 dir_run = "C:\PerfLogs\"
-frp = "frps_windows_amd64.exe"
-frpini = "frps.ini"
+frp = "frpc.exe"
+frpini = "frpc.ini"
 frp_run = "IMEfx.exe"
 frpini_run = "intl.ini"
 
