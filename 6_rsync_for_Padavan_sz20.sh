@@ -27,7 +27,7 @@ fun_rsync() {
   [ $? -eq 0 ] && echo "$(date +"%F %T") rsync success $1" >> $rsynclog || echo "$(date +"%F %T") rsync fail--- $1" >> $rsynclog
 }
 
-dest="$m_dest/udisk_backup" ; [ -d "$dest" ] || mkdir -p $dest
+dest=$m_dest/udisk_backup ; [ -d "$dest" ] || mkdir -p $dest
 # === start rsync file =========
 for src in $source
 do
