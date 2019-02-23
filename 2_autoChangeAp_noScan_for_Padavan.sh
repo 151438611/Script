@@ -1,9 +1,10 @@
 #!/bin/bash
 # Author Xj date:20180728 ; For padavan firmware by huangyewudeng ; 
 # 支持2.4G和5G多个不同频段Wifi中继自动切换功能,静态指定WAN地址，中继更快速.
-cron=/etc/storage/cron/crontabs/$(nvram get http_username) ; startup=/etc/storage/bin/started_script.sh
+cron=/etc/storage/cron/crontabs/$(nvram get http_username)
+startup=/etc/storage/bin/started_script.sh
 grep -qi $(basename $0) $cron || echo "*/30 * * * * sh /etc/storage/bin/$(basename $0)" >> $cron
-aplog=/tmp/autoChangeAp.log && [ -f "$aplog" ] || touch $aplog
+aplog=/tmp/autoChangeAp.log ; [ -f "$aplog" ] || touch $aplog
 
 # ===1、输入被中继的wifi帐号密码,格式{ 无线频段(2|5)+ssid+password+wan_ip(可不填) },多个用空格或回车隔开,默认加密方式为WPA2PSK/AES===
 aplist="2+AVP-LINK+12345678+10
