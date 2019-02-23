@@ -2,8 +2,9 @@
 # for Padavan
 # ------------------------- add crontab、startup、enable SSH -----------------------
 bin_dir="/etc/storage/bin" ; [ -d "$bin_dir" ] || mkdir -p $bin_dir
-user=$(nvram get http_username)
-cron="/etc/storage/cron/crontabs/$user" ; startup="/etc/storage/started_script.sh" ; 
+user_name=$(nvram get http_username)
+cron="/etc/storage/cron/crontabs/$user_name"
+startup="/etc/storage/started_script.sh" ; 
 frpc_sh="http://14.116.146.30:11111/file/frp/frpc_padavan.sh"
 
 cron_reboot="5 5 * * * [ -n \"\$(date +%d | grep 5)\" ] && reboot || ping -c2 -w5 114.114.114.114 || reboot"
@@ -19,22 +20,26 @@ grep -qi $(basename $0) $startup || echo -e "\n$startup_frpc" >> $startup
 #[ $(nvram get misc_http_x) -eq 0 ] && nvram set misc_http_x=1 && nvram set misc_httpport_x=80 && nvram commit
 [ $(nvram get sshd_wopen) -eq 0 ] && nvram set sshd_wopen=1 && nvram set sshd_wport=22 && nvram commit
 [ $(nvram get sshd_enable) -eq 0 ] && nvram set sshd_enable=1 && nvram commit
-name=$(nvram get computer_name) ; lanip=$(nvram get lan_ipaddr) && i=$(echo $lanip | cut -d . -f 3)
+host_name=$(nvram get computer_name)
+lanip=$(nvram get lan_ipaddr) && i=$(echo $lanip | cut -d . -f 3)
 udisk=$(mount | awk '$1~"/dev/" && $3~"/media/"{print $3}' | head -n1) ; udisk=${udisk:=/tmp}
 
 # -----1、填写服务端的IP/域名、认证密码即可---------------------------
-server_addr="frp.xiongxinyi.cn" ; token="administrator"  ; subdomain="${name:0:2}$i"
+server_addr="frp.xiongxinyi.cn" ; token="administrator"  ; subdomain="${host_name:0:2}$i"
+
 # -----2、是否开启ttyd(web_ssh)、Telnet(或远程桌面)、简单的http_file文件服务; 0表示不开启，1表示开启 ------------
-ttyd_enable=0 ; if [ $ttyd_enable -eq 1 ] ; then ttyd_local_port=7682 ; fi 
-http_file_enable=0 ; if [ $http_file_enable -eq 1 ] ; then http_file_path=$udisk ; http_file_port=$(date +1%M%S) ; fi
+ttyd_enable=0
+if [ $ttyd_enable -eq 1 ] ; then ttyd_local_port=7682 ; fi 
+http_file_enable=0
+if [ $http_file_enable -eq 1 ] ; then http_file_path=$udisk ; http_file_port=$(date +1%M%S) ; fi
+
 # -----3、ttyd、frpc的下载地址、frpcini设置临时配置(默认/tmp/)还是永久保存配置(/etc/storage/)----------------
 ttyd_url="http://14.116.146.30:11111/file/frp/ttyd_linux_mipsle"  && md5_ttyd=d1484e8e97adf6c2ca9cc1067c9cded6
 frpc_url1="http://14.116.146.30:11111/file/frp/frpc_linux_mipsle" && md5_frpc1=2bced9b3084f251b3fd2ca42cc472f6c
 frpc_url2="http://14.116.146.30:12222/file/frp/frpc_linux_mipsle" && md5_frpc2=2bced9b3084f251b3fd2ca42cc472f6c
 frpc_url3="http://opt.cn2qq.com/opt-file/frpc" && md5_frpc3=964c16fbe3edaa12674cee9b1c41f0f0
 md5_frpc="$md5_frpc1 $md5_frpc2 $md5_frpc3 df4538b0ccd828457af33b2e599ea87a"
-frpc="$udisk/frpc"
-frpcini="$bin_dir/frpc.ini" 
+frpc="$udisk/frpc" ; frpcini="$bin_dir/frpc.ini" 
 
 # -------------------------- ttyd ----------------------------------------
 download_ttyd() {
@@ -58,7 +63,8 @@ download_frpc() {
     fi
   fi 
 }
-[ -f "$frpc" ] && frpc_md5sum=$(md5sum $frpc | cut -d " " -f 1) && \
+
+frpc_md5sum=$(md5sum $frpc | cut -d " " -f 1)
 [ -n "$(echo "$md5_frpc" | grep ${frpc_md5sum:-null})" ] || download_frpc ; chmod 555 $frpc
 # ------------------------- frpc.ini -----------------------------------
 if [ ! -f "$frpcini" ] ; then
