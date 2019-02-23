@@ -8,13 +8,13 @@ startup=/etc/storage/started_script.sh
 frpc_sh=http://14.116.146.30:11111/file/frp/frpc_padavan.sh
 
 cron_reboot="5 5 * * * [ -n \"\$(date +%d | grep 5)\" ] && reboot || ping -c2 -w5 114.114.114.114 || reboot"
-grep -qi "reboot" $cron || echo -e "\n$cron_reboot" >> $cron
+grep -qi "reboot" $cron || echo "$cron_reboot" >> $cron
 
 cron_frpc="20 * * * * [ \$(date +%k) -eq 5 ] && killall -q frpc ; sleep 8 && sh $bin_dir/$(basename $0)"
-grep -qi $(basename $0) $cron || echo -e "\n$cron_frpc" >> $cron
+grep -qi $(basename $0) $cron || echo "$cron_frpc" >> $cron
 
 startup_frpc="sleep 30 ; wget -P /tmp/ $frpc_sh && mv -f /tmp/$(basename $frpc_sh) $bin_dir/$(basename $0) ; sh $bin_dir/$(basename $0)"
-grep -qi $(basename $0) $startup || echo -e "\n$startup_frpc" >> $startup
+grep -qi $(basename $0) $startup || echo "$startup_frpc" >> $startup
 
 # 开启从wan口访问路由器和ssh服务(默认关闭)，即从上级路由直接访问下级路由或ssh服务
 #[ $(nvram get misc_http_x) -eq 0 ] && nvram set misc_http_x=1 && nvram set misc_httpport_x=80 && nvram commit
@@ -89,7 +89,7 @@ local_port = 22
 remote_port = 0
 use_encryption = false
 use_compression = true
-# ---------------- http Tunnel config -------------------- 
+
 [$subdomain]
 type = tcp
 local_ip = $lanip
@@ -100,17 +100,30 @@ use_compression = true
 END
 
   if [ $ttyd_enable -eq 1 ] ; then 
-echo -e "[ttyd] \ntype = tcp \nlocal_ip = 127.0.0.1 " >> $frpcini
-echo -e "local_port = $ttyd_local_port \nremote_port = 0 " >> $frpcini
-echo -e "use_encryption = false \nuse_compression = true \n" >> $frpcini
+    cat << END >> $frpcini
+[ttyd]
+type = tcp
+local_ip = 127.0.0.1
+local_port = $ttyd_port
+remote_port = 0
+use_encryption = false
+use_compression = true
+END
   fi 
   if [ $http_file_enable -eq 1 ] ; then
-echo -e "# ----- http_file Tunnel config --- use:http://x.x.x.x:file_port/file/ ----- " >> $frpcini
-echo -e "[http_file] \ntype = tcp \nremote_port = $http_file_port \nplugin = static_file " >> $frpcini
-echo -e "plugin_local_path = $http_file_path \nplugin_strip_prefix = file " >> $frpcini
-echo -e "plugin_http_user = \nplugin_http_passwd = \n" >> $frpcini
+    cat << END >> $frpcini
+[http_file]
+type = tcp
+remote_port = $http_file_port
+plugin = static_file
+plugin_local_path = $http_file_path
+plugin_strip_prefix = file
+plugin_http_user =
+plugin_http_passwd =
+END
   fi
 fi
+
 # ------------------------- start frpc ---------------------
 ping -c2 -w5 114.114.114.114 && \
 if [ -z "$(pidof frpc)" ] ; then
