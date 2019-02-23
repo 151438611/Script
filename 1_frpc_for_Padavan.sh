@@ -48,7 +48,7 @@ download_ttyd() {
   chmod 755 $ttyd
 }
 if [ $ttyd_enable -eq 1 ] ; then 
-  ttyd=$(which ttyd) ; [ ! -x "${ttyd:=$bin_dir/ttyd}" ] && download_ttyd
+  ttyd=$(which ttyd) ; [ -f "${ttyd:=$bin_dir/ttyd}" ] || download_ttyd
   if [ -z "$(pidof ttyd)" ] ; then
       $ttyd -p $ttyd_local_port -r 10 -m 3 -d 1 /bin/login &
   fi
