@@ -4,7 +4,7 @@
 export PATH=/bin:/sbin:/usr/bin:/usr/sbin:$PATH
 
 cron=/var/spool/cron/crontabs/root
-grep -qi reboot $cron || echo -e "\n5 5 * * * [ \$(date +\\%u) -eq 6 ] && /sbin/reboot" >> $cron
+grep -qi reboot $cron || echo -e "\n5 5 * * * [ \$(date +\\%u) -eq 1 ] && /sbin/reboot" >> $cron
 
 cron_frpc="15 * * * * [ \$(date +\\%k) -eq 5 ] && killall -q frpc ; sleep 8 && sh /opt/frp/$(basename $0)"
 grep -qi $(basename $0) $cron || echo -e "\n$cron_frpc" >> $cron
