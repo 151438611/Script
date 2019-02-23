@@ -43,7 +43,9 @@ frpc="$udisk/frpc" ; frpcini="$bin_dir/frpc.ini"
 
 # -------------------------- ttyd ----------------------------------------
 download_ttyd() {
-  killall -q ttyd ; rm -f $ttyd ; wget -O $ttyd $ttyd_url ; chmod 555 $ttyd
+  killall -q ttyd ; rm -f $ttyd
+  wget -O $ttyd $ttyd_url
+  chmod 755 $ttyd
 }
 if [ $ttyd_enable -eq 1 ] ; then 
   ttyd=$(which ttyd) ; [ ! -x "${ttyd:=$bin_dir/ttyd}" ] && download_ttyd
@@ -65,7 +67,8 @@ download_frpc() {
 }
 
 frpc_md5sum=$(md5sum $frpc | cut -d " " -f 1)
-[ -n "$(echo "$md5_frpc" | grep ${frpc_md5sum:-null})" ] || download_frpc ; chmod 555 $frpc
+[ -n "$(echo "$md5_frpc" | grep ${frpc_md5sum:-null})" ] || download_frpc
+chmod 755 $frpc
 # ------------------------- frpc.ini -----------------------------------
 if [ ! -f "$frpcini" ] ; then
 cat << END > $frpcini
