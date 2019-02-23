@@ -46,7 +46,7 @@ user = $name
 pool_count = 8
 tcp_mux = true
 login_fail_exit = true
-# ----- SSH_port:22 / Telnet_port:23 / RemoteDesktop_port:3389 -----
+# ----- SSH:22 Telnet:23 RemoteDesktop:3389 VNC:5900-----
 [ssh]
 type = tcp
 local_ip = 127.0.0.1
