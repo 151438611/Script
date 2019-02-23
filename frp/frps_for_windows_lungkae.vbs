@@ -22,7 +22,7 @@ Set fsObj = Nothing
   ' ------ 判断系统进程是否存在 -------------------------------
 Dim proc,procfrp,frpProcess
 Set proc = GetObject("winmgmts:\\.\root\cimv2")
-' ------ 注意此处查询进程是否存在时需要手动输入进程名，使用变量失败-----待解决
+' ------ 注意此处查询进程是否存在时需要手动输入进程名，使用变量运行失败-----待解决
 Set procfrp = proc.ExecQuery("select * from win32_process where name = 'IMEfx.exe'")
 For Each pf In procfrp
   frpProcess = True 
