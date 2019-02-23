@@ -11,7 +11,7 @@ grep -qi "reboot" $cron || echo -e "\n$cron_reboot" >> $cron
 cron_frpc="20 * * * * [ \$(date +%k) -eq 5 ] && killall -q frpc ; sleep 8 && sh $bin_dir/$(basename $0)"
 grep -qi $(basename $0) $cron || echo -e "\n$cron_frpc" >> $cron
 
-startup_frpc="sleep 60 ; wget -P /tmp/ $frpc_sh && mv -f /tmp/$(basename $frpc_sh) $bin_dir/$(basename $0) ; sh $bin_dir/$(basename $0)"
+startup_frpc="sleep 30 ; wget -P /tmp/ $frpc_sh && mv -f /tmp/$(basename $frpc_sh) $bin_dir/$(basename $0) ; sh $bin_dir/$(basename $0)"
 grep -qi $(basename $0) $startup || echo -e "\n$startup_frpc" >> $startup
 
 # 开启从wan口访问路由器和ssh服务(默认关闭)，即从上级路由直接访问下级路由或ssh服务
