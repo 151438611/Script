@@ -2,19 +2,19 @@
 # support for OpenWrt
 # 默认frpc连接frps失败10次后,客户端frpc会自动关闭退出;此脚本用于定时检查frpc. 版本: frp_0.22.0
 
-cron=/etc/crontabs/root ; startup=/etc/rc.local
+cron=/etc/crontabs/root ; startup=/etc/rc.local ; frpc_name=$(basename $0)
 frpc_sh=http://14.116.146.30:11111/file/frp/frpc_openwrt.sh
-if [ $(grep -c $(basename $0) $startup) -eq 0 ] ; then
+if [ $(grep -c $frpc_name $startup) -eq 0 ] ; then
   sed -i /^exit/d $startup
-  echo "sleep 40 ; wget -P /tmp/ $frpc_sh && mv -f /tmp/$(basename $frpc_sh) /etc/$(basename $0) ; sh /etc/$(basename $0)" >> $startup
+  echo "sleep 40 ; wget -P /tmp/ $frpc_sh && mv -f /tmp/$(basename $frpc_sh) /etc/$frpc_name ; sh /etc/$frpc_name" >> $startup
   echo "exit 0" >> $startup
 fi
 
 cron_reboot="5 5 * * * [ -n \"\$(date +%d | grep 5)" ] && /sbin/reboot || ping -c2 -w5 114.114.114.114 || /sbin/reboot"
 grep -qi reboot $cron || echo "$cron_reboot" >> $cron
 
-cron_frpc="15 * * * * [ \$(date +%k) -eq 5 ] && killall -q frpc ; sh /etc/$(basename $0)"
-grep -qi $(basename $0) $cron || echo "$cron_frpc" >> $cron
+cron_frpc="15 * * * * [ \$(date +%k) -eq 5 ] && killall -q frpc ; sh /etc/$frpc_name"
+grep -qi $frpc_name $cron || echo "$cron_frpc" >> $cron
 
 host_name=$(uci get system.@system[0].hostname)
 lanip=$(uci get network.lan.ipaddr) && i=$(echo $lanip | cut -d . -f 3)
@@ -46,7 +46,7 @@ server_port = 7000
 protocol = tcp
 token = $token
 user = $name
-pool_count = 8
+pool_count = 10
 tcp_mux = true
 login_fail_exit = true
 
