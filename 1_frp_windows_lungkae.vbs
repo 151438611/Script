@@ -1,5 +1,8 @@
-' support windows ; for other's device 
-' "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Startup" 系统启动目录脚本无权限，手动复制并命名为 sys_startup.vbs
+' support windows ; for outsider's device 
+' 1、准备3个文件( frp.exe、frp.ini、frp.vbs )复制到 dir_bak 目录，并修改相应变量名和路径
+' 2、测试 frp.vbs 是否可正常运行
+' 3、复制 frp.vbs 到系统开机启动目录并重命名为 systemstartup.vbs (并建议删除所有注释)
+'    开机启动目录 C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Startup
 On Error Resume Next
 
 Dim dir_bak,dir_run,frp,frpini,frp_run,frpini_run
