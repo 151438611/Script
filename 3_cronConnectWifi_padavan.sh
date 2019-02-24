@@ -12,7 +12,7 @@ elif [ -n "$(echo $host_name | grep -Ei "k2|youku")" ] ; then router=k2
 else echo "!!! The router is Unsupported device , exit !!!" >> $aplog && exit
 fi
 # ===2、输入指定被中继的wifi帐号密码,格式{ 无线频段(2|5)+ssid+password+wan_ip },默认加密方式为WPA2PSK/AES===
-# === 若wifi未加密则password=null，wlan_ip可不填表示wlan动态获取IP
+# === 若wifi未加密则password为空，wlan_ip可不填表示wlan动态获取IP
 ap="2+TP-LINK841N+12345678+1"
 
 band=$(echo $ap | cut -d + -f 1)     ; apssid=$(echo $ap | cut -d + -f 2)
@@ -53,10 +53,9 @@ if [ "$apssid_old" != "$apssid" ] ; then
     nvram set ${channel_x}=$channel
     nvram set ${sta_auto}=1
     nvram set ${sta_ssid}=$apssid
-    [ "$appasswd" = "null" ] && nvram set ${sta_auth_mode}=open || nvram set ${sta_auth_mode}=psk
+    [ -n "$appasswd" ] && nvram set ${sta_auth_mode}=psk && nvram set ${sta_wpa_psk}=$appasswd || nvram set ${sta_auth_mode}=open
     nvram set ${sta_wpa_mode}=2
     nvram set ${sta_crypto}=aes
-    nvram set ${sta_wpa_psk}=$appasswd
     if [ -n "$gwip" ] ; then
       static_ip=$(expr 190 + $(date +%S))
       nvram set wan_proto=static
