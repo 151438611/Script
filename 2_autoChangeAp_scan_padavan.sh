@@ -87,7 +87,7 @@ printf "%-10s %-8s %-20s %-12s\n" $(date +"%F %T") SSID:$apssid Netstat:DOWN >> 
     nvram set ${sta_auto}=1
     nvram set ${sta_ssid}=$apssid
 # "rt/wl_sta_auth_mode": open表示不加密 ; psk表示加密
-    [ "$appasswd" = "null" ] && nvram set ${sta_auth_mode}=open || nvram set ${sta_auth_mode}=psk
+    [ -n "$appasswd" ] && nvram set ${sta_auth_mode}=psk || nvram set ${sta_auth_mode}=open
 # "rt/wl_sta_wpa_mode":加密类型 1=[WPA_Personal]  2=[WPA2_Personal]
     nvram set ${sta_wpa_mode}=2
     nvram set ${sta_crypto}=aes
