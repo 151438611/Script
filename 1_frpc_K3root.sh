@@ -1,15 +1,15 @@
 #!/bin/sh
 # for K3_root , ARM cpu
 user_name=$(nvram get http_username) ; crontab=/etc/crontabs/$user_name
-frpc_sh=http://14.116.146.30:11111/file/frp/frpc_K3root.sh ; sh_name=$(basename $0)
-startup_frpc="sleep 50 ; wget -P /tmp/ $frpc_sh && mv -f /tmp/$(basename $frpc_sh) /opt/$sh_name ; sh /opt/$sh_name"
-grep -qi "frpc.sh" /opt/started_script.sh || echo "$startup_frpc" >> /opt/started_script.sh
+frpc_sh=http://14.116.146.30:11111/file/frp/frpc_K3root.sh ; frpc_name=$(basename $0)
+startup_frpc="sleep 50 ; wget -P /tmp/ $frpc_sh && mv -f /tmp/$(basename $frpc_sh) /opt/$frpc_name ; sh /opt/$frpc_name"
+grep -qi "$frpc_name" /opt/started_script.sh || echo "$startup_frpc" >> /opt/started_script.sh
 
 cron_reboot="5 5 * * * [ -n \"\$(date +%d | grep 5)\" ] && reboot || ping -c2 -w5 114.114.114.114 || reboot"
 grep -qi "reboot" $crontab || echo "$cron_reboot" >> $crontab
 
-cron_frpc="15 * * * * [ \$(date +%k) -eq 5 ] && killall -q frpc ; sh /opt/$sh_name"
-grep -qi "$sh_name" $crontab || echo "$cron_frpc" >> $crontab
+cron_frpc="15 * * * * [ \$(date +%k) -eq 5 ] && killall -q frpc ; sh /opt/$frpc_name"
+grep -qi "$frpc_name" $crontab || echo "$cron_frpc" >> $crontab
 
 host_name=$(nvram get product)
 lanip=$(nvram get lan_ipaddr) && i=$(echo $lanip | cut -d . -f 3)
