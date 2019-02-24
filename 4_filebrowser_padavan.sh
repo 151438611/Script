@@ -21,5 +21,5 @@ cd $dir_fb
 if [ -f "$dir_fb/filebrowser.json" ] ; then
   $filebrowser &
 else
-  $filebrowser -p $port -l stderr &
+  $filebrowser -p $port -d $dir_fb/filebrowser.db -l stderr &
 fi
