@@ -14,8 +14,8 @@ aplog=/tmp/autoChangeAp.log ; [ -f "$aplog" ] || touch $aplog
 
 # === 1、设置路由器型号k2p和k2(youku-L1/newifi3的2.4G接口名为ra0，和k2相同),因为k2和k2p的无线接口名称不一样
 host_name=$(nvram get computer_name)
-if [ -n "$(echo $hostname | grep -i k2p)" ] ; then router=k2p
-elif [ -n "$(echo $hostname | grep -Ei "k2|youku")" ] ; then router=k2
+if [ -n "$(echo $host_name | grep -i k2p)" ] ; then router=k2p
+elif [ -n "$(echo $host_name | grep -Ei "k2|youku")" ] ; then router=k2
 else echo "!!! The router is Unsupported device , exit !!!" >> $aplog && exit
 fi
 # === 2、输入被中继的wifi帐号密码,格式{无线频段(2|5)+ssid+password+wan_ip(选填)},多个用空格或回车隔开,默认加密方式为WPA2-PSK/AES
