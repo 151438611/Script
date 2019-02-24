@@ -1,7 +1,7 @@
 #!/bin/sh
-# Author Xj date:20180728 ; For padavan firmware by huangyewudeng
+# Author Xj date:20180728 ; only for padavan firmware by huangyewudeng
 # 支持2.4G和5G的多个不同频段Wifi中继自动切换功能,静态指定WAN地址，中继更快速
-# 使用说明:
+# 使用说明: 路由器名称需要包含 k2p/k2/youku ,暂时只支持此型号
 bin_dir=/etc/storage/bin ; [ -d "$bin_dir" ] || mkdir -p $bin_dir
 startup=/etc/storage/started_script.sh
 cron=/etc/storage/cron/crontabs/$(nvram get http_username)
@@ -18,7 +18,7 @@ if [ -n "$(echo $hostname | grep -i k2p)" ] ; then router=k2p
 elif [ -n "$(echo $hostname | grep -Ei "k2|youku")" ] ; then router=k2
 else echo "!!! The router is Unsupported device , exit !!!" >> $aplog && exit
 fi
-# router=k2p ; [ "$router" = k2 -o "$router" = k2p ] || exit
+
 # === 2、输入被中继的wifi帐号密码,格式{无线频段(2|5)+ssid+password+wan_ip(选填)},多个用空格或回车隔开,默认加密方式为WPA2-PSK/AES
 # --- 若中继wifi无密码则password不填写, wlan_ip可不填表示wlan动态获取IP ；示例：2+TP-LINK+12345678+1
 aplist=""
@@ -115,8 +115,9 @@ printf "%-10s %-8s %-20s %-12s\n" $(date +"%F %T") SSID:$apssid Netstat:DOWN >> 
     nvram set ${sta_wpa_psk}=$appasswd
 #--- 指定静态WAN_IP，中继获取IP更快速稳定 -------------------------
     if [ -n "$gwip" ] ; then
+      static_ip=$(expr $(date +%S) - 5)
       nvram set wan_proto=static
-      nvram set wan_ipaddr=192.168.$gwip.252
+      nvram set wan_ipaddr=192.168.$gwip.$static_ip
       nvram set wan_netmask=255.255.255.0
       nvram set wan_gateway=192.168.$gwip.1
     else nvram set wan_proto=dhcp
