@@ -7,7 +7,7 @@ aplog=/tmp/autoChangeAp.log ; [ -f "$aplog" ] || touch $aplog
 # ===1、设置路由器型号k2p和k2(youku-L1的2.4G接口名为ra0，和k2相同),因为k2和k2p的无线接口名称不一样==========
 router=k2 ; [ "$router" = k2 -o "$router" = k2p ] || exit
 # ===2、输入指定被中继的wifi帐号密码,格式{ 无线频段(2|5)+ssid+password+wan_ip },默认加密方式为WPA2PSK/AES===
-# === password=null表示未加密，wlan_ip可不填写表示wlan动态获取IP
+# === 若wifi未加密则password=null，wlan_ip可不填表示wlan动态获取IP
 ap="2+TP-LINK841N+12345678+1"
 
 band=$(echo $ap | cut -d + -f 1)     ; apssid=$(echo $ap | cut -d + -f 2)
