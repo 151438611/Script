@@ -9,11 +9,10 @@ aplog=/tmp/autoChangeAp.log ; [ -f "$aplog" ] || touch $aplog
 # ===1、设置路由器型号k2p和k2(youku-L1/newifi3的2.4G接口名为ra0，和k2相同),因为k2和k2p的无线接口名称不一样==========
 router=k2p ; [ "$router" = k2 -o "$router" = k2p ] || exit
 # ===2、输入被中继的wifi帐号密码,格式{ 无线频段(2|5)+ssid+password+wan_ip(可不填) },多个用空格或回车隔开,默认加密方式为WPA2PSK/AES===
+# === 若wifi未加密则password=null，wlan_ip可不填表示wlan动态获取IP
 aplist="2+AVP-LINK+12345678+10
-2+TP-LINK_LSF+lsf13689557108+1
+2+TP-LINK_LSF+lsf13689557108
 2+TP-LINK_2646+null+1
-2+xiaodangjia+zlp18300022392+0
-2+UNION-2F+13316870528+0
 "
 # ======3、设置检测网络的IP，若检测局域网状态，设成网关(192.168.x.1)===============
 ip1=1.2.4.8 ; ip2=114.114.114.114
