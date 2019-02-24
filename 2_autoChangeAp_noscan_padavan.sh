@@ -2,7 +2,6 @@
 # Author Xj date:20180728 ; For padavan firmware by huangyewudeng ; 
 # 支持2.4G和5G多个不同频段Wifi中继自动切换功能,静态指定WAN地址，中继更快速.
 cron=/etc/storage/cron/crontabs/$(nvram get http_username)
-startup=/etc/storage/bin/started_script.sh
 grep -qi $(basename $0) $cron || echo "*/30 * * * * sh /etc/storage/bin/$(basename $0)" >> $cron
 aplog=/tmp/autoChangeAp.log ; [ -f "$aplog" ] || touch $aplog
 
@@ -10,8 +9,6 @@ aplog=/tmp/autoChangeAp.log ; [ -f "$aplog" ] || touch $aplog
 aplist="2+AVP-LINK+12345678+10
 2+TP-LINK_LSF+lsf13689557108+1
 2+TP-LINK_2646+null+1
-2+xiaodangjia+zlp18300022392+0
-2+UNION-2F+13316870528+0
 "
 
 aplist=$(echo "$aplist" | awk '{for(apl=1 ; apl<=NF ; apl++){print $apl}}')
