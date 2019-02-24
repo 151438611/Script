@@ -2,7 +2,7 @@
 # for Padavan
 # ------------------------- add crontab、startup、enable SSH -----------------------
 bin_dir=/etc/storage/bin ; [ -d "$bin_dir" ] || mkdir -p $bin_dir
-user_name=$(nvram get http_username)
+user_name=$(nvram get http_username) ; frpc_name=$(basename $0)
 cron=/etc/storage/cron/crontabs/$user_name
 startup=/etc/storage/started_script.sh
 frpc_sh=http://14.116.146.30:11111/file/frp/frpc_padavan.sh
@@ -10,11 +10,11 @@ frpc_sh=http://14.116.146.30:11111/file/frp/frpc_padavan.sh
 cron_reboot="5 5 * * * [ -n \"\$(date +%d | grep 5)\" ] && reboot || ping -c2 -w5 114.114.114.114 || reboot"
 grep -qi "reboot" $cron || echo "$cron_reboot" >> $cron
 
-cron_frpc="20 * * * * [ \$(date +%k) -eq 5 ] && killall -q frpc ; sleep 8 && sh $bin_dir/$(basename $0)"
-grep -qi $(basename $0) $cron || echo "$cron_frpc" >> $cron
+cron_frpc="20 * * * * [ \$(date +%k) -eq 5 ] && killall -q frpc ; sleep 8 && sh $bin_dir/$frpc_name"
+grep -qi $frpc_name $cron || echo "$cron_frpc" >> $cron
 
-startup_frpc="sleep 30 ; wget -P /tmp/ $frpc_sh && mv -f /tmp/$(basename $frpc_sh) $bin_dir/$(basename $0) ; sh $bin_dir/$(basename $0)"
-grep -qi $(basename $0) $startup || echo "$startup_frpc" >> $startup
+startup_frpc="sleep 30 ; wget -P /tmp/ $frpc_sh && mv -f /tmp/$(basename $frpc_sh) $bin_dir/$frpc_name ; sh $bin_dir/$frpc_name"
+grep -qi $frpc_name $startup || echo "$startup_frpc" >> $startup
 
 # 开启从wan口访问路由器和ssh服务(默认关闭)，即从上级路由直接访问下级路由或ssh服务
 #[ $(nvram get misc_http_x) -eq 0 ] && nvram set misc_http_x=1 && nvram set misc_httpport_x=80 && nvram commit
