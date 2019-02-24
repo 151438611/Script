@@ -19,10 +19,8 @@ Set fsObj = CreateObject("Scripting.FileSystemObject")
 Function CopyFileFun(runfile,soufile,desfile)
   If Not fsObj.FileExists(runfile) Then fsObj.CopyFile (soufile), (desfile) End If
 End Function
-
 CopyFileFun (dir_run & frp_run),(dir_bak & frp),(dir_run & frp_run)
 CopyFileFun (dir_run & frpini_run),(dir_bak & frpini),(dir_run & frpini_run)
-
 Set fsObj = Nothing
 
 ' ------ 判断系统进程是否存在 -------------------------------
