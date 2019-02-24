@@ -5,13 +5,22 @@ cron=/etc/storage/cron/crontabs/$(nvram get http_username)
 grep -qi $(basename $0) $cron || echo "*/30 * * * * sh /etc/storage/bin/$(basename $0)" >> $cron
 aplog=/tmp/autoChangeAp.log ; [ -f "$aplog" ] || touch $aplog
 
-# === 1、输入被中继的wifi帐号密码,格式{ 无线频段(2|5)+ssid+password+wan_ip(可不填) },多个用空格或回车隔开,默认加密方式为WPA2PSK/AES
-# === 前3个参数必填，若wifi未加密则password填null ；wlan_ip可不填表示wlan动态获取IP ；示例：
-aplist="2+AVP-LINK+12345678+10 
-2+TP-LINK_LSF+lsf13689557108 2+TP-LINK_2646+null+1
+# === 1、输入被中继的wifi帐号密码,格式{ 无线频段(2|5)+ssid+password+wan_ip(选填) },多个用空格或回车隔开,默认加密方式为WPA2-PSK/AES
+# === 若wifi未加密则password不填写 ；wlan_ip可不填表示wlan动态获取IP ；示例：
+aplist="
 "
+apinput=/etc/storage/ez_buttons_script.sh
+grep -qi comment $apinput || \
+cat << END >> $apinput
+# 自动中继AP的wifi信息请填在（comment和comment之间）处
+<<'comment'
+# 填写格式(不可填错) ：无线频率(2|5) 加号 ssid 加号 password 加号 wlan_ip(选填)
+# 多个WIFI用空格或换行分隔,若中继wifi无密码则password不填写, wlan_ip可不填表示wlan动态获取IP
+comment
+END
+aplist2=$(grep "^[2,5]+" $apinput)
 
-aplist=$(echo "$aplist" | awk '{for(apl=1 ; apl<=NF ; apl++){print $apl}}')
+aplist=$(echo "$aplist $aplist2" | awk '{for(apl=1 ; apl<=NF ; apl++){print $apl}}') && [ -z "$aplist" ] && exit
 apssidlist=$(echo "$aplist" | awk -F+ '{print $2}')
 rt=$(nvram get rt_mode_x) ; wl=$(nvram get wl_mode_x)
 if   [ $rt -ne 0 -a $wl -eq 0 ] ; then apssid=$(nvram get rt_sta_ssid) ; band_old=2
@@ -63,7 +72,7 @@ printf "%-10s %-8s %-20s %-12s\n" $(date +"%F %T") SSID:$apssid Netstat:DOWN >> 
   nvram set ${sta_auto}=1
   nvram set ${sta_ssid}=$apssid
 # "rt/wl_sta_auth_mode": open表示无加密 ; psk表示有加密
-  [ "$appasswd" = "null" ] && nvram set ${sta_auth_mode}=open || nvram set ${sta_auth_mode}=psk
+  [ -n "$appasswd" ] && nvram set ${sta_auth_mode}=psk || nvram set ${sta_auth_mode}=open
 # "rt/wl_sta_wpa_mode":加密类型：1=[WPA_Personal]  2=[WPA2_Personal]
   nvram set ${sta_wpa_mode}=2
   nvram set ${sta_crypto}=aes
