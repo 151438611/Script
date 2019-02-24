@@ -17,10 +17,7 @@ udisk=$(mount | awk '/dev/ && /media/ {print $3}' | head -n1)
 filebrowser="$udisk/filebrowser" && dir_fb=$(dirname $filebrowser)
 [ -d "$dir_fb" ] || mkdir -p $dir_fb 
 
-download_fb() {
-  rm -f $frpc ; wget -O $filebrowser $fb_url
-}
-[ -f "$filebrowser" ] || download_fb 
+[ -f "$filebrowser" ] || wget -O $filebrowser $fb_url
 chmod 755 $filebrowser
 
 cd $dir_fb
