@@ -1,4 +1,5 @@
 #!/bin/sh
+# 使用说明: 路由器名称需要包含 k2p/k2/youku ,暂时只支持此型号
 # add crontab,定时强制连接某个指定Wifi，适用于gx5 K2路由器场景
 cron=/etc/storage/cron/crontabs/$(nvram get http_username)
 grep -qi $(basename $0) $cron || echo "55 5 * * * sh /etc/storage/bin/$(basename $0)" >> $cron
@@ -57,8 +58,9 @@ if [ "$apssid_old" != "$apssid" ] ; then
     nvram set ${sta_crypto}=aes
     nvram set ${sta_wpa_psk}=$appasswd
     if [ -n "$gwip" ] ; then
+      static_ip=$(expr 190 + $(date +%S))
       nvram set wan_proto=static
-      nvram set wan_ipaddr=192.168.$gwip.252
+      nvram set wan_ipaddr=192.168.$gwip.$static_ip
       nvram set wan_netmask=255.255.255.0
       nvram set wan_gateway=192.168.$gwip.1
     else nvram set wan_proto=dhcp
