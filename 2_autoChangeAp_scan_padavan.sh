@@ -18,7 +18,6 @@ if [ -n "$(echo $hostname | grep -i k2p)" ] ; then router=k2p
 elif [ -n "$(echo $hostname | grep -Ei "k2|youku")" ] ; then router=k2
 else echo "!!! The router is Unsupported device , exit !!!" >> $aplog && exit
 fi
-
 # === 2、输入被中继的wifi帐号密码,格式{无线频段(2|5)+ssid+password+wan_ip(选填)},多个用空格或回车隔开,默认加密方式为WPA2-PSK/AES
 # --- 若中继wifi无密码则password不填写, wlan_ip可不填表示wlan动态获取IP ；示例：2+TP-LINK+12345678+1
 aplist=""
