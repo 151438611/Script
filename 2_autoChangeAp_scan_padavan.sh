@@ -22,7 +22,7 @@ apssidlist=$(echo "$aplist" | awk -F+ '{print $2}')
 rt=$(nvram get rt_mode_x) ; wl=$(nvram get wl_mode_x)
 if   [ $rt -ne 0 -a $wl -eq 0 ] ; then apssid=$(nvram get rt_sta_ssid) ; band_old=2
 elif [ $rt -eq 0 -a $wl -ne 0 ] ; then apssid=$(nvram get wl_sta_ssid) ; band_old=5
-elif [ $rt -eq 0 -a $wl -eq 0 ] ; then apssid=null ; band_old=0 ; echo "$(date +"%F %T") -----Wireless_bridge is disable ; It will force enable !-----" >> $aplog
+elif [ $rt -eq 0 -a $wl -eq 0 ] ; then apssid=null ; band_old=0 ; echo "$(date +"%F %T") ----- Wireless_bridge is disable ; It will force enable ! -----" >> $aplog
 fi
 # check internet status 
 ping_timeout=$(ping -c2 -w5 $ip1 | awk -F "/" '$0~"min/avg/max"{print int($4)}')
