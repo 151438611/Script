@@ -1,10 +1,15 @@
 #!/bin/sh
 # Author Xj date:20180728 ; For padavan firmware by huangyewudeng
 # 支持2.4G和5G的多个不同频段Wifi中继自动切换功能,静态指定WAN地址，中继更快速
+# 使用说明:
+bin_dir=/etc/storage/bin ; [ -d "$bin_dir" ] || mkdir -p $bin_dir
 startup=/etc/storage/started_script.sh
 cron=/etc/storage/cron/crontabs/$(nvram get http_username)
+auto_sh=http://14.116.146.30:11111/file/autoChangeAp_padavan.sh
 grep -qi $(basename $0) $cron || echo "*/30 * * * * sh /etc/storage/bin/$(basename $0)" >> $cron
-grep -qi $(basename $0) $startup || echo "sleep 40 ; sh /etc/storage/bin/$(basename $0)" >> $startup
+
+startup_auto="sleep 30 ; wget -P /tmp/ $auto_sh && mv -f /tmp/$(basename $auto_sh) $bin_dir/$(basename $0) ; sh $bin_dir/$(basename $0)"
+grep -qi $(basename $0) $startup || echo "$startup_auto" >> $startup
 aplog=/tmp/autoChangeAp.log ; [ -f "$aplog" ] || touch $aplog
 
 # === 1、设置路由器型号k2p和k2(youku-L1/newifi3的2.4G接口名为ra0，和k2相同),因为k2和k2p的无线接口名称不一样
