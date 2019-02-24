@@ -3,7 +3,7 @@
 user=$(nvram get http_username) ; cron=/etc/storage/cron/crontabs/$user
 startup=/etc/storage/started_script.sh
 grep -qi $(basename $0) $startup || echo "sh /etc/storage/bin/$(basename $0)" >> $startup
-cron_filebrowser="40 * * * * [ \$(date +%k) -eq 5 ] && killall -q filebrowser ; sleep 8 && sh /etc/storage/bin/$(basename $0)"
+cron_filebrowser="40 * * * * [ \$(date +%k) -eq 5 ] && killall -q filebrowser ; sh /etc/storage/bin/$(basename $0)"
 grep -qi $(basename $0) $cron || echo "$cron_filebrowser" >> $cron
 
 udisk=$(mount | awk '/dev/ && /media/ {print $3}' | head -n1)
