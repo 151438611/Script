@@ -24,11 +24,11 @@ cat << END >> $apinput
 comment
 END
 aplist2=$(grep "^[2,5]+" $apinput)
-aplist="$aplist $aplist2"
+
 # === 3、设置检测网络的IP，若检测局域网状态，设成局域网IP(192.168.x.x)
 ip1=1.2.4.8 ; ip2=114.114.114.114
 
-aplist=$(echo "$aplist" | awk '{for(apl=1 ; apl<=NF ; apl++){print $apl}}') && [ -z "$aplist" ] && exit
+aplist=$(echo "$aplist $aplist2" | awk '{for(apl=1 ; apl<=NF ; apl++){print $apl}}') && [ -z "$aplist" ] && exit
 apssidlist=$(echo "$aplist" | awk -F+ '{print $2}')
 rt=$(nvram get rt_mode_x) ; wl=$(nvram get wl_mode_x)
 if   [ $rt -ne 0 -a $wl -eq 0 ] ; then apssid=$(nvram get rt_sta_ssid) ; band_old=2
