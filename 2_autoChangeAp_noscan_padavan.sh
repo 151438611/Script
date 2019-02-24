@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 # Author Xj date:20180728 ; For padavan firmware by huangyewudeng ; 
 # 支持2.4G和5G多个不同频段Wifi中继自动切换功能,静态指定WAN地址，中继更快速.
 cron=/etc/storage/cron/crontabs/$(nvram get http_username)
