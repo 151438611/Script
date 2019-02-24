@@ -5,10 +5,10 @@ cron=/etc/storage/cron/crontabs/$(nvram get http_username)
 grep -qi $(basename $0) $cron || echo "*/30 * * * * sh /etc/storage/bin/$(basename $0)" >> $cron
 aplog=/tmp/autoChangeAp.log ; [ -f "$aplog" ] || touch $aplog
 
-# ===1、输入被中继的wifi帐号密码,格式{ 无线频段(2|5)+ssid+password+wan_ip(可不填) },多个用空格或回车隔开,默认加密方式为WPA2PSK/AES===
-aplist="2+AVP-LINK+12345678+10
-2+TP-LINK_LSF+lsf13689557108+1
-2+TP-LINK_2646+null+1
+# === 1、输入被中继的wifi帐号密码,格式{ 无线频段(2|5)+ssid+password+wan_ip(可不填) },多个用空格或回车隔开,默认加密方式为WPA2PSK/AES
+# === 前3个参数必填，若wifi未加密则password填null ；wlan_ip可不填表示wlan动态获取IP ；示例：
+aplist="2+AVP-LINK+12345678+10 
+2+TP-LINK_LSF+lsf13689557108 2+TP-LINK_2646+null+1
 "
 
 aplist=$(echo "$aplist" | awk '{for(apl=1 ; apl<=NF ; apl++){print $apl}}')
@@ -16,7 +16,7 @@ apssidlist=$(echo "$aplist" | awk -F+ '{print $2}')
 rt=$(nvram get rt_mode_x) ; wl=$(nvram get wl_mode_x)
 if   [ $rt -ne 0 -a $wl -eq 0 ] ; then apssid=$(nvram get rt_sta_ssid) ; band_old=2
 elif [ $rt -eq 0 -a $wl -ne 0 ] ; then apssid=$(nvram get wl_sta_ssid) ; band_old=5
-elif [ $rt -eq 0 -a $wl -eq 0 ] ; then apssid=null ; band_old=0 ; echo "$(date +"%F %T") -----AP is disable ; It will enable if needed !-----" >> $aplog
+elif [ $rt -eq 0 -a $wl -eq 0 ] ; then apssid=null ; band_old=0 ; echo "$(date +"%F %T") --- Wireless_bridge is disable ; It will force enable ! ---" >> $aplog
 fi
 # ====2、设置检测网络IP、域名，若检测局域网状态，设成网关(192.168.x.1)==============
 ip1=1.2.4.8 ; ip2=114.114.114.114
