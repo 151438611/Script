@@ -9,11 +9,11 @@ aplog=/tmp/autoChangeAp.log ; [ -f "$aplog" ] || touch $aplog
 
 # === 1、设置路由器型号k2p和k2(youku-L1/newifi3的2.4G接口名为ra0，和k2相同),因为k2和k2p的无线接口名称不一样
 router=k2p ; [ "$router" = k2 -o "$router" = k2p ] || exit
-# === 2、输入被中继的wifi帐号密码,格式{ 无线频段(2|5)+ssid+password+wan_ip(选填) },多个用空格或回车隔开,默认加密方式为WPA2-PSK/AES
-# --- 前3个参数必填, 若中继wifi无密码则password不填写, wlan_ip可不填表示wlan动态获取IP ；示例：
-aplist="2+AVP-LINK+12345678+10 2+TP-LINK_LSF+lsf13689557108 
-2+TP-LINK_2646++1
-"
+# === 2、输入被中继的wifi帐号密码,格式{无线频段(2|5)+ssid+password+wan_ip(选填)},多个用空格或回车隔开,默认加密方式为WPA2-PSK/AES
+# --- 若中继wifi无密码则password不填写, wlan_ip可不填表示wlan动态获取IP ；示例：2+TP-LINK+12345678+1
+aplist=""
+aplist2=(grep "^[2,5]+" /etc/storage/ez_buttons_script.sh)
+aplist="$aplist $aplist2"
 # === 3、设置检测网络的IP，若检测局域网状态，设成局域网IP(192.168.x.x)
 ip1=1.2.4.8 ; ip2=114.114.114.114
 
@@ -46,7 +46,7 @@ printf "%-10s %-8s %-20s %-12s\n" $(date +"%F %T") SSID:$apssid Netstat:DOWN >> 
     ap=$(echo "$aplist" | head -n1)
   else ap=$(echo "$aplist" | awk -F+ '$2=="'$apssid'"{getline nextap ; print nextap}')
   fi
-  band=$(echo $ap | cut -d + -f 1) ; apssid=$(echo $ap | cut -d + -f 2)
+  band=$(echo $ap | cut -d + -f 1) ; apssid=$(echo $ap | cut -d + -f 2) && [ -z "$apssid" ] && break
   appasswd=$(echo $ap | cut -d + -f 3) ; gwip=$(echo $ap | cut -d + -f 4)
   
 # 设置路由器的2.4G和5G接口名称interface_name:# k2p_2.4G_iface是rax0 ; k2p_5G_iface是ra0 ; k2/newifi3_2.4G_iface是ra0 ; k2/newifi3_5G_iface是rai0
