@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 # Author Xj date:20180728 ; For padavan firmware by huangyewudeng
 # 支持2.4G和5G的多个不同频段Wifi中继自动切换功能,静态指定WAN地址，中继更快速
 startup=/etc/storage/started_script.sh
@@ -7,14 +7,14 @@ grep -qi $(basename $0) $cron || echo "*/30 * * * * sh /etc/storage/bin/$(basena
 grep -qi $(basename $0) $startup || echo "sleep 40 ; sh /etc/storage/bin/$(basename $0)" >> $startup
 aplog=/tmp/autoChangeAp.log ; [ -f "$aplog" ] || touch $aplog
 
-# ===1、设置路由器型号k2p和k2(youku-L1/newifi3的2.4G接口名为ra0，和k2相同),因为k2和k2p的无线接口名称不一样==========
+# === 1、设置路由器型号k2p和k2(youku-L1/newifi3的2.4G接口名为ra0，和k2相同),因为k2和k2p的无线接口名称不一样
 router=k2p ; [ "$router" = k2 -o "$router" = k2p ] || exit
-# ===2、输入被中继的wifi帐号密码,格式{ 无线频段(2|5)+ssid+password+wan_ip(可不填) },多个用空格或回车隔开,默认加密方式为WPA2PSK/AES===
-# === 若wifi未加密则password=null，wlan_ip可不填表示wlan动态获取IP
+# === 2、输入被中继的wifi帐号密码,格式{ 无线频段(2|5)+ssid+password+wan_ip(可不填) },多个用空格或回车隔开,默认加密方式为WPA2PSK/AES
+# === 前3个参数必填，若wifi未加密则password填null ；wlan_ip可不填表示wlan动态获取IP ；示例：
 aplist="2+AVP-LINK+12345678+10 2+TP-LINK_LSF+lsf13689557108 
 2+TP-LINK_2646+null+1
 "
-# ======3、设置检测网络的IP，若检测局域网状态，设成网关(192.168.x.1)===============
+# === 3、设置检测网络的IP，若检测局域网状态，设成局域网IP(192.168.x.x)
 ip1=1.2.4.8 ; ip2=114.114.114.114
 
 aplist=$(echo "$aplist" | awk '{for(apl=1 ; apl<=NF ; apl++){print $apl}}')
@@ -32,7 +32,7 @@ restart_wan ; sleep 15
 scanwifi() {
   iwpriv $iface set SiteSurvey=1 && sleep 3 ; scanlist=$(iwpriv $iface get_site_survey)
 }
-# ======start autoChangeAP=======================================================
+# === start ChangeAp ========================================================
 for num in `seq $(echo "$aplist" | wc -l)`
 do
   ping_timeout=$(ping -c2 -w5 $ip2 | awk -F "/" '$0~"min/avg/max"{print int($4)}')
@@ -41,12 +41,12 @@ printf "%-10s %-8s %-20s %-12s %-1s\n" $(date +"%F %T") SSID:$apssid Netstat:ON 
   [ -n "$ping_timeout" ] && [ $ping_timeout -gt 300 ] && \
 printf "%-10s %-8s %-20s %-12s %-1s\n" $(date +"%F %T") SSID:$apssid Netstat:SLOW Ping_timeout:${ping_timeout}ms >> $aplog || \
 printf "%-10s %-8s %-20s %-12s\n" $(date +"%F %T") SSID:$apssid Netstat:DOWN >> $aplog
-# -----Get Next AP info---------------------------------------------------------------
+# --- Get Next AP infomation -------------------------------------------------
   if [ "$(echo "$apssidlist" | tail -n1)" = "$apssid" -o "$(echo "$apssidlist" | grep "$apssid")" != "$apssid" ] ; then
-       ap=$(echo "$aplist" | head -n1)
+    ap=$(echo "$aplist" | head -n1)
   else ap=$(echo "$aplist" | awk -F+ '$2=="'$apssid'"{getline nextap ; print nextap}')
   fi
-  band=$(echo $ap | cut -d + -f 1)     ; apssid=$(echo $ap | cut -d + -f 2)
+  band=$(echo $ap | cut -d + -f 1) ; apssid=$(echo $ap | cut -d + -f 2)
   appasswd=$(echo $ap | cut -d + -f 3) ; gwip=$(echo $ap | cut -d + -f 4)
   
 # 设置路由器的2.4G和5G接口名称interface_name:# k2p_2.4G_iface是rax0 ; k2p_5G_iface是ra0 ; k2/newifi3_2.4G_iface是ra0 ; k2/newifi3_5G_iface是rai0
@@ -86,13 +86,13 @@ printf "%-10s %-8s %-20s %-12s\n" $(date +"%F %T") SSID:$apssid Netstat:DOWN >> 
 # "rt/wl_sta_auto": 1表示勾选自动搜寻; 0表示不自动搜寻
     nvram set ${sta_auto}=1
     nvram set ${sta_ssid}=$apssid
-# "rt/wl_sta_auth_mode": open表示无加密 ; psk表示有加密
+# "rt/wl_sta_auth_mode": open表示不加密 ; psk表示加密
     [ "$appasswd" = "null" ] && nvram set ${sta_auth_mode}=open || nvram set ${sta_auth_mode}=psk
-# "rt/wl_sta_wpa_mode":加密类型：1=[WPA_Personal]  2=[WPA2_Personal]
+# "rt/wl_sta_wpa_mode":加密类型 1=[WPA_Personal]  2=[WPA2_Personal]
     nvram set ${sta_wpa_mode}=2
     nvram set ${sta_crypto}=aes
     nvram set ${sta_wpa_psk}=$appasswd
-#--------指定静态WAN_IP，中继更快速稳定-------------------------
+#--- 指定静态WAN_IP，中继获取IP更快速稳定 -------------------------
     if [ -n "$gwip" ] ; then
       nvram set wan_proto=static
       nvram set wan_ipaddr=192.168.$gwip.252
