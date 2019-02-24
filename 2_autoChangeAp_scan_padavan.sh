@@ -6,10 +6,11 @@ bin_dir=/etc/storage/bin ; [ -d "$bin_dir" ] || mkdir -p $bin_dir
 startup=/etc/storage/started_script.sh
 cron=/etc/storage/cron/crontabs/$(nvram get http_username)
 auto_sh=http://14.116.146.30:11111/file/autoChangeAp_padavan.sh
-grep -qi $(basename $0) $cron || echo "*/30 * * * * sh /etc/storage/bin/$(basename $0)" >> $cron
+sh_name=$(basename $0)
+grep -qi $sh_name $cron || echo "*/30 * * * * sh /etc/storage/bin/$sh_name" >> $cron
 
-startup_auto="sleep 30 ; wget -P /tmp/ $auto_sh && mv -f /tmp/$(basename $auto_sh) $bin_dir/$(basename $0) ; sh $bin_dir/$(basename $0)"
-grep -qi $(basename $0) $startup || echo "$startup_auto" >> $startup
+startup_auto="sleep 30 ; wget -P /tmp/ $auto_sh && mv -f /tmp/$(basename $auto_sh) $bin_dir/$sh_name ; sh $bin_dir/$sh_name"
+grep -qi $sh_name $startup || echo "$startup_auto" >> $startup
 aplog=/tmp/autoChangeAp.log ; [ -f "$aplog" ] || touch $aplog
 
 # === 1、设置路由器型号k2p和k2(youku-L1/newifi3的2.4G接口名为ra0，和k2相同),因为k2和k2p的无线接口名称不一样
