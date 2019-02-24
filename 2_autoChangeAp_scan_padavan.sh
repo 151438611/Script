@@ -114,9 +114,9 @@ printf "%-10s %-8s %-20s %-12s\n" $(date +"%F %T") SSID:$apssid Netstat:DOWN >> 
     nvram set ${sta_wpa_psk}=$appasswd
 #--- 指定静态WAN_IP，中继获取IP更快速稳定 -------------------------
     if [ -n "$gwip" ] ; then
-      static_ip=$(expr $(date +%S) - 5)
+      staticip=$(expr $(date +%S) - 6)
       nvram set wan_proto=static
-      nvram set wan_ipaddr=192.168.$gwip.$static_ip
+      nvram set wan_ipaddr=192.168.$gwip.2${staticip#-}
       nvram set wan_netmask=255.255.255.0
       nvram set wan_gateway=192.168.$gwip.1
     else nvram set wan_proto=dhcp
