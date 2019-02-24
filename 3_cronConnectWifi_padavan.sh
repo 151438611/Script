@@ -5,7 +5,11 @@ grep -qi $(basename $0) $cron || echo "55 5 * * * sh /etc/storage/bin/$(basename
 aplog=/tmp/autoChangeAp.log ; [ -f "$aplog" ] || touch $aplog
 
 # ===1、设置路由器型号k2p和k2(youku-L1的2.4G接口名为ra0，和k2相同),因为k2和k2p的无线接口名称不一样==========
-router=k2 ; [ "$router" = k2 -o "$router" = k2p ] || exit
+host_name=$(nvram get computer_name)
+if [ -n "$(echo $host_name | grep -i k2p)" ] ; then router=k2p
+elif [ -n "$(echo $host_name | grep -Ei "k2|youku")" ] ; then router=k2
+else echo "!!! The router is Unsupported device , exit !!!" >> $aplog && exit
+fi
 # ===2、输入指定被中继的wifi帐号密码,格式{ 无线频段(2|5)+ssid+password+wan_ip },默认加密方式为WPA2PSK/AES===
 # === 若wifi未加密则password=null，wlan_ip可不填表示wlan动态获取IP
 ap="2+TP-LINK841N+12345678+1"
