@@ -14,7 +14,7 @@ appasswd=$(echo $ap | cut -d + -f 3) ; gwip=$(echo $ap | cut -d + -f 4)
 rt=$(nvram get rt_mode_x) ; wl=$(nvram get wl_mode_x)
 if   [ $rt -ne 0 -a $wl -eq 0 ] ; then apssid_old=$(nvram get rt_sta_ssid) ; band_old=2
 elif [ $rt -eq 0 -a $wl -ne 0 ] ; then apssid_old=$(nvram get wl_sta_ssid) ; band_old=5
-elif [ $rt -eq 0 -a $wl -eq 0 ] ; then exit
+elif [ $rt -eq 0 -a $wl -eq 0 ] ; then echo "wifi bridge is not open , exit !" >> $aplog && exit 
 fi
 
 scanwifi() {
