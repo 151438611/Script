@@ -13,7 +13,17 @@ router=k2p ; [ "$router" = k2 -o "$router" = k2p ] || exit
 # --- 若中继wifi无密码则password不填写, wlan_ip可不填表示wlan动态获取IP ；示例：2+TP-LINK+12345678+1
 aplist="  
 "
-aplist2=$(grep "^[2,5]+" /etc/storage/ez_buttons_script.sh)
+apinput=/etc/storage/ez_buttons_script.sh
+grep -qi comment $apinput || \
+cat << END >> $apinput
+# 自动中继AP的wifi信息请填在（comment和comment之间）处
+<<'comment'
+# 填写格式(不可填错) ：无线频率(2|5) 加号 ssid 加号 password 加号 wlan_ip(选填)
+# 多个WIFI用空格或换行分隔,若中继wifi无密码则password不填写, wlan_ip可不填表示wlan动态获取IP
+
+comment
+END
+aplist2=$(grep "^[2,5]+" $apinput)
 aplist="$aplist $aplist2"
 # === 3、设置检测网络的IP，若检测局域网状态，设成局域网IP(192.168.x.x)
 ip1=1.2.4.8 ; ip2=114.114.114.114
