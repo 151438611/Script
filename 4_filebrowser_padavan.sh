@@ -1,8 +1,9 @@
 #!/bin/sh
 # for Padavan 
 
-user=$(nvram get http_username) ; cron=/etc/storage/cron/crontabs/$user ; startup=/etc/storage/started_script.sh
-grep -qi $(basename $0) $startup || echo "sleep 5 ; sh /etc/storage/bin/$(basename $0)" >> $startup
+user=$(nvram get http_username) ; cron=/etc/storage/cron/crontabs/$user
+startup=/etc/storage/started_script.sh
+grep -qi $(basename $0) $startup || echo "sh /etc/storage/bin/$(basename $0)" >> $startup
 cron_filebrowser="40 * * * * [ \$(date +%k) -eq 5 ] && killall -q filebrowser ; sleep 8 && sh /etc/storage/bin/$(basename $0)"
 grep -qi $(basename $0) $cron || echo "$cron_filebrowser" >> $cron
 
@@ -19,11 +20,10 @@ filebrowser="$udisk/filebrowser" && dir_fb=$(dirname $filebrowser)
 download_fb() {
   rm -f $frpc ; wget -O $filebrowser $fb_url
 }
-cd $dir_fb
-#[ -f "$filebrowser" ] && [ "$(md5sum $filebrowser | cut -d " " -f 1)" = "$md5_fb" ] || download_fb 
 [ -f "$filebrowser" ] || download_fb 
-chmod 555 $filebrowser
+chmod 755 $filebrowser
 
+cd $dir_fb
 [ -z "$(pidof filebrowser)" ] && \
 if [ -f "$dir_fb/filebrowser.json" ] ; then
   $filebrowser &
