@@ -54,7 +54,7 @@ if [ "$apssid_old" != "$apssid" ] ; then
   if [ -n "$apinfo" ] ; then
     [ "$router" = k2 ] && channel=$(echo $apinfo | awk '{print $1}')
     [ "$router" = k2p ] && channel=$(echo $apinfo | awk '{print $2}')
-    nvram set ${mode_x}=3
+    nvram set ${mode_x}=4
     nvram set ${sta_wisp}=1
     nvram set ${channel_x}=$channel
     nvram set ${sta_auto}=1
