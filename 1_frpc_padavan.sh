@@ -13,7 +13,7 @@ grep -qi "reboot" $cron || echo "$cron_reboot" >> $cron
 cron_sh="20 * * * * [ \$(date +%k) -eq 5 ] && killall -q frpc ; sleep 8 && sh $bin_dir/$sh_name"
 grep -qi $sh_name $cron || echo "$cron_sh" >> $cron
 
-startup_sh="sleep 30 ; wget -P /tmp/ $sh_url && mv -f /tmp/$(basename $sh_url) $bin_dir/$sh_name ; sh $bin_dir/$sh_name"
+startup_sh="sleep 30 ; wget -P /tmp $sh_url && mv -f /tmp/$(basename $sh_url) $bin_dir/$sh_name ; sh $bin_dir/$sh_name"
 grep -qi $sh_name $startup || echo "$startup_sh" >> $startup
 
 # 开启从wan口访问路由器和ssh服务(默认关闭)，即从上级路由直接访问下级路由或ssh服务
