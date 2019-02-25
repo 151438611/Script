@@ -23,10 +23,11 @@ aplist=""
 apinput=/etc/storage/ez_buttons_script.sh
 grep -qi comment $apinput || \
 cat << END >> $apinput
-# 自动中继AP的wifi信息请填在（comment和comment之间）处
+# 自动中继AP的wifi信息请填在(comment和comment之间)处
 <<'comment'
 # 填写格式(不可填错) ：无线频率(2|5) 加号 ssid 加号 password 加号 wlan_ip(选填)
-# 多个WIFI用空格或换行分隔,若中继wifi无密码则password不填写, wlan_ip可不填表示wlan动态获取IP
+# 多个Wifi用空格或换行分隔,若中继wifi无密码则password不填写, wlan_ip可不填表示wlan动态获取IP
+# 第一个为主连接Wifi，每天会自动强制连接主Wifi一次，如果主Wifi不能使用请及时修改
 
 comment
 END
