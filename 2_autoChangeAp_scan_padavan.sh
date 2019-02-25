@@ -5,17 +5,17 @@
 bin_dir=/etc/storage/bin ; [ -d "$bin_dir" ] || mkdir -p $bin_dir
 startup=/etc/storage/started_script.sh
 cron=/etc/storage/cron/crontabs/$(nvram get http_username)
-autoap=$(basename $0) ; ap_url=http://14.116.146.30:11111/file/autoChangeAp_padavan.sh
-grep -qi $autoap $cron || echo "*/30 * * * * sh /etc/storage/bin/$autoap" >> $cron
-startup_ap="sleep 30 ; wget -P /tmp/ $ap_url && mv -f /tmp/$(basename $ap_url) $bin_dir/$autoap ; sh $bin_dir/$autoap"
-grep -qi $autoap $startup || echo "$startup_ap" >> $startup
-aplog=/tmp/autoChangeAp.log ; [ -f "$aplog" ] || touch $aplog
+sh_name=$(basename $0) ; sh_url="http://14.116.146.30:11111/file/autoChangeAp_padavan.sh"
+grep -qi $sh_name $cron || echo "*/30 * * * * sh $bin_dir/$sh_name" >> $cron
+startup_ap="sleep 30 ; wget -P /tmp $sh_url && mv -f /tmp/$(basename $sh_url) $bin_dir/$sh_name ; sh $bin_dir/$sh_name"
+grep -qi $sh_name $startup || echo "$startup_ap" >> $startup
+log=/tmp/autoChangeAp.log
 
 # === 1、设置路由器型号k2p和k2(youku-L1/newifi3的2.4G接口名为ra0，和k2相同),因为k2和k2p的无线接口名称不一样
 host_name=$(nvram get computer_name)
 if [ -n "$(echo $host_name | grep -i k2p)" ] ; then router=k2p
 elif [ -n "$(echo $host_name | grep -Ei "k2|youku")" ] ; then router=k2
-else echo "!!! The router is Unsupported device , exit !!!" >> $aplog && exit
+else echo "!!! The router is Unsupported device , exit !!!" >> $log && exit
 fi
 # === 2、输入被中继的wifi帐号密码,格式{无线频段(2|5)+ssid+password+wan_ip(选填)},多个用空格或回车隔开,默认加密方式为WPA2-PSK/AES
 # --- 若中继wifi无密码则password不填写, wlan_ip可不填表示wlan动态获取IP ；示例：2+TP-LINK+12345678+1
@@ -42,12 +42,12 @@ rt=$(nvram get rt_mode_x) ; wl=$(nvram get wl_mode_x)
 if   [ $rt -ne 0 -a $wl -eq 0 ] ; then apssid=$(nvram get rt_sta_ssid) ; band_old=2
 elif [ $rt -eq 0 -a $wl -ne 0 ] ; then apssid=$(nvram get wl_sta_ssid) ; band_old=5
 elif [ $rt -eq 0 -a $wl -eq 0 ] ; then 
-  apssid=null ; band_old=0 ; echo "$(date +"%F %T") ----- Wireless_bridge is disable ; It will force enable ! -----" >> $aplog
+  apssid=null ; band_old=0 ; echo "$(date +"%F %T") ----- Wireless_bridge is disable ; It will force enable ! -----" >> $log
 fi
 # check internet status 
 ping_timeout=$(ping -c2 -w5 $ip1 | awk -F "/" '$0~"min/avg/max"{print int($4)}')
 [ -n "$ping_timeout" ] && [ $ping_timeout -lt 300 ] && \
-printf "%-10s %-8s %-20s %-12s %-1s\n" $(date +"%F %T") SSID:$apssid Netstat:ON Ping_timeout:${ping_timeout}ms >> $aplog && exit
+printf "%-10s %-8s %-20s %-12s %-1s\n" $(date +"%F %T") SSID:$apssid Netstat:ON Ping_timeout:${ping_timeout}ms >> $log && exit
 restart_wan ; sleep 15
 scanwifi() {
   iwpriv $iface set SiteSurvey=1 && sleep 3 ; scanlist=$(iwpriv $iface get_site_survey)
@@ -57,10 +57,10 @@ for num in `seq $(echo "$aplist" | wc -l)`
 do
   ping_timeout=$(ping -c2 -w5 $ip2 | awk -F "/" '$0~"min/avg/max"{print int($4)}')
   [ -n "$ping_timeout" ] && [ $ping_timeout -lt 300 ] && \
-printf "%-10s %-8s %-20s %-12s %-1s\n" $(date +"%F %T") SSID:$apssid Netstat:ON Ping_timeout:${ping_timeout}ms >> $aplog && exit
+printf "%-10s %-8s %-20s %-12s %-1s\n" $(date +"%F %T") SSID:$apssid Netstat:ON Ping_timeout:${ping_timeout}ms >> $log && exit
   [ -n "$ping_timeout" ] && [ $ping_timeout -gt 300 ] && \
-printf "%-10s %-8s %-20s %-12s %-1s\n" $(date +"%F %T") SSID:$apssid Netstat:SLOW Ping_timeout:${ping_timeout}ms >> $aplog || \
-printf "%-10s %-8s %-20s %-12s\n" $(date +"%F %T") SSID:$apssid Netstat:DOWN >> $aplog
+printf "%-10s %-8s %-20s %-12s %-1s\n" $(date +"%F %T") SSID:$apssid Netstat:SLOW Ping_timeout:${ping_timeout}ms >> $log || \
+printf "%-10s %-8s %-20s %-12s\n" $(date +"%F %T") SSID:$apssid Netstat:DOWN >> $log
 # --- Get Next AP infomation -------------------------------------------------
   if [ "$(echo "$apssidlist" | tail -n1)" = "$apssid" -o "$(echo "$apssidlist" | grep "$apssid")" != "$apssid" ] ; then
     ap=$(echo "$aplist" | head -n1)
@@ -98,7 +98,7 @@ printf "%-10s %-8s %-20s %-12s\n" $(date +"%F %T") SSID:$apssid Netstat:DOWN >> 
     [ "$router" = k2 ] && channel=$(echo $apinfo | awk '{print $1}')
     [ "$router" = k2p ] && channel=$(echo $apinfo | awk '{print $2}')
 # "rt/wl_mode_x"桥接模式：0=[AP(禁用桥接)] 1=[WDS桥接(禁用AP)] 2=[WDS中继(桥接+AP)] 3=[AP-Client(禁用AP)] 4=[AP-Client+AP]
-    nvram set ${mode_x}=3
+    nvram set ${mode_x}=4
 # "rt/wl_sta_wisp":0=[LAN bridge] 1=[WAN (Wireless ISP)]
     nvram set ${sta_wisp}=1
 # "rt/wl_channel"=0表示自动选择信道
