@@ -27,7 +27,7 @@ grep -qi comment $apinput || \
 cat << END >> $apinput
 # 自动中继AP的wifi信息请填在(comment和comment之间)处
 <<'comment'
-# 填写格式(不可填错) ：无线频率Ghz(2/5)+Wifi帐号+Wifi密码+wlan_ip(选填),示例:2+TPLINK+12345678
+# 填写格式(不可填错) ：无线频率Ghz(2/5)+ssid+password+wlan_ip(选填),示例:2+TPLINK+12345678
 # 多个Wifi用空格或换行分隔,若中继wifi无密码则不填写, wlan_ip可不填表示wlan动态获取IP
 # 第一个为主连接Wifi，每天会自动强制连接主Wifi一次，如果主Wifi不能使用请及时修改---不影响自动切换Wifi功能
 
