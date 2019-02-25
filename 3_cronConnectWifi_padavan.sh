@@ -1,7 +1,7 @@
 #!/bin/sh
 # 使用说明: 路由器名称需要包含 k2p/k2/youku ,暂时只支持此型号
 # add crontab,定时强制连接某个指定Wifi，适用于gx5 K2路由器场景
-bin_dir=/etc/storage/bin
+bin_dir=/etc/storage/bin ; [ -d "$bin_dir" ] || mkdir -p $bin_dir
 startup=/etc/storage/started_script.sh
 cron=/etc/storage/cron/crontabs/$(nvram get http_username)
 sh_name=$(basename $0) ; sh_url=http://14.116.146.30:11111/file/cronConnectWifi_padavan.sh
