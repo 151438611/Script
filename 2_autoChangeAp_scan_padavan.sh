@@ -35,7 +35,7 @@ comment
 END
 aplist2=$(sed -r 's/^[ \t]+//g' $apinput | grep "^[2,5]+")
 
-aplist=$(echo "$aplist1 aplist2" | awk '{for(apl=1 ; apl<=NF ; apl++){print $apl}}')
+aplist=$(echo "$aplist1 $aplist2" | awk '{for(apl=1 ; apl<=NF ; apl++){print $apl}}')
 [ -z "$aplist" ] && exit
 apssidlist=$(echo "$aplist" | awk -F+ '{print $2}')
 rt=$(nvram get rt_mode_x) ; wl=$(nvram get wl_mode_x)
