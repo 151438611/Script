@@ -7,3 +7,4 @@ cp -f $cron $bin_dir/crontab.txt
 
 cd $bin_dir 
 tar -zcvf /tmp/conf_backup_$(nvram get computer_name).tgz *.*
+rm -f $bin_dir/crontab.txt
