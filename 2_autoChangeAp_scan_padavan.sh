@@ -31,7 +31,7 @@ cat << END >> $apinput
 
 comment
 END
-aplist2=$(sed -r 's/^[ \t]+//g' $apinput | grep "^[2,5]")
+aplist2=$(sed -r 's/^[ \t]+//g' $apinput | grep "^[2,5]+")
 
 # === 3、设置检测网络的IP，若检测局域网状态，设成局域网IP(192.168.x.x)
 ip1=1.2.4.8 ; ip2=114.114.114.114
