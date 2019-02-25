@@ -8,7 +8,7 @@ startup=/etc/storage/started_script.sh
 cron=/etc/storage/cron/crontabs/$(nvram get http_username)
 sh_name=$(basename $0) ; sh_url=http://14.116.146.30:11111/file/cronConnectWifi_padavan.sh
 grep -qi $sh_name $cron || echo "55 5 * * * sh $bin_dir/$sh_name" >> $cron
-startup_ap="wget -P /tmp $sh_url && mv -f /tmp/$(basename $sh_url) $bin_dir/$sh_name ; sh $bin_dir/$sh_name"
+startup_ap="wget -P /tmp $sh_url && mv -f /tmp/$(basename $sh_url) $bin_dir/$sh_name"
 grep -qi $sh_name $startup || echo "$startup_ap" >> $startup
 log=/tmp/autoChangeAp.log
 
