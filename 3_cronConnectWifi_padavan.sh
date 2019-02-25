@@ -8,13 +8,13 @@ sh_name=$(basename $0) ; sh_url=http://14.116.146.30:11111/file/cronConnectWifi_
 grep -qi $sh_name $cron || echo "55 5 * * * sh $bin_dir/$sh_name" >> $cron
 startup_ap="wget -P /tmp $sh_url && mv -f /tmp/$(basename $sh_url) $bin_dir/$sh_name ; sh $bin_dir/$sh_name"
 grep -qi $sh_name $startup || echo "$startup_ap" >> $startup
-aplog=/tmp/autoChangeAp.log
+log=/tmp/autoChangeAp.log
 
 # ===1、设置路由器型号k2p和k2(youku-L1的2.4G接口名为ra0，和k2相同),因为k2和k2p的无线接口名称不一样==========
 host_name=$(nvram get computer_name)
 if [ -n "$(echo $host_name | grep -i k2p)" ] ; then router=k2p
 elif [ -n "$(echo $host_name | grep -Ei "k2|youku")" ] ; then router=k2
-else echo "!!! The router is Unsupported device , exit !!!" >> $aplog && exit
+else echo "!!! The router is Unsupported device , exit !!!" >> $log && exit
 fi
 # ===2、输入指定被中继的wifi帐号密码,格式{ 无线频段(2|5)+ssid+password+wan_ip },默认加密方式为WPA2-PSK/AES===
 # === 若wifi未加密则password为空，wlan_ip可不填表示wlan动态获取IP
@@ -26,7 +26,7 @@ appasswd=$(echo $ap | cut -d + -f 3) ; gwip=$(echo $ap | cut -d + -f 4)
 rt=$(nvram get rt_mode_x) ; wl=$(nvram get wl_mode_x)
 if   [ $rt -ne 0 -a $wl -eq 0 ] ; then apssid_old=$(nvram get rt_sta_ssid) ; band_old=2
 elif [ $rt -eq 0 -a $wl -ne 0 ] ; then apssid_old=$(nvram get wl_sta_ssid) ; band_old=5
-elif [ $rt -eq 0 -a $wl -eq 0 ] ; then echo "----- Wireless_bridge is disable , exit ! -----" >> $aplog && exit 
+elif [ $rt -eq 0 -a $wl -eq 0 ] ; then echo "----- Wireless_bridge is disable , exit ! -----" >> $log && exit 
 fi
 
 scanwifi() {
@@ -75,7 +75,7 @@ if [ "$apssid_old" != "$apssid" ] ; then
     nvram set wan_dns2_x=1.2.4.8
     nvram commit && sleep 2
     if [ $band -eq $band_old ] ; then radio${band}_restart ; else radio2_restart ; radio5_restart ; fi
-    echo "$(date +"%F %T") Old_WIFI was $apssid_old , Already switched $apssid ! " >> $aplog
+    echo "$(date +"%F %T") Old_WIFI was $apssid_old , Already switched $apssid ! " >> $log
   fi
-else  echo "$(date +"%F %T") Current_WIFI is $apssid , Don't do anything ! " >> $aplog
+else  echo "$(date +"%F %T") Current_WIFI is $apssid , Don't do anything ! " >> $log
 fi
