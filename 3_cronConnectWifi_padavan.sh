@@ -21,7 +21,7 @@ fi
 # ===2、输入指定被中继的wifi帐号密码,格式{ 无线频段(2|5)+ssid+password+wan_ip },默认加密方式为WPA2-PSK/AES===
 # === 若wifi未加密则password为空，wlan_ip可不填表示wlan动态获取IP
 apinput=/etc/storage/ez_buttons_script.sh
-ap=$(sed -r 's/^[ \t]+//g' $apinput | grep "^[2,5]+" | head -n1)
+ap=$(sed -r 's/^[ \t]+//g' $apinput | awk '/^[2,5]+/ {print $1}' | head -n1 )
 band=$(echo $ap | cut -d + -f 1)     ; apssid=$(echo $ap | cut -d + -f 2) && [ -z "$apssid" ] && exit
 appasswd=$(echo $ap | cut -d + -f 3) ; gwip=$(echo $ap | cut -d + -f 4)
 rt=$(nvram get rt_mode_x) ; wl=$(nvram get wl_mode_x)
