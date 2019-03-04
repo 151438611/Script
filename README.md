@@ -2,7 +2,7 @@
 
 &#10161; -----------------------frp客户端配置------------------------------------------
 - 路由器自动下载并执行frpc脚本（下发时把frpc.sh填写完整并放在服务端目录/tools/frp中,然后重启路由器即可）：<br>
-`wget -P /tmp http://14.116.146.30:11111/file/frp/frpc_padavan.sh && mv -f /tmp/frpc_padavan.sh /etc/storage/bin/frpc.sh ; sh /etc/storage/bin/frpc.sh`
+`wget -P /tmp http://14.116.146.xx:11111/file/frp/frpc_padavan.sh && mv -f /tmp/frpc_padavan.sh /etc/storage/bin/frpc.sh ; sh /etc/storage/bin/frpc.sh`
 
 &#10161; -----------------------使用说明-----------------------------------------------
 - MT7620、MT7621属于`mipsle`架构 , BCM4709属于`arm`架构 , AR9344属于`mips`架构
