@@ -2,7 +2,7 @@
 
 &#10161; -----------------------frp客户端配置------------------------------------------
 - 路由器自动下载并执行frpc脚本（下发时把frpc.sh填写完整并放在服务端目录/tools/frp中,然后重启路由器即可）：<br>
-`wget -P /tmp/ http://xiongxinyi.cn:2015/tools/frp/frpc_padavan.sh && mv -f /tmp/frpc_padavan.sh /etc/storage/bin/frpc.sh ; sh /etc/storage/bin/frpc.sh`
+`wget -P /tmp http://14.116.146.30:11111/file/frp/frpc_padavan.sh && mv -f /tmp/frpc_padavan.sh /etc/storage/bin/frpc.sh ; sh /etc/storage/bin/frpc.sh`
 
 &#10161; -----------------------使用说明-----------------------------------------------
 - MT7620、MT7621属于`mipsle`架构 , BCM4709属于`arm`架构 , AR9344属于`mips`架构
@@ -14,10 +14,10 @@
 - 子域名sudomain设定规则：地址缩写(多个后面+1)+网关(SN后2位)，示例：`sz20、jh28...`
 - 定时任务汇总：
 ```
-5 5 * * * [ -n "$(date +%e | grep -E "1|10|20")" ] && reboot || ping -c2 -w5 114.114.114.114 || reboot
-10 * * * * [ $(date +%k) -eq 6 ] && killall frpc ; sh /etc/storage/bin/frpc.sh
+5 5 * * * [ $(date +%u) -eq 1 ] && reboot || ping -c2 -w5 114.114.114.114 || reboot
+10 * * * * [ $(date +%k) -eq 5 ] && killall -q frpc ; sh /etc/storage/bin/frpc.sh
 */30 * * * * sh /etc/storage/bin/autoChangeAp.sh
-20 5 * * *   sh /etc/storage/bin/cronConWifi.sh
+20 6 * * *   sh /etc/storage/bin/cronConWifi.sh
 ```
 
 &#10161; padavan 弱信号剔除设置========================
