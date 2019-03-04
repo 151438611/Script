@@ -1,7 +1,7 @@
 #!/bin/sh
 
 autoap=/tmp/autoChangeAp.log
-old_ssid=$(awk -F "[ |:]" '/SSID:/{print $6}' $autoap | tail -n1)
+old_ssid=$(awk -F "[ |:]" '/SSID:/{print $6}' $autoap | tail -n2 | head -n1)
 current_ssid=$(nvram get rt_sta_ssid)
 
 if [ "$old_ssid" != "$current_ssid" ] ; then
