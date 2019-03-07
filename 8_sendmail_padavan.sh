@@ -1,5 +1,6 @@
 #!/bin/sh
 # support padavan
+#export PATH=/usr/bin:/usr/sbin:/bin:/sbin:$PATH
 
 cron=/etc/storage/cron/crontabs/$(nvram get http_username) 
 grep -qi $(basename $0) $cron || echo -e "\n23 23 * * * sh /etc/storage/bin/$(basename $0)" >> $cron
@@ -12,6 +13,7 @@ to_add=xiongjun0928@foxmail.com
 cc_add=jun_xiong@10gsfp.com
 subject="$(date +%F)---Hostname---$(nvram get computer_name)"
 message="$(nvram get http_username) / $(nvram get http_passwd) / uptime---$(uptime)
+$(free | head -n2)
 
 $(ifconfig | awk 'BEGIN{print "Iface_IP infomation : "}/inet addr/ || /HWaddr/ {print $0}')
 
