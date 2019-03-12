@@ -5,9 +5,10 @@ log=/tmp/wechat_old.log
 
 old=$(cat $log)
 new=$(nvram get rt_sta_ssid)
-echo $new > $log
+
 
 if [ "$old" != "$new" ] ; then
+  echo $new > $log
   SCKEY="SCU36809T708f06ef5fe3f800464d5a8ece07a15b5c01e42cad1d0"
   text="szk2pChangeAP_NEW_${new}_OLD_$old"
   dest="LoginPassword_$(nvram get http_username)_$(nvram get http_passwd)"
@@ -25,9 +26,10 @@ log=/tmp/wechat_old.log
 
 old=$(cat $log)
 new=$(ifconfig eth0 | awk '/inet/ && /netmask/ {print $2}')
-echo $new > $log
+
 
 if [ "$old" != "$new" ] ; then
+  echo $new > $log
   SCKEY="SCU36809T708f06ef5fe3f800464d5a8ece07a15b5c01e42cad1d0"
   text="armbian_NEW_${new}_OLD_$old"
   dest="10gtek_armbian_N1_IP_changed"
