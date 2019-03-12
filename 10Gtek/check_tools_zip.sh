@@ -54,7 +54,7 @@ fi
 older_num_old=$(echo $older_all | awk '{print $5}')
 case $older_kind in
 "H3C码")
-older_num=$((older_num_old * 2 + 5)) ;;
+older_num=$((older_num_old * 2 + 3)) ;;
 *)
 if [ -n "$(echo $older_type | grep -Ei "8644/qsfp|qsfp/4xfp")" ] ; then older_num=$(($older_num_old * 2))
 elif [ -n "$(echo $older_type | grep -Ei "10gsfp|sfp-sfp|xfp/xfp")" ] ; then older_num=$(($older_num_old * 3 + 1))
