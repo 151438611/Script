@@ -1,3 +1,4 @@
+#===================== for gxk2_05 ================================
 #!/bin/bash
 export PATH=/bin:/sbin:/usr/bin:/usr/sbin:$PATH
 log=/tmp/wechat_old.log
@@ -18,7 +19,7 @@ fi
 
 
 
-#=====================for armbian_N1================================
+#===================== for armbian_N1 ================================
 #!/bin/bash
 export PATH=/bin:/sbin:/usr/bin:/usr/sbin:$PATH
 log=/tmp/wechat_old.log
