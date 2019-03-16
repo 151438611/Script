@@ -58,7 +58,7 @@ older_num=$((older_num_old * 2 + 3)) ;;
 *)
 if [ -n "$(echo $older_type | grep -Ei "8644/qsfp|qsfp/4xfp")" ] ; then older_num=$(($older_num_old * 2))
 elif [ -n "$(echo $older_type | grep -Ei "10gsfp|sfp-sfp|xfp/xfp")" ] ; then older_num=$(($older_num_old * 3 + 1))
-elif [ -n "$(echo $older_type | grep -i "xfp/sfp")" ] ; then older_num=$(($older_num_old * 2))
+elif [ -n "$(echo $older_type | grep -i "xfp/sfp")" ] ; then older_num=$(($older_num_old * 2 + 1))
 elif [ -n "$(echo $older_type | grep -i "zsp/zsp")" ] ; then older_num=$(($older_num_old * 2 + 1))
 elif [ -n "$(echo $older_type | grep -i "zqp/2zqp")" ] ; then older_num=$((($older_num_old * 2 + 2) * 3 + 1))
 elif [ -n "$(echo $older_type | grep -i "zqp/4zsp")" ] ; then older_num=$(($older_num_old * 6 + 3))
