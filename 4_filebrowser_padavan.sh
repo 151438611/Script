@@ -1,5 +1,6 @@
 #!/bin/sh
 # for Padavan 
+export PATH=/bin:/sbin:/usr/bin:/usr/sbin:$PATH
 user=$(nvram get http_username) ; cron=/etc/storage/cron/crontabs/$user
 startup=/etc/storage/started_script.sh
 grep -qi $(basename $0) $startup || echo "sh /etc/storage/bin/$(basename $0)" >> $startup
