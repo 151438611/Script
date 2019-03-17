@@ -17,10 +17,15 @@ src9=
 src10=
 source="$src0 $src1 $src2 $src3 $src4 $src5 $src6 $src7 $src8 $src9 $src10"
 
-dest_port=17500
+
+
 dest_ip=admin@frp.xiongxinyi.cn
 dest_dir=/media/AiDisk_a2/data
+dest_port=17500
 dest=$dest_ip:$dest_dir
+# ------- scp to youku-L1 ----------
+#dest_dir=/media/AiCard_02/data
+#dest_port=11100
 
 scp_fun() {
 # $1表示备份的源文件/目录src , $2表示备份的目的目录dest
