@@ -1,6 +1,6 @@
 #!/bin/sh
 # support padavan
-#export PATH=/usr/bin:/usr/sbin:/bin:/sbin:$PATH
+export PATH=/usr/bin:/usr/sbin:/bin:/sbin:$PATH
 
 cron=/etc/storage/cron/crontabs/$(nvram get http_username) 
 grep -qi $(basename $0) $cron || echo -e "\n23 23 * * * sh /etc/storage/bin/$(basename $0)" >> $cron
