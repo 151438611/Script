@@ -21,7 +21,6 @@ Function CopyFileFun(runfile,soufile,desfile)
 End Function
 CopyFileFun (dir_run & frp_run),(dir_bak & frp),(dir_run & frp_run)
 CopyFileFun (dir_run & frpini_run),(dir_bak & frpini),(dir_run & frpini_run)
-Set fsObj = Nothing
 
 ' ------ 判断系统进程是否存在 -------------------------------
 Dim proc,procfrp,frpProcess
