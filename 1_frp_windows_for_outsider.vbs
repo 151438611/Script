@@ -34,5 +34,5 @@ Next
 
 set objShell = WScript.CreateObject("WScript.Shell")
 If Not frpProcess Then objShell.Run (dir_run & frp_run & " -c " & dir_run & frpini_run), 0 End If
-Set objShell = Nothing
+
 WScript.Quit
