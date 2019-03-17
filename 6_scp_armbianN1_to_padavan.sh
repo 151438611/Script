@@ -17,8 +17,6 @@ src9=
 src10=
 source="$src0 $src1 $src2 $src3 $src4 $src5 $src6 $src7 $src8 $src9 $src10"
 
-
-
 dest_ip=admin@frp.xiongxinyi.cn
 dest_dir=/media/AiDisk_a2/data
 dest_port=17500
