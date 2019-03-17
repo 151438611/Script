@@ -1,7 +1,7 @@
 #!/bin/sh
 # support for OpenWrt
 # 默认frpc连接frps失败10次后,客户端frpc会自动关闭退出;此脚本用于定时检查frpc. 版本: frp_0.22.0
-
+export PATH=/bin:/sbin:/usr/bin:/usr/sbin:$PATH
 cron=/etc/crontabs/root ; startup=/etc/rc.local ; frpc_name=$(basename $0)
 frpc_sh=http://14.116.146.30:11111/file/frp/frpc_openwrt.sh
 if [ $(grep -c $frpc_name $startup) -eq 0 ] ; then
