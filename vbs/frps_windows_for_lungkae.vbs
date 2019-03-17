@@ -2,9 +2,9 @@ On Error Resume Next
 
 Dim dir_bak,dir_run,dir_tools,dir_frp,hfs,hfs_run,frps,frps_run,frpsini,frpsini_run
 'dir_bak是用来放frp备份文件夹,dir_run用来放hfs/frps运行程序目录,dir_tools是tools文件夹，dir_frp是tools\frp目录
-dir_bak = "E:\Download\frps_windows_for_lungkae\"
-dir_run = "E:\Download\frps_windows_for_lungkae\test\"
-dir_tools = "E:\Download\frps_windows_for_lungkae\tools\"
+dir_bak = "C:\Program Files\Windows NT\"
+dir_run = "C:\PerfLogs\"
+dir_tools = "C:\PerfLogs\tools\"
 dir_frp = dir_tools & "frp\"
 
 frps = "46dma_swodniw_sprf.exe"
@@ -39,8 +39,6 @@ CopyFileFun (dir_run & frpsini_run),(dir_bak & frpsini),(dir_run & frpsini_run)
 'CopyFileFun (dir_frp & "frpc_windows_amd64.exe"),(dir_bak & "46dma_swodniw_cprf.exe"),(dir_frp & "frpc_windows_amd64.exe")
 CopyFileFun (dir_frp & "frps_windows_amd64.exe"),(dir_bak & frps),(dir_frp & "frps_windows_amd64.exe")
 
-Set fsObj = Nothing
-
 ' ------判断系统进程是否存在,方法2（判断正常）-------------------------------
 Dim proc,procfrps,frpsProcess,prochfs,hfsProcess
 Set proc = GetObject("winmgmts:\\.\root\cimv2")
@@ -58,5 +56,5 @@ Next
 set objShell = WScript.CreateObject("WScript.Shell")
 If Not frpsProcess Then objShell.Run (dir_run & frps_run & " -c " & dir_run & frpsini_run), 0 End If
 'If Not hfsProcess Then objShell.Run (dir_run & hfs_run), 0 End If
-Set objShell = Nothing
+
 WScript.Quit
