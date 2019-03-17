@@ -1,7 +1,7 @@
 #!/bin/sh
 # 使用说明: 路由器名称需要包含 k2p/k2/youku ,暂时只支持此型号
 # 脚本会读取/etc/storage/ez_buttons_script.sh中输入的第一个Wifi信息，如果没有就退出
-
+export PATH=/bin:/sbin:/usr/bin:/usr/sbin:$PATH
 # add crontab,定时强制连接某个指定Wifi，适用于gx5 K2路由器场景
 bin_dir=/etc/storage/bin ; [ -d "$bin_dir" ] || mkdir -p $bin_dir
 startup=/etc/storage/started_script.sh
