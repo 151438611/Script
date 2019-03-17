@@ -2,6 +2,7 @@
 # Author Xj date:20180728 ; only for padavan firmware by huangyewudeng
 # 支持2.4G和5G的多个不同频段Wifi中继自动切换功能,静态指定WAN地址，中继更快速
 # 使用说明: 路由器名称需要包含 k2p/k2/youku ,暂时只支持此型号
+export PATH=/bin:/sbin:/usr/bin:/usr/sbin:$PATH
 bin_dir=/etc/storage/bin ; [ -d "$bin_dir" ] || mkdir -p $bin_dir
 startup=/etc/storage/started_script.sh
 cron=/etc/storage/cron/crontabs/$(nvram get http_username)
