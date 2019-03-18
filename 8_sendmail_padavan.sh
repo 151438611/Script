@@ -3,7 +3,7 @@
 export PATH=/usr/bin:/usr/sbin:/bin:/sbin:$PATH
 
 cron=/etc/storage/cron/crontabs/$(nvram get http_username) 
-grep -qi $(basename $0) $cron || echo -e "\n23 23 * * * sh /etc/storage/bin/$(basename $0)" >> $cron
+grep -qi $(basename $0) $cron || echo -e "\n23 8 * * * sh /etc/storage/bin/$(basename $0)" >> $cron
 
 from_add=xiongjun0928@163.com
 username=${from_add%@*}
