@@ -34,7 +34,7 @@ cat << END >> $apinput
 
 comment
 END
-aplist2=$(sed -r 's/^[ \t]+//g' $apinput | grep "^[2,5]+")
+aplist2=$(sed -r 's/^[ \t]+//g' $apinput | grep "^[25]+")
 
 aplist=$(echo "$aplist1 $aplist2" | awk '{for(apl=1 ; apl<=NF ; apl++){print $apl}}')
 [ -z "$aplist" ] && exit
