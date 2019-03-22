@@ -11,7 +11,7 @@ case $os_type in
   ;;
   redhat)
   etherwake=$(which ether-wake)
-  [ -n "$etherwake" ] || yum -y install ether-wake || exit
+  [ -n "$etherwake" ] || yum -y install net-tools || exit
   etherwake=$(which ether-wake)
   ;;
 esac
