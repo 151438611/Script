@@ -2,7 +2,7 @@
 
 grep -qEi "debian|ubuntu" /etc/os-release && os_type=debian
 grep -qEi "redhat|centos" /etc/os-release && os_type=redhat
-
+[ -n "$os_type" ] || exit
 case $os_type in
   debian)
   etherwake=$(which etherwake)
