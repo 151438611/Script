@@ -1,4 +1,5 @@
 #!/bin/sh
+# 适用于网络唤醒: 10gtek公司的电脑、youku_L1连接的Lenovo_MT8200视频电脑
 
 [ -n "$(which etherwake)" ] && etherwake=$(which etherwake) 
 [ -n "$(which ether-wake)" ] && etherwake=$(which ether-wake)
