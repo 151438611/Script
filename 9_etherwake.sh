@@ -1,6 +1,6 @@
 #!/bin/sh
 
-grep -qEi "debian|ubutu" /etc/os-release && os_type=debian
+grep -qEi "debian|ubuntu" /etc/os-release && os_type=debian
 grep -qEi "redhat|centos" /etc/os-release && os_type=redhat
 
 case $os_type in
