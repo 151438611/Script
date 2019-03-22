@@ -12,7 +12,6 @@ echo "5 : 10gtek_cisco_coding_computer"
 echo "6 : jh_mt8200_computer"
 echo ""
 read -p "Please input a number : " device
-[ -n "$device" ] || exit
 case $device in
   1) mac=70:85:c2:30:b9:cd ;;
   2) mac=00:d8:61:10:df:a8 ;;
