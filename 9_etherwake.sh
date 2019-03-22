@@ -6,18 +6,19 @@ grep -qEi "redhat|centos" /etc/os-release && os_type=redhat
 case $os_type in
   debian)
   etherwake=$(which etherwake) 
-  [ -z "$etherwake" ] && apt -y install etherwake || exit
+  [ -n "$etherwake" ] || apt -y install etherwake || exit
   ;;
   redhat)
   etherwake=$(which ether-wake)
-  [ -z "$etherwake" ] && yum -y install ether-wake || exit
+  [ -n "$etherwake" ] || yum -y install ether-wake || exit
   ;;
 esac
 
-echo "1 : 10gtek_windows10_office_computer"
+echo -e "\n1 : 10gtek_windows10_office_computer"
 echo "2 : 10gtek_windows2016_test_computer"
 echo "3 : 10gtek_centos7_up_computer"
-echo "4 : 10gtek_centos7_down_computer"
+echo -e "4 : 10gtek_centos7_down_computer \n"
+
 read -p "Please input a number : " device
 [ -n "$device" ] || exit
 case $device in
