@@ -14,10 +14,10 @@ case $os_type in
   ;;
 esac
 
-echo "1 ：10gtek_windows10_office_computer"
-echo "2 ：10gtek_windows2016_test_computer"
-echo "3 ：10gtek_centos7_up_computer"
-echo "4 ：10gtek_centos7_down_computer"
+echo "1 : 10gtek_windows10_office_computer"
+echo "2 : 10gtek_windows2016_test_computer"
+echo "3 : 10gtek_centos7_up_computer"
+echo "4 : 10gtek_centos7_down_computer"
 read -p "Please input a number : " device
 [ -n "$device" ] || exit
 case $device in
