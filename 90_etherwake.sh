@@ -25,4 +25,5 @@ esac
 
 $etherwake -b $mac &> /dev/null
 $etherwake -i eth0 -b $mac &> /dev/null
+# 下面命令用于youku_L1连接的Lenovo_MT8200视频电脑
 $etherwake -i br0 -b $mac &> /dev/null
