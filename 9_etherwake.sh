@@ -8,7 +8,8 @@ echo -e "\n1 : 10gtek_windows10_office_computer"
 echo "2 : 10gtek_windows2016_test_computer"
 echo "3 : 10gtek_centos7_up_computer"
 echo "4 : 10gtek_centos7_down_computer"
-echo -e "5 : 10gtek_cisco_coding_computer \n"
+echo "5 : 10gtek_cisco_coding_computer"
+echo -e "6 : JH_mt8200_computer\n"
 
 read -p "Please input a number : " device
 [ -n "$device" ] || exit
@@ -18,7 +19,8 @@ case $device in
   3) mac=e0:d5:5e:47:ca:ec ;;
   4) mac=00:d8:61:10:df:a2 ;;
   5) mac=48:5b:39:a7:78:5b ;;
-  *) echo "Please input 1~5 number" && exit ;;
+  6) mac=44:37:e6:84:d7:ba ;;
+  *) echo "Please input a number" && exit ;;
 esac
 
 $etherwake -b $mac &> /dev/null
