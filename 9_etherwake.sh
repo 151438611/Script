@@ -1,20 +1,8 @@
 #!/bin/sh
 
-grep -qEi "debian|ubuntu" /etc/os-release && os_type=debian
-grep -qEi "redhat|centos" /etc/os-release && os_type=redhat
-[ -n "$os_type" ] || exit
-case $os_type in
-  debian)
-  etherwake=$(which etherwake)
-  [ -n "$etherwake" ] || apt -y install etherwake || exit
-  etherwake=$(which etherwake) 
-  ;;
-  redhat)
-  etherwake=$(which ether-wake)
-  [ -n "$etherwake" ] || yum -y install net-tools || exit
-  etherwake=$(which ether-wake)
-  ;;
-esac
+[ -n "$(which etherwake)" ] && etherwake=$(which etherwake) 
+[ -n "$(which ether-wake)" ] && etherwake=$(which ether-wake)
+[ -z "$etherwake" ] && echo "etherwake or ether-wake command not found !!!" && exit
 
 echo -e "\n1 : 10gtek_windows10_office_computer"
 echo "2 : 10gtek_windows2016_test_computer"
@@ -35,3 +23,4 @@ esac
 
 $etherwake -b $mac &> /dev/null
 $etherwake -i eth0 -b $mac &> /dev/null
+$etherwake -i br0 -b $mac &> /dev/null
