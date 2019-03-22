@@ -31,4 +31,5 @@ case $device in
   *) echo "Please input 1~4 number" && exit ;;
 esac
 
-$etherwake -b $mac || $etherwake -i eth0 -b $mac
+$etherwake -b $mac &> /dev/null
+$etherwake -i eth0 -b $mac &> /dev/null
