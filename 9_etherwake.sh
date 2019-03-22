@@ -19,7 +19,7 @@ case $device in
   4) mac=00:d8:61:10:df:a2 ;;
   5) mac=48:5b:39:a7:78:5b ;;
   6) mac=44:37:e6:84:d7:ba ;;
-  *) echo "Please input a number" && exit ;;
+  *) echo "Please enter a valid number !!!" && exit ;;
 esac
 
 $etherwake -b $mac &> /dev/null
