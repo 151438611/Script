@@ -9,8 +9,8 @@ echo "2 : 10gtek_windows2016_test_computer"
 echo "3 : 10gtek_centos7_up_computer"
 echo "4 : 10gtek_centos7_down_computer"
 echo "5 : 10gtek_cisco_coding_computer"
-echo -e "6 : JH_mt8200_computer\n"
-
+echo "6 : jh_mt8200_computer"
+echo ""
 read -p "Please input a number : " device
 [ -n "$device" ] || exit
 case $device in
