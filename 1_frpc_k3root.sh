@@ -1,7 +1,7 @@
 #!/bin/sh
 # for K3_root , ARM cpu
 user_name=$(nvram get http_username) ; crontab=/etc/crontabs/$user_name
-frpc_sh=http://14.116.146.30:11111/file/frp/frpc_K3root.sh ; frpc_name=$(basename $0)
+frpc_sh=http://14.116.146.30:11111/file/frp/frpc_k3root.sh ; frpc_name=$(basename $0)
 startup_frpc="sleep 50 ; wget -P /tmp/ $frpc_sh && mv -f /tmp/$(basename $frpc_sh) /opt/$frpc_name ; sh /opt/$frpc_name"
 grep -qi "$frpc_name" /opt/started_script.sh || echo "$startup_frpc" >> /opt/started_script.sh
 
