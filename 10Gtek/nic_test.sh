@@ -5,9 +5,10 @@ export PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:$PATH
 log="/tmp/nic_test.txt" ; date +"%F %T" > $log
 clear
 echo -e "\n请先确认测试电脑已配置好如下IP信息："
-echo "上面的测试电脑需配置IP信息：eth1:192.168.6.101 eth2:192.168.7.101 eth3:192.168.8.101 eth4:192.168.9.101;"
-echo "下面的测试电脑需配置IP信息：eth1:192.168.6.201 eth2:192.168.7.201 eth3:192.168.8.201 eth4:192.168.9.201;"
-echo "且二台电脑的同号端口相连，不可混连; 例如: eth1连接eth1、eth2连接eth2 依此连接 ... "
+echo -e "\n上面的测试电脑需配置IP信息：eth1:192.168.6.101 eth2:192.168.7.101 eth3:192.168.8.101 eth4:192.168.9.101;"
+echo -e "\n下面的测试电脑需配置IP信息：eth1:192.168.6.201 eth2:192.168.7.201 eth3:192.168.8.201 eth4:192.168.9.201;"
+echo -e "\n且二台电脑的同号端口相连，不可混连; 例如: eth1连接eth1、eth2连接eth2 依此连接 ... "
+echo -e "\n注意：测试网卡需要二张同端口的网卡，端口数不同的网卡测试只能按照端口少的来连接！！！\n"
 
 sleep 3 ; echo "开始读取PCI-E插入网卡信息..."
 ethernet=$(lspci | grep -i "Ethernet controller")
