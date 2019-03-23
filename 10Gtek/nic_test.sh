@@ -55,7 +55,7 @@ ping -w 2 $dest_ip &> /dev/null && \
 ping -c $count -i 0.05 $dest_ip | tee /tmp/ping.log 
 ping_head=$(head -n6 /tmp/ping.log)
 ping_tail=$(tail /tmp/ping.log)
-[ -n $(echo "$ping_tail" | awk '/0% packet loss/ {print $0}') ] && result="Ping包成功，无丢包:" || result="Ping包失败或有丢包:"
+[ -n "$(echo "$ping_tail" | awk '/0% packet loss/ {print $0}')" ] && result="Ping包成功，无丢包:" || result="Ping包失败或有丢包:"
 echo -e "\n$result\n$ping_head\n......\nping_tail" | tee -a $log 
 
 echo -e "\n请先将另一台电脑作为服务端，运行 "iperf3 -s" 命令"
@@ -64,7 +64,7 @@ read -p "请确认另一台电脑已运行 "iperf3 -s" , 按 回车键 开始性
 iperf3 -c $dest_ip -t 60 | tee /tmp/iperf.log
 iperf_head=$(head -n6 /tmp/iperf.log)
 iperf_tail=$(tail /tmp/iperf.log)
-[ -n $(echo "$iperf_tail" | grep "iperf Done") ] && result="性能测试完成: " || result="性能测试失败: " 
+[ -n "$(echo "$iperf_tail" | grep "iperf Done")" ] && result="性能测试完成: " || result="性能测试失败: " 
 echo -e "\n$result\n$iperf_head\n......\niperf_tail" | tee -a $log 
 
 unix2dos -o $log ; rm -f /tmp/ping.log /tmp/iperf.log
