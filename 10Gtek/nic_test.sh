@@ -17,8 +17,8 @@ echo -e "\n$result\n$ethernet\n" | tee -a $log
 
 ip addr | awk '/</ {print $0}'
 echo -e "\nPCIE网卡端口号从eth1开始 , state UP表示已链接,state DOWN表示未链接\n"
-read -p "请输入测试的网卡端口号 <eth1/eth2/eth3/eth4>: " port  
-eth_i=$(ethtool -i $port)
+read -p "请输入测试的网卡端口号(默认eth1) , <eth1/eth2/eth3/eth4>: " port  
+eth_i=$(ethtool -i ${port:=eth1})
 [ $? -eq 0 ] && result="读取网卡驱动版本信息成功:" || result="读取网卡驱动版本信息失败:"
 echo -e "\n$result\n$eth_i" | tee -a $log 
 
@@ -35,7 +35,7 @@ link_speed=$(echo "$link_cmd" |awk '/Speed:/{print int($2)}')
 echo -e "\n$result\n$link_cmd" | tee -a $log 
 
 echo -e "\n开始进行 Ping 包测试...\n"
-read -p "请输入Ping包次数,默认2000: (2000-10000以内)" count
+read -p "请输入Ping包次数(默认2000) : <2000-10000>" count
 [ -n $(echo ${count:=2000} | tr -d [0-9]) ] && count=2000
 net_ip=$(ifconfig eth1 | awk '/inet/ && /netmask/ {print $2}')
 if [ -n "$(echo $net_ip |  grep 10)" ] ; then
