@@ -37,17 +37,19 @@ read -p "请输入Ping包次数,默认2000: (2000-10000以内)" count
 [ -n $(echo ${count:=2000} | tr -d [0-9]) ] && count=2000
 net_ip=$(ifconfig eth1 | awk '/inet/ && /netmask/ {print $2}')
 if [ -n "$(echo $net_ip |  grep 10)" ] ; then
-case
+case $port in
  eth1) dest_ip=192.168.6.201 ;;
  eth2) dest_ip=192.168.7.201 ;;
  eth3) dest_ip=192.168.8.201 ;;
  eth4) dest_ip=192.168.9.201 ;;
-esca
+esac
 elif [ -n "$(echo $net_ip |  grep 20)" ] ; then
+case  $port in
  eth1) dest_ip=192.168.6.101 ;;
  eth2) dest_ip=192.168.7.101 ;;
  eth3) dest_ip=192.168.8.101 ;;
  eth4) dest_ip=192.168.9.101 ;;
+esac
 fi
 ping -w 2 $dest_ip &> /dev/null && \
 ping -c $count -i 0.05 $dest_ip | tee /tmp/ping.log 
