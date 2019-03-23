@@ -21,9 +21,7 @@ server_addr=frp.xiongxinyi.cn ; token=administrator ; subdomain=$host_name$i
 frpc_url1=http://14.116.146.30:11111/file/frp/frpc_linux_arm && md5_frpc1=cf0ec5bc1e22acff89ce8363cf2d2880
 frpc_url2=http://14.116.146.30:12222/file/frp/frpc_linux_arm && md5_frpc2=cf0ec5bc1e22acff89ce8363cf2d2880
 md5_frpc="$md5_frpc1 $md5_frpc2 "
-
-udisk=$(mount | awk '$1~"/dev/" && $3~"/media/"{print $3}' | head -n1) ; udisk=${udisk:=/tmp}
-frpc=$udisk/frpc ; frpcini="/opt/frpc.ini" 
+frpc=/opt/frpc ; frpcini="/opt/frpc.ini" 
 
 #echo -------------------------- frpc ---------------------------------------------------
 download_frpc() {
