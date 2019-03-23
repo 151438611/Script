@@ -10,13 +10,14 @@ echo -e "\n下面的测试电脑需配置IP信息：eth1:192.168.6.201 eth2:192.
 echo -e "\n且二台电脑的同号端口相连，不可混连; 例如: eth1连接eth1、eth2连接eth2 依此连接 ... "
 echo -e "\n注意：测试网卡需要二张同端口的网卡，端口数不同的网卡测试只能按照端口少的来连接！！！\n"
 
-sleep 3 ; echo "开始读取PCI-E插入网卡信息..."
+sleep 3 ; echo -e "\n开始读取PCI-E插入网卡信息..."
 ethernet=$(lspci | grep -i "Ethernet controller")
 [ $(echo $ethernet | wc -l) -lt 1 ] && result="识别网卡成功:" || result="未识别插入的PCI-E网卡:"
-echo -e "\n$result\n$ethernet" | tee -a $log 
+echo -e "\n$result\n$ethernet\n" | tee -a $log 
 
 ip addr | awk '/</ {print $0}'
-read -p "请输入测试的网卡端口号,state UP表示已链接,state DOWN表示未链接 (见上面 eth[1-4] ) : " port  
+echo -e "\nPCIE网卡端口号从eth1开始 , state UP表示已链接,state DOWN表示未链接\n"
+read -p "请输入测试的网卡端口号 <eth1/eth2/eth3/eth4>: " port  
 eth_i=$(ethtool -i $port)
 [ $? -eq 0 ] && result="读取网卡驱动版本信息成功:" || result="读取网卡驱动版本信息失败:"
 echo -e "\n$result\n$eth_i" | tee -a $log 
