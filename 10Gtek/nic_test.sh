@@ -2,7 +2,7 @@
 # 用于在Centos测试电脑上进行网卡测试
 
 export PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:$PATH
-log="~/nic_test.txt" ; date +"%F %T" > $log
+log="/tmp/nic_test.txt" ; date +"%F %T" > $log
 clear
 echo -e "\n请先确认测试电脑已配置好如下IP信息："
 echo "上面的测试电脑需配置IP信息：eth1:192.168.6.101 eth2:192.168.7.101 eth3:192.168.8.101 eth4:192.168.9.101;"
@@ -68,4 +68,4 @@ iperf_tail=$(tail /tmp/iperf.log)
 echo -e "\n$result\n$iperf_head\n......\niperf_tail" | tee -a $log 
 
 unix2dos -o $log ; rm -f /tmp/ping.log /tmp/iperf.log
-echo -e "\n测试已完成 ! 测试数据保存在 nic_test.txt 中，请及时拷出！！！\n"
+echo -e "\n测试已完成 ! 测试数据保存在 /tmp/nic_test.txt 中，请及时拷出！！！\n"
