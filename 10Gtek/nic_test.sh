@@ -16,7 +16,7 @@ ethernet=$(lspci | grep -i "Ethernet controller")
 echo -e "\n$result\n$ethernet\n" | tee -a $log 
 
 ip addr | awk '/</ {print $0}'
-echo -e "\nPCIE网卡端口号从eth1开始 , state UP表示已链接,state DOWN表示未链接\n"
+echo -e "\n说明:PCIE网卡端口号从eth1开始 , state UP表示已链接,state DOWN表示未链接\n"
 read -p "请输入测试的网卡端口号(默认eth1) , <eth1/eth2/eth3/eth4>: " port  
 eth_i=$(ethtool -i ${port:=eth1})
 [ $? -eq 0 ] && result="读取网卡驱动版本信息成功:" || result="读取网卡驱动版本信息失败:"
