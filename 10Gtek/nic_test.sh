@@ -18,8 +18,11 @@ ip addr | awk '/</ {print $0}'
 echo ""
 read -p "请输入连接的网卡端口号,默认eth1, 请输入 <eth1/eth2/eth3/eth4> : " port 
 echo ""
-read -p "请输入Ping包次数,默认2000, 请输入 <2000-10000> : " count 
+read -p "请输入Ping包次数,默认2000次, 请输入 <2000-10000> : " count 
 [ -n $(echo ${count:=2000} | tr -d [0-9]) ] && count=2000
+echo ""
+read -p "请输入iperf3性能测试时长,默认60秒, 请输入自定义时间，单位为秒 : " iperf_time
+[ -n $(echo ${iperf_time:=60} | tr -d [0-9]) ] && iperf_time=60
 
 echo -e "\n开始自动进行测试: "
 echo -e "\n正在读取PCI-E插入网卡信息..."
@@ -30,20 +33,20 @@ if [ $(echo $ethernet | wc -l) -lt 1 ] ; then
   echo -e "$ethernet\n" >> $log 
 else 
   result="未识别插入的PCI-E网卡"
-  echo -e "\n${result},请重新检查是否已插好，再来测试 !!!\n" && exit
+  echo -e "\n$result,请重新检查是否已插好,再来测试 !!!\n" && exit
 fi
 
 
 eth_i=$(ethtool -i ${port:=eth1} 2> /dev/null)
 [ $? -eq 0 ] && result="读取网卡驱动版本信息成功:" || result="读取网卡驱动版本信息失败:"
 echo -e "\n$result" | tee -a $log 
-echo -e "$eth_i\n" >> $log 
+echo -e "$eth_i" >> $log 
 
-echo -e "\n正在读取EEPROM信息...\n"
+echo -e "\n正在读取EEPROM信息..."
 eth_m=$(ethtool -m $port 2> /dev/null)
 [ $? -eq 0 ] && result="读取EEPROM信息成功:" || result="读取EEPROM信息失败:"
 echo -e "\n$result\n$eth_m" | tee -a $log 
-echo -e "$eth_m\n" >> $log 
+echo -e "$eth_m" >> $log 
 
 echo -e "\n正在读取链路连通状态...\n"
 link_cmd=$(ethtool $port 2> /dev/null)
@@ -53,7 +56,7 @@ link_speed=$(echo "$link_cmd" |awk '/Speed:/{print int($2)}')
 echo -e "\n$result" | tee -a $log
 echo "$link_cmd" >> $log 
 
-echo -e "\n开始进行 Ping 包测试...\n"
+echo -e "\n正在进行 $count 次的 Ping 包测试..."
 net_ip=$(ifconfig eth1 2> /dev/null | awk '/inet/ && /netmask/ {print $2}')
 if [ -n "$(echo $net_ip |  grep 10)" ] ; then
   case $port in
@@ -77,6 +80,7 @@ ping_tail=$(tail /tmp/ping.log 2> /dev/null)
 echo -e "\n$result" | tee -a $log
 echo -e "$ping_head\n......\nping_tail" >> $log
 
+echo -e "\n正在进行 $iperf_time 秒的 iperf3 性能测试..."
 iperf3 -c $dest_ip -t 60 | tee /tmp/iperf.log
 iperf_head=$(head -n6 /tmp/iperf.log 2> /dev/null)
 iperf_tail=$(tail /tmp/iperf.log 2> /dev/null)
