@@ -17,14 +17,21 @@ echo ""
 ip addr | awk '/</ {print $0}'
 echo -e "\n说明:PCIE网卡端口号从eth1开始 , state UP表示已链接,state DOWN表示未链接\n"
 read -p "请输入插入的网卡端口号,默认eth1, 请输入 <eth1/eth2/eth3/eth4> : " port 
+echo ""
 read -p "请输入Ping包次数,默认2000, 请输入 <2000-10000> : " count 
 [ -n $(echo ${count:=2000} | tr -d [0-9]) ] && count=2000
 
 echo -e "\n开始读取PCI-E插入网卡信息..."
 ethernet=$(lspci | grep -i "Ethernet controller")
-[ $(echo $ethernet | wc -l) -lt 1 ] && result="识别网卡成功:" || result="未识别插入的PCI-E网卡:"
-echo -e "\n$result" | tee -a $log 
-echo -e "$ethernet\n" >> $log 
+if [ $(echo $ethernet | wc -l) -lt 1 ] ; then 
+  result="识别网卡成功:"
+  echo -e "\n$result" | tee -a $log 
+  echo -e "$ethernet\n" >> $log 
+else 
+  result="未识别插入的PCI-E网卡"
+  echo -e "\n${result},请重启检查是否插好，再来测试 !!!\n" && exit
+fi
+
 
 eth_i=$(ethtool -i ${port:=eth1} 2> /dev/null)
 [ $? -eq 0 ] && result="读取网卡驱动版本信息成功:" || result="读取网卡驱动版本信息失败:"
