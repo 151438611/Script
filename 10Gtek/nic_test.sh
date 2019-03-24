@@ -11,7 +11,7 @@ echo -e "\n2、二台电脑的同号端口相连,不可混连,否则无法测试
 echo "   注意:尽量使用端口数量相同的网卡,端口数不同的网卡测试只能按照端口少的相应端口连接"
 echo -e "\n3、在另一台电脑上运行 "iperf3 -s" 命令,作为服务端,本机作为客户端\n"
 read -p "确认测试环境配置是否已完成,默认yes,请输入 <yes/no> : " confirm
-[ "${confirm:=yes}" != yes ] && echo -e "\n请配置好测试环境，再重新测试 !!! \n" && exit
+[ "${confirm:=yes}" != yes ] && echo -e "\n请先配置好测试环境，再重新测试!\n" && exit
 
 echo -e "\n所有网卡端口号列表:  (state UP表示该端口已链接,state DOWN表示该端口未链接)"
 ip addr | awk '/</ {print $0}'
