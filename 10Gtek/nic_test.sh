@@ -1,7 +1,7 @@
 #!/bin/sh
 # 用于在Centos测试电脑上进行网卡测试
 
-export PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:$PATH
+#export PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:$PATH
 log="/tmp/nic_test.txt" ; date +"%F %T" > $log
 clear
 echo -e "\n测试环境要求："
