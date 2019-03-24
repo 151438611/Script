@@ -12,11 +12,11 @@ echo -e "\n   注意：尽量使用端口数量相同的网卡，端口数不同
 echo -e "\n4、将另一台电脑作为服务端，运行 "iperf3 -s" 命令\n"
 read -p "确认测试环境配置是否已完成,默认yes,请输入 <yes/no> : " confirm
 [ "${confirm:=yes}" != yes ] && echo -e "\n请配置好测试环境，再重新测试 !!! \n" && exit
-echo ""
 
+echo -e "\n所有网卡端口号列表:  "
 ip addr | awk '/</ {print $0}'
-echo -e "\n说明:PCIE网卡端口号从eth1开始 , state UP表示已链接,state DOWN表示未链接\n"
-read -p "请输入插入的网卡端口号,默认eth1, 请输入 <eth1/eth2/eth3/eth4> : " port 
+echo -e "说明:state UP表示端口已链接,state DOWN表示端口未链接\n"
+read -p "请输入连接的网卡端口号,默认eth1, 请输入 <eth1/eth2/eth3/eth4> : " port 
 echo ""
 read -p "请输入Ping包次数,默认2000, 请输入 <2000-10000> : " count 
 [ -n $(echo ${count:=2000} | tr -d [0-9]) ] && count=2000
