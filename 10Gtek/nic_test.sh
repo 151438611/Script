@@ -5,12 +5,12 @@ export PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:$PATH
 log="/tmp/nic_test.txt" ; date +"%F %T" > $log
 clear
 echo -e "\n测试环境要求："
-echo -e "\n1、测试电脑1(上)需配置IP信息：eth1:192.168.6.101 eth2:192.168.7.101 eth3:192.168.8.101 eth4:192.168.9.101;"
-echo -e "\n2、测试电脑2(下)需配置IP信息：eth1:192.168.6.201 eth2:192.168.7.201 eth3:192.168.8.201 eth4:192.168.9.201;"
+echo -e "\n1、测试电脑1(上)需配置IP信息：eth1:192.168.6.101 eth2:192.168.7.101 eth3:192.168.8.101 eth4:192.168.9.101"
+echo -e "\n2、测试电脑2(下)需配置IP信息：eth1:192.168.6.201 eth2:192.168.7.201 eth3:192.168.8.201 eth4:192.168.9.201"
 echo -e "\n3、二台电脑的同号端口相连，不可混连; 例如: eth1连接eth1、eth2连接eth2 依此连接 ... "
-echo -e "\n   注意：测试网卡需要二张同端口的网卡，端口数不同的网卡测试只能按照端口少的来连接。"
+echo -e "\n   注意：尽量使用端口数量相同的网卡，端口数不同的网卡测试只能按照端口少的相应端口连接。"
 echo -e "\n4、将另一台电脑作为服务端，运行 "iperf3 -s" 命令\n"
-read -p "测试环境配置是否已完成,默认yes,请输入 <yes/no> : " confirm
+read -p "确认测试环境配置是否已完成,默认yes,请输入 <yes/no> : " confirm
 [ "${confirm:=yes}" != yes ] && echo -e "\n请配置好测试环境，再重新测试 !!! \n" && exit
 echo ""
 
