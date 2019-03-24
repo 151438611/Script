@@ -26,26 +26,26 @@ ethernet=$(lspci | grep -i "Ethernet controller")
 echo -e "\n$result" | tee -a $log 
 echo -e "$ethernet\n" >> $log 
 
-eth_i=$(ethtool -i ${port:=eth1})
+eth_i=$(ethtool -i ${port:=eth1} 2> /dev/null)
 [ $? -eq 0 ] && result="读取网卡驱动版本信息成功:" || result="读取网卡驱动版本信息失败:"
 echo -e "\n$result" | tee -a $log 
 echo -e "$eth_i\n" >> $log 
 
 echo -e "\n开始读取EEPROM信息...\n"
-eth_m=$(ethtool -m $port)
+eth_m=$(ethtool -m $port 2> /dev/null)
 [ $? -eq 0 ] && result="读取EEPROM信息成功:" || result="读取EEPROM信息失败:"
 echo -e "\n$result\n$eth_m" | tee -a $log 
 echo -e "$eth_m\n" >> $log 
 
 echo -e "\n开始读取链路连通状态...\n"
-link_cmd=$(ethtool $port)
+link_cmd=$(ethtool $port 2> /dev/null)
 link_stat=$(echo "$link_cmd" | awk '/Link detected:/{print $3}')
 link_speed=$(echo "$link_cmd" |awk '/Speed:/{print int($2)}')
 [ "$link_stat" = "yes" -a -n "link_speed" ] && result="链路连通正常:" || result="链路连通失败:"
 echo -e "\n$result\n$link_cmd" | tee -a $log 
 
 echo -e "\n开始进行 Ping 包测试...\n"
-net_ip=$(ifconfig eth1 | awk '/inet/ && /netmask/ {print $2}')
+net_ip=$(ifconfig eth1 2> /dev/null | awk '/inet/ && /netmask/ {print $2}')
 if [ -n "$(echo $net_ip |  grep 10)" ] ; then
 case $port in
  eth1) dest_ip=192.168.6.201 ;;
@@ -68,7 +68,7 @@ ping_tail=$(tail /tmp/ping.log)
 [ -n "$(echo "$ping_tail" | awk '/0% packet loss/ {print $0}')" ] && result="Ping包成功,无丢包:" || result="Ping包失败,或有丢包:"
 echo -e "\n$result\n$ping_head\n......\nping_tail" | tee -a $log 
 
-iperf3 -c $dest_ip -t 60 | tee /tmp/iperf.log
+iperf3 -c $dest_ip -t 60 2> /dev/null | tee /tmp/iperf.log
 iperf_head=$(head -n6 /tmp/iperf.log)
 iperf_tail=$(tail /tmp/iperf.log)
 [ -n "$(echo "$iperf_tail" | grep "iperf Done")" ] && result="性能测试完成: " || result="性能测试失败: " 
