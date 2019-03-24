@@ -2,7 +2,7 @@
 # 用于在Centos测试电脑上进行网卡测试
 
 #export PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:$PATH
-log="/tmp/nic_test.txt" ; date +"%F %T" > $log
+log="/tmp/nictest.txt" ; date +"%F %T" > $log
 clear
 echo -e "\n测试环境要求："
 echo -e "\n1、测试电脑1(上)需配置IP信息：eth1:192.168.6.101 eth2:192.168.7.101 eth3:192.168.8.101 eth4:192.168.9.101"
@@ -21,7 +21,7 @@ echo ""
 read -p "请输入Ping包次数,默认2000, 请输入 <2000-10000> : " count 
 [ -n $(echo ${count:=2000} | tr -d [0-9]) ] && count=2000
 
-echo -e "\n开始读取PCI-E插入网卡信息..."
+echo -e "\n开始测试: \n正在读取PCI-E插入网卡信息..."
 ethernet=$(lspci | grep -i "Ethernet controller")
 if [ $(echo $ethernet | wc -l) -lt 1 ] ; then 
   result="识别网卡成功:"
@@ -38,49 +38,51 @@ eth_i=$(ethtool -i ${port:=eth1} 2> /dev/null)
 echo -e "\n$result" | tee -a $log 
 echo -e "$eth_i\n" >> $log 
 
-echo -e "\n开始读取EEPROM信息...\n"
+echo -e "\n正在读取EEPROM信息...\n"
 eth_m=$(ethtool -m $port 2> /dev/null)
 [ $? -eq 0 ] && result="读取EEPROM信息成功:" || result="读取EEPROM信息失败:"
 echo -e "\n$result\n$eth_m" | tee -a $log 
 echo -e "$eth_m\n" >> $log 
 
-echo -e "\n开始读取链路连通状态...\n"
+echo -e "\n正在读取链路连通状态...\n"
 link_cmd=$(ethtool $port 2> /dev/null)
 link_stat=$(echo "$link_cmd" | awk '/Link detected:/{print $3}')
 link_speed=$(echo "$link_cmd" |awk '/Speed:/{print int($2)}')
-[ "$link_stat" = "yes" -a -n "link_speed" ] && result="链路连通正常:" || result="链路连通失败:"
-echo -e "\n$result\n$link_cmd" | tee -a $log 
+[ "$link_stat" = "yes" -a -n "link_speed" ] && result="链路已连通,速率为 ${link_speed}Mb/s :" || result="链路连通失败:"
+echo -e "\n$result" | tee -a $log
+echo "$link_cmd" >> $log 
 
 echo -e "\n开始进行 Ping 包测试...\n"
 net_ip=$(ifconfig eth1 2> /dev/null | awk '/inet/ && /netmask/ {print $2}')
 if [ -n "$(echo $net_ip |  grep 10)" ] ; then
-case $port in
- eth1) dest_ip=192.168.6.201 ;;
- eth2) dest_ip=192.168.7.201 ;;
- eth3) dest_ip=192.168.8.201 ;;
- eth4) dest_ip=192.168.9.201 ;;
-esac
+  case $port in
+   eth1) dest_ip=192.168.6.201 ;;
+   eth2) dest_ip=192.168.7.201 ;;
+   eth3) dest_ip=192.168.8.201 ;;
+   eth4) dest_ip=192.168.9.201 ;;
+  esac
 elif [ -n "$(echo $net_ip |  grep 20)" ] ; then
-case  $port in
- eth1) dest_ip=192.168.6.101 ;;
- eth2) dest_ip=192.168.7.101 ;;
- eth3) dest_ip=192.168.8.101 ;;
- eth4) dest_ip=192.168.9.101 ;;
-esac
+  case  $port in
+   eth1) dest_ip=192.168.6.101 ;;
+   eth2) dest_ip=192.168.7.101 ;;
+   eth3) dest_ip=192.168.8.101 ;;
+   eth4) dest_ip=192.168.9.101 ;;
+  esac
 fi
-ping -w 2 $dest_ip &> /dev/null && \
-ping -c $count -i 0.05 $dest_ip | tee /tmp/ping.log 
+ping -c $count -i 0.05 $dest_ip 2> /dev/null | tee /tmp/ping.log 
 ping_head=$(head -n6 /tmp/ping.log 2> /dev/null)
 ping_tail=$(tail /tmp/ping.log 2> /dev/null)
 [ -n "$(echo "$ping_tail" | awk '/0% packet loss/ {print $0}')" ] && result="Ping包成功,无丢包:" || result="Ping包失败,或有丢包:"
-echo -e "\n$result\n$ping_head\n......\nping_tail" | tee -a $log 
+echo -e "\n$result" | tee -a $log
+echo -e "$ping_head\n......\nping_tail" >> $log
 
 iperf3 -c $dest_ip -t 60 | tee /tmp/iperf.log
 iperf_head=$(head -n6 /tmp/iperf.log 2> /dev/null)
 iperf_tail=$(tail /tmp/iperf.log 2> /dev/null)
 [ -n "$(echo "$iperf_tail" | grep "iperf Done")" ] && result="性能测试完成: " || result="性能测试失败: " 
-echo -e "\n$result\n$iperf_head\n......\niperf_tail" | tee -a $log 
+echo -e "\n$result" | tee -a $log
+echo -e "$iperf_head\n......\niperf_tail" >> $log 
 
 unix2dos -o $log ; rm -f /tmp/ping.log /tmp/iperf.log
-echo -e "\n测试已完成! 测试数据保存在 /tmp/nic_test.txt 中，下次测试会覆盖掉，请及时拷出！！！\n"
+echo -e "\n测试已完成! 测试数据保存在 /tmp/nictest.txt 中，下次测试会覆盖掉，请及时拷出！！！\n"
 
