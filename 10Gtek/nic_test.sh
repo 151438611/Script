@@ -21,7 +21,8 @@ echo ""
 read -p "请输入Ping包次数,默认2000, 请输入 <2000-10000> : " count 
 [ -n $(echo ${count:=2000} | tr -d [0-9]) ] && count=2000
 
-echo -e "\n开始测试: \n正在读取PCI-E插入网卡信息..."
+echo -e "\n开始自动进行测试: "
+echo -e "\n正在读取PCI-E插入网卡信息..."
 ethernet=$(lspci | grep -i "Ethernet controller")
 if [ $(echo $ethernet | wc -l) -lt 1 ] ; then 
   result="识别网卡成功:"
