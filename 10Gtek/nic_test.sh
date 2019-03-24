@@ -2,8 +2,8 @@
 # 用于在Centos测试电脑上进行网卡测试
 
 #export PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:$PATH
-log="/tmp/nictest.txt" ; date +"%F %T" > $log
-clear
+log="/tmp/nictest.txt" ; date +"%F %T" > $log ; clear
+
 echo -e "\n测试环境要求："
 echo -e "\n1、测试电脑1(上)需配置IP信息：eth1:192.168.6.101 eth2:192.168.7.101 eth3:192.168.8.101 eth4:192.168.9.101"
 echo -e "\n2、测试电脑2(下)需配置IP信息：eth1:192.168.6.201 eth2:192.168.7.201 eth3:192.168.8.201 eth4:192.168.9.201"
@@ -25,7 +25,7 @@ read -p "请输入iperf3性能测试时长,默认60秒, 请输入自定义时间
 [ -n $(echo ${iperf_time:=60} | tr -d [0-9]) ] && iperf_time=60
 
 echo -e "\n开始自动进行测试: "
-echo -e "\n正在读取PCI-E插入网卡信息..."
+#echo -e "\n正在读取PCI-E插入网卡信息..."
 ethernet=$(lspci | grep -i "Ethernet controller")
 if [ $(echo $ethernet | wc -l) -lt 1 ] ; then 
   result="识别网卡成功:"
@@ -36,19 +36,19 @@ else
   echo -e "\n$result,请重新检查是否已插好,再来测试 !!!\n" && exit
 fi
 
-
+#echo -e "\n正在读取PCI-E插入网卡驱动信息..."
 eth_i=$(ethtool -i ${port:=eth1} 2> /dev/null)
 [ $? -eq 0 ] && result="读取网卡驱动版本信息成功:" || result="读取网卡驱动版本信息失败:"
 echo -e "\n$result" | tee -a $log 
 echo -e "$eth_i" >> $log 
 
-echo -e "\n正在读取EEPROM信息..."
+#echo -e "\n正在读取EEPROM信息..."
 eth_m=$(ethtool -m $port 2> /dev/null)
 [ $? -eq 0 ] && result="读取EEPROM信息成功:" || result="读取EEPROM信息失败:"
 echo -e "\n$result\n$eth_m" | tee -a $log 
 echo -e "$eth_m" >> $log 
 
-echo -e "\n正在读取链路连通状态...\n"
+#echo -e "\n正在读取链路连通状态...\n"
 link_cmd=$(ethtool $port 2> /dev/null)
 link_stat=$(echo "$link_cmd" | awk '/Link detected:/{print $3}')
 link_speed=$(echo "$link_cmd" |awk '/Speed:/{print int($2)}')
