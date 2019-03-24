@@ -30,7 +30,7 @@ if [ $(echo $ethernet | wc -l) -lt 1 ] ; then
   echo -e "$ethernet\n" >> $log 
 else 
   result="未识别插入的PCI-E网卡"
-  echo -e "\n${result},请重启检查是否插好，再来测试 !!!\n" && exit
+  echo -e "\n${result},请重新检查是否已插好，再来测试 !!!\n" && exit
 fi
 
 
