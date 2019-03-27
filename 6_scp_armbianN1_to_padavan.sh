@@ -2,6 +2,7 @@
 # 使用scp配合ssh公钥私钥，用来将armbian中的文件同步到Padavan路由器中保存
 # 默认同步到jhk2p_USB中，使用传参 $1 = youku / szk2p 来同步到youku_TF卡或szk2p_USB中
 router=$1
+echo -e "\nYou can choose \$1 = jhk2p(default) / youku / szk2p\n"
 export PATH=/bin:/sbin:/usr/bin:/usr/sbin:$PATH
 scplog=/tmp/scp.log ; echo "" >> $scplog
 
