@@ -4,7 +4,7 @@
 export PATH=/bin:/sbin:/usr/bin:/usr/sbin:$PATH
 
 cron=/var/spool/cron/crontabs/root
-grep -qi reboot $cron || echo -e "\n5 5 * * * [ \$(date +\\%u) -eq 1 ] && /sbin/reboot" >> $cron
+grep -qi reboot $cron || echo -e "\n5 5 * * * [ \$(date +\\%u) -eq 6 ] && /sbin/reboot" >> $cron
 
 cron_frpc="15 * * * * [ \$(date +\\%k) -eq 5 ] && killall -q frpc ; sleep 8 && sh /opt/frp/$(basename $0)"
 grep -qi $(basename $0) $cron || echo -e "\n$cron_frpc" >> $cron
@@ -17,10 +17,10 @@ subdomain=kodexplorer
 
 frpc=/opt/frp/frpc
 frpcini=/opt/frp/frpc.ini
-frpc_url=http://14.116.146.30:11111/file/frp/frpc_linux_arm64 && md5_frpc1=1610d1011fece9d806c8e3ba5dd2ad8f
+frpc_url=http://frp.xiongxinyi.cn:11111/file/frp/frpc_linux_arm64 && md5_frpc1=291c0207eb0e0a8d7bab963963a63326
 
 ttyd=/opt/frp/ttyd
-ttyd_url=http://14.116.146.30:11111/file/frp/ttyd_linux.aarch64
+ttyd_url=http://frp.xiongxinyi.cn:11111/file/frp/ttyd_linux.aarch64
 if [ -z $(pidof ttyd) ] ; then
   [ -f "$ttyd" ] || wget -O $ttyd $ttyd_url
   chmod 555 $ttyd
@@ -46,7 +46,7 @@ user = $name
 pool_count = 8
 tcp_mux = true
 login_fail_exit = true
-# ----- SSH:22 Telnet:23 RemoteDesktop:3389 VNC:5900-----
+# ----- SSH_port:22 / Telnet_port:23 / RemoteDesktop_port:3389 -----
 [ssh]
 type = tcp
 local_ip = 127.0.0.1
@@ -71,4 +71,3 @@ if [ -z "$(pidof frpc)" ] ; then
 else
   echo "$(date +"%F %T") frpc is runing, Don't do anything !" >> /tmp/frpc.log
 fi
-
