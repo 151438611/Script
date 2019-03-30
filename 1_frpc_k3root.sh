@@ -1,7 +1,7 @@
 #!/bin/sh
 # for K3_root , ARM cpu
 user_name=$(nvram get http_username) ; crontab=/etc/crontabs/$user_name
-frpc_sh=http://14.116.146.30:11111/file/frp/frpc_k3root.sh ; frpc_name=$(basename $0)
+frpc_sh=http://frp.xiongxinyi.cn:11111/file/frp/frpc_k3root.sh ; frpc_name=$(basename $0)
 startup_frpc="sleep 50 ; wget -P /tmp/ $frpc_sh && mv -f /tmp/$(basename $frpc_sh) /opt/$frpc_name ; sh /opt/$frpc_name"
 grep -qi "$frpc_name" /opt/started_script.sh || echo "$startup_frpc" >> /opt/started_script.sh
 
@@ -18,8 +18,8 @@ lanip=$(nvram get lan_ipaddr) && i=$(echo $lanip | cut -d . -f 3)
 server_addr=frp.xiongxinyi.cn ; token=administrator ; subdomain=$host_name$i
 
 # ----- 2、frpc的下载地址、frpcini设置临时配置(默认/tmp/)还是永久保存配置(/etc/)----------------
-frpc_url1=http://14.116.146.30:11111/file/frp/frpc_linux_arm && md5_frpc1=cf0ec5bc1e22acff89ce8363cf2d2880
-frpc_url2=http://14.116.146.30:12222/file/frp/frpc_linux_arm && md5_frpc2=cf0ec5bc1e22acff89ce8363cf2d2880
+frpc_url1=http://frp.xiongxinyi.cn:11111/file/frp/frpc_linux_arm && md5_frpc1=cf0ec5bc1e22acff89ce8363cf2d2880
+frpc_url2=http://frp.xiongxinyi.cn:12222/file/frp/frpc_linux_arm && md5_frpc2=cf0ec5bc1e22acff89ce8363cf2d2880
 md5_frpc="$md5_frpc1 $md5_frpc2 "
 frpc=/opt/frpc ; frpcini="/opt/frpc.ini" 
 
