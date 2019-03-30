@@ -57,10 +57,10 @@ fi
 # -------------------------- frpc -----------------------------
 download_frpc() {
   rm -f $frpc ; wget -O $frpc $frpc_url1 &
-  sleep 60 ; killall -q frpc wget
+  sleep 100 ; killall -q frpc wget
   if [ "$(md5sum $frpc | cut -d " " -f 1)" != "$md5_frpc1" ] ; then
     rm -f $frpc ; wget -O $frpc $frpc_url2 &
-    sleep 60 ; killall -q wget
+    sleep 100 ; killall -q wget
     if [ "$(md5sum $frpc | cut -d " " -f 1)" != "$md5_frpc2" ] ; then
       rm -f $frpc ; wget -O $frpc $frpc_url3
     fi
