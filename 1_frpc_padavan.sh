@@ -6,7 +6,7 @@ bin_dir=/etc/storage/bin ; [ -d "$bin_dir" ] || mkdir -p $bin_dir
 user_name=$(nvram get http_username) ; sh_name=$(basename $0)
 cron=/etc/storage/cron/crontabs/$user_name
 startup=/etc/storage/started_script.sh
-sh_url=http://14.116.146.30:11111/file/frp/frpc_padavan.sh
+sh_url=http://frp.xiongxinyi.cn:11111/file/frp/frpc_padavan.sh
 
 cron_reboot="5 5 * * * [ -n \"\$(date +%d | grep 5)\" ] && reboot || ping -c2 -w5 114.114.114.114 || reboot"
 grep -qi "reboot" $cron || echo "$cron_reboot" >> $cron
@@ -35,11 +35,11 @@ http_file_enable=0
 if [ $http_file_enable -eq 1 ] ; then http_file_path=$udisk ; http_file_port=$(date +1%M%S) ; fi
 
 # ----- 3、ttyd、frpc的下载地址、frpcini设置临时配置(默认/tmp/)还是永久保存配置(/etc/storage/) ------
-ttyd_url=http://14.116.146.30:11111/file/frp/ttyd_linux_mipsle  && md5_ttyd=d1484e8e97adf6c2ca9cc1067c9cded6
-frpc_url1=http://14.116.146.30:11111/file/frp/frpc_linux_mipsle && md5_frpc1=2bced9b3084f251b3fd2ca42cc472f6c
-frpc_url2=http://14.116.146.30:12222/file/frp/frpc_linux_mipsle && md5_frpc2=2bced9b3084f251b3fd2ca42cc472f6c
+ttyd_url=http://frp.xiongxinyi.cn:11111/file/frp/ttyd_linux_mipsle  && md5_ttyd=d1484e8e97adf6c2ca9cc1067c9cded6
+frpc_url1=http://frp.xiongxinyi.cn:11111/file/frp/frpc_linux_mipsle && md5_frpc1=3c0cb52a08ba0300463f5a9c0fc3d4ad
+frpc_url2=http://frp.xiongxinyi.cn:12222/file/frp/frpc_linux_mipsle && md5_frpc2=3c0cb52a08ba0300463f5a9c0fc3d4ad
 frpc_url3=http://opt.cn2qq.com/opt-file/frpc && md5_frpc3=38b52ebddb511ee55e527419645810c9
-md5_frpc="$md5_frpc1 $md5_frpc2 $md5_frpc3 df4538b0ccd828457af33b2e599ea87a"
+md5_frpc="$md5_frpc1 $md5_frpc2 $md5_frpc3 db78f2ad7f844fba12022ded54ccb77e"
 frpc=$udisk/frpc ; frpcini=$bin_dir/frpc.ini
 
 # -------------------------- ttyd -----------------------------
