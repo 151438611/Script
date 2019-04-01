@@ -24,7 +24,7 @@ echo ""
 read -p "请输入iperf3性能测试时长,默认60秒,请输入自定义时间,单位为秒 : " iperf_time
 iperf_time=${iperf_time:=60} ; [ -n "$(echo $iperf_time | tr -d [0-9])" ] && iperf_time=60
 
-echo -e "\n开始自动进行测试: "
+echo -e "\n开始自动进行测试: \n"
 
 ethernet=$(lspci | grep -i "Ethernet controller")
 if [ $(echo "$ethernet" | wc -l) -gt 1 ] ; then 
