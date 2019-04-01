@@ -15,7 +15,6 @@ read -p "确认测试环境配置是否已完成,默认yes,请输入 <yes/no> : 
 
 echo -e "\n所有网卡端口号列表:  (state UP表示该端口已链接,state DOWN表示该端口未链接)"
 ip addr | awk '/</ {print $0}'
-echo ""
 read -p "请输入连接的网卡端口号,默认eth1,请输入 <eth1/eth2/eth3/eth4> : " port 
 port=${port:=eth1}
 echo ""
