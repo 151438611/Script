@@ -74,15 +74,15 @@ if [ "$link_stat" = yes ] ; then
     esac
   fi
   ping -c $count -i 0.05 $dest_ip | tee /tmp/ping.log 
-  ping_head=$(head -n6 /tmp/ping.log)
+  ping_head=$(head /tmp/ping.log)
   ping_tail=$(tail /tmp/ping.log)
   [ -n "$(echo "$ping_tail" | awk '/0% packet loss/ {print $0}')" ] && result="Ping包成功,无丢包." || result="Ping包失败,或有丢包!"
   echo -e "\n$result" | tee -a $log
   echo -e "$ping_head\n......\n$ping_tail" >> $log
 
-  echo -e "\n正在进行 $iperf_time 秒的 iperf3 性能测试..."
-  iperf3 -c $dest_ip -t 60 | tee /tmp/iperf.log
-  iperf_head=$(head -n6 /tmp/iperf.log)
+  echo -e "\n正在进行 iperf3 性能测试,请稍等 $iperf_time 秒 ......"
+  iperf3 -c $dest_ip -t $iperf_time > /tmp/iperf.log
+  iperf_head=$(head /tmp/iperf.log)
   iperf_tail=$(tail /tmp/iperf.log)
   [ -n "$(echo "$iperf_tail" | grep "iperf Done")" ] && result="性能测试完成." || result="性能测试失败!" 
   echo -e "\n$result" | tee -a $log
