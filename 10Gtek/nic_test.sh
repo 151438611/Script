@@ -36,11 +36,11 @@ else
   echo -e "\n$result,请重新检查是否已插好,再来测试 !!!\n" && exit
 fi
 
-ethtool -i $port >> $log
+ethtool -i $port &>> $log
 [ $? -eq 0 ] && result="读取网卡驱动版本信息成功" || result="读取网卡驱动版本信息失败!"
 echo -e "$result\n" | tee -a $log 
 
-ethtool -m $port >> $log
+ethtool -m $port &>> $log
 [ $? -eq 0 ] && result="读取EEPROM信息成功" || result="读取EEPROM信息失败!"
 echo -e "$result\n" | tee -a $log 
 
