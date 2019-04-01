@@ -37,28 +37,25 @@ else
   echo -e "\n$result,请重新检查是否已插好,再来测试 !!!\n" && exit
 fi
 
-eth_i=$(ethtool -i $port 2> /dev/null)
+ethtool -i $port >> $log
 [ $? -eq 0 ] && result="读取网卡驱动版本信息成功" || result="读取网卡驱动版本信息失败!"
 echo -e "\n$result" | tee -a $log 
-echo -e "$eth_i" >> $log 
 
-eth_m=$(ethtool -m $port 2> /dev/null)
+ethtool -m $port >> $log
 [ $? -eq 0 ] && result="读取EEPROM信息成功" || result="读取EEPROM信息失败!"
-echo -e "\n$result\n$eth_m" | tee -a $log 
-echo -e "$eth_m" >> $log 
+echo -e "\n$result" | tee -a $log 
 
-#echo -e "\n正在读取链路连通状态...\n"
 link_cmd=$(ethtool $port 2> /dev/null)
 link_stat=$(echo "$link_cmd" | awk '/Link detected:/{print $3}')
 link_speed=$(echo "$link_cmd" |awk '/Speed:/{print int($2)}')
 if [ "$link_stat" = "yes" -a -n "link_speed" ] ; then
-  result="链路已连通,速率为 $link_speed Mb/s" ; ping_result=success
-else result="链路连通失败!" ; ping_result=error
+  result="链路已连通,速率为 $link_speed Mb/s"
+else result="链路连通失败!"
 fi
 echo -e "\n$result" | tee -a $log
-echo "$link_cmd" >> $log 
+echo "$(ethtool $port)" >> $log 
 
-if [ $ping_result = success ] ; then
+if [ "$link_stat" = yes ] ; then
   echo -e "\n正在进行 $count 次的 Ping 包测试..."
   net_ip=$(ifconfig $port 2> /dev/null | awk '/inet/ && /netmask/ {print $2}')
   if [ -n "$(echo $net_ip |  grep 10)" ] ; then
@@ -95,4 +92,3 @@ fi
 
 unix2dos -o $log ; rm -f /tmp/ping.log /tmp/iperf.log
 echo -e "\n测试已完成,测试数据保存在 /tmp/nictest.txt ,下次测试会覆盖掉,请及时拷出!!! \n"
-
