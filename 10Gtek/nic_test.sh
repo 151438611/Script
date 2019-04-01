@@ -89,5 +89,5 @@ if [ "$link_stat" = yes ] ; then
   echo -e "$iperf_head\n......\n$iperf_tail" >> $log 
 fi
 
-unix2dos -o $log
+unix2dos -o $log &> /dev/null
 echo -e "\n测试已完成,测试数据保存在 /tmp/nictest.txt ,下次测试会覆盖掉,请及时拷出!!! \n"
