@@ -38,6 +38,7 @@ do
   scp_fun $src $dest
 done
 
+# 临时添加同步目录
 frp_bak=/media/sda1/data/software/frp/frp_windows_for_outside
 scp -C -r -o "StrictHostKeyChecking no" -P ${dest_port:-22} $frp_bak $dest_ip:$frp_dir
 [ $? -eq 0 ] && echo "$(date +"%F %T") scp to $router success $frp_bak" >> $scplog || echo "$(date +"%F %T") scp to $router fail--- $frp_bak" >> $scplog
