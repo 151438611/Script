@@ -38,4 +38,7 @@ do
   scp_fun $src $dest
 done
 
-scp -C -r -o "StrictHostKeyChecking no" -P ${dest_port:-22} /media/sda1/data/software/frp/frp_windows_for_outside $dest_ip:$frp_dir
+frp_backup=/media/sda1/data/software/frp/frp_windows_for_outside
+scp -C -r -o "StrictHostKeyChecking no" -P ${dest_port:-22} $frp_backup $dest_ip:$frp_dir
+[ $? -eq 0 ] && echo "$(date +"%F %T") scp to $router success $frp_backup" >> $scplog || echo "$(date +"%F %T") scp to $router fail--- $frp_backup" >> $scplog
+
