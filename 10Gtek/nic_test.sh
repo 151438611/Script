@@ -53,7 +53,7 @@ if [ "$link_stat" = "yes" -a -n "link_speed" ] ; then
 else 
   result="链路连通失败!" 
 fi
-[ "$link_stat" = yes ] && echo $link_cmd >> $log
+[ "$link_stat" = yes ] && echo "$link_cmd" >> $log
 echo -e "$result\n" | tee -a $log
 
 if [ "$link_stat" = yes ] ; then
