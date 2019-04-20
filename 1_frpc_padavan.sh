@@ -90,6 +90,10 @@ user = $host_name
 pool_count = 8
 tcp_mux = true
 login_fail_exit = true
+
+#log_file = /tmp/frpc.log
+log_level = warn
+#log_max_days = 3
 # ----- SSH:22 Telnet:23 RemoteDesktop:3389 VNC:5900 -----
 [ssh]
 type = tcp
@@ -97,7 +101,7 @@ local_ip = 127.0.0.1
 local_port = 22
 remote_port = 0
 use_encryption = false
-use_compression = true
+use_compression = false
 
 [$subdomain]
 type = tcp
@@ -105,7 +109,7 @@ local_ip = $lanip
 local_port = 80
 remote_port = 0
 use_encryption = false
-use_compression = true
+use_compression = false
 END
 
   if [ $ttyd_enable -eq 1 ] ; then 
@@ -116,7 +120,7 @@ local_ip = 127.0.0.1
 local_port = $ttyd_port
 remote_port = 0
 use_encryption = false
-use_compression = true
+use_compression = false
 END
   fi 
   if [ $http_file_enable -eq 1 ] ; then
@@ -137,6 +141,6 @@ fi
 ping -c2 -w5 114.114.114.114 && \
 if [ -z "$(pidof frpc)" ] ; then
      logger -t frpc "frpc is not running ; starting frpc......"
-     $frpc -c $frpcini &
+     exec $frpc -c $frpcini &
 else logger -t frpc "frpc is running ; Don't do anything !"
 fi
