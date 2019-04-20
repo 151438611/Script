@@ -1,5 +1,13 @@
-#!/bin/sh
-# for Padavan
+#!/bin/bash
+#################################################################
+# FILE NAME: frpc.sh
+# DESCRIPTION: frpc for Padavan
+# MODIFICATION HISTORY:
+# NAME		  DATE	    Description
+# ========	========  ===========================================
+# Jun	      20180808  Created.
+#################################################################
+
 export PATH=/bin:/sbin:/usr/bin:/usr/sbin:$PATH
 # ------------------------- add crontab、startup、enable SSH -----------------------
 bin_dir=/etc/storage/bin ; [ -d "$bin_dir" ] || mkdir -p $bin_dir
