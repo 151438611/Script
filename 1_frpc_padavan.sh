@@ -146,6 +146,6 @@ fi
 ping -c2 -w5 114.114.114.114 && \
 if [ -z "$(pidof frpc)" ] ; then
      logger -t frpc "frpc is not running ; starting frpc......"
-     $frpc -c $frpcini &
+     exec $frpc -c $frpcini &
 else logger -t frpc "frpc is running ; Don't do anything !"
 fi
