@@ -95,9 +95,9 @@ admin_addr = 127.0.0.1
 admin_port = 7400
 admin_user = admin
 admin_pwd = admin
-log_file = /tmp/frpc.log
+#log_file = /tmp/frpc.log
 log_level = warn
-log_max_days = 3
+#log_max_days = 3
 
 # ----- SSH:22 Telnet:23 RemoteDesktop:3389 VNC:5900 -----
 [ssh]
