@@ -1,9 +1,9 @@
 #!/bin/sh
 # support all Linux 
-export PATH=/bin:/sbin:/usr/bin:/usr/sbin:$PATH
+# 
 
 subnet=192.168.1.
-hosts=/tmp/scan_host.log ; echo -e "$(date +"%F %T") start scan ...... \n" > $hosts
+hosts=/tmp/scan_host.log ; echo -e "$(date +"%F %T") start scan ${subnet}x ...... \n" > $hosts
 
 a=$1 ; b=$2
 [ -n "$(echo $a | tr -d [0-9])" -o -n "$(echo $b | tr -d [0-9])" -o -z "$a" ] && echo "please input subnet_number" && exit
@@ -19,5 +19,5 @@ fi
 for x in `seq $a $b`
 do
   ping -w 1 $subnet$x && \
-  echo "$(arp -an | awk -F [\(\)] '$2=="'$subnet$x'" {print $0}')" >> $hosts
+  echo "$subnet$x MAC: $(arp -an | awk -F [\(\)] '$2=="'$subnet$x'" {print $0}')" >> $hosts
 done
