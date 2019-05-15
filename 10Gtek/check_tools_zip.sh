@@ -268,7 +268,7 @@ fi
 else
 echo "没有找到对应的编码文件夹,请重新检查！！！！！！！！！！" 
 #显示编码压缩文件中的目录内容
-	echo $(unzip -l $input_zip | awk -F / '/WO/{print $1}' | awk '{print $4","}' | sort -u)
+echo $(unzip -l $input_zip | awk -F / '/WO/{print $1}' | awk '{print $4","}' | sort -u)
 fi
 else echo -e "\n请重新输入完整、正确的生产单号！！！"  ;  continue
 fi
@@ -338,6 +338,7 @@ Edgecore-7712
 HP-5900
 Huawei-CE6855
 IBM-G8264
+Mellanox-SB7800
 Juniper-QFX5200
 Juniper-QFX5100"
 ;;
@@ -348,6 +349,7 @@ Arista-7050
 Edgecore-7712
 Edgecore-5712
 HP-5900
+Mellanox-SB7800
 Juniper-QFX5100
 Juniper-QFX5200"
 ;;
@@ -371,6 +373,7 @@ HP-5900
 Huawei-S3700
 Huawei-S5700
 IBM-G8264
+Mellanox-SB7800
 Juniper-QFX5200
 Juniper-QFX5100"
 ;;
@@ -471,5 +474,3 @@ fi
 echo -e "请输入正确的工作模式！！！\n"	
 ;;
 esac
-
-
