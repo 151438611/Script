@@ -43,7 +43,6 @@ if [ -z "$(echo $older_all | awk '{print $8}' | grep -i "h3c")" ] ; then older_l
 fi
 #提取内容中的日期,示例：20180515
 older_time=$(echo $older_all | awk '{print $1}')
-
 #判断邮件中要求的编码类型，H3C表示H3C码, OEM表示OEM码,默认表示思科兼容
 if [ -n "$(echo $older_all | awk '{print $8}' | grep -Ei "h3c|hp")" ] ; then older_kind="H3C码"
 elif [ -n "$(echo $older_all | awk '{print $8}' | grep -i "oem")" ] ; then older_kind="OEM码"
@@ -74,7 +73,7 @@ code_info() {
 #统计编码文件夹下的编码数量，在后面判断是否和邮件中的数量是否一致？
 code_num=$(find ./ -type d -name $older_id -exec ls -lR {} \; | grep -c "^-")
 #在编码文件夹中搜索SN号为001.bin或0001.bin的编码文件
-	code_file=$(find ./ -type f -name "$older_sn".bin | sort)
+code_file=$(find ./ -type f -name "$older_sn".bin | sort)
 if [ -n "$code_file" ] ; then
 if [ -z "$(echo $older_type | grep -Ei "qsfp|q10")" -o -n "$(echo $older_all | grep -i "mcu")" ] ; then
 #提取编码中的第1位，03表示SFP类型，06表示XFP类型, 0D表示40G-QSFP, 11表示100G-ZQP，0F表示8644
@@ -219,12 +218,12 @@ if [ -n "$code_file" ] ; then
 check_info
 #输出检查结果信息
 echo "邮件日期:"$older_time" 产品名称:"$older_type" 数量:"$older_num_old" 备注:"$older_kind"" >> result
-    echo "编码日期:"$code_time""$result_time" 产品类型:"$code_type""$result_type" 长度:"$code_length"米"$result_length" 数量:"$code_num""$result_num" 速率:"$code_speed" 兼容:"$code_kind""$result_kind"" >> result
+echo "编码日期:"$code_time""$result_time" 产品类型:"$code_type""$result_type" 长度:"$code_length"米"$result_length" 数量:"$code_num""$result_num" 速率:"$code_speed" 兼容:"$code_kind""$result_kind"" >> result
 #判断是否出现编码错误，出错就输出错误信息和编码中的十六进制文件。
 if [ -n "$error_time""$error_type""$error_num""$error_kind" ] ; then
 echo "$error_time""$error_type""$error_num""$error_kind" >> result
 echo "--------------------------------------------------------------------------------------" >> result
-				hexdump -C $code_file | head -n16 >> result
+hexdump -C $code_file | head -n16 >> result
 fi
 else
 echo "没有找到SN为 "$older_sn" 编码！！！！！！！！！！" >> result
@@ -232,7 +231,7 @@ echo -e "-----------------------------------------------------------------------
 continue
 fi
 else
-			echo "没有找到"$older_id"对应的编码文件夹,请重新检查！！！！！！！！！！" >> result 
+echo "没有找到"$older_id"对应的编码文件夹,请重新检查！！！！！！！！！！" >> result 
 echo $(unzip -l $input_zip | awk -F / '/WO/{print $1}' | awk '{print $4}' | sort -u) >> result
 fi
 echo -e "--------------------------------------------------------------------------------------\n" >> result
@@ -262,7 +261,7 @@ echo "编码日期:"$code_time""$result_time" 产品类型:"$code_type""$result_
 [ -n "$error_time""$error_type""$error_num""$error_kind" ] && echo "$error_time""$error_type""$error_num""$error_kind"
 echo "--------------------------------------------------------------------------------------"
 #输出编码中的十六进制文件，仅输出20行。
- 		hexdump -C $code_file | head -n20 
+hexdump -C $code_file | head -n20 
 else echo -e "\n没有找到SN为"$older_sn"编码！！！！！！！！！！"
 fi
 else
