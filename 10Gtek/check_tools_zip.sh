@@ -64,7 +64,7 @@ elif [ -n "$(echo $older_type | grep -i "zqp/4zsp")" ] ; then older_num=$(($olde
 elif [ -n "$(echo $older_type | grep -Ei "q10/4s|qsfp/4sfp")" ] ; then older_num=$(($older_num_old * 7 + 1))
 elif [ -n "$(echo $older_all | awk '/[qQ]10\/[qQ]10/&&/[mM][cC][uU]/{print $0}')" -o -n "$(echo $older_type | grep -i "zqp/zqp")" ]; then 
 older_num=$(($older_num_old * 4 + 5))
-elif [ -n "$(echo $older_type | grep -Ei "q10/q10|qsfp/8088|8644/8644")" ] ; then older_num=$(($older_num_old * 3 + 1))
+elif [ -n "$(echo $older_type | grep -Ei "q10/q10|qsfp/8088|8644/8644")" ] ; then older_num=$(($older_num_old * 2 + 1))
 else older_num=$older_num_old
 fi ;;
 esac
