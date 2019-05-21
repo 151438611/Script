@@ -47,7 +47,7 @@ older_time=$(echo $older_all | awk '{print $1}')
 if [ -n "$(echo $older_all | awk '{print $8}' | grep -Ei "h3c|hp")" ] ; then older_kind="H3C"
 elif [ -n "$(echo $older_all | awk '{print $8}' | grep -i "oem")" ] ; then older_kind="OEM"
 elif [ -n "$(echo $older_all | awk '{print $8}' | grep -i "juniper")" ] ; then older_kind="Juniper"
-else older_kind="思科码"
+else older_kind="Cisco"
 fi
 #提取订单编码数量,示例：30
 older_num_old=$(echo $older_all | awk '{print $5}')
@@ -99,11 +99,11 @@ esac
 #提取编码中的第7行第96位-98位，"48 33 43"表示H3C码, “00 00 00”表示OEM码,因思科码96位不同，所以只判断第97 98位，"00 11"表示思科码
 code_kind=$(hexdump -C $code_file | awk 'NR==7{print $3,$4}')
 case $code_kind in
-"00 00") code_kind="OEM码" ;;
-"33 43") code_kind="H3C码" ;;
-"00 11"|"43 11") code_kind="思科码" ;;
-"34 30"|"34 11") code_kind="Juniper码" ;;
-"58 54") code_kind="Extreme码" ;;
+"00 00") code_kind="OEM" ;;
+"33 43") code_kind="H3C" ;;
+"00 11"|"43 11") code_kind="Cisco" ;;
+"34 30"|"34 11") code_kind="Juniper" ;;
+"58 54") code_kind="Extreme" ;;
 *) code_kind="请检查LMM加密位的编码兼容类型:$code_kind" ;;
 esac
 #提取编码中的第2行第4位，表示线缆的长度
@@ -133,10 +133,10 @@ esac
 #提取编码中的第7行第96位-98位，"48 33 43"表示H3C码, “00 00 00”表示OEM码,因思科码96位不同，所以只判断第97 98位，"00 11"表示思科码
 code_kind=$(hexdump -C $code_file | awk 'NR==15{print $3,$4}')
 case $code_kind in
-"00 00") code_kind="OEM码" ;;
-"33 43") code_kind="H3C码" ;;
-"00 11"|"43 11") code_kind="思科码" ;;
-"34 30"|"34 11") code_kind="Juniper码" ;;
+"00 00") code_kind="OEM" ;;
+"33 43") code_kind="H3C" ;;
+"00 11"|"43 11") code_kind="Cisco" ;;
+"34 30"|"34 11") code_kind="Juniper" ;;
 "58 54") code_kind="Extreme码" ;;
 *) code_kind="请检查LMM加密位的编码兼容类型:$code_kind" ;;
 esac
@@ -325,7 +325,7 @@ Huawei-CE6855
 IBM-G8264
 Juniper-QFX5100"
 ;;
-"40g"|"56g")
+"40g"|"56g"|"100g")
 swtich="Arista-7050
 Cisco-3064
 Cisco-5548
@@ -341,15 +341,11 @@ Mellanox-SB7800
 Juniper-QFX5200
 Juniper-QFX5100"
 ;;
-"100g")
+"200g")
 swtich="Cisco-3232C
 Cisco-92160
-Arista-7050
 Edgecore-7712
-Edgecore-5712
-HP-5900
 Mellanox-SB7800
-Juniper-QFX5100
 Juniper-QFX5200"
 ;;
 *)
