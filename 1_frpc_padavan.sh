@@ -9,7 +9,7 @@
 #################################################################
 
 export PATH=/bin:/sbin:/usr/bin:/usr/sbin:$PATH
-frpclog=/tmp/frpc.log
+frpclog=/tmp/frpc.log ; [ -f $frpclog ] || echo $(date +"%F %T") > $frpclog
 # ------------------------- add crontab、startup、enable SSH -----------------------
 bin_dir=/etc/storage/bin ; [ -d "$bin_dir" ] || mkdir -p $bin_dir
 user_name=$(nvram get http_username) ; sh_name=$(basename $0)
