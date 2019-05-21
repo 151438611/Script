@@ -44,15 +44,15 @@ fi
 #提取内容中的日期,示例：20180515
 older_time=$(echo $older_all | awk '{print $1}')
 #判断邮件中要求的编码类型，H3C表示H3C码, OEM表示OEM码,默认表示思科兼容
-if [ -n "$(echo $older_all | awk '{print $8}' | grep -Ei "h3c|hp")" ] ; then older_kind="H3C码"
-elif [ -n "$(echo $older_all | awk '{print $8}' | grep -i "oem")" ] ; then older_kind="OEM码"
-elif [ -n "$(echo $older_all | awk '{print $8}' | grep -i "juniper")" ] ; then older_kind="Juniper码"
+if [ -n "$(echo $older_all | awk '{print $8}' | grep -Ei "h3c|hp")" ] ; then older_kind="H3C"
+elif [ -n "$(echo $older_all | awk '{print $8}' | grep -i "oem")" ] ; then older_kind="OEM"
+elif [ -n "$(echo $older_all | awk '{print $8}' | grep -i "juniper")" ] ; then older_kind="Juniper"
 else older_kind="思科码"
 fi
 #提取订单编码数量,示例：30
 older_num_old=$(echo $older_all | awk '{print $5}')
 case $older_kind in
-"H3C码")
+"H3C")
 older_num=$((older_num_old * 2 + 5)) ;;
 *)
 if [ -n "$(echo $older_type | grep -Ei "8644/qsfp|qsfp/4xfp")" ] ; then older_num=$(($older_num_old * 2))
