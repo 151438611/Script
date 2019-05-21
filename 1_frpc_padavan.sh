@@ -9,6 +9,7 @@
 #################################################################
 
 export PATH=/bin:/sbin:/usr/bin:/usr/sbin:$PATH
+frpclog=/tmp/frpc.log
 # ------------------------- add crontab、startup、enable SSH -----------------------
 bin_dir=/etc/storage/bin ; [ -d "$bin_dir" ] || mkdir -p $bin_dir
 user_name=$(nvram get http_username) ; sh_name=$(basename $0)
@@ -145,7 +146,8 @@ fi
 # ------------------------- start frpc ---------------------
 ping -c2 -w5 114.114.114.114 && \
 if [ -z "$(pidof frpc)" ] ; then
-     logger -t frpc "frpc is not running ; starting frpc......"
-     exec $frpc -c $frpcini &
-else logger -t frpc "frpc is running ; Don't do anything !"
+  echo "frpc is not running ; starting frpc......" >> $frpclog
+  exec $frpc -c $frpcini &
+else 
+  echo "frpc is running ; Don't do anything !" >> $frpclog
 fi
