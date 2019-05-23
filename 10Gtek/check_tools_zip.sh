@@ -55,15 +55,16 @@ case $older_kind in
 "H3C")
 older_num=$((older_num_old * 2 + 5)) ;;
 *)
-if [ -n "$(echo $older_type | grep -Ei "8644/qsfp")" ] ; then older_num=$(($older_num_old * 2 + 1))
-elif [ -n "$(echo $older_type | grep -Ei "10gsfp|xfp/xfp")" ] ; then older_num=$(($older_num_old * 3 + 1))
+if [ -n "$(echo $older_type | grep -Ei "10gsfp|xfp/xfp|sfp-sfp")" ] ; then older_num=$(($older_num_old * 3 + 1))
 elif [ -n "$(echo $older_type | grep -Ei "zsp/zsp|xfp/sfp")" ] ; then older_num=$(($older_num_old * 2 + 1))
 elif [ -n "$(echo $older_type | grep -i "zqp/2zqp")" ] ; then older_num=$((($older_num_old * 2 + 2) * 3 + 1))
 elif [ -n "$(echo $older_type | grep -i "zqp/4zsp")" ] ; then older_num=$(($older_num_old * 6 + 3))
+elif [ -n "$(echo $older_type | grep -i "zqp/2zsp")" ] ; then older_num=$(($older_num_old * 4 + 3))
 elif [ -n "$(echo $older_type | grep -Ei "q10/4s|qsfp/4sfp|qsfp/4xfp")" ] ; then older_num=$(($older_num_old * 7 + 1))
-elif [ -n "$(echo $older_all | awk '/[qQ]10\/[qQ]10/&&/[mM][cC][uU]/{print $0}')" -o -n "$(echo $older_type | grep -i "zqp/zqp")" ]; then 
-older_num=$(($older_num_old * 4 + 5))
-elif [ -n "$(echo $older_type | grep -Ei "q10/q10|qsfp/8088|8644/8644")" ] ; then older_num=$(($older_num_old * 2 + 1))
+elif [ -n "$(echo $older_all | awk '/[qQ]10\/[qQ]10/&&/[mM][cC][uU]/{print $0}')" -o -n "$(echo $older_type | grep -i "zqp/zqp")" ]; then
+  older_num=$(($older_num_old * 4 + 5))
+elif [ -n "$(echo $older_all | awk '/[qQ]10\/4[sS]/&&/[mM][cC][uU]/{print $0}')" ]; then older_num=$(($older_num_old * 6 + 3))
+elif [ -n "$(echo $older_type | grep -Ei "q10/q10|qsfp/8088|8644/8644|8644/qsfp|8644/8088")" ] ; then older_num=$(($older_num_old * 2 + 1))
 else older_num=$older_num_old
 fi ;;
 esac
