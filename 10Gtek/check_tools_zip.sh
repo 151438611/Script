@@ -55,10 +55,9 @@ case $older_kind in
 "H3C")
 older_num=$((older_num_old * 2 + 5)) ;;
 *)
-if [ -n "$(echo $older_type | grep -Ei "8644/qsfp|qsfp/4xfp")" ] ; then older_num=$(($older_num_old * 2))
-elif [ -n "$(echo $older_type | grep -Ei "10gsfp|sfp-sfp|xfp/xfp")" ] ; then older_num=$(($older_num_old * 3 + 1))
-elif [ -n "$(echo $older_type | grep -i "xfp/sfp")" ] ; then older_num=$(($older_num_old * 2 + 1))
-elif [ -n "$(echo $older_type | grep -i "zsp/zsp")" ] ; then older_num=$(($older_num_old * 2 + 1))
+if [ -n "$(echo $older_type | grep -Ei "8644/qsfp")" ] ; then older_num=$(($older_num_old * 2 + 1))
+elif [ -n "$(echo $older_type | grep -Ei "10gsfp|xfp/xfp")" ] ; then older_num=$(($older_num_old * 3 + 1))
+elif [ -n "$(echo $older_type | grep -Ei "zsp/zsp|xfp/sfp")" ] ; then older_num=$(($older_num_old * 2 + 1))
 elif [ -n "$(echo $older_type | grep -i "zqp/2zqp")" ] ; then older_num=$((($older_num_old * 2 + 2) * 3 + 1))
 elif [ -n "$(echo $older_type | grep -i "zqp/4zsp")" ] ; then older_num=$(($older_num_old * 6 + 3))
 elif [ -n "$(echo $older_type | grep -Ei "q10/4s|qsfp/4sfp|qsfp/4xfp")" ] ; then older_num=$(($older_num_old * 7 + 1))
