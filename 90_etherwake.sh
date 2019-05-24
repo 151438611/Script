@@ -11,6 +11,7 @@ echo "3 : 10gtek_centos7_up_computer"
 echo "4 : 10gtek_centos7_down_computer"
 echo "5 : 10gtek_cisco_coding_computer"
 echo "6 : jh_mt8200_computer"
+echo "7 : 10gtek_dell_computer"
 echo ""
 read -p "Please input a number : " device
 case $device in
@@ -20,6 +21,7 @@ case $device in
   4) mac=00:d8:61:10:df:a2 ;;
   5) mac=48:5b:39:a7:78:5b ;;
   6) mac=44:37:e6:84:d7:ba ;;
+  7) mac=8c:ec:4b:c0:9d:22 ;;
   *) echo "Please enter a valid number !!!" && exit ;;
 esac
 
