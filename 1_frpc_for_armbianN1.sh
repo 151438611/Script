@@ -56,7 +56,7 @@ admin_pwd = admin
 #log_max_days = 3
 log_level = warn
 
-# --- SSH_port:22 / Telnet_port:23 / RemoteDesktop_port:3389 / VNC:5900 ---
+# --- SSH_port:22 Telnet_port:23 RemoteDesktop_port:3389 VNC:5900 ---
 [ssh]
 type = tcp
 local_ip = 127.0.0.1
