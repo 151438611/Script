@@ -19,10 +19,8 @@ sh_url=http://frp.xiongxinyi.cn:11111/file/frp/frpc_padavan.sh
 
 cron_reboot="5 5 * * * [ -n \"\$(date +%d | grep 5)\" ] && reboot || ping -c2 -w5 114.114.114.114 || reboot"
 grep -qi "reboot" $cron || echo "$cron_reboot" >> $cron
-
 cron_sh="20 * * * * [ \$(date +%k) -eq 5 ] && killall -q frpc ; sleep 8 && sh $bin_dir/$sh_name"
 grep -qi $sh_name $cron || echo "$cron_sh" >> $cron
-
 startup_sh="sleep 30 ; wget -P /tmp $sh_url && mv -f /tmp/$(basename $sh_url) $bin_dir/$sh_name ; sh $bin_dir/$sh_name"
 grep -qi $sh_name $startup || echo "$startup_sh" >> $startup
 
@@ -33,12 +31,12 @@ grep -qi $sh_name $startup || echo "$startup_sh" >> $startup
 
 lanip=$(nvram get lan_ipaddr) && i=$(echo $lanip | cut -d . -f 3)
 udisk=$(mount | awk '$1~"/dev/" && $3~"/media/"{print $3}' | head -n1) ; udisk=${udisk:=/tmp}
-
+host_name=$(nvram get computer_name)
 # ----- 1、填写服务端的IP/域名、认证密码即可-----------------------------------
 server_addr=frp.xiongxinyi.cn
 token=administrator
 subdomain=$host_name$i
-host_name=$(nvram get computer_name)
+
 # ----- 2、是否开启ttyd(web_ssh)、Telnet(或远程桌面)、简单的http_file文件服务; 0表示不开启，1表示开启 -----
 ttyd_enable=0
 if [ $ttyd_enable -eq 1 ] ; then ttyd_port=7682 ; fi 
