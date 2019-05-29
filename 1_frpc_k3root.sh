@@ -20,8 +20,8 @@ token="administrator"
 subdomain=${host_name}$i
 
 # ----- 2、frpc的下载地址、frpcini设置临时配置(默认/tmp/)还是永久保存配置(/etc/)----------------
-frpc_url1=http://frp.xiongxinyi.cn:11111/file/frp/frpc_linux_arm && md5_frpc1=af0e1a938ba6ddb62fe72bad8dc0a1eb
-frpc_url2=http://frp.xiongxinyi.cn:12222/file/frp/frpc_linux_arm && md5_frpc2=af0e1a938ba6ddb62fe72bad8dc0a1eb
+frpc_url1="http://frp.xiongxinyi.cn:11111/file/frp/frpc_linux_arm" && md5_frpc1="af0e1a938ba6ddb62fe72bad8dc0a1eb"
+frpc_url2="http://frp.xiongxinyi.cn:12222/file/frp/frpc_linux_arm" && md5_frpc2="af0e1a938ba6ddb62fe72bad8dc0a1eb"
 md5_frpc="$md5_frpc1 $md5_frpc2"
 frpc="/opt/frpc" && frpc_name=${frpc##*/}
 frpcini="/opt/frpc.ini" 
