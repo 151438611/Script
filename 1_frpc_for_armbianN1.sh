@@ -22,7 +22,7 @@ ttyd=/opt/frp/ttyd
 ttyd_url=http://frp.xiongxinyi.cn:11111/file/frp/ttyd_linux.aarch64
 if [ -z $(pidof ttyd) ] ; then
   [ -f "$ttyd" ] || wget -O $ttyd $ttyd_url
-  chmod 555 $ttyd
+  chmod 755 $ttyd
   $ttyd -p 7682 -m 5 -d 1 /bin/login &
 fi
 
