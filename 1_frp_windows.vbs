@@ -7,6 +7,7 @@
 
 On Error Resume Next
 Dim dir_run,frp,frpini
+' 注意dir_run目录后面要带反斜杠 \
 dir_run = "C:\PerfLogs\"
 frp = "frpc.exe"
 frpini = "frpc.ini"
