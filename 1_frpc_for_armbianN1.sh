@@ -5,10 +5,9 @@ export PATH=/bin:/sbin:/usr/bin:/usr/sbin:$PATH
 
 cron=/var/spool/cron/crontabs/root
 grep -qi reboot $cron || echo -e "\n5 5 * * * [ \$(date +\\%u) -eq 6 ] && /sbin/reboot" >> $cron
-
 cron_frpc="15 * * * * [ \$(date +\\%k) -eq 5 ] && killall -q frpc ; sleep 8 && sh /opt/frp/$(basename $0)"
 grep -qi $(basename $0) $cron || echo -e "\n$cron_frpc" >> $cron
-
+frpclog=/tmp/frpc.log
 # -----1、填写服务端的IP/域名、认证密码即可---------------------------
 server_addr=frp.xiongxinyi.cn
 token=administrator
@@ -46,7 +45,16 @@ user = $name
 pool_count = 8
 tcp_mux = true
 login_fail_exit = true
-# ----- SSH_port:22 / Telnet_port:23 / RemoteDesktop_port:3389 -----
+
+#log_file = $frpclog
+#log_max_days = 3
+log_level = warn
+admin_addr = 0.0.0.0
+admin_port = 7400
+admin_user = admin
+admin_pwd = admin
+
+# --- SSH_port:22 / Telnet_port:23 / RemoteDesktop_port:3389 / VNC:5900 ---
 [ssh]
 type = tcp
 local_ip = 127.0.0.1
@@ -54,7 +62,7 @@ local_port = 22
 remote_port = 0
 use_encryption = false
 use_compression = true
-# ------------ http Tunnel config ------------
+
 [$subdomain]
 type = tcp
 local_ip = 127.0.0.1
@@ -67,7 +75,7 @@ fi
 
 if [ -z "$(pidof frpc)" ] ; then
   $frpc -c $frpcini &
-  echo "$(date +"%F %T") frpc was not runing ; start frpc ..." >> /tmp/frpc.log
+  echo "$(date +"%F %T") frpc was not runing ; start frpc ..." >> $frpclog
 else
-  echo "$(date +"%F %T") frpc is runing, Don't do anything !" >> /tmp/frpc.log
+  echo "$(date +"%F %T") frpc is runing, Don't do anything !" >> $frpclog
 fi
