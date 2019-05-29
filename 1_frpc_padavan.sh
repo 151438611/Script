@@ -51,7 +51,6 @@ frpc_url3=http://opt.cn2qq.com/opt-file/frpc && md5_frpc3=38b52ebddb511ee55e5274
 md5_frpc="$md5_frpc1 $md5_frpc2 $md5_frpc3 db78f2ad7f844fba12022ded54ccb77e"
 frpc=$udisk/frpc && frpc_name=${frpc##*/}
 frpcini=$bin_dir/frpc.ini
-
 # -------------------------- ttyd -----------------------------
 download_ttyd() {
   killall -q ttyd
@@ -147,7 +146,6 @@ plugin_http_passwd =
 END
   fi
 fi
-
 # ------------------------- start frpc ---------------------
 ping -c2 -w5 114.114.114.114 && \
   if [ -z "$(pidof $frpc_name)" ] ; then
