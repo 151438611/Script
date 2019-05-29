@@ -15,19 +15,20 @@ token="administrator"
 name="10gtek_n1"
 subdomain="kodexplorer"
 
-frpc="/opt/frp/frpc"
+frpc="/opt/frp/frpc" && frpc_name=${frpc##*/}
 frpcini="/opt/frp/frpc.ini"
 frpc_url="http://frp.xiongxinyi.cn:11111/file/frp/frpc_linux_arm64 && md5_frpc1=291c0207eb0e0a8d7bab963963a63326"
 
 ttyd="/opt/frp/ttyd"
 ttyd_url="http://frp.xiongxinyi.cn:11111/file/frp/ttyd_linux.aarch64"
-if [ -z "$(pidof ttyd)" ] ; then
+if [ -z "$(pidof ${ttyd##*/})" ] ; then
   [ -f "$ttyd" ] || wget -O $ttyd $ttyd_url
   chmod 755 $ttyd
   $ttyd -p 7682 -m 5 -d 1 /bin/login &
 fi
 
 download_frpc() {
+  killall -q $frpc_name
   rm -f $frpc
   wget -O $frpc $frpc_url &
   sleep 60 ; killall -q wget
@@ -75,9 +76,9 @@ END
 fi
 
 ping -c2 -w5 114.114.114.114 && \
-  if [ -z "$(pidof ${frpc##*/})" ] ; then
-    echo "$(date +"%F %T") frpc was not runing ; start frpc ..." >> $frpclog
+  if [ -z "$(pidof $frpc_name)" ] ; then
+    echo "$(date +"%F %T") $frpc_name was not runing ; start $frpc_name ..." >> $frpclog
     exec $frpc -c $frpcini &
   else
-    echo "$(date +"%F %T") frpc is runing, Don't do anything !" >> $frpclog
+    echo "$(date +"%F %T") $frpc_name is runing, Don't do anything !" >> $frpclog
   fi
