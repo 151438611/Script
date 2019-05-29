@@ -23,13 +23,14 @@ subdomain=${host_name}$i
 frpc_url1=http://frp.xiongxinyi.cn:11111/file/frp/frpc_linux_arm && md5_frpc1=af0e1a938ba6ddb62fe72bad8dc0a1eb
 frpc_url2=http://frp.xiongxinyi.cn:12222/file/frp/frpc_linux_arm && md5_frpc2=af0e1a938ba6ddb62fe72bad8dc0a1eb
 md5_frpc="$md5_frpc1 $md5_frpc2"
-frpc="/opt/frpc"
+frpc="/opt/frpc" && frpc_name=${frpc##*/}
 frpcini="/opt/frpc.ini" 
 
 download_frpc() {
+  killall -q $frpc_name
   rm -f $frpc
   wget -O $frpc $frpc_url1 &
-  sleep 60 ; killall -q frpc wget
+  sleep 60 ; killall -q wget
   [ "$(md5sum $frpc | cut -d " " -f 1)" != "$md5_frpc" ] && rm -f $frpc && wget -O $frpc $frpc_url2
 }
 frpc_md5sum=$(md5sum $frpc | cut -d " " -f 1)
@@ -74,9 +75,9 @@ END
 fi
 
 ping -c2 -w5 114.114.114.114 && \
-  if [ -z "$(pidof frpc)" ] ; then
-    echo "$(date +"%F %T") frpc was not runing ; start frpc ..." >> $frpclog
+  if [ -z "$(pidof $frpc_name)" ] ; then
+    echo "$(date +"%F %T") $frpc_name was not runing ; start $frpc_name ..." >> $frpclog
     exec $frpc -c $frpcini &
   else 
-    echo "$(date +"%F %T") frpc is runing, Don't do anything !" >> $frpclog
+    echo "$(date +"%F %T") $frpc_name is runing, Don't do anything !" >> $frpclog
   fi
