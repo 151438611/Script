@@ -10,17 +10,17 @@ cron_frpc="15 * * * * [ \$(date +\\%k) -eq 5 ] && killall -q frpc ; sleep 8 && s
 grep -qi $(basename $0) $cron || echo -e "\n$cron_frpc" >> $cron
 
 # -----1、填写服务端的IP/域名、认证密码即可---------------------------
-server_addr="frp.xiongxinyi.cn"
-token="administrator"
-name="10gtek_n1"
-subdomain="kodexplorer"
+server_addr=frp.xiongxinyi.cn
+token=administrator
+name=10gtek_n1
+subdomain=kodexplorer
 
-frpc="/opt/frp/frpc" && frpc_name=${frpc##*/}
-frpcini="/opt/frp/frpc.ini"
-frpc_url="http://frp.xiongxinyi.cn:11111/file/frp/frpc_linux_arm64" && md5_frpc1=291c0207eb0e0a8d7bab963963a63326
+frpc=/opt/frp/frpc && frpc_name=${frpc##*/}
+frpcini=/opt/frp/frpc.ini
+frpc_url=http://frp.xiongxinyi.cn:11111/file/frp/frpc_linux_arm64 && md5_frpc1=291c0207eb0e0a8d7bab963963a63326
 
-ttyd="/opt/frp/ttyd"
-ttyd_url="http://frp.xiongxinyi.cn:11111/file/frp/ttyd_linux.aarch64"
+ttyd=/opt/frp/ttyd
+ttyd_url=http://frp.xiongxinyi.cn:11111/file/frp/ttyd_linux.aarch64
 if [ -z "$(pidof ${ttyd##*/})" ] ; then
   [ -f "$ttyd" ] || wget -O $ttyd $ttyd_url
   chmod 755 $ttyd
