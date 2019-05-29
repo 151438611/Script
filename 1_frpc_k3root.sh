@@ -12,8 +12,8 @@ grep -qi "reboot" $crontab || echo "$cron_reboot" >> $crontab
 cron_frpc="15 * * * * [ \$(date +%k) -eq 5 ] && killall -q frpc ; sh /opt/$frpc_name"
 grep -qi "$frpc_name" $crontab || echo "$cron_frpc" >> $crontab
 
-host_name=$(nvram get product)
 lanip=$(nvram get lan_ipaddr) && i=$(echo $lanip | cut -d . -f 3)
+host_name=$(nvram get product)
 # ----- 1、填写服务端的IP/域名、认证密码即可---------------------------
 server_addr="frp.xiongxinyi.cn"
 token="administrator"
