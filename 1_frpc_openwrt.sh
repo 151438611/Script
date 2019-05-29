@@ -28,10 +28,10 @@ grep -qi $sh_name $startup || echo "$startup_sh" >> $startup
 #[ $(nvram get misc_http_x) -eq 0 ] && nvram set misc_http_x=1 && nvram set misc_httpport_x=80 && nvram commit
 [ $(nvram get sshd_wopen) -eq 0 ] && nvram set sshd_wopen=1 && nvram set sshd_wport=22 && nvram commit
 [ $(nvram get sshd_enable) -eq 0 ] && nvram set sshd_enable=1 && nvram commit
-host_name=$(nvram get computer_name)
+
 lanip=$(nvram get lan_ipaddr) && i=$(echo $lanip | cut -d . -f 3)
 udisk=$(mount | awk '$1~"/dev/" && $3~"/media/"{print $3}' | head -n1) ; udisk=${udisk:=/tmp}
-
+host_name=$(nvram get computer_name)
 # ----- 1、填写服务端的IP/域名、认证密码即可-----------------------------------
 server_addr=frp.xiongxinyi.cn
 token=administrator
