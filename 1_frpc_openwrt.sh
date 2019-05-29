@@ -81,6 +81,9 @@ END
 fi
 
 ping -c2 -w5 114.114.114.114 && \
-if [ -z "$(pidof frpc)" ] ; then
-   $frpc -c $frpcini &
-fi
+  if [ -z "$(pidof frpc)" ] ; then
+    echo "$(date +"%F %T") frpc was not runing ; start frpc ..." >> $frpclog
+    exec $frpc -c $frpcini &
+  else 
+    echo "$(date +"%F %T") frpc is runing, Don't do anything !" >> $frpclog
+  fi
