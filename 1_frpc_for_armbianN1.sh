@@ -17,7 +17,7 @@ subdomain="kodexplorer"
 
 frpc="/opt/frp/frpc" && frpc_name=${frpc##*/}
 frpcini="/opt/frp/frpc.ini"
-frpc_url="http://frp.xiongxinyi.cn:11111/file/frp/frpc_linux_arm64 && md5_frpc1=291c0207eb0e0a8d7bab963963a63326"
+frpc_url="http://frp.xiongxinyi.cn:11111/file/frp/frpc_linux_arm64" && md5_frpc1=291c0207eb0e0a8d7bab963963a63326
 
 ttyd="/opt/frp/ttyd"
 ttyd_url="http://frp.xiongxinyi.cn:11111/file/frp/ttyd_linux.aarch64"
