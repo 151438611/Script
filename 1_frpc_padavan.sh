@@ -49,7 +49,7 @@ frpc_url1=http://frp.xiongxinyi.cn:11111/file/frp/frpc_linux_mipsle && md5_frpc1
 frpc_url2=http://frp.xiongxinyi.cn:12222/file/frp/frpc_linux_mipsle && md5_frpc2=3c0cb52a08ba0300463f5a9c0fc3d4ad
 frpc_url3=http://opt.cn2qq.com/opt-file/frpc && md5_frpc3=38b52ebddb511ee55e527419645810c9
 md5_frpc="$md5_frpc1 $md5_frpc2 $md5_frpc3 db78f2ad7f844fba12022ded54ccb77e"
-frpc=$udisk/frpc
+frpc=$udisk/frpc && frpc_name=${frpc##*/}
 frpcini=$bin_dir/frpc.ini
 
 # -------------------------- ttyd -----------------------------
@@ -68,20 +68,20 @@ if [ $ttyd_enable -eq 1 ] ; then
 fi
 # -------------------------- frpc -----------------------------
 download_frpc() {
+  killall -q $frpc_name
   rm -f $frpc
   wget -O $frpc $frpc_url1 &
-  sleep 100 ; killall -q frpc wget
+  sleep 60 ; killall -q wget
   if [ "$(md5sum $frpc | cut -d " " -f 1)" != "$md5_frpc1" ] ; then
     rm -f $frpc
     wget -O $frpc $frpc_url2 &
-    sleep 100 ; killall -q wget
+    sleep 60 ; killall -q wget
     if [ "$(md5sum $frpc | cut -d " " -f 1)" != "$md5_frpc2" ] ; then
       rm -f $frpc
       wget -O $frpc $frpc_url3
     fi
   fi 
 }
-
 frpc_md5sum=$(md5sum $frpc | cut -d " " -f 1)
 [ -n "$(echo "$md5_frpc" | grep ${frpc_md5sum:-null})" ] || download_frpc
 chmod 755 $frpc
@@ -105,7 +105,6 @@ admin_pwd = admin
 #log_file = $frpclog
 #log_max_days = 3
 log_level = warn
-
 # ----- SSH:22 Telnet:23 RemoteDesktop:3389 VNC:5900 -----
 [ssh]
 type = tcp
@@ -151,9 +150,9 @@ fi
 
 # ------------------------- start frpc ---------------------
 ping -c2 -w5 114.114.114.114 && \
-  if [ -z "$(pidof frpc)" ] ; then
-    echo "$(date +"%F %T") frpc was not runing ; start frpc ..." >> $frpclog
+  if [ -z "$(pidof $frpc_name)" ] ; then
+    echo "$(date +"%F %T") $frpc_name was not runing ; start $frpc_name ..." >> $frpclog
     exec $frpc -c $frpcini &
   else 
-    echo "$(date +"%F %T") frpc is runing, Don't do anything !" >> $frpclog
+    echo "$(date +"%F %T") $frpc_name is runing, Don't do anything !" >> $frpclog
   fi
