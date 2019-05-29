@@ -34,9 +34,10 @@ frpcini=/etc/frpc.ini
 
 # -------------------------- frpc ----------------------------------------------------
 download_frpc() {
+  killall -q $frpc_name 
   rm -f $frpc
   wget -O $frpc $frpc_url1 &
-  sleep 100 ; killall -q wget $frpc_name 
+  sleep 60 ; killall -q wget
   [ "$(md5sum $frpc | cut -d " " -f 1)" != "$md5_frpc1" ] && rm -f $frpc && wget -O $frpc $frpc_url2
 }
 frpc_md5sum=$(md5sum $frpc | cut -d " " -f 1)
