@@ -2,6 +2,8 @@
 # support for OpenWrt
 # 默认frpc连接frps失败10次后,客户端frpc会自动关闭退出;此脚本用于定时检查frpc. 版本: frp_0.22.0
 export PATH=/bin:/sbin:/usr/bin:/usr/sbin:$PATH
+frpclog=/tmp/frpc.log ; [ -f $frpclog ] || echo $(date +"%F %T") > $frpclog
+
 cron=/etc/crontabs/root ; startup=/etc/rc.local ; frpc_name=$(basename $0)
 frpc_sh=http://frp.xiongxinyi.cn:11111/file/frp/frpc_openwrt.sh
 if [ $(grep -c $frpc_name $startup) -eq 0 ] ; then
@@ -20,12 +22,15 @@ host_name=$(uci get system.@system[0].hostname)
 lanip=$(uci get network.lan.ipaddr) && i=$(echo $lanip | cut -d . -f 3)
 
 # ----- 1、填写服务端的IP/域名、认证密码即可 ---------------
-server_addr=frp.xiongxinyi.cn ; token=administrator ; subdomain=$host_name$i
+server_addr=frp.xiongxinyi.cn
+token=administrator
+subdomain=$host_name$i
 # ----- 2、frpc的下载地址、frpcini设置临时配置(默认/tmp/重启自动更新)还是永久保存配置(/etc/，需取消注释#) -----
 frpc_url1=http://frp.xiongxinyi.cn:11111/file/frp/frpc_linux_mips && md5_frpc1=2bb7a6d32c5f378ba1aede9f669ed37a
 frpc_url2=http://frp.xiongxinyi.cn:12222/file/frp/frpc_linux_mips && md5_frpc2=2bb7a6d32c5f378ba1aede9f669ed37a
 md5_frpc="$md5_frpc1 $md5_frpc2"
-frpc=/tmp/frpc ; frpcini=/etc/frpc.ini 
+frpc=/tmp/frpc
+frpcini=/etc/frpc.ini 
 
 # -------------------------- frpc ----------------------------------------------------
 download_frpc() {
@@ -49,6 +54,13 @@ user = $name
 pool_count = 10
 tcp_mux = true
 login_fail_exit = true
+admin_addr = 0.0.0.0
+admin_port = 7400
+admin_user = admin
+admin_pwd = admin
+#log_file = $frpclog
+#log_max_days = 3
+log_level = warn
 
 [ssh]
 type = tcp
