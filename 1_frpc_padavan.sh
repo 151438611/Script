@@ -7,9 +7,9 @@
 # ========	========  ===========================================
 # Jun	      20180808  Created.
 #################################################################
-
 export PATH=/bin:/sbin:/usr/bin:/usr/sbin:$PATH
 frpclog=/tmp/frpc.log ; [ -f $frpclog ] || echo $(date +"%F %T") > $frpclog
+
 # ------------------------- add crontab、startup、enable SSH -----------------------
 bin_dir=/etc/storage/bin ; [ -d "$bin_dir" ] || mkdir -p $bin_dir
 user_name=$(nvram get http_username) ; sh_name=$(basename $0)
@@ -35,7 +35,9 @@ lanip=$(nvram get lan_ipaddr) && i=$(echo $lanip | cut -d . -f 3)
 udisk=$(mount | awk '$1~"/dev/" && $3~"/media/"{print $3}' | head -n1) ; udisk=${udisk:=/tmp}
 
 # ----- 1、填写服务端的IP/域名、认证密码即可-----------------------------------
-server_addr=frp.xiongxinyi.cn ; token=administrator  ; subdomain=$host_name$i
+server_addr=frp.xiongxinyi.cn
+token=administrator
+subdomain=$host_name$i
 
 # ----- 2、是否开启ttyd(web_ssh)、Telnet(或远程桌面)、简单的http_file文件服务; 0表示不开启，1表示开启 -----
 ttyd_enable=0
@@ -49,29 +51,37 @@ frpc_url1=http://frp.xiongxinyi.cn:11111/file/frp/frpc_linux_mipsle && md5_frpc1
 frpc_url2=http://frp.xiongxinyi.cn:12222/file/frp/frpc_linux_mipsle && md5_frpc2=3c0cb52a08ba0300463f5a9c0fc3d4ad
 frpc_url3=http://opt.cn2qq.com/opt-file/frpc && md5_frpc3=38b52ebddb511ee55e527419645810c9
 md5_frpc="$md5_frpc1 $md5_frpc2 $md5_frpc3 db78f2ad7f844fba12022ded54ccb77e"
-frpc=$udisk/frpc ; frpcini=$bin_dir/frpc.ini
+frpc=$udisk/frpc
+frpcini=$bin_dir/frpc.ini
 
 # -------------------------- ttyd -----------------------------
 download_ttyd() {
-  killall -q ttyd ; rm -f $ttyd
+  killall -q ttyd
+  rm -f $ttyd
   wget -O $ttyd $ttyd_url
   chmod 755 $ttyd
 }
 if [ $ttyd_enable -eq 1 ] ; then 
-  ttyd=$(which ttyd) ; [ -f "${ttyd:=$bin_dir/ttyd}" ] || download_ttyd
+  ttyd=$(which ttyd)
+  [ -f "${ttyd:=$bin_dir/ttyd}" ] || download_ttyd
   if [ -z "$(pidof ttyd)" ] ; then
       $ttyd -p $ttyd_port -r 10 -m 3 -d 1 /bin/login &
   fi
 fi
 # -------------------------- frpc -----------------------------
 download_frpc() {
-  rm -f $frpc ; wget -O $frpc $frpc_url1 &
-  sleep 100 ; killall -q frpc wget
+  rm -f $frpc
+  wget -O $frpc $frpc_url1 &
+  sleep 100
+  killall -q frpc wget
   if [ "$(md5sum $frpc | cut -d " " -f 1)" != "$md5_frpc1" ] ; then
-    rm -f $frpc ; wget -O $frpc $frpc_url2 &
-    sleep 100 ; killall -q wget
+    rm -f $frpc
+    wget -O $frpc $frpc_url2 &
+    sleep 100
+    killall -q wget
     if [ "$(md5sum $frpc | cut -d " " -f 1)" != "$md5_frpc2" ] ; then
-      rm -f $frpc ; wget -O $frpc $frpc_url3
+      rm -f $frpc
+      wget -O $frpc $frpc_url3
     fi
   fi 
 }
@@ -92,13 +102,13 @@ pool_count = 8
 tcp_mux = true
 login_fail_exit = true
 
-admin_addr = 127.0.0.1
+admin_addr = 0.0.0.0
 admin_port = 7400
 admin_user = admin
 admin_pwd = admin
-#log_file = /tmp/frpc.log
-log_level = warn
+#log_file = $frpclog
 #log_max_days = 3
+log_level = warn
 
 # ----- SSH:22 Telnet:23 RemoteDesktop:3389 VNC:5900 -----
 [ssh]
@@ -145,9 +155,9 @@ fi
 
 # ------------------------- start frpc ---------------------
 ping -c2 -w5 114.114.114.114 && \
-if [ -z "$(pidof frpc)" ] ; then
-  echo "frpc is not running ; starting frpc......" >> $frpclog
-  exec $frpc -c $frpcini &
-else 
-  echo "frpc is running ; Don't do anything !" >> $frpclog
-fi
+  if [ -z "$(pidof frpc)" ] ; then
+    echo "frpc is not running ; starting frpc......" >> $frpclog
+    exec $frpc -c $frpcini &
+  else 
+    echo "frpc is running ; Don't do anything !" >> $frpclog
+  fi
