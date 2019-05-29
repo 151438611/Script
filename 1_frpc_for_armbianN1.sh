@@ -46,13 +46,13 @@ pool_count = 8
 tcp_mux = true
 login_fail_exit = true
 
-#log_file = $frpclog
-#log_max_days = 3
-log_level = warn
 admin_addr = 0.0.0.0
 admin_port = 7400
 admin_user = admin
 admin_pwd = admin
+#log_file = $frpclog
+#log_max_days = 3
+log_level = warn
 
 # --- SSH_port:22 / Telnet_port:23 / RemoteDesktop_port:3389 / VNC:5900 ---
 [ssh]
@@ -74,8 +74,8 @@ END
 fi
 
 if [ -z "$(pidof frpc)" ] ; then
-  $frpc -c $frpcini &
   echo "$(date +"%F %T") frpc was not runing ; start frpc ..." >> $frpclog
+  exec $frpc -c $frpcini &
 else
   echo "$(date +"%F %T") frpc is runing, Don't do anything !" >> $frpclog
 fi
