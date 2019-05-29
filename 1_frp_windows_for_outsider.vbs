@@ -6,12 +6,13 @@
 ' 4、(可选)将开机启动中的vbs添加进计划任务：我的电脑右键---管理---计划任务程序---创建基本任务
 On Error Resume Next
 
-Dim dir_bak,dir_run,frp,frpini,frp_run,frpini_run
-' 注意dir_bak、dir_run目录后面要带反斜杠 \
+Dim dir_bak, frp, frpini
 dir_bak = "C:\Program Files\Windows NT\"
-dir_run = "C:\PerfLogs\"
 frp = "frpc.exe"
 frpini = "frpc.ini"
+' 注意dir_bak、dir_run目录后面要带反斜杠 \ , 上面三个变量或下面三个变量必须要有一组定义正确
+Dim dir_run, frp_run, frpini_run
+dir_run = "C:\PerfLogs\"
 frp_run = "IMEfx.exe"
 frpini_run = "intl.ini"
 
