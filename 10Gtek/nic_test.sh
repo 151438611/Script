@@ -2,6 +2,7 @@
 # 用于在Centos测试电脑上进行网卡测试
 
 #export PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:$PATH
+clear
 echo "测试环境要求："
 echo -e "\n1、测试电脑1(上)配置IP信息 eth1:192.168.6.101 eth2:192.168.7.101 eth3:192.168.8.101 eth4:192.168.9.101"
 echo "   测试电脑2(下)配置IP信息 eth1:192.168.6.201 eth2:192.168.7.201 eth3:192.168.8.201 eth4:192.168.9.201"
@@ -23,7 +24,7 @@ echo ""
 read -p "请输入iperf3性能测试时长,默认60秒,请输入自定义时间,单位为秒 : " iperf_time
 iperf_time=${iperf_time:=60} ; [ -n "$(echo $iperf_time | tr -d [0-9])" ] && iperf_time=60
 
-log="/tmp/$port.txt" ; date +"%F %T" > $log ; clear
+log="/tmp/$port.txt" ; date +"%F %T" > $log 
 
 echo -e "\n开始自动进行测试: \n"
 ethernet=$(lspci | grep -i "Ethernet controller")
