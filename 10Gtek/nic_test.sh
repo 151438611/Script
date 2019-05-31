@@ -3,7 +3,7 @@
 
 #export PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:$PATH
 mark() { 
-echo "==========================================================" 
+  echo "==========================================================" 
 }
 clear
 echo "测试环境要求："
