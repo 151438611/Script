@@ -2,8 +2,8 @@
 # 用于在Centos测试电脑上进行网卡测试
 
 #export PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:$PATH
-mark() {
-  echo "=========================================================="
+mark() { 
+echo "==========================================================" 
 }
 clear
 echo "测试环境要求："
