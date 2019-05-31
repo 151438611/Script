@@ -2,6 +2,9 @@
 # 用于在Centos测试电脑上进行网卡测试
 
 #export PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:$PATH
+mark() {
+  echo -e "==========================================================\n"
+}
 clear
 echo "测试环境要求："
 echo -e "\n1、测试电脑1(上)配置IP信息 eth1:192.168.6.101 eth2:192.168.7.101 eth3:192.168.8.101 eth4:192.168.9.101"
@@ -15,8 +18,11 @@ read -p "确认测试环境配置是否已完成,默认yes,请输入 <yes/no> : 
 [ "${confirm:=yes}" != yes ] && echo -e "\n请先配置好测试环境，再重新测试!\n" && exit
 echo -e "\n所有网卡端口号列表:  (state UP表示该端口已链接,state DOWN表示该端口未链接)"
 ip addr | awk '/</ {print $0}'
-read -p "请输入连接的网卡端口号,默认eth1,请输入 < 1/2/3/4 > : " port 
-port=eth${port:=1} ; [ -z "$(echo $port | grep eth)" ] && echo -e "\n请输入有效的网卡编号，再重新测试!\n" && exit
+read -p "请输入连接的网卡端口号,默认eth1,请输入 < 1/2/3/4 > : " port_num
+case ${port_num:=1} in 
+  1|2|3|4) port=eth$port_num ;; 
+  *) echo -e "\n请输入有效的网卡编号，再重新测试!\n" && exit ;;
+esac
 echo ""
 read -p "请输入Ping包次数,默认2000次,请输入 <2000-10000> : " count
 count=${count:=2000} ; [ -n "$(echo $count | tr -d [0-9])" ] && count=2000
@@ -36,15 +42,15 @@ else
   result="未识别插入的PCI-E网卡"
   echo -e "\n$result,请重新检查是否已插好,再来测试 !!!\n" && exit
 fi
-
+mark
 ethtool -i $port &>> $log
 [ $? -eq 0 ] && result="读取网卡驱动版本信息成功" || result="读取网卡驱动版本信息失败!"
 echo -e "$result\n" | tee -a $log 
-
+mark
 ethtool -m $port &>> $log
 [ $? -eq 0 ] && result="读取EEPROM信息成功" || result="读取EEPROM信息失败!"
 echo -e "$result\n" | tee -a $log 
-
+mark
 link_cmd=$(ethtool $port 2> /dev/null)
 link_stat=$(echo "$link_cmd" | awk '/Link detected:/{print $3}')
 link_speed=$(echo "$link_cmd" |awk '/Speed:/{print int($2)}')
@@ -55,7 +61,7 @@ else
 fi
 [ "$link_stat" = yes ] && echo "$link_cmd" >> $log
 echo -e "$result\n" | tee -a $log
-
+mark
 if [ "$link_stat" = yes ] ; then
   echo -e "\n正在进行 $count 次的 Ping 包测试..."
   net_ip=$(ifconfig $port 2> /dev/null | awk '/inet/ && /netmask/ {print $2}')
@@ -80,7 +86,7 @@ if [ "$link_stat" = yes ] ; then
   [ -n "$(echo "$ping_tail" | awk '/0% packet loss/ {print $0}')" ] && result="Ping包成功,无丢包." || result="Ping包失败,或有丢包!"
   echo -e "\n$result" | tee -a $log
   echo -e "$ping_head\n......\n$ping_tail" >> $log
-
+  mark
   echo -e "\n正在进行 iperf3 性能测试,请稍等 $iperf_time 秒 ......"
   iperf3 -c $dest_ip -t $iperf_time > /tmp/iperf.log
   iperf_head=$(head /tmp/iperf.log)
@@ -90,6 +96,6 @@ if [ "$link_stat" = yes ] ; then
   echo -e "\n$result" | tee -a $log
   echo -e "$iperf_head\n......\n$iperf_tail" >> $log 
 fi
-
+mark
 unix2dos -o $log &> /dev/null
-echo -e "\n测试已完成,测试数据保存在 /tmp/$port.txt ,下次测试会覆盖掉,请及时拷出!!! \n"
+echo -e "\n测试已完成,测试数据保存在 $log ,下次测试会覆盖掉,请及时拷出!!! \n"
