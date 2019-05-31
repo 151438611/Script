@@ -28,9 +28,9 @@ read -p "请输入Ping包次数,默认2000次,请输入 <2000-10000> : " count
 count=${count:=2000} ; [ -n "$(echo $count | tr -d [0-9])" ] && count=2000
 echo ""
 read -p "请输入iperf3性能测试时长,默认60秒,请输入自定义时间,单位为秒 : " iperf_time
-iperf_time=${iperf_time:=60} ; [ -n "$(echo $iperf_time | tr -d [0-9])" ] && iperf_time=60
+[ -n "$(echo ${iperf_time:=60} | tr -d [0-9])" ] && iperf_time=60
 
-log="/tmp/$port.txt" ; date +"%F %T" > $log 
+log="/tmp/$port.txt" ; echo "Test Time : $(date +"%F %T")" > $log 
 
 echo -e "\n开始自动进行测试: \n"
 ethernet=$(lspci | grep -i "Ethernet controller")
@@ -43,12 +43,12 @@ else
   echo -e "\n$result,请重新检查是否已插好,再来测试 !!!\n" && exit
 fi
 mark
-ethtool -i $port &>> $log
-[ $? -eq 0 ] && result="读取网卡驱动版本信息成功" || result="读取网卡驱动版本信息失败!"
+ethtool -i $port && result="读取网卡驱动版本信息成功" && \
+ethtool -i $port >> $log || result="读取网卡驱动版本信息失败!"
 echo -e "$result\n" | tee -a $log 
 mark
-ethtool -m $port &>> $log
-[ $? -eq 0 ] && result="读取EEPROM信息成功" || result="读取EEPROM信息失败!"
+ethtool -m $port && result="读取EEPROM信息成功" && \
+ethtool -m $port >> $log || result="读取EEPROM信息失败! (说明：若网卡是RJ45端口则无EEPROM)"
 echo -e "$result\n" | tee -a $log 
 mark
 link_cmd=$(ethtool $port 2> /dev/null)
@@ -57,9 +57,9 @@ link_speed=$(echo "$link_cmd" |awk '/Speed:/{print int($2)}')
 if [ "$link_stat" = "yes" -a -n "link_speed" ] ; then
   result="链路已连通,速率为 $link_speed Mb/s"
 else 
-  result="链路连通失败!" 
+  result="链路连通失败! 无法继续下一步 ping包 和 iperf性能测试 ..." 
 fi
-[ "$link_stat" = yes ] && echo "$link_cmd" >> $log
+ethtool $port &>> $log
 echo -e "$result\n" | tee -a $log
 mark
 if [ "$link_stat" = yes ] ; then
@@ -91,11 +91,11 @@ if [ "$link_stat" = yes ] ; then
   iperf3 -c $dest_ip -t $iperf_time > /tmp/iperf.log
   iperf_head=$(head /tmp/iperf.log)
   iperf_tail=$(tail /tmp/iperf.log)
-  tail -n3 /tmp/iperf.log
+  tail -n5 /tmp/iperf.log
   [ -n "$(echo "$iperf_tail" | grep "iperf Done")" ] && result="性能测试完成." || result="性能测试失败!" 
   echo -e "\n$result" | tee -a $log
   echo -e "$iperf_head\n......\n$iperf_tail" >> $log 
+  mark
 fi
-mark
 unix2dos -o $log &> /dev/null
-echo -e "\n测试已完成,测试数据保存在 $log ,下次测试会覆盖掉,请及时拷出!!! \n"
+echo -e "\n测试完成,测试数据保存在 $log ,下次测试会覆盖掉,请及时拷出!!! \n"
