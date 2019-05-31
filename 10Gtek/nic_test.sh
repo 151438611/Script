@@ -11,12 +11,12 @@ echo -e "\n1、测试电脑1(上)配置IP信息 eth1:192.168.6.101 eth2:192.168.
 echo "   测试电脑2(下)配置IP信息 eth1:192.168.6.201 eth2:192.168.7.201 eth3:192.168.8.201 eth4:192.168.9.201"
 echo -e "\n2、二台电脑的同号端口相连,不可混连,否则无法Ping包和性能测试; 例如: eth1-eth1、eth2-eth2... "
 echo "   注意:尽量使用端口数量相同的网卡,端口数不同的网卡测试只能按照端口少的相应端口连接"
-echo "   注意:有的网卡上面第一个端口为eth1,下面依次为eth2、eth3... ;有的网卡下面第一个端口为eth1,其次为eth2、eth3..."
+echo "   注意:有的网卡上面第一个端口为eth1,往下依次为eth2、eth3... ;有的网卡下面第一个端口为eth1,往上为eth2、eth3..."
 echo -e "\n3、在另一台电脑上运行 "iperf3 -s" 命令,作为服务端,本机作为客户端 \n"
 
-read -p "确认测试环境配置是否已完成,默认yes,请输入 <yes/no> : " confirm
+read -p "确认测试环境是否已配置正确,默认yes,请输入 <yes/no> : " confirm
 [ "${confirm:=yes}" != yes ] && echo -e "\n请先配置好测试环境，再重新测试!\n" && exit
-echo -e "\n所有网卡端口号列表:  (state UP表示该端口已链接,state DOWN表示该端口未链接)"
+echo -e "\n所有网卡端口列表: (state UP表示端口已链接, DOWN表示端口未链接)"
 ip addr | awk '/</ {print $0}' | grep -E "eth1|eth2|eth3|eth4"
 read -p "请输入连接的网卡端口号,默认eth1,请输入 < 1/2/3/4 > : " port_num
 case ${port_num:=1} in 
