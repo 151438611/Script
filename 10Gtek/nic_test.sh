@@ -30,7 +30,7 @@ echo ""
 read -p "请输入iperf3性能测试时长,默认60秒,请输入自定义时间,单位为秒 : " iperf_time
 [ -n "$(echo ${iperf_time:=60} | tr -d [0-9])" ] && iperf_time=60
 
-log="/tmp/$port.txt" ; echo "Test Time : $(date +"%F %T")" > $log 
+log="/tmp/$port.txt" ; echo -e "Test Time : $(date +"%F %T") \n" > $log 
 
 echo -e "\n开始自动进行测试: \n"
 ethernet=$(lspci | grep -i "Ethernet controller")
