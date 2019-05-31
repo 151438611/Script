@@ -3,7 +3,7 @@
 
 #export PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:$PATH
 mark() {
-  echo -e "==========================================================\n"
+  echo "=========================================================="
 }
 clear
 echo "测试环境要求："
@@ -37,30 +37,35 @@ ethernet=$(lspci | grep -i "Ethernet controller")
 if [ $(echo "$ethernet" | wc -l) -gt 1 ] ; then 
   result="识别网卡成功"
   echo -e "\n$ethernet" >> $log 
-  echo -e "$result\n" | tee -a $log
+  echo -e "$result \n" | tee -a $log
 else 
   result="未识别插入的PCI-E网卡"
-  echo -e "\n$result,请重新检查是否已插好,再来测试 !!!\n" && exit
+  echo -e "\n$result ,请重新检查是否已插好,再来测试 !!!\n" && exit
 fi
+
 mark
 ethtool -i $port && result="读取网卡驱动版本信息成功" && \
 ethtool -i $port >> $log || result="读取网卡驱动版本信息失败!"
 echo -e "$result\n" | tee -a $log 
+
 mark
 ethtool -m $port && result="读取EEPROM信息成功" && \
 ethtool -m $port >> $log || result="读取EEPROM信息失败! (说明：若网卡是RJ45端口则无EEPROM)"
 echo -e "$result\n" | tee -a $log 
+
 mark
 link_cmd=$(ethtool $port 2> /dev/null)
 link_stat=$(echo "$link_cmd" | awk '/Link detected:/{print $3}')
 link_speed=$(echo "$link_cmd" |awk '/Speed:/{print int($2)}')
 if [ "$link_stat" = "yes" -a -n "link_speed" ] ; then
   result="链路已连通,速率为 $link_speed Mb/s"
+  echo "$link_cmd"
 else 
   result="链路连通失败! 无法继续下一步 ping包 和 iperf性能测试 ..." 
 fi
 ethtool $port &>> $log
 echo -e "$result\n" | tee -a $log
+
 mark
 if [ "$link_stat" = yes ] ; then
   echo -e "\n正在进行 $count 次的 Ping 包测试..."
@@ -80,21 +85,23 @@ if [ "$link_stat" = yes ] ; then
      eth4) dest_ip=192.168.9.101 ;;
     esac
   fi
-  ping -c $count -i 0.05 $dest_ip | tee /tmp/ping.log 
-  ping_head=$(head /tmp/ping.log)
-  ping_tail=$(tail /tmp/ping.log)
+  pinglog=/tmp/ping.log
+  ping -c 2 -w 3 $dest_ip &> $pinglog &&  ping -c $count -i 0.05 $dest_ip | tee $pinglog 
+  ping_head=$(head $pinglog)
+  ping_tail=$(tail $pinglog)
   [ -n "$(echo "$ping_tail" | awk '/0% packet loss/ {print $0}')" ] && result="Ping包成功,无丢包." || result="Ping包失败,或有丢包!"
   echo -e "\n$result" | tee -a $log
-  echo -e "$ping_head\n......\n$ping_tail" >> $log
+  echo -e "$ping_head \n...... \n$ping_tail \n" >> $log
   mark
   echo -e "\n正在进行 iperf3 性能测试,请稍等 $iperf_time 秒 ......"
-  iperf3 -c $dest_ip -t $iperf_time > /tmp/iperf.log
-  iperf_head=$(head /tmp/iperf.log)
-  iperf_tail=$(tail /tmp/iperf.log)
-  tail -n5 /tmp/iperf.log
+  iperflog=/tmp/iperf.log
+  iperf3 -c $dest_ip -t $iperf_time > $iperflog
+  iperf_head=$(head iperflog)
+  iperf_tail=$(tail iperflog)
+  tail -n5 iperflog
   [ -n "$(echo "$iperf_tail" | grep "iperf Done")" ] && result="性能测试完成." || result="性能测试失败!" 
   echo -e "\n$result" | tee -a $log
-  echo -e "$iperf_head\n......\n$iperf_tail" >> $log 
+  echo -e "$iperf_head \n...... \n$iperf_tail \n" >> $log 
   mark
 fi
 unix2dos -o $log &> /dev/null
