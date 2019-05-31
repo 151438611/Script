@@ -17,7 +17,7 @@ echo -e "\n3、在另一台电脑上运行 "iperf3 -s" 命令,作为服务端,�
 read -p "确认测试环境配置是否已完成,默认yes,请输入 <yes/no> : " confirm
 [ "${confirm:=yes}" != yes ] && echo -e "\n请先配置好测试环境，再重新测试!\n" && exit
 echo -e "\n所有网卡端口号列表:  (state UP表示该端口已链接,state DOWN表示该端口未链接)"
-ip addr | awk '/</ {print $0}'
+ip addr | awk '/</ {print $0}' | grep -E "eth1|eth2|eth3|eth4"
 read -p "请输入连接的网卡端口号,默认eth1,请输入 < 1/2/3/4 > : " port_num
 case ${port_num:=1} in 
   1|2|3|4) port=eth$port_num ;; 
