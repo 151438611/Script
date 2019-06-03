@@ -28,7 +28,8 @@ read -p "请输入Ping包次数,默认2000次,请输入 <2000-10000> : " count
 count=${count:=2000} ; [ -n "$(echo $count | tr -d [0-9])" ] && count=2000
 echo ""
 read -p "请输入iperf3性能测试时长,默认60秒,请输入自定义时间,单位为秒 : " iperf_time
-[ -n "$(echo ${iperf_time:=60} | tr -d [0-9])" ] && iperf_time=60
+iperf_time=${iperf_time:=60}
+[ -n "$(echo $iperf_time | tr -d [0-9])" ] && iperf_time=60
 
 log="/tmp/$port.txt" ; echo -e "Test Time : $(date +"%F %T") \n" > $log 
 
