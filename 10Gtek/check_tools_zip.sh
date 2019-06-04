@@ -223,7 +223,7 @@ echo "编码日期:"$code_time""$result_time" 产品类型:"$code_type""$result_
 if [ -n "$error_time""$error_type""$error_num""$error_kind" ] ; then
 echo "$error_time""$error_type""$error_num""$error_kind" >> result
 echo "--------------------------------------------------------------------------------------" >> result
-hexdump -C $code_file | head -n16 >> result
+hexdump -vC $code_file | head -n16 >> result
 fi
 else
 echo "没有找到SN为 "$older_sn" 编码！！！！！！！！！！" >> result
@@ -261,7 +261,7 @@ echo "编码日期:"$code_time""$result_time" 产品类型:"$code_type""$result_
 [ -n "$error_time""$error_type""$error_num""$error_kind" ] && echo "$error_time""$error_type""$error_num""$error_kind"
 echo "--------------------------------------------------------------------------------------"
 #输出编码中的十六进制文件，仅输出20行。
-hexdump -C $code_file | head -n20 
+hexdump -vC $code_file | head -n20 
 else echo -e "\n没有找到SN为"$older_sn"编码！！！！！！！！！！"
 fi
 else
