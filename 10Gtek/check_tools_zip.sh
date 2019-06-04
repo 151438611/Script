@@ -69,6 +69,7 @@ case $older_kind in
 	fi ;;
 	esac
 }
+
 code_info() {
 #统计编码文件夹下的编码数量，在后面判断是否和邮件中的数量是否一致？
 code_num=$(find ./ -type d -name $older_id -exec ls -lR {} \; | grep -c "^-")
@@ -120,6 +121,7 @@ if [ -n "$code_file" ] ; then
 	[ "$code_type" = "ZQP" -a "$code_speed" = "25G" ] && code_speed="100G"
 fi
 }
+
 check_info() {
 #判断之前先初始化错误信息
 error_time=  ;  error_type=  ;  error_num=  ;  error_kind=  
@@ -163,6 +165,7 @@ elif [ $(expr $older_length \>= 2) -eq 1 ] ; then
 	expr $older_length \>= ${code_length:=null} 1>/dev/null && expr $older_length \< $(($code_length+2)) 1>/dev/null && result_length="(ok)"
 fi
 }
+
 check_end() {
 #清除解压出来的编码文件夹，并重命名
 mv -f $input_zip old.zip &> /dev/null 
@@ -232,15 +235,15 @@ while [ true ] ; do
 			echo "--------------------------------------------------------------------------------------"
 			#输出编码中的十六进制文件，仅输出20行。
 			echo "$code_file_hex_all" | head -n20 
-		else echo -e "\n没有找到SN为"$older_sn"编码！！！！！！！！！！"
+			else echo -e "\n没有找到SN为"$older_sn"编码！！！！！！！！！！"
 			fi
-	else
-		echo "没有找到对应的编码文件夹,请重新检查！！！！！！！！！！" 
-		#显示编码压缩文件中的目录内容
-		echo $(unzip -l $input_zip | awk -F / '/WO/{print $1}' | awk '{print $4","}' | sort -u)
+		else
+			echo "没有找到对应的编码文件夹,请重新检查！！！！！！！！！！" 
+			#显示编码压缩文件中的目录内容
+			echo $(unzip -l $input_zip | awk -F / '/WO/{print $1}' | awk '{print $4","}' | sort -u)
 		fi
-		else echo -e "\n请重新输入完整、正确的生产单号！！！"  ;  continue
-		fi
+	else echo -e "\n请重新输入完整、正确的生产单号！！！"  ;  continue
+	fi
 done
 check_end
 ;;
