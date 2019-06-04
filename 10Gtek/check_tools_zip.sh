@@ -77,7 +77,8 @@ code_file=$(find ./ -type f -name "$older_sn".bin | sort)
 if [ -n "$code_file" ] ; then
 if [ -z "$(echo $older_type | grep -Ei "qsfp|q10")" -o -n "$(echo $older_all | grep -i "mcu")" ] ; then
 #提取编码中的第1位，03表示SFP类型，06表示XFP类型, 0D表示40G-QSFP, 11表示100G-ZQP，0F表示8644
-code_type=$(hexdump -vC $code_file | awk 'NR==1{print $2}')
+code_file_hex=$(hexdump -vC $code_file)
+code_type=$(echo "$code_file_hex" | awk 'NR==1{print $2}')
 case $code_type in
 "03") code_type="SFP" ;;
 "06") code_type="XFP" ;;
@@ -87,7 +88,7 @@ case $code_type in
 *) code_type="请检查第0位产品类型代码：$code_type" ;;
 esac
 #提取编码中的第1行第14位，0C表示千兆，63/67表示10G, FF表示25G, 3C表示6G
-code_speed=$(hexdump -vC $code_file | awk 'NR==1{print $14}')
+code_speed=$(echo "$code_file_hex" | awk 'NR==1{print $14}')
 case $code_speed in
 "0c"|"0C") code_speed="1000BASE" ;;
 "3c"|"3C") code_speed="6G" ;;
@@ -97,7 +98,7 @@ case $code_speed in
 esac
 [ "$code_type" = "SFP" -a "$code_speed" = "25G" ] && code_type="ZSP"
 #提取编码中的第7行第96位-98位，"48 33 43"表示H3C码, “00 00 00”表示OEM码,因思科码96位不同，所以只判断第97 98位，"00 11"表示思科码
-code_kind=$(hexdump -vC $code_file | awk 'NR==7{print $3,$4}')
+code_kind=$(echo "$code_file_hex" | awk 'NR==7{print $3,$4}')
 case $code_kind in
 "00 00") code_kind="OEM" ;;
 "33 43") code_kind="H3C" ;;
@@ -107,12 +108,12 @@ case $code_kind in
 *) code_kind="请检查LMM加密位的编码兼容类型:$code_kind" ;;
 esac
 #提取编码中的第2行第4位，表示线缆的长度
-code_length=$(hexdump -vC $code_file | awk 'NR==2{print $4}') ; code_length=$(echo $((0x$code_length)))
+code_length=$(echo "$code_file_hex" | awk 'NR==2{print $4}') ; code_length=$(echo $((0x$code_length)))
 #提取编码中的第6行日期
-code_time_line=$(hexdump -vC $code_file | awk -F "|" 'NR==6{print $2}')
+code_time_line=$(echo "$code_file_hex" | awk -F "|" 'NR==6{print $2}')
 code_time=${code_time_line:4:6}
 else
-code_type=$(hexdump -vC $code_file | awk 'NR==9{print $2}')
+code_type=$(echo "$code_file_hex" | awk 'NR==9{print $2}')
 case $code_type in
 "03") code_type="SFP" ;;
 "06") code_type="XFP" ;;
@@ -122,7 +123,7 @@ case $code_type in
 *) code_type="请检查第0位产品类型代码：$code_type" ;;
 esac
 #提取编码中的第1行第14位，0C表示千兆，63/67表示10G, FF表示25G, 3C表示6G
-code_speed=$(hexdump -vC $code_file | awk 'NR==9{print $14}')
+code_speed=$(echo "$code_file_hex" | awk 'NR==9{print $14}')
 case $code_speed in
 "0c"|"0C") code_speed="1000BASE" ;;
 "3c"|"3C") code_speed="6G" ;;
@@ -131,7 +132,7 @@ case $code_speed in
 *) code_speed="请检查第13位产品速率代码：$code_speed" ;;
 esac
 #提取编码中的第7行第96位-98位，"48 33 43"表示H3C码, “00 00 00”表示OEM码,因思科码96位不同，所以只判断第97 98位，"00 11"表示思科码
-code_kind=$(hexdump -vC $code_file | awk 'NR==15{print $3,$4}')
+code_kind=$(echo "$code_file_hex" | awk 'NR==15{print $3,$4}')
 case $code_kind in
 "00 00") code_kind="OEM" ;;
 "33 43") code_kind="H3C" ;;
@@ -141,9 +142,9 @@ case $code_kind in
 *) code_kind="请检查LMM加密位的编码兼容类型:$code_kind" ;;
 esac
 #提取编码中的第2行第4位，表示线缆的长度
-code_length=$(hexdump -vC $code_file | awk 'NR==10{print $4}')
+code_length=$(echo "$code_file_hex" | awk 'NR==10{print $4}')
 #提取编码中的第6行日期
-code_time_line=$(hexdump -vC $code_file | awk -F "|" 'NR==14{print $2}')
+code_time_line=$(echo "$code_file_hex" | awk -F "|" 'NR==14{print $2}')
 code_time=${code_time_line:4:6}
 fi
 [ "$code_type" = "SFP" -a "$code_speed" = "25G" ] && code_type="ZSP"
@@ -223,7 +224,7 @@ echo "编码日期:"$code_time""$result_time" 产品类型:"$code_type""$result_
 if [ -n "$error_time""$error_type""$error_num""$error_kind" ] ; then
 echo "$error_time""$error_type""$error_num""$error_kind" >> result
 echo "--------------------------------------------------------------------------------------" >> result
-hexdump -vC $code_file | head -n16 >> result
+echo "$code_file_hex" | head -n16 >> result
 fi
 else
 echo "没有找到SN为 "$older_sn" 编码！！！！！！！！！！" >> result
@@ -261,7 +262,7 @@ echo "编码日期:"$code_time""$result_time" 产品类型:"$code_type""$result_
 [ -n "$error_time""$error_type""$error_num""$error_kind" ] && echo "$error_time""$error_type""$error_num""$error_kind"
 echo "--------------------------------------------------------------------------------------"
 #输出编码中的十六进制文件，仅输出20行。
-hexdump -vC $code_file | head -n20 
+echo "$code_file_hex" | head -n20 
 else echo -e "\n没有找到SN为"$older_sn"编码！！！！！！！！！！"
 fi
 else
