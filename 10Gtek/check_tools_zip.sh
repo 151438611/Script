@@ -10,9 +10,10 @@ echo "1-自动检查编码"
 echo "2-手动检查编码"
 echo "3-创建兼容测试模板文件"
 echo "4-整理排板邮件中的产品类型、SN"
-echo "5-汇总产品验证结果，输出到result文件中"
+echo "5-汇总产品验证结果，输出到result.txt文件中"
 echo "6-创建ZQP-P02全FF的bin文件(适用于SN后4位为非数字编码工具无法生成的场景)"
 echo ""
+result=./result
 #获取需求的邮件编码信息文件
 input_txt() {
 input_txt=$(ls -t *.txt | head -n1)
@@ -128,34 +129,34 @@ error_time=  ;  error_type=  ;  error_num=  ;  error_kind=
 #核对邮件内容中的日期和编码中的日期是否一致
 if [ "${older_time:2}" = "$code_time" ] ; then result_time="(ok)"
 else
-	result_time="(--error!--)"
-	error_time="邮件中的日期<"$older_time">和编码日期<"$code_time">不一致，请仔细核对编码日期！！！！！！！！！！"
+	result_time="(-error!-)"
+	error_time="邮件中的日期<"$older_time">和编码日期<"$code_time">不一致，请仔细核对编码日期！！！"
 fi
 #核对邮件内容中的产品类型和编码中的是否一致
 if [ -n "$(echo $older_type | grep -i "qsfp")" ] ; then
 	if [ "$code_type" = "Q10" -o "$code_type" = "8644" ] ; then result_type="(ok)"
 	else
-		result_type="(--error--)"
-		error_type="邮件中的产品名称<"$older_type">和编码类型<"$code_type">不一致，请仔细核对编码类型！！！！！！！！！！"
+		result_type="(-error-)"
+		error_type="邮件中的产品名称<"$older_type">和编码类型<"$code_type">不一致，请仔细核对编码类型！！！"
 	fi
 else
 	if [ -n "$(echo $older_type | grep -i $code_type)" ] ; then result_type="(ok)"
 	else
-		result_type="(--error--)"
-		error_type="邮件中的产品名称<"$older_type">和编码类型<"$code_type">不一致，请仔细核对编码类型！！！！！！！！！！"
+		result_type="(-error-)"
+		error_type="邮件中的产品名称<"$older_type">和编码类型<"$code_type">不一致，请仔细核对编码类型！！！"
 	fi
 fi
 #核对邮件内容中的数量和编码中的数量是否一致
 if [ $older_num -eq $code_num ] ; then result_num="(ok)"
 else
-	result_num="(--error!--)"
-	error_num="邮件中的数量<"$older_num_old">和编码数量<"$code_num">不一致，请仔细核对编码数量！！！！！！！！！！"
+	result_num="(-error!-)"
+	error_num="邮件中的数量<"$older_num_old">和编码数量<"$code_num">不一致，请仔细核对编码数量！！！"
 fi
 #核对邮件内容中的兼容性和编码中的兼容性是否一致
 if [ "$older_kind" = "$code_kind" ] ; then result_kind="(ok)"
 else
-	result_kind="(--error!--)"
-	error_kind="邮件的兼容<"$older_kind">和编码兼容<"$code_kind">不一致，请仔细核对编码兼容情况！！！！！！！！！！"
+	result_kind="(-error!-)"
+	error_kind="邮件的兼容<"$older_kind">和编码兼容<"$code_kind">不一致，请仔细核对编码兼容情况！！！"
 fi
 #核对邮件内容中的长度和编码中的长度是否一致
 result_length="(-?-)"
@@ -172,46 +173,51 @@ mv -f $input_zip old.zip &> /dev/null
 mv -f $input_txt old.txt &> /dev/null
 deldir=$(find . -type d -cmin -2 | grep -v ^\.$) && rm -rf $deldir
 }
+printmark() {
+echo "------------------------------------------------------------------------------"
+}
 read -p "请选择工作模式,***直接回车***退出程序： " mode ; echo ""
 case $mode in
-#--------------------------------------------------------------------------------------
 1)
 echo "正在检查,可能需要5~30秒,请稍等......"
 input_txt  ;  input_zip
 #提取生产订单列表
-echo -e "$(awk '{print $1}' $input_txt | sed -n '1p')编码核对信息汇总：\n" > result
+echo -e "$(awk '{print $1}' $input_txt | sed -n '1p')编码核对信息汇总：\n" > $result
 older_list=$(awk '{print $3}' $input_txt)
 for older_id in $older_list
 do
 	#判断是否存在生产单号对应的编码文件夹
 	if [ -d $older_id ] ; then
-		echo "生产订单号"$older_id"核对结果：" >> result
+		echo "生产订单号"$older_id"核对结果：" >> $result
 		older_info  ;  code_info
 		if [ -n "$code_file" ] ; then
 			check_info
 			#输出检查结果信息
-			echo "邮件日期:"$older_time" 产品名称:"$older_type" 数量:"$older_num_old" 备注:"$older_kind"" >> result
-			echo "编码日期:"$code_time""$result_time" 产品类型:"$code_type""$result_type" 长度:"$code_length"米"$result_length" 数量:"$code_num""$result_num" 速率:"$code_speed" 兼容:"$code_kind""$result_kind"" >> result
+			echo "邮件日期:"$older_time" 产品名称:"$older_type" 数量:"$older_num_old" 备注:"$older_kind"" >> $result
+			echo "编码日期:"$code_time""$result_time" 产品类型:"$code_type""$result_type" 长度:"$code_length"米"$result_length" 数量:"$code_num""$result_num" 速率:"$code_speed" 兼容:"$code_kind""$result_kind"" >> $result
 			#判断是否出现编码错误，出错就输出错误信息和编码中的十六进制文件。
 			if [ -n "$error_time""$error_type""$error_num""$error_kind" ] ; then
-				echo "$error_time""$error_type""$error_num""$error_kind" >> result
-				echo "--------------------------------------------------------------------------------------" >> result
-				echo "$code_file_hex_all" | head -n16 >> result
+				#echo "$error_time""$error_type""$error_num""$error_kind" >> $result
+				printmark >> $result
+				echo "$code_file_hex_all" | head -n16 >> $result
 			fi
 		else
-			echo "没有找到SN为 "$older_sn" 编码！！！！！！！！！！" >> result
-			echo -e "--------------------------------------------------------------------------------------\n" >> result
+			echo "没有找到SN为 "$older_sn" 编码！！！" >> $result
+			printmark >> $result
+			echo "" >> $result
 			continue
 		fi
 	else
-		echo "没有找到"$older_id"对应的编码文件夹,请重新检查！！！！！！！！！！" >> result 
-		echo $(unzip -l $input_zip | awk -F / '/WO/{print $1}' | awk '{print $4}' | sort -u) >> result
+		echo "没有找到"$older_id"对应的编码文件夹,请重新检查！！！" >> $result 
+		echo $(unzip -l $input_zip | awk -F / '/WO/{print $1}' | awk '{print $4}' | sort -u) >> $result
 	fi
-	echo -e "--------------------------------------------------------------------------------------\n" >> result
+	printmark >> $result
+	echo "" >> $result
 done
-check_end  ;  echo -e "\n------检查完成！检查结果保存在result文件中, 请及时查看(方法:more result), 下次运行会自动覆盖!-------\n"
+check_end
+echo -e "\n---检查完成！检查结果保存在result文件中, 请及时查看(方法:cat result), 下次运行会自动覆盖!---\n"
 ;;
-#--------------------------------------------------------------------------------------
+
 2)
 echo "正在准备手动检查编码......"
 input_txt ; input_zip
@@ -232,13 +238,13 @@ while [ true ] ; do
 			echo "编码日期:"$code_time""$result_time" 产品类型:"$code_type""$result_type" 长度:"$code_length"米"$result_length" 数量:"$code_num""$result_num" 速率:"$code_speed" 兼容:"$code_kind""$result_kind""
 			#判断是否出现编码错误，出错就输出错误信息和编码中的十六进制文件。
 			[ -n "$error_time""$error_type""$error_num""$error_kind" ] && echo "$error_time""$error_type""$error_num""$error_kind"
-			echo "--------------------------------------------------------------------------------------"
+			printmark
 			#输出编码中的十六进制文件，仅输出20行。
 			echo "$code_file_hex_all" | head -n20 
-			else echo -e "\n没有找到SN为"$older_sn"编码！！！！！！！！！！"
+			else echo -e "\n没有找到SN为"$older_sn"编码！！！"
 			fi
 		else
-			echo "没有找到对应的编码文件夹,请重新检查！！！！！！！！！！" 
+			echo "没有找到对应的编码文件夹,请重新检查！！！" 
 			#显示编码压缩文件中的目录内容
 			echo $(unzip -l $input_zip | awk -F / '/WO/{print $1}' | awk '{print $4","}' | sort -u)
 		fi
@@ -247,7 +253,7 @@ while [ true ] ; do
 done
 check_end
 ;;
-#--------------------------------------------------------------------------------------
+
 3)
 # 功能：自动创建以产品名＋交换机命名的模板文件；
 read -p "请输入产品名称(多个请用空格隔开)：" product
@@ -372,15 +378,15 @@ done
 dir=$(find . -type d -cmin -1 | grep -v "^\.$")  ;  dir_name="$(date +%Y%m%d-%H%M%S).tar"
 tar --remove-files -cf $dir_name $dir && echo -e "\n----------测试模板文件"$dir_name"创建完成!----------\n"
 ;;
-#--------------------------------------------------------------------------------------
+
 4)
 #用来提取邮件中的SN号，并整理排板好
 input_txt
-echo "--------------产品类型---------------------------------------"
+echo "--------------产品类型---------------------------"
 awk '{print $4}' $input_txt | awk -F"M" '{print $1"M"}'
-echo "--------------起始SN-----------------------------------------"
+echo "--------------起始SN-----------------------------"
 awk '{print $6}' $input_txt | awk -F"-" '{print $1}'
-echo "--------------截止SN-----------------------------------------"
+echo "--------------截止SN-----------------------------"
 snall=$(awk '{print $6}' $input_txt)
 for sn in $snall
 do 
@@ -392,39 +398,39 @@ do
 	else echo "$sn"
 	fi
 done
-echo -e "--------------整理完成---------------------------------------\n"
+echo -e "--------------整理完成-------------------------\n"
 mv -f $input_txt old.txt 2> /dev/null
 ;;
-#--------------------------------------------------------------------------------------
+
 5)
 #将测试结果文件整理并汇总到一个文本中
 input_zip
 alldir=$(find . -type d -cmin -1 -print | grep -v "\.$")
-echo -e "测试结果汇总：\n" > result
+echo -e "测试结果汇总：\n" > $result
 for dir in $alldir
 do
 	alltxt=$(ls $dir | grep ".txt")
-	[ -z "$alltxt" ] && echo -e "$dir\n" >> result && continue
-	echo -e "\n${dir##*/}: " >> result
+	[ -z "$alltxt" ] && echo -e "$dir\n" >> $result && continue
+	echo -e "\n${dir##*/}: " >> $result
 	for txt in $alltxt
 	do
 	txt_h=$(cat $dir/$txt | head -n3)
 	if [[ -z $(echo $txt | grep error) && -z $(echo $txt_h | grep -aiE "down|error|false") && -n $(echo $txt_h | grep -aiE "on|ok") ]] ; then
-		action $txt /bin/true >> result
+		action $txt /bin/true >> $result
 	else
 		if [ -z "$(echo $txt_h)" -o -n "$(echo $txt_h | grep -ai "on\/down")" ] ; then
-			echo $txt---------------------------------[ 未测试 ] >> result
+			echo $txt---------------------------------[ 未测试 ] >> $result
 		else
-			action $txt /bin/false >> result
-			echo "$txt_h" | head -n1 >> result
+			action $txt /bin/false >> $result
+			echo "$txt_h" | head -n1 >> $result
 		fi
 	fi
 	done
 done
 rm -rf $(find . -type d -cmin -2 | grep -v "\.$") 1> /dev/null
-echo -e "\n整理完成！整理结果保存在result文件中, 请及时查看(方法:more result), 下次运行会自动覆盖！\n如需导出到windows中请安装tofrodos软件\n"
+echo -e "\n整理完成！整理结果保存在result文件中, 请及时查看(方法:cat result), 下次运行会自动覆盖！\n"
 ;;
-#--------------------------------------------------------------------------------------
+
 6)
 if [ -f zqp_p02.bin ] ; then
   read -p "请输入SN的前面固定位：" sn_start
@@ -437,7 +443,7 @@ if [ -f zqp_p02.bin ] ; then
 else echo "zqp_p02.bin文件不存在，请放入全FF的bin文件，并命名为：zqp_p02.bin ！！！"
 fi
 ;;
-#--------------------------------------------------------------------------------------
+
 *)
 echo -e "请输入正确的工作模式！！！\n"	
 ;;
