@@ -1,6 +1,7 @@
 #!/bin/bash
 # 用于万兆通PAE兼容测试岗位 : 自动创建兼容测试模板、邮件编码的核对工作
 # 需要文件：需求的邮件编码信息、编码完后的编码压缩zip文件
+# 需要软件：zip dos2unix
 # Author : XJ  Date: 20180519
 
 #获取脚本当前路径,并进入脚本目录
@@ -215,6 +216,7 @@ do
 	echo "" >> $result
 done
 check_end
+dos2unix -o $result 2> /dev/null
 echo -e "\n---检查完成！检查结果保存在result文件中, 请及时查看(方法:cat result), 下次运行会自动覆盖!---\n"
 ;;
 
