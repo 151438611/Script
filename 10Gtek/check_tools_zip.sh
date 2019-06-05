@@ -384,11 +384,11 @@ tar --remove-files -cf $dir_name $dir && echo -e "\n----------测试模板文件
 4)
 #用来提取邮件中的SN号，并整理排板好
 input_txt
-echo "--------------产品类型---------------------------"
+echo "-------------- 产品类型 ------------"
 awk '{print $4}' $input_txt | awk -F"M" '{print $1"M"}'
-echo "--------------起始SN-----------------------------"
+echo "-------------- 起始SN --------------"
 awk '{print $6}' $input_txt | awk -F"-" '{print $1}'
-echo "--------------截止SN-----------------------------"
+echo "-------------- 截止SN --------------"
 snall=$(awk '{print $6}' $input_txt)
 for sn in $snall
 do 
@@ -400,7 +400,7 @@ do
 	else echo "$sn"
 	fi
 done
-echo -e "--------------整理完成-------------------------\n"
+echo -e "-------------- 整理完成 ----------\n"
 mv -f $input_txt old.txt 2> /dev/null
 ;;
 
