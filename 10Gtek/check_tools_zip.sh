@@ -11,7 +11,7 @@ echo "1-自动检查编码"
 echo "2-手动检查编码"
 echo "3-创建兼容测试模板文件"
 echo "4-整理排板邮件中的产品类型、SN"
-echo "5-汇总产品验证结果，输出到result.txt文件中"
+echo "5-汇总产品验证结果，输出到result文件中"
 echo "6-创建ZQP-P02全FF的bin文件(适用于SN后4位为非数字编码工具无法生成的场景)"
 echo ""
 result=./result
