@@ -21,13 +21,13 @@ source="$src0 $src1 $src2 $src3 $src4 $src5 $src6 $src7 $src8"
 
 # ------- scp to jhk2p_75_usb ----------
 dest_ip=admin@frp.xiongxinyi.cn
-dest_dir=/media/AiDisk_a2/ && dest_port=17500 && frp_dir=/media/AiDisk_a2/frp/
+dest_dir=/media/AiDisk_a2/data && dest_port=17500 && frp_dir=/media/AiDisk_a2/frp/
 # ------- scp to youku-L1_TF ----------
-[ "$router" = youku ] && dest_dir=/media/AiCard_02/ && dest_port=11100 && frp_dir=/media/AiCard_02/frp/
+[ "$router" = youku ] && dest_dir=/media/AiCard_02/data && dest_port=11100 && frp_dir=/media/AiCard_02/frp/
 # ------- scp to szk2p_usb ----------
-[ "$router" = szk2p ] && dest_dir=/media/AiDisk_a1/ && dest_port=17920  && frp_dir=/media/AiDisk_a1/frp/
+[ "$router" = szk2p ] && dest_dir=/media/AiDisk_a1/data && dest_port=17920  && frp_dir=/media/AiDisk_a1/frp/
 
-dest=${dest_ip}:${dest_dir}data
+dest=${dest_ip}:${dest_dir}
 scp_fun() {
 # $1:source dir/file  ,  $2:dest dir/file
   scp -r -o "StrictHostKeyChecking no" -P ${dest_port:-22} $1 $2 && \
