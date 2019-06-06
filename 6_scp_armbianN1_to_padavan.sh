@@ -1,6 +1,6 @@
 #!/bin/sh
-# 使用scp配合ssh公钥私钥，用来将armbian中的文件同步到Padavan路由器中保存
-# 默认同步到jhk2p_USB中，使用传参 $1 = youku / szk2p 来同步到youku_TF卡或szk2p_USB中
+# use scp with ssh id_rsa/id_rsa_pub , copy armbian_disk backup to remote_backup
+# default backup to jhk2p_usb, use $1 = youku / szk2p to youku_tf or szk2p_usb 
 router=$1
 echo -e "\nYou can choose \$1 = jhk2p(default) / youku / szk2p\n"
 export PATH=/bin:/sbin:/usr/bin:/usr/sbin:$PATH
@@ -27,9 +27,9 @@ dest_dir=/media/AiDisk_a2/data && dest_port=17500 && frp_dir=/media/AiDisk_a2/fr
 
 dest=$dest_ip:$dest_dir
 scp_fun() {
-# $1表示备份的源文件/目录src , $2表示备份的目的目录dest
-  scp -r -o "StrictHostKeyChecking no" -P ${dest_port:-22} $1 $2
-  [ $? -eq 0 ] && echo "$(date +"%F %T") scp to $router success $1" >> $scplog || echo "$(date +"%F %T") scp to $router fail--- $1" >> $scplog
+# $1:source dir/file  ,  $2:dest dir/file
+  scp -r -o "StrictHostKeyChecking no" -P ${dest_port:-22} $1 $2 && \
+  echo "$(date +"%F %T") scp to $router success $1" >> $scplog || echo "$(date +"%F %T") scp to $router fail--- $1" >> $scplog
 }
 
 # === start scp ==============
@@ -38,8 +38,12 @@ do
   scp_fun $src $dest
 done
 
-# 临时添加同步目录
-frp_bak=/media/sda1/data/software/frp/frp_windows_for_outside
-scp -r -o "StrictHostKeyChecking no" -P ${dest_port:-22} $frp_bak $dest_ip:$frp_dir
-[ $? -eq 0 ] && echo "$(date +"%F %T") scp to $router success $frp_bak" >> $scplog || echo "$(date +"%F %T") scp to $router fail--- $frp_bak" >> $scplog
+# add temp frp file
+frp_bak0=/media/sda1/data/software/frp/frp_windows_for_outside
+scp -r -o "StrictHostKeyChecking no" -P ${dest_port:-22} $frp_bak0 $dest_ip:$frp_dir && \
+echo "$(date +"%F %T") scp to $router success $frp_bak0" >> $scplog || echo "$(date +"%F %T") scp to $router fail--- $frp_bak0" >> $scplog
+
+frp_bak1=/media/sda1/data/software/frp/frp_for_remote
+scp -r -o "StrictHostKeyChecking no" -P ${dest_port:-22} $frp_bak1 $dest_ip:$frp_dir && \
+echo "$(date +"%F %T") scp to $router success $frp_bak1" >> $scplog || echo "$(date +"%F %T") scp to $router fail--- $frp_bak1" >> $scplog
 
