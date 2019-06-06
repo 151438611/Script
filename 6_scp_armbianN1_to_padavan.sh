@@ -6,7 +6,7 @@ echo -e "\nYou can choose \$1 = jhk2p(default) / youku / szk2p\n"
 export PATH=/bin:/sbin:/usr/bin:/usr/sbin:$PATH
 scplog=/tmp/scp.log ; echo "" >> $scplog
 
-src0=/media/sda1/data/script
+#src0=/media/sda1/data/script
 src1=/media/sda1/data/document
 src2=
 src3=
