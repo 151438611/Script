@@ -28,7 +28,7 @@ dest_dir=/media/AiDisk_a2/data && dest_port=17500 && frp_dir=/media/AiDisk_a2/fr
 dest=$dest_ip:$dest_dir
 scp_fun() {
 # $1表示备份的源文件/目录src , $2表示备份的目的目录dest
-  scp -C -r -o "StrictHostKeyChecking no" -P ${dest_port:-22} $1 $2
+  scp -r -o "StrictHostKeyChecking no" -P ${dest_port:-22} $1 $2
   [ $? -eq 0 ] && echo "$(date +"%F %T") scp to $router success $1" >> $scplog || echo "$(date +"%F %T") scp to $router fail--- $1" >> $scplog
 }
 
@@ -40,6 +40,6 @@ done
 
 # 临时添加同步目录
 frp_bak=/media/sda1/data/software/frp/frp_windows_for_outside
-scp -C -r -o "StrictHostKeyChecking no" -P ${dest_port:-22} $frp_bak $dest_ip:$frp_dir
+scp -r -o "StrictHostKeyChecking no" -P ${dest_port:-22} $frp_bak $dest_ip:$frp_dir
 [ $? -eq 0 ] && echo "$(date +"%F %T") scp to $router success $frp_bak" >> $scplog || echo "$(date +"%F %T") scp to $router fail--- $frp_bak" >> $scplog
 
