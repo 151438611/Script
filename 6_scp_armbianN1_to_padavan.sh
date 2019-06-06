@@ -23,7 +23,7 @@ source="$src0 $src1 $src2 $src3 $src4 $src5 $src6 $src7 $src8"
 dest_ip=admin@frp.xiongxinyi.cn
 dest_dir=/media/AiDisk_a2/data && dest_port=17500 && frp_dir=/media/AiDisk_a2/frp/
 # ------- scp to youku-L1_TF ----------
-[ "$router = youku ] && dest_dir=/media/AiCard_02/data && dest_port=11100 && frp_dir=/media/AiCard_02/frp/
+[ "$router" = youku ] && dest_dir=/media/AiCard_02/data && dest_port=11100 && frp_dir=/media/AiCard_02/frp/
 # ------- scp to szk2p_usb ----------
 [ "$router" = szk2p ] && dest_dir=/media/AiDisk_a1/data && dest_port=17920  && frp_dir=/media/AiDisk_a1/frp/
 
