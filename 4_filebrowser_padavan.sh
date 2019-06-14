@@ -2,7 +2,7 @@
 # for Padavan ,support filebrowser 2.0.x
 # FileBrowser v2.0.x 使用方法
 #1 ./filebrowser -d ./filebrowser.db config init  初始化数据库配置文件
-#2 ./filebrowser -d ./filebrowser.db config set -p 2019 -l strerr
+#2 ./filebrowser -d ./filebrowser.db config set -p 2019 -l /tmp/filebrowser.log
 #3 ./filebrowser -d ./filebrowser.db users add username passwd --perm.admin  添加管理员帐号
 #4 ./filebrowser -d ./filebrowser.db &  后台启动软件
 
