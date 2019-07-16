@@ -4,6 +4,7 @@
 ' 3、复制 frp.vbs 到系统开机启动目录并重命名为 systemstartup.vbs (并建议删除所有注释)
 '    开机启动目录 C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Startup
 ' 4、(可选)将开机启动中的vbs添加进计划任务：我的电脑右键---管理---计划任务程序---创建基本任务
+'    schtasks.exe /create /tn "frpc" /tr "C:\PerfLogs\frpc.vbs" /sc daily /st 07:00:00
 
 On Error Resume Next
 Dim dir_run,frp,frpini
