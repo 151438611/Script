@@ -64,7 +64,7 @@ case $older_kind in
 	elif [ -n "$(echo $older_type | grep -i "zqp/2zqp")" ] ; then older_num=$((($older_num_old * 2 + 2) * 3 + 1))
 	elif [ -n "$(echo $older_type | grep -i "zqp/4zsp")" ] ; then older_num=$(($older_num_old * 6 + 3))
 	elif [ -n "$(echo $older_type | grep -i "zqp/2zsp")" ] ; then older_num=$(($older_num_old * 4 + 3))
-	elif [ -n "$(echo $older_type | grep -Ei "q10/4s|qsfp/4sfp|qsfp/4xfp")" ] ; then older_num=$(($older_num_old * 7 + 1))
+	elif [ -n "$(echo $older_type | grep -Ei "q10/4s|qsfp/4sfp|qsfp/4xfp")" ] ; then older_num=$(($older_num_old * 5 + 1))
 	elif [ -n "$(echo $older_all | awk '/[qQ]10\/[qQ]10/&&/[mM][cC][uU]/{print $0}')" -o -n "$(echo $older_type | grep -i "zqp/zqp")" ]; then
 	  older_num=$(($older_num_old * 4 + 5))
 	elif [ -n "$(echo $older_all | awk '/[qQ]10\/4[sS]/&&/[mM][cC][uU]/{print $0}')" ]; then older_num=$(($older_num_old * 6 + 3))
