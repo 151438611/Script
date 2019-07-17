@@ -13,6 +13,8 @@ echo "3-创建兼容测试模板文件"
 echo "4-整理排板邮件中的产品类型、SN"
 echo "5-汇总产品验证结果，输出到result文件中"
 echo "6-创建ZQP-P02全FF的bin文件(适用于SN后4位为非数字编码工具无法生成的场景)"
+echo "7-针对生产写码QSFP/4SFP、ZQP/4ZSP二端SN不一致无法写码，仅修改SFP端命名和QSFP保持一致"
+
 echo ""
 result=./result
 #获取需求的邮件编码信息文件
@@ -446,6 +448,35 @@ else echo "zqp_p02.bin文件不存在，请放入全FF的bin文件，并命名�
 fi
 ;;
 
+7)
+echo "针对生产线缆QSFP/4SFP写码，SFP和QSFP端SN不一样，SFP端都是同一SN的情况"
+echo "解决方法：按照正常编码，编码完将SFP端的码文件重命名为QSFP端，前提SFP端SN和QSFP端SN无对应关系"
+input_zip
+older_all=$(find ./ -type d -name "WO*")
+for older in $older_all
+do
+	port1=$older/Port1/A0
+	[ -d $port1 ] || port1=$older/Port1/Page00
+	qsfpAllSN=$(ls $port1) && 
+	sfpAllSN=$(find $older/Port2/A0 -type f)
+	
+	allNum=$(echo "$qsfpAllSN" | wc -l)
+	[ $allNum -ne $(echo "$sfpAllSN" | wc -l) ] && echo "QSFP端和SFP端SN数量不一致,请检查！！！" && exit
+	for num in $(seq $allNum)
+	do
+		qsfpSN=$(echo "$qsfpAllSN" | awk 'NR=="'$num'"{print $0}')
+		sfpSN=$(echo "$sfpAllSN" | awk 'NR=="'$num'"{print $0}')
+		mv -f $sfpSN ${sfpSN%/*}/$qsfpSN
+	done
+	[ -d $older/Port3 ] && rm -rf $older/Port3/* && cp -rf $older/Port2/* $older/Port3
+	[ -d $older/Port4 ] && rm -rf $older/Port4/* && cp -rf $older/Port2/* $older/Port4
+	[ -d $older/Port5 ] && rm -rf $older/Port5/* && cp -rf $older/Port2/* $older/Port5
+	
+done
+dir_name="$(date +%Y%m%d-%H%M%S).tar"
+tar --remove-files -cf $dir_name $older_all && echo -e "\n----------重命名文件"$dir_name"创建完成!----------\n"
+check_end
+;;
 *)
 echo -e "请输入正确的工作模式！！！\n"	
 ;;
