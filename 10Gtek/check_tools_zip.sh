@@ -457,7 +457,7 @@ for older in $older_all
 do
 	port1=$older/Port1/A0
 	[ -d $port1 ] || port1=$older/Port1/Page00
-	qsfpAllSN=$(ls $port1) && 
+	qsfpAllSN=$(ls $port1) 
 	sfpAllSN=$(find $older/Port2/A0 -type f)
 	
 	allNum=$(echo "$qsfpAllSN" | wc -l)
