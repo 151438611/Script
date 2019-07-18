@@ -18,7 +18,7 @@ subdomain=kodexplorer
 frpc=/opt/frp/frpc && frpc_name=${frpc##*/}
 frpcini=/opt/frp/frpc.ini
 frpc_url=http://frp.xiongxinyi.cn:11111/file/frp/frpc_linux_arm64 && md5_frpc1=291c0207eb0e0a8d7bab963963a63326
-
+md5_frpc="$md5_frpc1 f661b9ec3432071f9ba23c31b881fbef"
 ttyd=/opt/frp/ttyd
 ttyd_url=http://frp.xiongxinyi.cn:11111/file/frp/ttyd_linux.aarch64
 if [ -z "$(pidof ${ttyd##*/})" ] ; then
@@ -31,9 +31,10 @@ download_frpc() {
   killall -q $frpc_name
   rm -f $frpc
   wget -O $frpc $frpc_url &
-  sleep 60 ; killall -q wget
+  sleep 100 ; killall -q wget
 }
-[ "$(md5sum $frpc | cut -d " " -f 1)" = "$md5_frpc1" ] || download_frpc
+frpc_md5sum=$(md5sum $frpc | cut -d " " -f 1)
+[ -n "$(echo $md5_frpc | grep ${frpc_md5sum:-null})" ] || download_frpc
 chmod 755 $frpc
 
 if [ ! -f "$frpcini" ] ; then
@@ -54,7 +55,7 @@ admin_user = admin
 admin_pwd = admin
 #log_file = $frpclog
 #log_max_days = 3
-log_level = warn
+log_level = error
 
 # --- SSH_port:22 Telnet_port:23 RemoteDesktop_port:3389 VNC:5900 ---
 [ssh]
