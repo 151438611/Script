@@ -174,7 +174,7 @@ check_end() {
 #清除解压出来的编码文件夹，并重命名
 mv -f $input_zip old.zip &> /dev/null 
 mv -f $input_txt old.txt &> /dev/null
-deldir=$(find . -type d -cmin -2 | grep -v ^\.$) && rm -rf $deldir
+deldir=$(find ./ -type d -cmin -2 | grep -v ^./$) && rm -rf $deldir
 }
 printmark() {
 echo "------------------------------------------------------------------------------"
@@ -379,7 +379,7 @@ do
 	done
 done
 #将创建好的文件夹打包，并删除原文件,方便拷出
-dir=$(find . -type d -cmin -1 | grep -v "^\.$")  ;  dir_name="$(date +%Y%m%d-%H%M%S).tar"
+dir=$(find ./ -type d -cmin -1 | grep -v "^./$")  ;  dir_name="$(date +%Y%m%d-%H%M%S).tar"
 tar --remove-files -cf $dir_name $dir && echo -e "\n----------测试模板文件"$dir_name"创建完成!----------\n"
 ;;
 
@@ -409,7 +409,7 @@ mv -f $input_txt old.txt 2> /dev/null
 5)
 #将测试结果文件整理并汇总到一个文本中
 input_zip
-alldir=$(find . -type d -cmin -1 -print | grep -v "\.$")
+alldir=$(find ./ -type d -cmin -1 -print | grep -v ^./$)
 echo -e "测试结果汇总：\n" > $result
 for dir in $alldir
 do
@@ -431,7 +431,7 @@ do
 	fi
 	done
 done
-rm -rf $(find . -type d -cmin -2 | grep -v "\.$") 1> /dev/null
+rm -rf $(find ./ -type d -cmin -2 | grep -v ^./$) 1> /dev/null
 echo -e "\n整理完成！整理结果保存在result文件中, 请及时查看(方法:cat result), 下次运行会自动覆盖！\n"
 ;;
 
