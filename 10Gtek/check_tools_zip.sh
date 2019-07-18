@@ -468,7 +468,7 @@ do
 		qsfpSN=$(echo "$qsfpAllSN" | awk 'NR=="'$num'"{print $0}')
 		sfpSN=$(echo "$sfpAllSN" | awk 'NR=="'$num'"{print $0}')
 		mv -f ${port1}$qsfpSN ${port1}$sfpSN
-		[ $port1_p02 ] && mv -f ${port1_p02}$qsfpSN ${port1_p02}$sfpSN
+		[ "$port1_p02" ] && mv -f ${port1_p02}$qsfpSN ${port1_p02}$sfpSN
 	done
 done
 dir_name="$(date +%Y%m%d-%H%M%S).tar"
