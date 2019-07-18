@@ -13,7 +13,7 @@ echo "3-创建兼容测试模板文件"
 echo "4-整理排板邮件中的产品类型、SN"
 echo "5-汇总产品验证结果，输出到result文件中"
 echo "6-创建ZQP-P02全FF的bin文件(适用于SN后4位为非数字编码工具无法生成的场景)"
-echo "7-针对生产写码QSFP/4SFP、ZQP/4ZSP二端SN不一致无法写码，仅修改SFP端命名和QSFP保持一致"
+echo "7-针对生产写码QSFP/4SFP、ZQP/4ZSP二端SN不一致无法写码，仅修改QSFP端命名和SFP名字保持一致"
 
 echo ""
 result=./result
@@ -467,12 +467,8 @@ do
 	do
 		qsfpSN=$(echo "$qsfpAllSN" | awk 'NR=="'$num'"{print $0}')
 		sfpSN=$(echo "$sfpAllSN" | awk 'NR=="'$num'"{print $0}')
-		mv -f ${port2}$sfpSN ${port2}$qsfpSN
+		mv -f ${port1}$qsfpSN ${port1}$sfpSN
 	done
-	[ -d $older/Port3 ] && rm -rf $older/Port3/* && cp -rf $older/Port2/* $older/Port3
-	[ -d $older/Port4 ] && rm -rf $older/Port4/* && cp -rf $older/Port2/* $older/Port4
-	[ -d $older/Port5 ] && rm -rf $older/Port5/* && cp -rf $older/Port2/* $older/Port5
-	
 done
 dir_name="$(date +%Y%m%d-%H%M%S).tar"
 tar --remove-files -cf $dir_name $older_all && echo -e "\n----------重命名文件"$dir_name"创建完成!----------\n"
