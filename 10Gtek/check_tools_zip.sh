@@ -449,8 +449,8 @@ fi
 ;;
 
 7)
-echo "针对生产线缆QSFP/4SFP写码，SFP和QSFP端SN不一样，SFP端都是同一SN的情况"
-echo "解决方法：按照正常编码，编码完将SFP端的码文件重命名为QSFP端，前提SFP端SN和QSFP端SN无对应关系"
+echo "针对生产线缆QSFP/4SFP写码，仅QSFP和SFP端SN不一样，SFP端都是同一SN的情况"
+echo "解决方法：按照正常编码，编码完将QSFP端的码文件重命名为SFP端名字，QSFP端和SFP端SN从小到大一一对应"
 input_zip
 older_all=$(find ./ -type d -name "WO*")
 for older in $older_all
@@ -467,7 +467,7 @@ do
 	do
 		qsfpSN=$(echo "$qsfpAllSN" | awk 'NR=="'$num'"{print $0}')
 		sfpSN=$(echo "$sfpAllSN" | awk 'NR=="'$num'"{print $0}')
-		mv -f ${port1}$qsfpSN ${port1}$sfpSN
+		mv -f ${port1}$qsfpSN ${port1}$sfpSN 
 	done
 done
 dir_name="$(date +%Y%m%d-%H%M%S).tar"
