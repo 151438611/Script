@@ -456,7 +456,7 @@ older_all=$(find ./ -type d -name "WO*")
 for older in $older_all
 do
 	port1=$older/Port1/A0/
-	[ -d $port1 ] || port1=$older/Port1/Page00/
+	[ ! -d $port1 ] && port1=$older/Port1/Page00/ && port1_p02=$older/Port1/Page02/
 	port2=$older/Port2/A0/
 	qsfpAllSN=$(ls $port1) 
 	sfpAllSN=$(ls $port2)
@@ -467,7 +467,8 @@ do
 	do
 		qsfpSN=$(echo "$qsfpAllSN" | awk 'NR=="'$num'"{print $0}')
 		sfpSN=$(echo "$sfpAllSN" | awk 'NR=="'$num'"{print $0}')
-		mv -f ${port1}$qsfpSN ${port1}$sfpSN 
+		mv -f ${port1}$qsfpSN ${port1}$sfpSN
+		[ $port1_p02 ] && mv -f ${port1_p02}$qsfpSN ${port1_p02}$sfpSN
 	done
 done
 dir_name="$(date +%Y%m%d-%H%M%S).tar"
