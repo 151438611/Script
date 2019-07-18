@@ -27,7 +27,7 @@ dos2unix -o $input_txt 2> /dev/null
 input_zip() {
 input_zip=$(ls -t *.zip | head -n1)
 #判断是否存在未删除的解压出来的文件夹，删除了再解压刚传入的zip文件,-iname表示忽略大小写
-ls | grep -qi "wo" && find . -type d -iname "WO*" -exec rm -rf {} \; 2> /dev/null
+ls | grep -qi "wo" && find ./ -type d -iname "WO*" -exec rm -rf {} \; 2> /dev/null
 [ -z "$input_zip" ] && echo -e "\nzip文件不存在，请重新检查！！！\n" && exit
 unzip -o "$input_zip" 1> /dev/null || exit
 }
