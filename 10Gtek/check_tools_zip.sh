@@ -455,10 +455,11 @@ input_zip
 older_all=$(find ./ -type d -name "WO*")
 for older in $older_all
 do
-	port1=$older/Port1/A0
-	[ -d $port1 ] || port1=$older/Port1/Page00
+	port1=$older/Port1/A0/
+	[ -d $port1 ] || port1=$older/Port1/Page00/
+	port2=$older/Port2/A0/
 	qsfpAllSN=$(ls $port1) 
-	sfpAllSN=$(find $older/Port2/A0 -type f)
+	sfpAllSN=$(ls $port2)
 	
 	allNum=$(echo "$qsfpAllSN" | wc -l)
 	[ $allNum -ne $(echo "$sfpAllSN" | wc -l) ] && echo "QSFP端和SFP端SN数量不一致,请检查！！！" && exit
@@ -466,7 +467,7 @@ do
 	do
 		qsfpSN=$(echo "$qsfpAllSN" | awk 'NR=="'$num'"{print $0}')
 		sfpSN=$(echo "$sfpAllSN" | awk 'NR=="'$num'"{print $0}')
-		mv -f $sfpSN ${sfpSN%/*}/$qsfpSN
+		mv -f ${port2}$sfpSN ${port2}$qsfpSN
 	done
 	[ -d $older/Port3 ] && rm -rf $older/Port3/* && cp -rf $older/Port2/* $older/Port3
 	[ -d $older/Port4 ] && rm -rf $older/Port4/* && cp -rf $older/Port2/* $older/Port4
