@@ -1,7 +1,7 @@
 #/bin/bash
 # script for Padavan
 # zerotier安装步骤：1、插U盘，格式为ext4，安装entware ；2、 opkg install zerotier
-# 先启动zerotier-one -d 再加入网络zerotier-cli join networkIP 再添加防火墙规则
+# 先启动zerotier-one -d 再加入网络 zerotier-cli join network_ID 再添加防火墙规则
 
 z_one=$(which zerotier-one)
 z_cli=$(which zerotier-cli)
