@@ -20,13 +20,24 @@ src8=
 source="$src0 $src1 $src2 $src3 $src4 $src5 $src6 $src7 $src8"
 
 # ------- scp to jhk2p_75_usb ----------
-dest_ip=admin@frp.xiongxinyi.cn
-dest_dir=/media/AiDisk_a2/data && dest_port=17500 && frp_dir=/media/AiDisk_a2/frp/
+dest_ip=admin@frp2.xiongxinyi.cn
+dest_dir=/media/AiDisk_a2/data
+dest_port=37500
+frp_dir=/media/AiDisk_a2/frp/
 # ------- scp to youku-L1_TF ----------
-[ "$router" = youku ] && dest_dir=/media/AiCard_02/data && dest_port=11100 && frp_dir=/media/AiCard_02/frp/
+if [ "$router" = youku ]; then
+  dest_ip=admin@frp.xiongxinyi.cn
+  dest_dir=/media/AiCard_02/data
+  dest_port=11100
+  frp_dir=/media/AiCard_02/frp/
+fi
 # ------- scp to szk2p_usb ----------
-[ "$router" = szk2p ] && dest_dir=/media/AiDisk_a1/data && dest_port=17920  && frp_dir=/media/AiDisk_a1/frp/
-
+if [ "$router" = szk2p ]; then
+  dest_ip=admin@frp2.xiongxinyi.cn
+  dest_dir=/media/AiDisk_a1/data
+  dest_port=37920
+  frp_dir=/media/AiDisk_a1/frp/
+fi
 dest=${dest_ip}:${dest_dir}
 scp_fun() {
 # $1:source dir/file  ,  $2:dest dir/file
