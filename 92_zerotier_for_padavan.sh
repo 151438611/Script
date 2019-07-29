@@ -27,7 +27,7 @@ vm_nic=$(echo "$vm_network" | awk 'NR == 2 && $6 == "OK" {print $8}')
 vm_ip=$(echo "$vm_network" | awk 'NR == 2 && $6 == "OK" {print $9}')
 
 # 判断 iptables 是否添加 zerotier 新增的虚拟网卡规则
-iptables_all=$(iptables -L INPUT -n --line-number -v)
+iptables_all=$(iptables -nvL INPUT --line-number)
 # $iptables_num 中前二行是标题和格式，实际iptables规则需要减 2
 iptables_num=$(echo "$iptables_all" | wc -l)
 if [ -z "$(echo "$iptables_all" | grep -i $vm_nic)" ]; then
