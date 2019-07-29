@@ -15,13 +15,15 @@ grep -qi $(basename $0) $cron || echo "$cron_filebrowser" >> $cron
 
 udisk=$(mount | awk '/dev/ && /media/ {print $3}' | head -n1)
 [ -z "$udisk" ] && echo "U_disk is not exist , exit !" >> /tmp/filebrowser.log && exit
+
 # ----- filebrowser_mipsle的下载地址 ------------------------------------
-fb_url=http://opt.cn2qq.com/opt-file/filemanager && md5_fb=f205afc55118007e22e64dd063655a1f
-filebrowser="$udisk/filebrowser" ; port=2019
+fb_url=http://opt.cn2qq.com/opt-file/filemanager
+filebrowser="$udisk/filebrowser
+port=2019
 dir_fb=$(dirname $filebrowser)
-[ -d "$dir_fb" ] || mkdir -p $dir_fb 
-[ -f "$filebrowser" ] || wget -O $filebrowser $fb_url
-chmod 755 $filebrowser
+[ -d "$dir_fb" ] || mkdir -p $dir_fb
+$filebrowser --verson || wget -c -O $filebrowser $fb_url
+chmod 555 $filebrowser
 
 cd $dir_fb
 [ -z "$(pidof filebrowser)" ] && \
