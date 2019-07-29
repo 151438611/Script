@@ -32,7 +32,7 @@ iptables_all=$(iptables -L INPUT -n --line-number -v)
 iptables_num=$(echo "$iptables_all" | wc -l)
 if [ -z "$(echo "$iptables_all" | grep -i $vm_nic)" ]; then
 	iptables -I INPUT $((iptables_num - 1)) -i $vm_nic -j ACCEPT
-	# 因$iptables_num中有2行非规则，所以新增序号只需要减1即可
+	# 因 $iptables_num 中有2行非规则，所以新增序号只需要减1即可
 fi
 
 log_ok "Zerotier join Network_ID success, VM_IP: $vm_ip"
