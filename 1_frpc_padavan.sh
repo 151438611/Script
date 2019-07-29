@@ -10,7 +10,8 @@
 export PATH=/bin:/sbin:/usr/bin:/usr/sbin:$PATH
 main_url=http://frp2.xiongxinyi.cn:37511/file
 
-frpclog=/tmp/frpc.log ; [ -f $frpclog ] || echo $(date +"%F %T") > $frpclog
+frpclog=/tmp/frpc.log
+[ -f $frpclog ] || echo $(date +"%F %T") > $frpclog
 
 # ------------------------- add crontab、startup、enable SSH -----------------------
 bin_dir=/etc/storage/bin ; [ -d "$bin_dir" ] || mkdir -p $bin_dir
@@ -31,25 +32,20 @@ grep -qi $sh_name $startup || echo "$startup_sh" >> $startup
 [ $(nvram get sshd_wopen) -eq 0 ] && nvram set sshd_wopen=1 && nvram set sshd_wport=22 && nvram commit
 [ $(nvram get sshd_enable) -eq 0 ] && nvram set sshd_enable=1 && nvram commit
 
-lanip=$(nvram get lan_ipaddr) && i=$(echo $lanip | cut -d . -f 3)
-udisk=$(mount | awk '$1~"/dev/" && $3~"/media/"{print $3}' | head -n1) ; udisk=${udisk:=/tmp}
-host_name=$(nvram get computer_name)
-# ----- 1、填写服务端的IP/域名、认证密码即可-----------------------------------
-server_addr=frp.xiongxinyi.cn
-token=administrator
-subdomain=$host_name$i
-
-# ----- 2、是否开启ttyd(web_ssh)、Telnet(或远程桌面)、简单的http_file文件服务; 0表示不开启，1表示开启 -----
+# ----- 是否开启ttyd(web_ssh)、Telnet(或远程桌面)、简单的http_file文件服务; 0表示不开启，1表示开启 -----
 ttyd_enable=0
 if [ $ttyd_enable -eq 1 ] ; then ttyd_port=7682 ; fi 
 
-# ----- 3、ttyd、frpc的下载地址、frpcini设置临时配置(默认/tmp/)还是永久保存配置(/etc/storage/) ------
+# ----- ttyd、frpc的下载地址、frpcini设置临时配置(默认/tmp/)还是永久保存配置(/etc/storage/) ------
 ttyd_url=${main_url}/frp/ttyd_linux_mipsle
 frpc_url1=${main_url}/frp/frpc_linux_mipsle
 frpc_url2=http://opt.cn2qq.com/opt-file/frpc
 
+udisk=$(mount | awk '$1~"/dev/" && $3~"/media/"{print $3}' | head -n1)
+udisk=${udisk:=/tmp}
 frpc=$udisk/frpc && frpc_name=${frpc##*/}
 frpcini=$bin_dir/frpc.ini
+
 # -------------------------- ttyd -----------------------------
 download_ttyd() {
   killall -q ttyd
@@ -89,6 +85,13 @@ chmod 555 $frpc
 
 # ------------------------- frpc.ini -------------------------
 if [ ! -f "$frpcini" ] ; then
+# ----- 填写服务端的IP/域名、认证密码即可-----------------------------------
+  server_addr=x.x.x.x
+  token=xxx
+  
+  lanip=$(nvram get lan_ipaddr) && i=$(echo $lanip | cut -d . -f 3)
+  host_name=$(nvram get computer_name)
+  subdomain=$host_name$i
 cat << END > $frpcini
 [common]
 server_addr = $server_addr
@@ -107,7 +110,7 @@ admin_user = admin
 admin_pwd = admin
 #log_file = $frpclog
 #log_max_days = 3
-log_level = warn
+log_level = error
 # ----- SSH:22 Telnet:23 RemoteDesktop:3389 VNC:5900 -----
 [ssh]
 type = tcp
@@ -144,3 +147,4 @@ ping -c2 -w5 114.114.114.114 && \
   else 
     echo "$(date +"%F %T") $frpc_name is runing, Don't do anything !" >> $frpclog
   fi
+
