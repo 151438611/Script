@@ -15,19 +15,19 @@ log_er() {
 	echo "$(date +"%F %T") $1" >> $z_log
 	exit 1
 }
-# 判断已安装 zerotier 软件
+# 1、判断已安装 zerotier 软件
 [ -z "$z_one" -o -z "$z_cli" ] && log_er "zerotier does no exist !"
 
-# 判断 zerotier-one 主程序已启动; sleep是为了启动需要时间
+# 2、判断 zerotier-one 主程序已启动; sleep是为了启动需要时间
 [ -z "$(pidof zerotier-one)" ] && $z_one -d && sleep 5
 
-# 判断 zerotier-cli 加入虚拟网络成功
+# 3、判断 zerotier-cli 加入虚拟网络成功
 vm_network=$($z_cli listnetworks)
 vm_nic=$(echo "$vm_network" | awk 'NR == 2 && $6 == "OK" {print $8}')
 [ -z "$vm_nic" ] && log_er "$z_cli is not join Network ID !"
 vm_ip=$(echo "$vm_network" | awk 'NR == 2 && $6 == "OK" {print $9}')
 
-# 判断 iptables 是否添加 zerotier 新增的虚拟网卡规则
+# 4、判断 iptables 是否添加 zerotier 新增的虚拟网卡规则
 iptables_all=$(iptables -nvL INPUT --line-number)
 # $iptables_all 中前二行是标题和格式，实际 iptables_num 规则数量需要减 2
 iptables_num=$(echo "$iptables_all" | wc -l)
