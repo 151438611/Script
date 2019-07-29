@@ -24,7 +24,7 @@ log_er() {
 vm_network=$($z_cli listnetworks)
 vm_nic=$(echo "$vm_network" | awk 'NR == 2 && $6 == "OK" {print $8}')
 [ -z "$vm_nic" ] && log_er "$z_cli is not join Network ID !"
-vm_ip=$(echo "$vm_network" | awk -F , 'NR == 2 {print $2}')
+vm_ip=$(echo "$vm_network" | awk 'NR == 2 && $6 == "OK" {print $2}')
 
 # 判断 iptables 是否添加 zerotier 新增的虚拟网卡规则
 iptables_all=$(iptables -L INPUT -n --line-number -v)
