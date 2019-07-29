@@ -6,7 +6,9 @@ export PATH=/bin:/sbin:/usr/bin:/usr/sbin:$PATH
 bin_dir=/etc/storage/bin ; [ -d "$bin_dir" ] || mkdir -p $bin_dir
 startup=/etc/storage/started_script.sh
 cron=/etc/storage/cron/crontabs/$(nvram get http_username)
-sh_name=$(basename $0) ; sh_url=http://frp.xiongxinyi.cn:11111/file/cronConnectWifi_padavan.sh
+sh_name=$(basename $0)
+main_url=http://frp.xiongxinyi.cn:11111/file
+sh_url=${main_url}/cronConnectWifi_padavan.sh
 grep -qi $sh_name $cron || echo "55 5,15 * * * sh $bin_dir/$sh_name" >> $cron
 startup_ap="wget -P /tmp $sh_url && mv -f /tmp/$(basename $sh_url) $bin_dir/$sh_name"
 grep -qi $sh_name $startup || echo "$startup_ap" >> $startup
