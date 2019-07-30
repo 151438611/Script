@@ -32,9 +32,12 @@ grep -qi $sh_name $startup || echo "$startup_sh" >> $startup
 [ $(nvram get sshd_wopen) -eq 0 ] && nvram set sshd_wopen=1 && nvram set sshd_wport=22 && nvram commit
 [ $(nvram get sshd_enable) -eq 0 ] && nvram set sshd_enable=1 && nvram commit
 
+# ----- 填写服务端的IP/域名、认证密码即可-----------------------------------
+server_addr=x.x.x.x
+token=xxx
 # ----- 是否开启ttyd(web_ssh)、Telnet(或远程桌面)、简单的http_file文件服务; 0表示不开启，1表示开启 -----
 ttyd_enable=0
-if [ $ttyd_enable -eq 1 ] ; then ttyd_port=7682 ; fi 
+if [ $ttyd_enable -eq 1 ] ; then ttyd_port=7800 ; fi 
 
 # ----- ttyd、frpc的下载地址、frpcini设置临时配置(默认/tmp/)还是永久保存配置(/etc/storage/) ------
 ttyd_url=${main_url}/frp/ttyd_linux_mipsle
@@ -85,10 +88,6 @@ chmod 555 $frpc
 
 # ------------------------- frpc.ini -------------------------
 if [ ! -f "$frpcini" ] ; then
-# ----- 填写服务端的IP/域名、认证密码即可-----------------------------------
-  server_addr=x.x.x.x
-  token=xxx
-  
   lanip=$(nvram get lan_ipaddr) && i=$(echo $lanip | cut -d . -f 3)
   host_name=$(nvram get computer_name)
   subdomain=$host_name$i
@@ -103,7 +102,6 @@ protocol = tcp
 pool_count = 8
 tcp_mux = true
 login_fail_exit = true
-
 admin_addr = 127.0.0.1
 admin_port = 7400
 admin_user = admin
@@ -125,6 +123,7 @@ type = tcp
 local_ip = $lanip
 local_port = 80
 remote_port = 0
+
 END
 
   if [ $ttyd_enable -eq 1 ] ; then 
@@ -134,7 +133,6 @@ type = tcp
 local_ip = 127.0.0.1
 local_port = $ttyd_port
 remote_port = 0
-
 END
   fi 
 
@@ -145,6 +143,6 @@ ping -c2 -w5 114.114.114.114 && \
     echo "$(date +"%F %T") $frpc_name was not runing ; start $frpc_name ..." >> $frpclog
     exec $frpc -c $frpcini &
   else 
-    echo "$(date +"%F %T") $frpc_name is runing, Don't do anything !" >> $frpclog
+    echo "$(date +"%F %T") $frpc_name is runing , Don't do anything !" >> $frpclog
   fi
 
