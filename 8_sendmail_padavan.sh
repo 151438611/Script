@@ -1,5 +1,7 @@
-#!/bin/sh
+#!/bin/bash
 # Sendmail in Busybox Guide
+# for padavan
+
 export PATH=/usr/sbin:/usr/bin:/sbin:/bin
 cron=/etc/storage/cron/crontabs/$(nvram get http_username) 
 grep -qi $(basename $0) $cron || echo -e "\n23 23 * * * sh /etc/storage/bin/$(basename $0)" >> $cron
@@ -13,7 +15,6 @@ cc_add=jun_xiong@10gsfp.com
 subject="$(date +%F)---Hostname---$(nvram get computer_name)"
 
 frpc=$(ps | grep frpc | grep -v grep | awk '{print $5,$6,$7}')
-
 message="$(nvram get http_username) / $(nvram get http_passwd) / uptime---$(uptime)
 $(free | head -n2)
 
