@@ -70,6 +70,7 @@ fi
 # -------------------------- frpc -----------------------------
 download_frpc() {
   killall -q $frpc_name
+  rm -f $frpc
   wget -c -O $frpc $frpc_url1 &
   sleep 60
   killall -q wget
