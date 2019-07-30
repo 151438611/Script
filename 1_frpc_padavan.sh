@@ -14,8 +14,10 @@ frpclog=/tmp/frpc.log
 [ -f $frpclog ] || echo $(date +"%F %T") > $frpclog
 
 # ------------------------- add crontab、startup、enable SSH -----------------------
-bin_dir=/etc/storage/bin ; [ -d "$bin_dir" ] || mkdir -p $bin_dir
-user_name=$(nvram get http_username) ; sh_name=$(basename $0)
+bin_dir=/etc/storage/bin
+[ -d "$bin_dir" ] || mkdir -p $bin_dir
+sh_name=$(basename $0)
+user_name=$(nvram get http_username)
 cron=/etc/storage/cron/crontabs/$user_name
 startup=/etc/storage/started_script.sh
 sh_url=${main_url}/frp/frpc_padavan.sh
@@ -35,6 +37,7 @@ grep -qi $sh_name $startup || echo "$startup_sh" >> $startup
 # ----- 填写服务端的IP/域名、认证密码即可-----------------------------------
 server_addr=x.x.x.x
 token=xxx
+server_port=7000
 # ----- 是否开启ttyd(web_ssh)、Telnet(或远程桌面)、简单的http_file文件服务; 0表示不开启，1表示开启 -----
 ttyd_enable=0
 if [ $ttyd_enable -eq 1 ] ; then ttyd_port=7800 ; fi 
@@ -94,9 +97,8 @@ if [ ! -f "$frpcini" ] ; then
 cat << END > $frpcini
 [common]
 server_addr = $server_addr
-server_port = 7000
+server_port = $server_port
 token = $token
-
 user = $host_name
 protocol = tcp
 pool_count = 8
