@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # support padavan
 export PATH=/usr/bin:/usr/sbin:/bin:/sbin:$PATH
 
