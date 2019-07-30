@@ -1,5 +1,6 @@
-#===================== for gxk2_05 ================================
 #!/bin/bash
+# for padavan
+
 export PATH=/bin:/sbin:/usr/bin:/usr/sbin:$PATH
 log=/tmp/wechat_old.log
 [ -f "$log" ] || touch $log
