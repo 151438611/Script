@@ -1,5 +1,6 @@
 #!/bin/sh
 # for K3_root , ARM cpu
+# ----无时间测试，暂无法使用---停用
 user_name=$(nvram get http_username)
 crontab=/etc/crontabs/$user_name
 frpc_name=$(basename $0)
