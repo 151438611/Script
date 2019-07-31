@@ -1,6 +1,6 @@
-#!/bin/sh
-#
-# armbian中crontab $PATH=/usr/bin:/bin
+#!/bin/bash
+# for Armbian N1
+# Armbian中crontab $PATH=/usr/bin:/bin
 export PATH=/bin:/sbin:/usr/bin:/usr/sbin:$PATH
 frpclog=/tmp/frpc.log
 [ -f $frpclog ] || echo $(date +"%F %T") > $frpclog
