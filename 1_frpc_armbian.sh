@@ -16,8 +16,8 @@ token=xx
 server_port=7000
 name=10gtek_n1
 
-frpc=/opt/frp/frpc && frpc_name=${frpc##*/}
-frpcini=/opt/frp/frpc.ini
+frpc=/opt/frpc/frpc && frpc_name=${frpc##*/}
+frpcini=/opt/frpc/frpc.ini
 frpc_url=http://frp2.xiongxinyi.cn:37511/file/frp/frpc_linux_arm64
 
 ttyd=/opt/frp/ttyd
@@ -37,7 +37,7 @@ download_frpc() {
   sleep 60
   killall -q wget
 }
-[ -z "$($frpc -v)" ] || download_frpc
+$frpc -v || download_frpc
 chmod 555 $frpc
 
 if [ ! -f "$frpcini" ] ; then
