@@ -10,7 +10,7 @@ grep -qi reboot $cron || echo -e "\n5 5 * * * [ \$(date +\\%u) -eq 6 ] && /sbin/
 cron_frpc="15 * * * * [ \$(date +\\%k) -eq 5 ] && killall -q frpc ; sleep 8 && sh /opt/frp/$(basename $0)"
 grep -qi $(basename $0) $cron || echo -e "\n$cron_frpc" >> $cron
 
-# -----1、填写服务端的IP/域名、认证密码即可---------------------------
+# ----- 填写服务端的IP/域名、端口号、认证密码 ---------------------------
 server_addr=x.x.x.x
 token=xx
 server_port=7000
