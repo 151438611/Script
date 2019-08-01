@@ -33,18 +33,15 @@ iptables_forward=$(iptables -nvL FORWARD --line-number)
 iptables_nat=$(iptables -t nat -nvL POSTROUTING --line-number)
 
 # 添加入站规则
-if [ -z "$(echo "$iptables_input" | awk '$7 == "'$vm_nic'" {print $7}')" ]; then
-	iptables -A INPUT -i $vm_nic -j ACCEPT
-fi
+[ -z "$(echo "$iptables_input" | awk '$7 == "'$vm_nic'" {print $7}')" ] && \
+iptables -A INPUT -i $vm_nic -j ACCEPT
 # 添加转发规则
 [ -z "$(echo "$iptables_forward" | awk '$7 == "'$vm_nic'" {print $7}')" ] && \
 iptables -A FORWARD -i $vm_nic -j ACCEPT
 [ -z "$(echo "$iptables_forward" | awk '$8 == "'$vm_nic'" {print $8}')" ] && \
 iptables -A FORWARD -o $vm_nic -j ACCEPT
 # 添加nat规则
-if [ -z "$(echo "$iptables_nat" | awk '$8 == "'$vm_nic'" {print $8}')" ]; then
-	iptables_nat_num=$(echo "$iptables_nat" | awk 'END {print $1}')
-	iptables -t nat -I POSTROUTING $((iptables_nat_num + 1)) -o $vm_nic -j MASQUERADE
-fi
+[ -z "$(echo "$iptables_nat" | awk '$8 == "'$vm_nic'" {print $8}')" ] && \
+iptables -t nat -A POSTROUTING -o $vm_nic -j MASQUERADE
 
 log_ok "Zerotier join Network_ID success, VM_IP: $vm_ip"
