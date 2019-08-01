@@ -28,9 +28,9 @@ vm_nic=$(echo "$vm_network" | awk 'NR == 2 && $6 == "OK" {print $8}')
 vm_ip=$(echo "$vm_network" | awk 'NR == 2 && $6 == "OK" {print $9}')
 
 # 4、判断 iptables 是否添加 zerotier 规则
-iptables_input=$(iptables -nvL INPUT --line-number)
-iptables_forward=$(iptables -nvL FORWARD --line-number)
-iptables_nat=$(iptables -t nat -nvL POSTROUTING --line-number)
+iptables_input=$(iptables -nvL INPUT)
+iptables_forward=$(iptables -nvL FORWARD)
+iptables_nat=$(iptables -t nat -nvL POSTROUTING)
 
 # 添加入站规则
 [ -z "$(echo "$iptables_input" | awk '$7 == "'$vm_nic'" {print $7}')" ] && \
