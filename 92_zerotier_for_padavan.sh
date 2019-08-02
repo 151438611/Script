@@ -51,7 +51,7 @@ gw=192.168.168.10
 
 route_rules=$(route -n)
 [ -z "$(echo "$route_rules" | awk '$1 == "'$dest_net'" && $2 == "'$gw'" {print $1}')" ] && \
-route add -host ${dest_net}/24 gw $gw
+route add -net ${dest_net}/24 gw $gw
 [ -z "$(echo "$route_rules" | awk '$1 == "'$dest_host1'" && $2 == "'$gw'" {print $1}')" ] && \
 route add -host $dest_host1 gw $gw
 [ -z "$(echo "$route_rules" | awk '$1 == "'$dest_host2'" && $2 == "'$gw'" {print $1}')" ] && \
