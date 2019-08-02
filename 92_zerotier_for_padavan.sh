@@ -31,17 +31,30 @@ vm_ip=$(echo "$vm_network" | awk 'NR == 2 && $6 == "OK" {print $9}')
 iptables_input=$(iptables -nvL INPUT)
 iptables_forward=$(iptables -nvL FORWARD)
 iptables_nat=$(iptables -t nat -nvL POSTROUTING)
-
-# 添加入站规则
+# 添加 iptables INPUT 规则
 [ -z "$(echo "$iptables_input" | awk '$6 == "'$vm_nic'" {print $6}')" ] && \
 iptables -A INPUT -i $vm_nic -j ACCEPT
-# 添加转发规则
+# 添加 iptables FORWARD 规则
 [ -z "$(echo "$iptables_forward" | awk '$6 == "'$vm_nic'" {print $6}')" ] && \
 iptables -A FORWARD -i $vm_nic -j ACCEPT
 [ -z "$(echo "$iptables_forward" | awk '$7 == "'$vm_nic'" {print $7}')" ] && \
 iptables -A FORWARD -o $vm_nic -j ACCEPT
-# 添加nat规则
+# 添加 iptables nat 规则
 [ -z "$(echo "$iptables_nat" | awk '$7 == "'$vm_nic'" {print $7}')" ] && \
 iptables -t nat -A POSTROUTING -o $vm_nic -j MASQUERADE
+
+# 5、判断 route 是否添加路由策略
+dest_net=192.168.3.0
+dest_host1=192.168.1.250
+dest_host2=192.168.1.122
+gw=192.168.168.10
+
+route_rules=$(route -n)
+[ -z "$(echo "$route_rules" | awk '$1 == "'$dest_net'" && $2 == "'$gw'" {print $1}')" ] && \
+route add -host ${dest_net}/24 gw $gw
+[ -z "$(echo "$route_rules" | awk '$1 == "'$dest_host1'" && $2 == "'$gw'" {print $1}')" ] && \
+route add -host $dest_host1 gw $gw
+[ -z "$(echo "$route_rules" | awk '$1 == "'$dest_host2'" && $2 == "'$gw'" {print $1}')" ] && \
+route add -host $dest_host2 gw $gw
 
 log_ok "Zerotier join Network_ID success, VM_IP: $vm_ip"
