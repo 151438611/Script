@@ -8,10 +8,9 @@
 # Jun	      20180808  Created.
 #################################################################
 export PATH=/bin:/sbin:/usr/bin:/usr/sbin:$PATH
-main_url=http://frp2.xiongxinyi.cn:37511/file
-
 frpclog=/tmp/frpc.log
 [ -f $frpclog ] || echo $(date +"%F %T") > $frpclog
+download_url=http://frp2.xiongxinyi.cn:37511/file/
 
 # ------------------------- add crontab、startup、enable SSH -----------------------
 bin_dir=/etc/storage/bin
@@ -20,7 +19,7 @@ sh_name=$(basename $0)
 user_name=$(nvram get http_username)
 cron=/etc/storage/cron/crontabs/$user_name
 startup=/etc/storage/started_script.sh
-sh_url=${main_url}/frp/frpc_padavan.sh
+sh_url=${download_url}frp/frpc_padavan.sh
 
 cron_reboot="5 5 * * * [ -n \"\$(date +%d | grep 5)\" ] && reboot || ping -c2 -w5 114.114.114.114 || reboot"
 grep -qi "reboot" $cron || echo "$cron_reboot" >> $cron
@@ -40,11 +39,11 @@ token=xxx
 server_port=7000
 # ----- 是否开启ttyd(web_ssh)、Telnet(或远程桌面)、简单的http_file文件服务; 0表示不开启，1表示开启 -----
 ttyd_enable=0
-if [ $ttyd_enable -eq 1 ] ; then ttyd_port=7800 ; fi 
+if [ $ttyd_enable -eq 1 ]; then ttyd=/tmp/ttyd; ttyd_port=7800; fi 
 
 # ----- ttyd、frpc的下载地址、frpcini设置临时配置(默认/tmp/)还是永久保存配置(/etc/storage/) ------
-ttyd_url=${main_url}/frp/ttyd_linux_mipsle
-frpc_url1=${main_url}/frp/frpc_linux_mipsle
+ttyd_url=${download_url}frp/ttyd_linux.mipsel
+frpc_url1=${download_url}frp/frpc_linux_mipsle
 frpc_url2=http://opt.cn2qq.com/opt-file/frpc
 
 udisk=$(mount | awk '$1~"/dev/" && $3~"/media/"{print $3}' | head -n1)
@@ -57,13 +56,12 @@ download_ttyd() {
   killall -q ttyd
   rm -f $ttyd
   wget -c -O $ttyd $ttyd_url
-  chmod 555 $ttyd
+  chmod +x $ttyd
 }
 if [ $ttyd_enable -eq 1 ] ; then 
-  ttyd=$(which ttyd)
-  [ -f "${ttyd:=$bin_dir/ttyd}" ] || download_ttyd
+  [ -f $ttyd ] || download_ttyd
   if [ -z "$(pidof ttyd)" ] ; then
-      $ttyd -p $ttyd_port -r 10 -m 3 -d 1 /bin/login &
+      $ttyd -p $ttyd_port -m 3 -d 0 /bin/login &
   fi
 fi
 
@@ -74,27 +72,27 @@ download_frpc() {
   wget -c -O $frpc $frpc_url1 &
   sleep 60
   killall -q wget
-  chmod 555 $frpc
+  chmod +x $frpc
   frpc_ver=$($frpc -v)
-  if [ -z "$frpc_ver" ] ; then
+  if [ -z "$frpc_ver" ]; then
     wget -c -O $frpc $frpc_url &
     sleep 60
     killall -q wget
     frpc_ver=$($frpc -v)
-    if [ -z "$frpc_ver" ] ; then
+    if [ -z "$frpc_ver" ]; then
       rm -f $frpc
       wget -c -O $frpc $frpc_url2
     fi
   fi 
 }
  $frpc -v || download_frpc
-chmod 555 $frpc
+chmod +x $frpc
 
 # ------------------------- frpc.ini -------------------------
-if [ ! -f "$frpcini" ] ; then
+if [ ! -f "$frpcini" ]; then
   lanip=$(nvram get lan_ipaddr) && i=$(echo $lanip | cut -d . -f 3)
   host_name=$(nvram get computer_name)
-  subdomain=$host_name$i
+  subdomain=${host_name}$i
 cat << END > $frpcini
 [common]
 server_addr = $server_addr
@@ -103,16 +101,16 @@ token = $token
 user = $host_name
 protocol = tcp
 pool_count = 8
-tcp_mux = true
-login_fail_exit = true
 admin_addr = 127.0.0.1
 admin_port = 7400
 admin_user = admin
 admin_pwd = admin
-#log_file = $frpclog
-#log_max_days = 3
 log_level = error
-# ----- SSH:22 Telnet:23 RemoteDesktop:3389 VNC:5900 -----
+#log_max_days = 3
+#log_file = $frpclog
+tcp_mux = true
+login_fail_exit = true
+
 [ssh]
 type = tcp
 local_ip = 127.0.0.1
@@ -126,18 +124,16 @@ type = tcp
 local_ip = $lanip
 local_port = 80
 remote_port = 0
-
 END
 
-  if [ $ttyd_enable -eq 1 ] ; then 
-    cat << END >> $frpcini
+[ $ttyd_enable -eq 1 ] && \
+cat << END >> $frpcini
 [ttyd]
 type = tcp
 local_ip = 127.0.0.1
 local_port = $ttyd_port
 remote_port = 0
 END
-  fi 
 
 fi
 # ------------------------- start frpc ---------------------
