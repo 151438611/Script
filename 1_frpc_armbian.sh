@@ -42,7 +42,7 @@ esac
 if [ -z "$(pidof ${ttyd##*/})" ] ; then
   [ -z "$($ttyd -v)" ] && rm -f $ttyd && wget -c -O $ttyd $ttyd_url
   chmod 555 $ttyd
-  $ttyd -p $ttyd_port -m 5 -d 1 /bin/login &
+  $ttyd -p $ttyd_port -m 5 -d 0 /bin/login &
 fi
 
 download_frpc() {
