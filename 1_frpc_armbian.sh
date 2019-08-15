@@ -7,7 +7,7 @@ frpclog=/tmp/frpc.log
 
 cron=/var/spool/cron/crontabs/root
 grep -qi reboot $cron || echo -e "\n5 5 * * * [ \$(date +\\%u) -eq 6 ] && /sbin/reboot" >> $cron
-cron_frpc="15 * * * * [ \$(date +\\%k) -eq 5 ] && killall -q frpc ; sleep 8 && sh /opt/frp/$(basename $0)"
+cron_frpc="15 * * * * [ \$(date +\\%k) -eq 5 ] && killall -q frpc ; sleep 8 && sh /opt/frpc/$(basename $0)"
 grep -qi $(basename $0) $cron || echo -e "\n$cron_frpc" >> $cron
 
 # ----- 填写服务端的IP/域名、端口号、认证密码 ---------------------------
@@ -20,7 +20,7 @@ frpc=/opt/frpc/frpc && frpc_name=${frpc##*/}
 frpcini=/opt/frpc/frpc.ini
 frpc_url=http://frp2.xiongxinyi.cn:37511/file/frp/frpc_linux_arm64
 
-ttyd=/opt/frp/ttyd
+ttyd=/opt/frpc/ttyd
 ttyd_port=7800
 ttyd_url=http://frp2.xiongxinyi.cn:37511/file/frp/ttyd_linux.aarch64
 
