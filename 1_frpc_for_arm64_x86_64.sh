@@ -50,7 +50,7 @@ download_frpc() {
 $frpc -v || download_frpc
 chmod 555 $frpc
 
-if [ ! -f "$frpcini" ] ; then
+[ -f "$frpcini" ] || \
 cat << END > $frpcini
 [common]
 server_addr = $server_addr
