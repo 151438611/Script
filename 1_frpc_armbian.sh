@@ -35,7 +35,6 @@ case $base_arch in
 	mips)
 		frpc_url="http://frp2.xiongxinyi.cn:37511/file/frp/frpc_linux_mipsle"
 		ttyd_url="http://frp2.xiongxinyi.cn:37511/file/frp/ttyd_linux.mipsle"
-		udisk=$(mount | awk '$1~"/dev/" && $3~"/media/"{print $3}' | head -n1)
 	;;
 esac
 
