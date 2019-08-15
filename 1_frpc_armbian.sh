@@ -5,10 +5,9 @@ export PATH=/bin:/sbin:/usr/bin:/usr/sbin:$PATH
 frpclog=/tmp/frpc.log
 [ -f $frpclog ] || echo $(date +"%F %T") > $frpclog
 
-cron=/var/spool/cron/crontabs/root
-grep -qi reboot $cron || echo -e "\n5 5 * * * [ \$(date +\\%u) -eq 6 ] && /sbin/reboot" >> $cron
-cron_frpc="15 * * * * [ \$(date +\\%k) -eq 5 ] && killall -q frpc ; sleep 8 && sh /opt/frpc/$(basename $0)"
-grep -qi $(basename $0) $cron || echo -e "\n$cron_frpc" >> $cron
+# 添加计划任务： 
+# 5 5 * * * [ $(date +\%u) -eq 6 ] && /sbin/reboot
+# 15 * * * * [ $(date +\%k) -eq 5 ] && killall -q frpc ; sleep 8 && sh /opt/frpc/frpc.sh
 
 # ----- 填写服务端的IP/域名、端口号、认证密码 ---------------------------
 server_addr=x.x.x.x
@@ -46,22 +45,19 @@ cat << END > $frpcini
 server_addr = $server_addr
 server_port = $server_port
 token = $token
-
-protocol = tcp
 user = $name
+protocol = tcp
 pool_count = 8
-tcp_mux = true
-login_fail_exit = true
-
 admin_addr = 127.0.0.1
 admin_port = 7400
 admin_user = admin
 admin_pwd = admin
-#log_file = $frpclog
-#log_max_days = 3
 log_level = error
+#log_max_days = 3
+#log_file = $frpclog
+tcp_mux = true
+login_fail_exit = true
 
-# --- SSH_port:22 Telnet_port:23 RemoteDesktop_port:3389 VNC:5900 ---
 [ssh]
 type = tcp
 local_ip = 127.0.0.1
