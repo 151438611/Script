@@ -1,40 +1,37 @@
 #!/bin/bash
-# for aarch64/arm64 and amd64/x86_64
+# for aarch64/arm64 and amd64/x86_64 ; Armbian N1
 # Armbian中crontab $PATH=/usr/bin:/bin
+# 添加计划任务： 
+# 5 5 * * * [ $(date +\%u) -eq 6 ] && /sbin/reboot || ping -c2 -w5 114.114.114.114 || /sbin/reboot
+# 20 * * * * [ $(date +\%k) -eq 5 ] && killall -q frpc ; sleep 8 && bash /opt/frpc/frpc.sh
+
 export PATH=/bin:/sbin:/usr/bin:/usr/sbin:$PATH
 frpclog=/tmp/frpc.log
 [ -f $frpclog ] || echo $(date +"%F %T") > $frpclog
-
-# 添加计划任务： 
-# 5 5 * * * [ $(date +\%u) -eq 6 ] && /sbin/reboot
-# 20 * * * * [ $(date +\%k) -eq 5 ] && killall -q frpc ; sleep 8 && bash /opt/frpc/frpc.sh
-
-# ----- 填写服务端的IP/域名、端口号、认证密码 ---------------------------
+download_url="http://frp2.xiongxinyi.cn:37511/file/"
+frpc=/opt/frpc/frpc
+frpcini=/opt/frpc/frpc.ini
+frpc_name=${frpc##*/}
+ttyd=/opt/frpc/ttyd
+ttyd_port=7800
+# ----- 填写服务端的IP/域名、端口号、认证密码 -----------
 server_addr=x.x.x.x
 token=xx
 server_port=7000
 name=10gtek_n1
 
-frpc=/opt/frpc/frpc
-frpcini=/opt/frpc/frpc.ini
-frpc_name=${frpc##*/}
-
-ttyd=/opt/frpc/ttyd
-ttyd_port=7800
-
-base_arch=$(uname -m)
-case $base_arch in
+case $(uname -m) in
 	x86_64)
-		frpc_url="http://frp2.xiongxinyi.cn:37511/file/frp/frpc_linux_amd64"
-		ttyd_url="http://frp2.xiongxinyi.cn:37511/file/frp/ttyd_linux.x86_64"
+		frpc_url="${download_url}frp/frpc_linux_amd64"
+		ttyd_url="${download_url}frp/ttyd_linux.x86_64"
 	;;
 	aarch64)
-		frpc_url="http://frp2.xiongxinyi.cn:37511/file/frp/frpc_linux_arm64"
-		ttyd_url="http://frp2.xiongxinyi.cn:37511/file/frp/ttyd_linux.aarch64"
+		frpc_url="${download_url}frp/frpc_linux_arm64"
+		ttyd_url="${download_url}frp/ttyd_linux.aarch64"
 	;;
 	mips)
-		frpc_url="http://frp2.xiongxinyi.cn:37511/file/frp/frpc_linux_mipsle"
-		ttyd_url="http://frp2.xiongxinyi.cn:37511/file/frp/ttyd_linux.mipsle"
+		frpc_url="${download_url}frp/frpc_linux_mipsle"
+		ttyd_url="${download_url}frp/ttyd_linux.mipsle"
 	;;
 esac
 
@@ -48,8 +45,7 @@ download_frpc() {
   killall -q $frpc_name
   rm -f $frpc
   wget -c -O $frpc $frpc_url &
-  sleep 60
-  killall -q wget
+  sleep 60 && killall -q wget
 }
 $frpc -v || download_frpc
 chmod 555 $frpc
