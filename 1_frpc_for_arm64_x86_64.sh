@@ -8,17 +8,18 @@
 export PATH=/bin:/sbin:/usr/bin:/usr/sbin:$PATH
 frpclog=/tmp/frpc.log
 [ -f $frpclog ] || echo $(date +"%F %T") > $frpclog
+# ----- 填写服务端的IP/域名、端口号、认证密码 -----------
+server_addr=x.x.x.x
+token=xx
+server_port=7000
+name=10gtek_n1
+
 download_url="http://frp2.xiongxinyi.cn:37511/file/"
 frpc=/opt/frpc/frpc
 frpcini=/opt/frpc/frpc.ini
 frpc_name=${frpc##*/}
 ttyd=/opt/frpc/ttyd
 ttyd_port=7800
-# ----- 填写服务端的IP/域名、端口号、认证密码 -----------
-server_addr=x.x.x.x
-token=xx
-server_port=7000
-name=10gtek_n1
 
 case $(uname -m) in
 	x86_64)
@@ -77,7 +78,6 @@ remote_port = 0
 use_encryption = false
 use_compression = false
 END
-fi
 
 ping -c2 -w5 114.114.114.114 && \
   if [ -z "$(pidof $frpc_name)" ] ; then
