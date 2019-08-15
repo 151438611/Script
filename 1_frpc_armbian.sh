@@ -1,5 +1,5 @@
 #!/bin/bash
-# for Armbian N1
+# for aarch64/arm64 and amd64/x86_64
 # Armbian中crontab $PATH=/usr/bin:/bin
 export PATH=/bin:/sbin:/usr/bin:/usr/sbin:$PATH
 frpclog=/tmp/frpc.log
@@ -15,13 +15,29 @@ token=xx
 server_port=7000
 name=10gtek_n1
 
-frpc=/opt/frpc/frpc && frpc_name=${frpc##*/}
+frpc=/opt/frpc/frpc
 frpcini=/opt/frpc/frpc.ini
-frpc_url=http://frp2.xiongxinyi.cn:37511/file/frp/frpc_linux_arm64
+frpc_name=${frpc##*/}
 
 ttyd=/opt/frpc/ttyd
 ttyd_port=7800
-ttyd_url=http://frp2.xiongxinyi.cn:37511/file/frp/ttyd_linux.aarch64
+
+base_arch=$(uname -m)
+case $base_arch in
+	x86_64)
+		frpc_url="http://frp2.xiongxinyi.cn:37511/file/frp/frpc_linux_amd64"
+		ttyd_url="http://frp2.xiongxinyi.cn:37511/file/frp/ttyd_linux.x86_64"
+	;;
+	aarch64)
+		frpc_url="http://frp2.xiongxinyi.cn:37511/file/frp/frpc_linux_arm64"
+		ttyd_url="http://frp2.xiongxinyi.cn:37511/file/frp/ttyd_linux.aarch64"
+	;;
+	mips)
+		frpc_url="http://frp2.xiongxinyi.cn:37511/file/frp/frpc_linux_mipsle"
+		ttyd_url="http://frp2.xiongxinyi.cn:37511/file/frp/ttyd_linux.mipsle"
+		udisk=$(mount | awk '$1~"/dev/" && $3~"/media/"{print $3}' | head -n1)
+	;;
+esac
 
 if [ -z "$(pidof ${ttyd##*/})" ] ; then
   [ -z "$($ttyd -v)" ] && rm -f $ttyd && wget -c -O $ttyd $ttyd_url
@@ -65,7 +81,6 @@ local_port = 22
 remote_port = 0
 use_encryption = false
 use_compression = false
-
 END
 fi
 
