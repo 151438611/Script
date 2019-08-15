@@ -7,7 +7,7 @@ frpclog=/tmp/frpc.log
 
 # 添加计划任务： 
 # 5 5 * * * [ $(date +\%u) -eq 6 ] && /sbin/reboot
-# 15 * * * * [ $(date +\%k) -eq 5 ] && killall -q frpc ; sleep 8 && sh /opt/frpc/frpc.sh
+# 20 * * * * [ $(date +\%k) -eq 5 ] && killall -q frpc ; sleep 8 && bash /opt/frpc/frpc.sh
 
 # ----- 填写服务端的IP/域名、端口号、认证密码 ---------------------------
 server_addr=x.x.x.x
