@@ -14,7 +14,7 @@ echo "4-整理排板邮件中的产品类型、SN"
 echo "5-汇总产品验证结果，输出到result文件中"
 echo "6-创建ZQP-P02全FF的bin文件(适用于SN后4位为非数字编码工具无法生成的场景)"
 echo "7-针对生产写码QSFP/4SFP、ZQP/4ZSP二端SN不一致无法写码，仅修改QSFP端命名和SFP名字保持一致"
-
+echo "8-自动放码：将A0/P0放入第一个文件夹即可"
 echo ""
 result=./result
 #获取需求的邮件编码信息文件
@@ -49,7 +49,7 @@ fi
 older_time=$(echo $older_all | awk '{print $1}')
 #判断邮件中要求的编码类型，H3C表示H3C码, OEM表示OEM码,默认表示思科兼容
 if [ -n "$(echo $older_all | awk '{print $8}' | grep -Ei "h3c|hp")" ] ; then older_kind="H3C"
-elif [ -n "$(echo $older_all | awk '{print $8}' | grep -i "oem")" ] ; then older_kind="OEM"
+elif [ -n "$(echo $older_all | awk '{print $8}' | grep -i "op")" ] ; then older_kind="OEM"
 elif [ -n "$(echo $older_all | awk '{print $8}' | grep -i "juniper")" ] ; then older_kind="Juniper"
 else older_kind="Cisco"
 fi
@@ -57,6 +57,7 @@ fi
 older_num_old=$(echo $older_all | awk '{print $5}')
 case $older_kind in
 "H3C")
+	
 	older_num=$((older_num_old * 2 + 5)) ;;
 *)
 	if [ -n "$(echo $older_type | grep -Ei "10gsfp|xfp/xfp|sfp-sfp")" ] ; then older_num=$(($older_num_old * 3 + 1))
@@ -436,14 +437,28 @@ echo -e "\n整理完成！整理结果保存在result文件中, 请及时查看(
 ;;
 
 6)
+echo "提前：前面固定，最后位为数字 "
 if [ -f zqp_p02.bin ] ; then
-  read -p "请输入SN的前面固定位：" sn_start
-  read -p "请输入SN的后面变化位(必须为数字，不足前面可补0)：" sn_end
-  if [ -n "$sn_start" -a -n "$sn_end" ] ; then
-	for sn in `seq -w $sn_end` ; do cp zqp_p02.bin ${sn_start}$sn.bin ; done
-	tar --remove-file -cf $sn_start.tar $sn_start*
-  else echo -e "请输入正确的SN信息！！！"
+  read -p "请输入起始SN：" sn_start
+  read -p "请输入需要生成SN的数量：" sn_end
+  if [ -z "$sn_start" -o -z "$sn_end" ]; then
+	echo "SN或数量不能为空，请重新输入" && exit
+  elif [ -n "$(echo "$sn_end" | sed 's/[0-9]//g')" ]; then
+	echo "数量输入错误，不能包含字母" && exit
   fi
+  sn_end_num=$(printf "$sn_end" | wc -m)
+  sn_start_st=${sn_start: -$sn_end_num}
+  sn_start_en=${sn_start: 0: -$sn_end_num}
+  [ -n "$(echo "$sn_start_en" | sed 's/[0-9]//g')" ] && \
+  echo "起始SN的最后几位必须为数字类型！！！" && exit
+  
+  for sn in $(seq $sn_end)
+  do 
+    cp -f zqp_p02.bin ${sn_start_st}${sn_start_en}.bin
+	sn_start_en=$((sn_start_en + 1))
+  done
+	tar --remove-file -cf $sn_start.tar ${sn_start_st}*
+
 else echo "zqp_p02.bin文件不存在，请放入全FF的bin文件，并命名为：zqp_p02.bin ！！！"
 fi
 ;;
@@ -473,6 +488,61 @@ do
 done
 dir_name="$(date +%Y%m%d-%H%M%S).tar"
 tar --remove-files -cf $dir_name $older_all && echo -e "\n----------重命名文件"$dir_name"创建完成!----------\n"
+check_end
+;;
+8)
+echo -e "需求：\n1、复制相应放码模板，并以生产订单号命名"
+echo "2、使用相应编码软件编码，并放入模板第一个文件夹中即可"
+input_txt
+input_zip
+
+sfp_eeprom() {
+	cp -f $1/Port2/A0/* $1/Port5/A0/
+	cp -f $1/Port2/A0/* $1/
+}
+sfp_mcu_zsp() {
+	cp -rf $1/Port2/* $1/Port5/
+}
+qsfp_zqp_eeprom_mcu() {
+	cp -rf $1/Port1/* $1/Port6/
+}
+qsfp_zqp_4sfp_4zsp() {
+	cp -rf $1/Port2/* $1/Port3/
+	cp -rf $1/Port2/* $1/Port4/
+	cp -rf $1/Port2/* $1/Port5/
+}
+zqp_2zqp() {
+	cp -rf $1/Port1/* $1/Port2/
+	cp -rf $1/Port1/* $1/Port6/
+}
+
+older_list=$(awk '{print $3}' $input_txt)
+for older_id in $older_list
+do
+	#提取邮件中某个生产订单一整行内容
+	older_all=$(cat $input_txt | grep -a $older_id)
+	#提取邮件中的产品名称，示例：CAB-10GSFP-P3M
+	older_type=$(echo $older_all | awk '{print $4}')
+	if [ -n "$(echo $older_type | grep -i 10gsfp)" ]; then
+		if [ -d ${older_id}/Port2/A0 -a -d ${older_id}/Port2/A2 ]; then
+			sfp_mcu_zsp $older_id
+		elif [ -d ${older_id}/Port2/A0 -a ! -d ${older_id}/Port2/A2 ]; then
+			sfp_eeprom $older_id
+		else "$older_id 订单无A0文件，放码失败！！！"
+		fi
+	elif [ -n "$(echo $older_type | grep -i "zsp/zsp")" ]; then
+		sfp_mcu_zsp $older_id
+	elif [ -n "$(echo $older_type | grep -Ei "q10/4s|qsfp/4sfp|zqp/4zsp|qsfp/4xfp")" ]; then
+		qsfp_zqp_4sfp_4zsp $older_id
+	elif [ -n "$(echo $older_type | grep -Ei "q10/q10|qsfp/qsfp|zqp/zqp|8644/8644|8644/8088")" ]; then
+		qsfp_zqp_eeprom_mcu $older_id
+	elif [ -n "$(echo $older_type | grep -i "zqp/2zqp")" ]; then
+		zqp_2zqp $older_id
+	else echo "没有匹配到 $older_id 订单的产品类型！！！"
+	fi
+done
+dir_name="$(date +%Y%m%d-%H%M%S).tar"
+tar --remove-files -cf $dir_name $older_list && echo -e "\n----------放码完成! $dir_name ----------\n"
 check_end
 ;;
 *)
