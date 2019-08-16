@@ -35,8 +35,11 @@ log="/tmp/$port.txt" ; echo -e "Test Time : $(date +"%F %T") \n" > $log
 
 echo -e "\n开始自动进行测试: \n"
 ethernet=$(lspci | grep -i "Ethernet controller")
-if [ $(echo "$ethernet" | wc -l) -gt 1 ] ; then 
+if [ $(echo "$ethernet" | wc -l) -gt 1 -a $(echo "$ethernet" | wc -l) -lt 6 ] ; then 
   result="识别网卡成功"
+  echo -e "$result \n$ethernet \n" | tee -a $log
+elif [ $(echo "$ethernet" | wc -l) -gt 5 ] ; then 
+  result="识别网卡异常"
   echo -e "$result \n$ethernet \n" | tee -a $log
 else 
   result="未识别插入的PCI-E网卡"
