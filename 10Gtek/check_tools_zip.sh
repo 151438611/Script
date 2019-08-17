@@ -579,7 +579,7 @@ do
 done
 dir_name="$(date +%Y%m%d-%H%M%S).zip"
 zip -qrm $dir_name $older_list && echo -e "\n----------放码完成! $dir_name ----------\n"
-check_end
+rm -f old.zip $input_zip
 ;;
 *)
 echo -e "请输入正确的工作模式！！！\n"	
