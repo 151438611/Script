@@ -1,7 +1,7 @@
 #!/bin/bash
 # 用于万兆通PAE兼容测试岗位 : 自动创建兼容测试模板、邮件编码的核对工作
 # 需要文件：需求的邮件编码信息、编码完后的编码压缩zip文件
-# 需要软件：zip dos2unix
+# 需要软件：apt install zip unzip dos2unix
 # Author : XJ  Date: 20180519
 
 #获取脚本当前路径,并进入脚本目录
@@ -528,7 +528,8 @@ do
 			sfp_mcu_zsp $older_id
 		elif [ -d ${older_id}/Port2/A0 -a ! -d ${older_id}/Port2/A2 ]; then
 			sfp_eeprom $older_id
-		else "$older_id 订单无A0文件，放码失败！！！"
+		else 
+		 	echo "$older_id 订单无A0文件，放码失败，请重新检查！！！"
 		fi
 	elif [ -n "$(echo $older_type | grep -i "zsp/zsp")" ]; then
 		sfp_mcu_zsp $older_id
@@ -538,11 +539,12 @@ do
 		qsfp_zqp_eeprom_mcu $older_id
 	elif [ -n "$(echo $older_type | grep -i "zqp/2zqp")" ]; then
 		zqp_2zqp $older_id
-	else echo "没有匹配到 $older_id 订单的产品类型！！！"
+	else 
+		echo "没有匹配到 $older_id 订单的产品类型！！！"
 	fi
 done
-dir_name="$(date +%Y%m%d-%H%M%S).tar"
-tar --remove-files -cf $dir_name $older_list && echo -e "\n----------放码完成! $dir_name ----------\n"
+dir_name="$(date +%Y%m%d-%H%M%S).zip"
+zip -qrm $dir_name $older_list && echo -e "\n----------放码完成! $dir_name ----------\n"
 check_end
 ;;
 *)
