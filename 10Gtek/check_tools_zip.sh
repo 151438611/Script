@@ -60,6 +60,7 @@ if [ -n "$(echo $older_type | grep -i 10sfp)" -a -n "$(echo $older_remark | grep
 #暂时只有备注(欧普 OEM 中性码等关键字，才使用OEM通用码，非思科码代替)
 elif [ -n "$(echo $older_remark | grep -i oem | grep -i optech)" ]; then older_kind="OEM"
 elif [ -n "$(echo $older_remark | grep -i "juniper")" ]; then older_kind="Juniper"
+elif [ -n "$(echo $older_remark | grep -i "arista")" ]; then older_kind="Arista"
 #非以上备注，都使用思科码代替
 else older_kind="Cisco"
 fi
@@ -138,6 +139,7 @@ if [ -n "$code_file" ] ; then
 		"33 43") 		 code_kind="H3C" ;;
 		"00 11"|"43 11") code_kind="Cisco" ;;
 		"34 30"|"34 11") code_kind="Juniper" ;;
+		"61 20") 		 code_kind="Arista" ;;
 		"32 30") 		 code_kind="Alcatel-lucent" ;;
 		"58 54") 		 code_kind="Extreme" ;;
 	*) code_kind="请检查LMM加密位的编码兼容类型:$code_kind" ;;
