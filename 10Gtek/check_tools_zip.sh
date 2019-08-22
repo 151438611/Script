@@ -61,6 +61,7 @@ if [ -n "$(echo $older_type | grep -i 10sfp)" -a -n "$(echo $older_remark | grep
 elif [ -n "$(echo $older_remark | grep -i oem | grep -i optech)" ]; then older_kind="OEM"
 elif [ -n "$(echo $older_remark | grep -i "juniper")" ]; then older_kind="Juniper"
 elif [ -n "$(echo $older_remark | grep -i "arista")" ]; then older_kind="Arista"
+elif [ -n "$(echo $older_remark | grep -i "brocade")" ]; then older_kind="Brocade"
 #非以上备注，都使用思科码代替
 else older_kind="Cisco"
 fi
@@ -74,7 +75,7 @@ case $older_kind in
 *)
 	if [ -n "$(echo $older_type | grep -Ei "10gsfp|xfp/xfp")" ]; then older_num=$(($older_num_old * 3 + 1))
 	elif [ -n "$(echo $older_type | grep -Ei "zsp/zsp|xfp/sfp")" ]; then older_num=$(($older_num_old * 2 + 1))
-	elif [ -n "$(echo $older_type | grep -Ei "q10/q10|qsfp/qsfp|8644/qsfp|8644/8644/8644/8088")" ]; then
+	elif [ -n "$(echo $older_type | grep -Ei "q10/q10|qsfp/qsfp|8644/qsfp|8644/8644|8644/8088|qsfp/8088")" ]; then
 		if [ -n "$(echo $older_remark | grep -i mcu)" ]; then 
 			older_num=$(($older_num_old * 4 + 5))
 		else 
@@ -142,6 +143,7 @@ if [ -n "$code_file" ] ; then
 		"61 20") 		 code_kind="Arista" ;;
 		"32 30") 		 code_kind="Alcatel-lucent" ;;
 		"58 54") 		 code_kind="Extreme" ;;
+		"47 53") 		 code_kind="Brocade" ;;
 	*) code_kind="请检查LMM加密位的编码兼容类型:$code_kind" ;;
 	esac
 	#提取编码中的第2行第4位，表示线缆的长度
@@ -571,7 +573,7 @@ do
 		sfp_mcu_zsp $older_id
 	elif [ -n "$(echo $older_type | grep -Ei "q10/4s|qsfp/4sfp|zqp/4zsp|qsfp/4xfp")" ]; then
 		qsfp_zqp_4sfp_4zsp $older_id
-	elif [ -n "$(echo $older_type | grep -Ei "q10/q10|qsfp/qsfp|zqp/zqp|8644/8644|8644/8088")" ]; then
+	elif [ -n "$(echo $older_type | grep -Ei "q10/q10|qsfp/qsfp|zqp/zqp|8644/8644|8644/8088|qsfp/8088")" ]; then
 		qsfp_zqp_eeprom_mcu $older_id
 	elif [ -n "$(echo $older_type | grep -i "zqp/2zqp")" ]; then
 		zqp_2zqp $older_id
