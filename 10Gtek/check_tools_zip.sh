@@ -482,14 +482,15 @@ if [ -f zqp_p02.bin ]; then
   elif [ -n "$(echo "$sn_end" | sed 's/[0-9]//g')" ]; then
 	echo "数量输入错误，不能包含字母" && exit
   fi
-  sn_end_num=$(printf "$sn_end" | wc -m)
-  sn_start_st=${sn_start: -$sn_end_num}
-  sn_start_en=${sn_start: 0: -$sn_end_num}
-  [ -n "$(echo "$sn_start_en" | sed 's/[0-9]//g')" ] && \
-  echo "起始SN的最后几位必须为数字类型！！！" && exit
   
-  for sn in $(seq $sn_end)
+  for sn in $(seq $sn_end);
   do 
+    sn_end_num=$(#sn)
+	sn_start_st=${sn_start: -$sn_end_num}
+	sn_start_en=${sn_start: 0: -$sn_end_num}
+	[ -n "$(echo "$sn_start_en" | sed 's/[0-9]//g')" ] && \
+	echo "起始SN的最后几位必须为数字类型！！！" && exit
+	
     cp -f zqp_p02.bin ${sn_start_st}${sn_start_en}.bin
 	sn_start_en=$((sn_start_en + 1))
   done
@@ -530,28 +531,83 @@ check_end
 8)
 echo -e "需求：\n1、复制相应放码模板，并以生产订单号命名"
 echo "2、使用相应编码软件编码，并放入模板第一个文件夹中即可"
+echo "3、若QSFP、ZQP是MCU方案放一个Page02.bin并重命名为起始SN，放进第一个文件夹中即可"
 input_txt
 input_zip
 
+
+cp_page02() {
+# $1表示复制模板路径SN_start_page02.bin  	$2表示复制的数量	
+	page02=$1
+	cp_num=$2
+	[ -z "$cp_num" -o -n "$(echo "$sn_end" | sed 's/[0-9]//g')"] && \
+		echo "数量不能为空、不能包含字母，输入错误！！！" && exit
+	if [ -f "$page02" ]; then
+		dir_file=$(dirname $page02)
+		p02_name=$(basename $page02)
+		p02_name_start=${p02_name%.*}
+		p02_name_start_4s=${p02_name_start: 0: -4}
+		p02_name_start_4e=${p02_name_start: -4}
+		p02_name_end=${p02_name#*.}
+		# 因起始SN存在，刚总数需要减1
+		cp_num=$(($cp_num - 1))
+		for n in $(seq $cp_num);
+		do
+			sum_end=$(($p02_name_start_4e + $n))
+			cp -n $page02 ${dir_file}/${p02_name_start_4s}$(printf %04d $sum_end).${p02_name_end}
+		done
+	 else
+	 echo "$page02 文件不存在！！！" && continue
+	fi
+}
+page02_n() {
+	#提取邮件中的产品SN，示例：S180701230001
+	older_sn=$(echo $older_all | awk '{print $6}' | awk -F"-" '{print $1}') 
+	#提取订单编码数量,示例：30
+	older_num=$(echo $older_all | awk '{print $5}')
+	if [ -d "$1/Port1/Page02" ]; then
+		cp_page02 $(ls ${older_id}/Port1/Page02/ | grep $older_sn) $older_num
+	fi
+}
 # cp选项: -r递归 -n不覆盖同名文件 -f覆盖同名文件
 sfp_eeprom() {
-	cp -n $1/Port2/A0/* $1/Port5/A0/
-	cp -n $1/Port2/A0/* $1/
+	if [ -d $1/Port2/A0 ]; then 
+		cp -n $1/Port2/A0/* $1/Port5/A0/
+		cp -n $1/Port2/A0/* $1/
+	else
+		echo "$1/Port2/A0 文件夹不存在，调用 sfp_eeprom 模板错误！！！" && continue
+	fi
 }
 sfp_mcu_zsp() {
-	cp -rn $1/Port2/* $1/Port5/
+	if [ -d $1/Port2/ ]; then
+		cp -rn $1/Port2/* $1/Port5/
+	else 
+		echo "$1/Port2/ 文件夹不存在，调用 sfp_mcu_zsp 模板错误！！！" && continue
+	fi
 }
 qsfp_zqp_eeprom_mcu() {
-	cp -rn $1/Port1/* $1/Port6/
+	if [ -d $1/Port1/ ]; then
+		cp -rn $1/Port1/* $1/Port6/
+	else 
+		echo "$1/Port1/ 文件夹不存在，调用 qsfp_zqp_eeprom_mcu 模板错误！！！" && continue
+	fi
 }
 qsfp_zqp_4sfp_4zsp() {
-	cp -rn $1/Port2/* $1/Port3/
-	cp -rn $1/Port2/* $1/Port4/
-	cp -rn $1/Port2/* $1/Port5/
+	if [ -d $1/Port2/ ]; then
+		cp -rn $1/Port2/* $1/Port3/
+		cp -rn $1/Port2/* $1/Port4/
+		cp -rn $1/Port2/* $1/Port5/
+	else 
+		echo "$1/Port2/ 文件夹不存在，调用 qsfp_zqp_4sfp_4zsp 模板错误！！！" && continue
+	fi
 }
 zqp_2zqp() {
-	cp -rn $1/Port1/* $1/Port2/
-	cp -rn $1/Port1/* $1/Port6/
+	if [ -d $1/Port1 ]; then
+		cp -rn $1/Port1/* $1/Port2/
+		cp -rn $1/Port1/* $1/Port6/
+	else
+		echo "$1/Port1/ 文件夹不存在，调用 zqp_2zqp 模板错误！！！" && continue
+	fi
 }
 
 older_list=$(awk '{print $3}' $input_txt)
@@ -572,10 +628,13 @@ do
 	elif [ -n "$(echo $older_type | grep -i "zsp/zsp")" ]; then
 		sfp_mcu_zsp $older_id
 	elif [ -n "$(echo $older_type | grep -Ei "q10/4s|qsfp/4sfp|zqp/4zsp|qsfp/4xfp")" ]; then
+		page02_n
 		qsfp_zqp_4sfp_4zsp $older_id
 	elif [ -n "$(echo $older_type | grep -Ei "q10/q10|qsfp/qsfp|zqp/zqp|8644/8644|8644/8088|qsfp/8088")" ]; then
+		page02_n
 		qsfp_zqp_eeprom_mcu $older_id
 	elif [ -n "$(echo $older_type | grep -i "zqp/2zqp")" ]; then
+		page02_n
 		zqp_2zqp $older_id
 	else 
 		echo "没有匹配到 $older_id 订单的产品类型！！！"
