@@ -436,13 +436,15 @@ do
 	sn_start=$(echo $sn | awk -F"-" '{print $1}')
 	if [ -n "$(echo $sn | grep "-")" ] ; then
 		sn_end=$(echo $sn | awk -F"-" '{print $2}')
-		num1=$((${#sn_start} - ${#sn_end}))
-		echo "${sn_start:0:$num1}$sn_end"
-	else echo "$sn"
+		
+		num1=${#sn_end}
+		echo "${sn_start: 0: -$num1}$sn_end"
+	else 
+		echo "$sn"
 	fi
 done
-echo -e "-------------- 整理完成 ----------\n"
-mv -f $input_txt old.txt 2> /dev/null
+echo -e "-------------- 整理完成 ------------\n"
+mv -f $input_txt old.txt
 ;;
 
 5)
@@ -451,7 +453,6 @@ echo "2、使用相应编码软件编码，并放入模板第一个Port文件夹
 echo "3、若QSFP、ZQP是MCU方案放Page02.bin并重命名为起始SN,一个即可"
 input_txt
 input_zip
-
 copy_page02() {
 	if [ -d "${older_id}/Port1/Page02" ]; then
 		page02_sn=$(find ${older_id}/Port1/Page02/ -type f -iname "${older_sn}*")
