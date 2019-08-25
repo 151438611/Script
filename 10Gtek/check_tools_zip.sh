@@ -47,6 +47,7 @@ older_remark=$(echo $older_all | awk '{print $8}')
 # 提取邮件中的需求长度，单位CM/M;判断特殊情况：CAB-10GSFP-P65CM的编码长度位为00
 if [ -z "$(echo "$older_type" | grep -i cm)" ]; then
 	older_length=$(echo ${older_type%M*} | sed 's/.*\(...\)$/\1/' | sed 's/[a-zA-Z]//g' | sed 's/-//g')
+	older_length=$(echo $older_length | awk '{print int($0)}')
 else
 	if [ -n "$(echo $older_type | grep -i 10sfp)" -a -n "$(echo $older_remark | grep -Ei "h3c|hp")" ]; then 
 		older_length=0
@@ -191,12 +192,12 @@ else
 	error_kind="邮件的兼容<${older_kind}>和编码兼容<${code_kind}>不一致，请仔细核对编码兼容情况！！！"
 fi
 # 核对邮件内容中的长度和编码中的长度是否一致
-if [ $(expr $older_length \< 2) -eq 1 ] ; then
-	expr ${code_length:=null} \<= 1 1>/dev/null && result_length="(ok)"
-elif [ $(expr $older_length \>= 2) -eq 1 ] ; then
-	expr $older_length \>= ${code_length:=null} 1>/dev/null && expr $older_length \< $(($code_length + 2)) 1>/dev/null && result_length="(ok)"
+if [ $older_length = $code_length ] ; then
+	result_length="(ok)"
+elif [ $(($older_length - $code_length)) -le 1 ] ; then
+	result_length="(ok)"
 else 
-	result_length="(-?-)"
+	result_length="(-error?-)"
 	error_length="邮件的长度<${older_length}>和编码长度<${code_length}>不一致，请仔细核对编码兼容情况！！！"
 fi
 }
@@ -208,7 +209,7 @@ mv -f $input_txt old.txt 2> /dev/null
 deldir=$(find ./ -type d -cmin -2 | grep -v ^./$) && rm -rf $deldir
 }
 printmark() {
-echo -e "------------------------------------------------------------------------------\n"
+echo "------------------------------------------------------------------------------"
 }
 read -p "请选择工作模式,***直接回车***退出程序： " mode
 echo ""
@@ -231,7 +232,7 @@ do
 			check_info
 			# 输出检查结果信息
 			echo "邮件日期:${older_time} 产品名称:${older_type} 数量:${older_num_old} 备注:${older_kind}" >> $result
-			echo "编码日期:${code_time}${result_time} 产品类型:${code_type}${result_type} 长度:${code_length}米${result_length} 数量:${code_num}${result_num} 速率:${code_speed} 兼容:${code_kind}$result_kind}" >> $result
+			echo "编码日期:${code_time}${result_time} 产品类型:${code_type}${result_type} 长度:${code_length}米${result_length} 数量:${code_num}${result_num} 速率:${code_speed} 兼容:${code_kind}${result_kind}" >> $result
 			# 判断是否出现编码错误，出错就输出错误信息和编码中的十六进制文件。
 			if [ -n "${error_time}${error_type}${error_num}${error_kind}${error_length}" ] ; then
 				#echo ${error_time}${error_type}${error_num}${error_kind}${error_length} >> $result
@@ -240,7 +241,6 @@ do
 			fi
 		else
 			echo "没有找到SN为 "$older_sn" 编码！！！" >> $result
-			printmark >> $result
 			continue
 		fi
 	else
@@ -248,6 +248,7 @@ do
 		echo $(unzip -l $input_zip | awk -F / '/WO/{print $1}' | awk '{print $4}' | sort -u) >> $result
 	fi
 	printmark >> $result
+	echo >> $result
 done
 check_end
 echo -e "\n---检查完成！结果保存在result文件中,下次运行会自动覆盖,请及时查看(方法:cat result)!---\n"
