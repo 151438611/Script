@@ -4,8 +4,9 @@
 # 需要软件：apt install zip unzip dos2unix
 # Author : XJ  Date: 20180519
 
-#获取脚本当前路径,并进入脚本目录
-cd `dirname $0`  ;  clear
+# 获取脚本当前路径,并进入脚本目录
+clear
+cd $(dirname $0)
 echo "------------------工作模式------------------"
 echo "1-自动检查编码"
 echo "2-手动检查编码"
@@ -14,37 +15,36 @@ echo "4-整理排板邮件中的产品类型、SN"
 echo "5-自动放码：只需放入Port1或Port2，将自动复制到其他Port; 若有Page02放一个并重命名为起始SN即可"
 echo "6-创建ZQP-P02全FF的bin文件(适用于SN后4位为非数字编码工具无法生成的场景)---待测试"
 echo "7-针对生产写码QSFP/4SFP、ZQP/4ZSP二端SN不一致无法写码，仅修改QSFP端命名和SFP名字保持一致"
-
 echo ""
 result=./result
-#获取需求的邮件编码信息文件
+# 获取需求的邮件编码信息文件
 input_txt() {
-input_txt=$(ls -t *.txt | head -n1)
-[ -z "$input_txt" ] && echo -e "\ntxt文件不存在，请重新检查！！！\n" && exit
-dos2unix -q $input_txt
+	input_txt=$(ls -t *.txt | head -n1)
+	[ -z "$input_txt" ] && echo -e "\ntxt文件不存在，请重新检查！！！\n" && exit
+	dos2unix -q $input_txt
 }
-#获取编码完后的编码压缩zip文件
+# 获取编码完后的编码压缩zip文件
 input_zip() {
-input_zip=$(ls -t *.zip | head -n1)
-#判断是否存在未删除的解压出来的文件夹，删除了再解压刚传入的zip文件,-iname表示忽略大小写
-find ./ -type d -iname "WO*" -delete
-[ -z "$input_zip" ] && echo -e "\nzip文件不存在，请重新检查！！！\n" && exit
-unzip -q "$input_zip" || exit
+	input_zip=$(ls -t *.zip | head -n1)
+	# 判断是否存在未删除的解压出来的文件夹，删除了再解压刚传入的zip文件,-iname表示忽略大小写
+	find ./ -type d -iname "WO*" -exec rm -r {} \; 2> /dev/null
+	[ -z "$input_zip" ] && echo -e "\nxx.zip 文件不存在，请重新检查！！！\n" && exit
+	unzip -q "$input_zip" || exit
 }
 
 older_info() {
-#提取邮件中某个生产订单一整行内容
+# 提取邮件中某个生产订单一整行内容
 older_all=$(cat $input_txt | grep -a $older_id)
-#提取内容中的日期,示例：20180515
+# 提取内容中的日期,示例：20180515
 older_time=$(echo $older_all | awk '{print $1}')
-#提取邮件中的产品SN，示例：S180701230001
+# 提取邮件中的产品SN，示例：S180701230001
 older_sn=$(echo $older_all | awk '{print $6}' | awk -F"-" '{print $1}') 
-#提取邮件中的产品名称，示例：CAB-10GSFP-P3M
+# 提取邮件中的产品名称，示例：CAB-10GSFP-P3M
 older_type=$(echo $older_all | awk '{print $4}') 
-#提取内容中的备注,示例：通用/OEM中性码，VN：Optech，PN：OPQSFP-T-05-PCB
+# 提取内容中的备注,示例：通用/OEM中性码，VN：Optech，PN：OPQSFP-T-05-PCB
 older_remark=$(echo $older_all | awk '{print $8}')
 
-#提取邮件中的需求长度，单位CM/M;判断特殊情况：CAB-10GSFP-P65CM的编码长度位为00
+# 提取邮件中的需求长度，单位CM/M;判断特殊情况：CAB-10GSFP-P65CM的编码长度位为00
 if [ -z "$(echo "$older_type" | grep -i "cm")" ]; then
 	older_length=$(echo ${older_type%M*} | sed 's/.*\(...\)$/\1/' | sed 's/[a-zA-Z]//g' | sed 's/-//g')
 else
@@ -55,18 +55,18 @@ else
 	fi
 fi
 
-#判断邮件中要求的编码类型，H3C表示H3C码, OEM表示OEM码,默认表示思科兼容
+# 判断邮件中要求的编码类型，H3C表示H3C码, OEM表示OEM码,默认表示思科兼容
 if [ -n "$(echo $older_type | grep -i 10sfp)" -a -n "$(echo $older_remark | grep -Ei "h3c|hp")" ]; then older_kind="H3C"
-#暂时只有备注(欧普 OEM 中性码等关键字，才使用OEM通用码，非思科码代替)
+# 暂时只有备注(欧普 OEM 中性码等关键字，才使用OEM通用码，非思科码代替)
 elif [ -n "$(echo $older_remark | grep -i oem | grep -i optech)" ]; then older_kind="OEM"
 elif [ -n "$(echo $older_remark | grep -i "juniper")" ]; then older_kind="Juniper"
 elif [ -n "$(echo $older_remark | grep -i "arista")" ]; then older_kind="Arista"
 elif [ -n "$(echo $older_remark | grep -i "brocade")" ]; then older_kind="Brocade"
-#非以上备注，都使用思科码代替
+# 非以上备注，都使用思科码代替
 else older_kind="Cisco"
 fi
 
-#提取订单编码数量,示例：30
+# 提取订单编码数量,示例：30
 older_num_old=$(echo $older_all | awk '{print $5}')
 case $older_kind in
 "H3C")
@@ -100,16 +100,16 @@ esac
 }
 
 code_info() {
-#统计编码文件夹下的编码数量，在后面判断是否和邮件中的数量是否一致？
+# 统计编码文件夹下的编码数量，在后面判断是否和邮件中的数量是否一致？
 code_num=$(find ./ -type d -name $older_id -exec ls -lR {} \; | grep -c "^-")
-#在编码文件夹中搜索SN号为001.bin或0001.bin的编码文件
+# 在编码文件夹中搜索SN号为001.bin或0001.bin的编码文件
 code_file=$(find ./ -type f -name "$older_sn".bin | sort | head -n1)
 if [ -n "$code_file" ] ; then
 	# hexdump参数： -s偏移量 -n指定字节
 	code_file_hex_all=$(hexdump -vC $code_file)
 	[ -z "$(echo $older_type | grep -Ei "qsfp|q10")" -o -n "$(echo $older_remark | grep -i "mcu")" ] && \
 	code_file_hex=$(hexdump -vC $code_file -n 128) || code_file_hex=$(hexdump -vC $code_file -s 128 -n 256)
-	#提取编码中的第0位，03表示SFP类型，06表示XFP类型, 0D表示40G-QSFP, 11表示100G-ZQP，0F表示8644
+	# 提取编码中的第0位，03表示SFP类型，06表示XFP类型, 0D表示40G-QSFP, 11表示100G-ZQP，0F表示8644
 	code_type=$(echo "$code_file_hex" | awk 'NR==1{print $2}')
 	case $code_type in
 		"03") code_type="SFP" ;;
@@ -120,7 +120,7 @@ if [ -n "$code_file" ] ; then
 		"0f") code_type="8644" ;;
 		*) 	code_type="请检查第0位未识别的产品类型代码：$code_type" ;;
 	esac
-	#提取编码中的第1行第13位，0C表示千兆，63/67表示10G, FF表示25G, 3C表示6G
+	# 提取编码中的第1行第13位，0C表示千兆，63/67表示10G, FF表示25G, 3C表示6G
 	code_speed=$(echo "$code_file_hex" | awk 'NR==1{print $14}')
 	case $code_speed in
 		"67"|"63"|"64") code_speed="10G" ;;
@@ -133,7 +133,7 @@ if [ -n "$code_file" ] ; then
 	[ "$code_type" = "SFP" -a "$code_speed" = "25G" ] && code_type="ZSP"
 	[ "$code_type" = "Q10" -a "$code_speed" = "10G" ] && code_speed="40G"
 	[ "$code_type" = "ZQP" -a "$code_speed" = "25G" ] && code_speed="100G"
-	#提取编码中的第7行第96位-98位，"48 33 43"表示H3C码, "00 00 00"表示OEM码,因思科码96位不同，所以只判断第97 98位，"00 11"表示思科码
+	# 提取编码中的第7行第96位-98位，"48 33 43"表示H3C码, "00 00 00"表示OEM码,因思科码96位不同，所以只判断第97 98位，"00 11"表示思科码
 	code_kind=$(echo "$code_file_hex" | awk 'NR==7{print $3,$4}')
 	case $code_kind in
 		"00 00") 		 code_kind="OEM" ;;
@@ -146,25 +146,25 @@ if [ -n "$code_file" ] ; then
 		"47 53") 		 code_kind="Brocade" ;;
 		*) code_kind="请检查LMM加密位的编码兼容类型:$code_kind" ;;
 	esac
-	#提取编码中的第2行第4位，表示线缆的长度
+	# 提取编码中的第2行第4位，表示线缆的长度
 	code_length=$(echo "$code_file_hex" | awk 'NR==2{print $4}')
 	code_length=$(echo $((0x$code_length)))
-	#提取编码中的第6行日期
+	# 提取编码中的第6行日期
 	code_time_line=$(echo "$code_file_hex" | awk -F "|" 'NR==6{print $2}')
 	code_time=${code_time_line:4:6}
 fi
 }
 
 check_info() {
-#判断之前先初始化错误信息
+# 判断之前先初始化错误信息
 error_time=  ;  error_type=  ;  error_num=  ;  error_kind=  
-#核对邮件内容中的日期和编码中的日期是否一致
+# 核对邮件内容中的日期和编码中的日期是否一致
 if [ "${older_time:2}" = "$code_time" ]; then result_time="(ok)"
 else
 	result_time="(-error!-)"
 	error_time="邮件中的日期<"$older_time">和编码日期<"$code_time">不一致，请仔细核对编码日期！！！"
 fi
-#核对邮件内容中的产品类型和编码中的是否一致
+# 核对邮件内容中的产品类型和编码中的是否一致
 if [ -n "$(echo $older_type | grep -i qsfp)" ]; then
 	if [ "$code_type" = Q10 -o "$code_type" = 8644 ]; then result_type="(ok)"
 	else
@@ -178,19 +178,19 @@ else
 		error_type="邮件中的产品名称<"$older_type">和编码类型<"$code_type">不一致，请仔细核对编码类型！！！"
 	fi
 fi
-#核对邮件内容中的数量和编码中的数量是否一致
+# 核对邮件内容中的数量和编码中的数量是否一致
 if [ $older_num -eq $code_num ] ; then result_num="(ok)"
 else
 	result_num="(-error!-)"
 	error_num="邮件中的数量<"$older_num_old">和编码数量<"$code_num">不一致，请仔细核对编码数量！！！"
 fi
-#核对邮件内容中的兼容性和编码中的兼容性是否一致
+# 核对邮件内容中的兼容性和编码中的兼容性是否一致
 if [ "$older_kind" = "$code_kind" ] ; then result_kind="(ok)"
 else
 	result_kind="(-error!-)"
 	error_kind="邮件的兼容<"$older_kind">和编码兼容<"$code_kind">不一致，请仔细核对编码兼容情况！！！"
 fi
-#核对邮件内容中的长度和编码中的长度是否一致
+# 核对邮件内容中的长度和编码中的长度是否一致
 result_length="(-?-)"
 if [ $(expr $older_length \< 2) -eq 1 ] ; then
 	expr ${code_length:=null} \<= 1 1>/dev/null && result_length="(ok)"
@@ -200,7 +200,7 @@ fi
 }
 
 check_end() {
-#清除解压出来的编码文件夹，并重命名
+# 清除解压出来的编码文件夹
 mv -f $input_zip old.zip 2> /dev/null
 mv -f $input_txt old.txt 2> /dev/null
 deldir=$(find ./ -type d -cmin -2 | grep -v ^./$) && rm -rf $deldir
@@ -215,22 +215,22 @@ case $mode in
 echo "正在检查,可能需要5~30秒,请稍等......"
 input_txt
 input_zip
-#提取生产订单列表
+# 提取生产订单列表
 echo -e "$(awk '{print $1}' $input_txt | sed -n '1p')编码核对信息汇总：\n" > $result
 older_list=$(awk '{print $3}' $input_txt)
 for older_id in $older_list
 do
-	#判断是否存在生产单号对应的编码文件夹
+	# 判断是否存在生产单号对应的编码文件夹
 	if [ -d $older_id ] ; then
 		echo "生产订单号"$older_id"核对结果：" >> $result
 		older_info
 		code_info
 		if [ -n "$code_file" ] ; then
 			check_info
-			#输出检查结果信息
+			# 输出检查结果信息
 			echo "邮件日期:"$older_time" 产品名称:"$older_type" 数量:"$older_num_old" 备注:"$older_kind"" >> $result
 			echo "编码日期:"$code_time""$result_time" 产品类型:"$code_type""$result_type" 长度:"$code_length"米"$result_length" 数量:"$code_num""$result_num" 速率:"$code_speed" 兼容:"$code_kind""$result_kind"" >> $result
-			#判断是否出现编码错误，出错就输出错误信息和编码中的十六进制文件。
+			# 判断是否出现编码错误，出错就输出错误信息和编码中的十六进制文件。
 			if [ -n "$error_time""$error_type""$error_num""$error_kind" ] ; then
 				#echo "$error_time""$error_type""$error_num""$error_kind" >> $result
 				printmark >> $result
@@ -259,32 +259,32 @@ while [ true ]
 do
 	echo ""
 	read -p "请输入需要核对的生产订单号,***直接回车***退出手动检查：" scdh
-	#判断手输的生产单号是否存在邮件内容中，思路：生产单号是唯一的，判断唯一
+	# 判断手输的生产单号是否存在邮件内容中，思路：生产单号是唯一的，判断唯一
 	echo ""
 	[ -z $scdh ] && echo -e "正在退出手动检查编码......\n" && check_end && break 
 	if [ $(cat $input_txt | awk '{print $3}' | grep -c $scdh 2>/dev/null) -eq 1 ]; then
-		#提取手输的生产订单号全称，示例：WO180500115
+		# 提取手输的生产订单号全称，示例：WO180500115
 		older_id=$(cat $input_txt | awk '{print $3}' | grep $scdh) 
-		#判断是否存在生产单号对应的编码文件夹
+		# 判断是否存在生产单号对应的编码文件夹
 		if [ -d $older_id ]; then 
 			older_info
 			code_info
 			if [ -n "$code_file" ]; then 
 			check_info
-			#输出检查结果信息
+			# 输出检查结果信息
 			echo "生产订单号：${older_id}"
 			echo "邮件日期:${older_time} 产品名称:${older_type} 数量:${older_num_old} 备注:${older_kind}"
 			echo "编码日期:${code_time}${result_time} 产品类型:${code_type}${result_type} 长度:${code_length}米${result_length} 数量:"$code_num""$result_num" 速率:"$code_speed" 兼容:"$code_kind""$result_kind""
-			#判断是否出现编码错误，出错就输出错误信息和编码中的十六进制文件。
+			# 判断是否出现编码错误，出错就输出错误信息和编码中的十六进制文件。
 			[ -n "${error_time}${error_type}${error_num}${error_kind}" ] && echo "${error_time}${error_type}${error_num}${error_kind}"
 			printmark
-			#输出编码中的十六进制文件，仅输出20行。
+			# 输出编码中的十六进制文件，仅输出20行。
 			echo "$code_file_hex_all" | head -n20 
 			else echo -e "\n没有找到SN为"$older_sn"编码！！！"
 			fi
 		else
 			echo "没有找到对应的编码文件夹,请重新检查！！！" 
-			#显示编码压缩文件中的目录内容
+			# 显示编码压缩文件中的目录内容
 			echo $(unzip -l $input_zip | awk -F / '/WO/{print $1}' | awk '{print $4","}' | sort -u)
 		fi
 	else echo -e "\n请重新输入完整、正确的生产单号！！！" ;  continue
@@ -401,7 +401,7 @@ do
 	do
 		sw=$(echo $sw | sed '{s/\//-/g ; s/ //g}')
 		sw_file="${pr}/${pr}-${sw}.txt"
-		#添加测试模板格式到文本文件中：指示灯、基本信息、DDM信息
+		# 添加测试模板格式到文本文件中：指示灯、基本信息、DDM信息
 		if [ -n "$(echo $sw | grep -i "edgecore")" ]; then name="Cisco"
 		elif [ -n "$(echo $sw | grep -i "hp")" ]; then 
 			echo $sw | grep -qi "2910" && name="HPP" || name="H3C"
@@ -415,14 +415,14 @@ do
 		unix2dos -q $sw_file
 	done
 done
-#将创建好的文件夹打包，并删除原文件,方便拷出
+# 将创建好的文件夹打包，并删除原文件,方便拷出
 dir=$(find ./ -type d -cmin -1 | grep -v "^./$")
 dir_name="$(date +%Y%m%d-%H%M%S).tar"
 tar --remove-files -cf $dir_name $dir && echo -e "\n----------测试模板文件"$dir_name"创建完成!----------\n"
 ;;
 
 4)
-#用来提取邮件中的SN号，并整理排板好
+# 用来提取邮件中的SN号，并整理排板好
 input_txt
 echo "-------------- 产品类型 ------------"
 awk '{print $4}' $input_txt | awk -F"M" '{print $1"M"}'
@@ -519,13 +519,13 @@ zqp_2zqp() {
 older_list=$(awk '{print $3}' $input_txt)
 for older_id in $older_list
 do
-	#提取邮件中某个生产订单一整行内容
+	# 提取邮件中某个生产订单一整行内容
 	older_all=$(cat $input_txt | grep -a $older_id)
-	#提取邮件中的产品名称，示例：CAB-10GSFP-P3M
+	# 提取邮件中的产品名称，示例：CAB-10GSFP-P3M
 	older_type=$(echo $older_all | awk '{print $4}')
-	#提取邮件中的产品SN，示例：S180701230001
+	# 提取邮件中的产品SN，示例：S180701230001
 	older_sn=$(echo $older_all | awk '{print $6}' | awk -F"-" '{print $1}') 
-	#提取订单编码数量,示例：30
+	# 提取订单编码数量,示例：30
 	older_num=$(echo $older_all | awk '{print $5}')
 	if [ -n "$(echo $older_type | grep -i 10gsfp)" ]; then
 		if [ -d ${older_id}/Port2/A0 -a -d ${older_id}/Port2/A2 ]; then
