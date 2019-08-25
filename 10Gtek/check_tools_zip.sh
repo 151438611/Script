@@ -201,8 +201,8 @@ fi
 
 check_end() {
 #清除解压出来的编码文件夹，并重命名
-mv -f $input_zip old.zip
-mv -f $input_txt old.txt
+mv -f $input_zip old.zip 2> /dev/null
+mv -f $input_txt old.txt 2> /dev/null
 deldir=$(find ./ -type d -cmin -2 | grep -v ^./$) && rm -rf $deldir
 }
 printmark() {
@@ -443,7 +443,7 @@ do
 	fi
 done
 echo -e "-------------- 整理完成 ------------\n"
-mv -f $input_txt old.txt
+mv -f $input_txt old.txt 2> /dev/null
 ;;
 
 5)
