@@ -4,8 +4,8 @@
 # 需要软件：apt install zip unzip dos2unix
 # Author : XJ  Date: 20180519
 
-# 获取脚本当前路径,并进入脚本目录
 clear
+# 获取脚本当前路径,并进入脚本目录
 cd $(dirname $0)
 echo "------------------ 工作模式 ------------------"
 echo "1-自动检查编码"
@@ -20,7 +20,7 @@ result=./result
 # 获取需求的邮件编码信息文件
 input_txt() {
 	input_txt=$(ls -t *.txt | head -n1)
-	[ -z "$input_txt" ] && echo -e "\ntxt文件不存在，请重新检查！！！\n" && exit
+	[ -z "$input_txt" ] && echo -e "\nxx.txt 文件不存在，请重新检查！！！\n" && exit
 	dos2unix -q $input_txt
 }
 # 获取编码完后的编码压缩zip文件
@@ -45,7 +45,7 @@ older_type=$(echo $older_all | awk '{print $4}')
 older_remark=$(echo $older_all | awk '{print $8}')
 
 # 提取邮件中的需求长度，单位CM/M;判断特殊情况：CAB-10GSFP-P65CM的编码长度位为00
-if [ -z "$(echo "$older_type" | grep -i "cm")" ]; then
+if [ -z "$(echo "$older_type" | grep -i cm)" ]; then
 	older_length=$(echo ${older_type%M*} | sed 's/.*\(...\)$/\1/' | sed 's/[a-zA-Z]//g' | sed 's/-//g')
 else
 	if [ -n "$(echo $older_type | grep -i 10sfp)" -a -n "$(echo $older_remark | grep -Ei "h3c|hp")" ]; then 
@@ -56,12 +56,12 @@ else
 fi
 
 # 判断邮件中要求的编码类型，H3C表示H3C码, OEM表示OEM码,默认表示思科兼容
-if [ -n "$(echo $older_type | grep -i 10sfp)" -a -n "$(echo $older_remark | grep -Ei "h3c|hp")" ]; then older_kind="H3C"
+if [ -n "$(echo $older_type | grep -i 10sfp)" -a -n "$(echo $older_remark | grep -Ei "h3c|hp")" ]; then older_kind=H3C
 # 暂时只有备注(欧普 OEM 中性码等关键字，才使用OEM通用码，非思科码代替)
-elif [ -n "$(echo $older_remark | grep -i oem | grep -i optech)" ]; then older_kind="OEM"
-elif [ -n "$(echo $older_remark | grep -i "juniper")" ]; then older_kind="Juniper"
-elif [ -n "$(echo $older_remark | grep -i "arista")" ]; then older_kind="Arista"
-elif [ -n "$(echo $older_remark | grep -i "brocade")" ]; then older_kind="Brocade"
+elif [ -n "$(echo $older_remark | grep -i oem | grep -i optech)" ]; then older_kind=OEM
+elif [ -n "$(echo $older_remark | grep -i juniper)" ]; then older_kind=Juniper
+elif [ -n "$(echo $older_remark | grep -i arista)" ]; then older_kind=Arista
+elif [ -n "$(echo $older_remark | grep -i brocade)" ]; then older_kind=Brocade
 # 非以上备注，都使用思科码代替
 else older_kind="Cisco"
 fi
@@ -103,11 +103,11 @@ code_info() {
 # 统计编码文件夹下的编码数量，在后面判断是否和邮件中的数量是否一致？
 code_num=$(find ./ -type d -name $older_id -exec ls -lR {} \; | grep -c "^-")
 # 在编码文件夹中搜索SN号为001.bin或0001.bin的编码文件
-code_file=$(find ./ -type f -name "$older_sn".bin | sort | head -n1)
+code_file=$(find ./ -type f -name ${older_sn}.bin | sort | head -n1)
 if [ -n "$code_file" ] ; then
 	# hexdump参数： -s偏移量 -n指定字节
 	code_file_hex_all=$(hexdump -vC $code_file)
-	[ -z "$(echo $older_type | grep -Ei "qsfp|q10")" -o -n "$(echo $older_remark | grep -i "mcu")" ] && \
+	[ -z "$(echo $older_type | grep -Ei "qsfp|q10")" -o -n "$(echo $older_remark | grep -i mcu)" ] && \
 	code_file_hex=$(hexdump -vC $code_file -n 128) || code_file_hex=$(hexdump -vC $code_file -s 128 -n 256)
 	# 提取编码中的第0位，03表示SFP类型，06表示XFP类型, 0D表示40G-QSFP, 11表示100G-ZQP，0F表示8644
 	code_type=$(echo "$code_file_hex" | awk 'NR==1{print $2}')
@@ -116,7 +116,7 @@ if [ -n "$code_file" ] ; then
 		"06") code_type="XFP" ;;
 		"0d") code_type="Q10" ;;
 		"11") code_type="ZQP" ;;
-		"18") code_type="QSFP-DD" ;;
+		"18") code_type="QSFPDD" ;;
 		"0f") code_type="8644" ;;
 		*) 	code_type="请检查第0位未识别的产品类型代码：$code_type" ;;
 	esac
@@ -144,14 +144,14 @@ if [ -n "$code_file" ] ; then
 		"32 30") 		 code_kind="Alcatel-lucent" ;;
 		"58 54") 		 code_kind="Extreme" ;;
 		"47 53") 		 code_kind="Brocade" ;;
-		*) code_kind="请检查LMM加密位的编码兼容类型:$code_kind" ;;
+		*) code_kind="请检查LMM加密位的编码兼容类型: $code_kind" ;;
 	esac
 	# 提取编码中的第2行第4位，表示线缆的长度
 	code_length=$(echo "$code_file_hex" | awk 'NR==2{print $4}')
 	code_length=$(echo $((0x$code_length)))
 	# 提取编码中的第6行日期
 	code_time_line=$(echo "$code_file_hex" | awk -F "|" 'NR==6{print $2}')
-	code_time=${code_time_line:4:6}
+	code_time=${code_time_line: 4: 6}
 fi
 }
 
@@ -162,40 +162,40 @@ error_time=  ;  error_type=  ;  error_num=  ;  error_kind=
 if [ "${older_time:2}" = "$code_time" ]; then result_time="(ok)"
 else
 	result_time="(-error!-)"
-	error_time="邮件中的日期<"$older_time">和编码日期<"$code_time">不一致，请仔细核对编码日期！！！"
+	error_time="邮件中的日期<${older_time}>和编码日期<${code_time}>不一致，请仔细核对编码日期！！！"
 fi
 # 核对邮件内容中的产品类型和编码中的是否一致
 if [ -n "$(echo $older_type | grep -i qsfp)" ]; then
 	if [ "$code_type" = Q10 -o "$code_type" = 8644 ]; then result_type="(ok)"
 	else
 		result_type="(-error-)"
-		error_type="邮件中的产品名称<"$older_type">和编码类型<"$code_type">不一致，请仔细核对编码类型！！！"
+		error_type="邮件中的产品名称<${older_type}>和编码类型<${code_type}>不一致，请仔细核对编码类型！！！"
 	fi
 else
 	if [ -n "$(echo $older_type | grep -i $code_type)" ] ; then result_type="(ok)"
 	else
 		result_type="(-error-)"
-		error_type="邮件中的产品名称<"$older_type">和编码类型<"$code_type">不一致，请仔细核对编码类型！！！"
+		error_type="邮件中的产品名称<${older_type}>和编码类型<${code_type}>不一致，请仔细核对编码类型！！！"
 	fi
 fi
 # 核对邮件内容中的数量和编码中的数量是否一致
 if [ $older_num -eq $code_num ] ; then result_num="(ok)"
 else
 	result_num="(-error!-)"
-	error_num="邮件中的数量<"$older_num_old">和编码数量<"$code_num">不一致，请仔细核对编码数量！！！"
+	error_num="邮件中的数量<${older_num_old}>和编码数量<${code_num}>不一致，请仔细核对编码数量！！！"
 fi
 # 核对邮件内容中的兼容性和编码中的兼容性是否一致
 if [ "$older_kind" = "$code_kind" ] ; then result_kind="(ok)"
 else
 	result_kind="(-error!-)"
-	error_kind="邮件的兼容<"$older_kind">和编码兼容<"$code_kind">不一致，请仔细核对编码兼容情况！！！"
+	error_kind="邮件的兼容<${older_kind}>和编码兼容<${code_kind}>不一致，请仔细核对编码兼容情况！！！"
 fi
 # 核对邮件内容中的长度和编码中的长度是否一致
 result_length="(-?-)"
 if [ $(expr $older_length \< 2) -eq 1 ] ; then
 	expr ${code_length:=null} \<= 1 1>/dev/null && result_length="(ok)"
 elif [ $(expr $older_length \>= 2) -eq 1 ] ; then
-	expr $older_length \>= ${code_length:=null} 1>/dev/null && expr $older_length \< $(($code_length+2)) 1>/dev/null && result_length="(ok)"
+	expr $older_length \>= ${code_length:=null} 1>/dev/null && expr $older_length \< $(($code_length + 2)) 1>/dev/null && result_length="(ok)"
 fi
 }
 
@@ -222,17 +222,17 @@ for older_id in $older_list
 do
 	# 判断是否存在生产单号对应的编码文件夹
 	if [ -d $older_id ] ; then
-		echo "生产订单号"$older_id"核对结果：" >> $result
+		echo "生产订单号${older_id}核对结果：" >> $result
 		older_info
 		code_info
 		if [ -n "$code_file" ] ; then
 			check_info
 			# 输出检查结果信息
-			echo "邮件日期:"$older_time" 产品名称:"$older_type" 数量:"$older_num_old" 备注:"$older_kind"" >> $result
-			echo "编码日期:"$code_time""$result_time" 产品类型:"$code_type""$result_type" 长度:"$code_length"米"$result_length" 数量:"$code_num""$result_num" 速率:"$code_speed" 兼容:"$code_kind""$result_kind"" >> $result
+			echo "邮件日期:${older_time} 产品名称:${older_type} 数量:${older_num_old} 备注:${older_kind}" >> $result
+			echo "编码日期:${code_time}${result_time} 产品类型:${code_type}${result_type} 长度:${code_length}米${result_length} 数量:${code_num}${result_num} 速率:${code_speed} 兼容:${code_kind}$result_kind}" >> $result
 			# 判断是否出现编码错误，出错就输出错误信息和编码中的十六进制文件。
-			if [ -n "$error_time""$error_type""$error_num""$error_kind" ] ; then
-				#echo "$error_time""$error_type""$error_num""$error_kind" >> $result
+			if [ -n "${error_time}${error_type}${error_num}${error_kind}${result_length}" ] ; then
+				#echo ${error_time}${error_type}${error_num}${error_kind}${result_length} >> $result
 				printmark >> $result
 				echo "$code_file_hex_all" | head -n16 >> $result
 			fi
@@ -242,7 +242,7 @@ do
 			continue
 		fi
 	else
-		echo "没有找到"$older_id"对应的编码文件夹,请重新检查！！！" >> $result 
+		echo "没有找到${older_id}对应的编码文件夹,请重新检查！！！" >> $result 
 		echo $(unzip -l $input_zip | awk -F / '/WO/{print $1}' | awk '{print $4}' | sort -u) >> $result
 	fi
 	printmark >> $result
