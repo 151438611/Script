@@ -11,8 +11,8 @@ echo "1-自动检查编码"
 echo "2-手动检查编码"
 echo "3-创建兼容测试模板文件"
 echo "4-整理排板邮件中的产品类型、SN"
-echo "5-汇总产品验证结果，输出到result文件中"
-echo "6-创建ZQP-P02全FF的bin文件(适用于SN后4位为非数字编码工具无法生成的场景)"
+echo "5-已删除，待添加新功能......"
+echo "6-创建ZQP-P02全FF的bin文件(适用于SN后4位为非数字编码工具无法生成的场景)---待测试"
 echo "7-针对生产写码QSFP/4SFP、ZQP/4ZSP二端SN不一致无法写码，仅修改QSFP端命名和SFP名字保持一致"
 echo "8-自动放码：将A0/P0放入第一个文件夹即可"
 echo ""
@@ -445,32 +445,7 @@ mv -f $input_txt old.txt 2> /dev/null
 ;;
 
 5)
-#将测试结果文件整理并汇总到一个文本中
-input_zip
-alldir=$(find ./ -type d -cmin -1 -print | grep -v ^./$)
-echo -e "测试结果汇总：\n" > $result
-for dir in $alldir
-do
-	alltxt=$(ls $dir | grep ".txt")
-	[ -z "$alltxt" ] && echo -e "$dir\n" >> $result && continue
-	echo -e "\n${dir##*/}: " >> $result
-	for txt in $alltxt
-	do
-	txt_h=$(cat $dir/$txt | head -n3)
-	if [[ -z $(echo $txt | grep error) && -z $(echo $txt_h | grep -aiE "down|error|false") && -n $(echo $txt_h | grep -aiE "on|ok") ]] ; then
-		action $txt /bin/true >> $result
-	else
-		if [ -z "$(echo $txt_h)" -o -n "$(echo $txt_h | grep -ai "on\/down")" ] ; then
-			echo $txt---------------------------------[ 未测试 ] >> $result
-		else
-			action $txt /bin/false >> $result
-			echo "$txt_h" | head -n1 >> $result
-		fi
-	fi
-	done
-done
-rm -rf $(find ./ -type d -cmin -2 | grep -v ^./$) 1> /dev/null
-echo -e "\n整理完成！整理结果保存在result文件中, 请及时查看(方法:cat result), 下次运行会自动覆盖！\n"
+pass
 ;;
 
 6)
