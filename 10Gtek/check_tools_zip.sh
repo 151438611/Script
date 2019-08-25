@@ -344,7 +344,7 @@ Huawei-CE6855
 IBM-G8264
 Juniper-QFX5100"
 ;;
-"40g"|"56g"|"100g")
+"40g"|"56g")
 swtich="Arista-7050
 Cisco-3064
 Cisco-5548
@@ -360,7 +360,7 @@ Mellanox-SB7800
 Juniper-QFX5200
 Juniper-QFX5100"
 ;;
-"200g")
+"100g"|"200g")
 swtich="Cisco-3232C
 Cisco-92160
 Edgecore-7712
@@ -401,18 +401,19 @@ do
 	for sw in $swtich
 	do
 		sw=$(echo $sw | sed '{s/\//-/g ; s/ //g}')
-		touch $pr/$pr-$sw.txt 
+		sw_file="${pr}/${pr}-${sw}.txt"
 		#添加测试模板格式到文本文件中：指示灯、基本信息、DDM信息
 		if [ -n "$(echo $sw | grep -i "edgecore")" ]; then name="Cisco"
-		elif [ -n "$(echo $sw | grep -i "hp")" ]; then echo $sw | grep -qi "2910" && name="HP" || name="H3C"
+		elif [ -n "$(echo $sw | grep -i "hp")" ]; then 
+			echo $sw | grep -qi "2910" && name="HPP" || name="H3C"
 		else name=$(echo $sw | awk -F"-" '{print $1}')
 		fi
 		if [ -n "$(echo $pr | grep -Ei "cab|aoc|-t")" ]; then
-			echo -e "$name code , Indictor_light is UP/DOWN , Basic_infomation is OK/ERROR , DDM is NONE .\n\n\n" > ${pr}/${pr}-${sw}.txt 
+			echo -e "$name code , Indictor_light is UP/DOWN , Basic_infomation is OK/ERROR , DDM is NONE .\n\n" > $sw_file
 		else
-			echo -e "$name code , Indictor_light is UP/DOWN , Basic_infomation is OK/ERROR , DDM is OK/ERROR .\n\n\n" > ${pr}/${pr}-${sw}.txt  
+			echo -e "$name code , Indictor_light is UP/DOWN , Basic_infomation is OK/ERROR , DDM is OK/ERROR .\n\n" > $sw_file
 		fi
-		unix2dos -q ${pr}/${pr}-${sw}.txt
+		unix2dos -q $sw_file
 	done
 done
 #将创建好的文件夹打包，并删除原文件,方便拷出
