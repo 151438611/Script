@@ -11,10 +11,10 @@ echo "1-自动检查编码"
 echo "2-手动检查编码"
 echo "3-创建兼容测试模板文件"
 echo "4-整理排板邮件中的产品类型、SN"
-echo "5- pass ，待添加新功能......"
+echo "5-自动放码：只需放入Port1或Port2，将自动复制到其他Port; 若有Page02放一个并重命名为起始SN即可"
 echo "6-创建ZQP-P02全FF的bin文件(适用于SN后4位为非数字编码工具无法生成的场景)---待测试"
 echo "7-针对生产写码QSFP/4SFP、ZQP/4ZSP二端SN不一致无法写码，仅修改QSFP端命名和SFP名字保持一致"
-echo "8-自动放码：将A0/P0放入第一个文件夹即可"
+
 echo ""
 result=./result
 #获取需求的邮件编码信息文件
@@ -445,67 +445,9 @@ mv -f $input_txt old.txt 2> /dev/null
 ;;
 
 5)
-	echo "This is nothing"
-;;
-
-6)
-echo "1、将zqp_p02.bin放入脚本根目录"
-echo "2、SN最后4位为数字 "
-if [ -f zqp_p02.bin ]; then
-  read -p "请输入起始SN：" sn_start
-  read -p "请输入需要生成SN的数量：" sn_end
-  if [ -z "$sn_start" -o -z "$sn_end" ]; then
-	echo "SN或数量不能为空，请重新输入" && exit
-  elif [ -n "$(echo "$sn_end" | sed 's/[0-9]//g')" ]; then
-	echo "数量输入错误，不能包含字母" && exit
-  fi
-	# 去掉数字前面的0
-	sn_end=$(echo $sn_end | awk '{print int($0)}')
-	sn_start_st=${sn_start: 0: -4}
-	sn_start_en=${sn_start: -4}
-	sn_start_en=$(echo $sn_start_en | awk '{print int($0)}')
-	for sn in $(seq $sn_end)
-	do 
-		cp -f zqp_p02.bin ${sn_start_st}$(printf %04d $sn_start_en).bin
-		sn_start_en=$((sn_start_en + 1))
-	done
-	tar --remove-file -cf ${sn_start}.tar ${sn_start_st}*
-
-else 
-  echo "zqp_p02.bin文件不存在，请放入全FF的bin文件，并命名为：zqp_p02.bin ！"
-fi
-;;
-7)
-echo "针对生产线缆QSFP/4SFP写码，仅QSFP和SFP端SN不一样，SFP端都是同一SN的情况"
-echo "解决方法：按照正常编码，编码完将QSFP端的码文件重命名为SFP端名字，QSFP端和SFP端SN从小到大一一对应"
-input_zip
-older_all=$(find ./ -type d -name "WO*")
-for older in $older_all
-do
-	port1=$older/Port1/A0/
-	[ ! -d "$port1" ] && port1=$older/Port1/Page00/ && port1_p02=$older/Port1/Page02/
-	port2=$older/Port2/A0/
-	qsfpAllSN=$(ls $port1) 
-	sfpAllSN=$(ls $port2)
-	
-	allNum=$(echo "$qsfpAllSN" | wc -l)
-	[ $allNum -ne $(echo "$sfpAllSN" | wc -l) ] && echo "QSFP端和SFP端SN数量不一致,请检查！！！" && exit
-	for num in $(seq $allNum)
-	do
-		qsfpSN=$(echo "$qsfpAllSN" | awk 'NR=="'$num'"{print $0}')
-		sfpSN=$(echo "$sfpAllSN" | awk 'NR=="'$num'"{print $0}')
-		mv -f ${port1}$qsfpSN ${port1}$sfpSN
-		[ -d "$port1_p02" ] && mv -f ${port1_p02}$qsfpSN ${port1_p02}$sfpSN
-	done
-done
-dir_name="$(date +%Y%m%d-%H%M%S).tar"
-tar --remove-files -cf $dir_name $older_all && echo -e "\n----------重命名文件 ${dir_name} 创建完成!----------\n"
-check_end
-;;
-8)
-echo -e "需求：\n1、复制相应放码模板，并以生产订单号命名"
-echo "2、使用相应编码软件编码，并放入模板第一个文件夹中即可"
-echo "3、若QSFP、ZQP是MCU方案放一个Page02.bin并重命名为起始SN，放进第一个文件夹中即可"
+echo -e "需求：\n1、首先复制相应放码模板，并以生产订单号命名"
+echo "2、使用相应编码软件编码，并放入模板第一个Port文件夹中即可"
+echo "3、若QSFP、ZQP是MCU方案放Page02.bin并重命名为起始SN,一个即可"
 input_txt
 input_zip
 
@@ -513,7 +455,7 @@ copy_page02() {
 	if [ -d "${older_id}/Port1/Page02" ]; then
 		page02_sn=$(find ${older_id}/Port1/Page02/ -type f -iname "${older_sn}*")
 		cp_num=$older_num
-		if [ -f "$page02_sn" ]; then
+		if [ -n "$page02_sn" ]; then
 			dir_file=$(dirname $page02_sn)
 			p02_name=$(basename $page02_sn)
 			p02_name_start=${p02_name%.*}
@@ -522,13 +464,13 @@ copy_page02() {
 			p02_name_end=${p02_name#*.}
 			# 因起始SN存在，刚总数需要减1
 			cp_num=$(($cp_num - 1))
-			for n in $(seq $cp_num);
+			for n in $(seq $cp_num)
 			do
 				sum_end=$(($p02_name_start_4e + $n))
 				cp -n $page02_sn ${dir_file}/${p02_name_start_4s}$(printf %04d $sum_end).${p02_name_end}
 			done
-		 else
-		 echo "$page02 文件不存在！！！" && continue
+		else
+		 echo "${older_id}/Port1/Page02/ SN文件不存在！！！" && continue
 		fi
 	fi
 }
@@ -611,6 +553,62 @@ dir_name="$(date +%Y%m%d-%H%M%S).zip"
 zip -qrm $dir_name $older_list && echo -e "\n----------放码完成! $dir_name ----------\n"
 rm -f old.zip $input_zip
 ;;
+
+6)
+echo "1、将zqp_p02.bin放入脚本根目录"
+echo "2、SN最后4位为数字 "
+if [ -f zqp_p02.bin ]; then
+  read -p "请输入起始SN：" sn_start
+  read -p "请输入需要生成SN的数量：" sn_end
+  if [ -z "$sn_start" -o -z "$sn_end" ]; then
+	echo "SN或数量不能为空，请重新输入" && exit
+  elif [ -n "$(echo "$sn_end" | sed 's/[0-9]//g')" ]; then
+	echo "数量输入错误，不能包含字母" && exit
+  fi
+	# 去掉数字前面的0
+	sn_end=$(echo $sn_end | awk '{print int($0)}')
+	sn_start_st=${sn_start: 0: -4}
+	sn_start_en=${sn_start: -4}
+	sn_start_en=$(echo $sn_start_en | awk '{print int($0)}')
+	for sn in $(seq $sn_end)
+	do 
+		cp -f zqp_p02.bin ${sn_start_st}$(printf %04d $sn_start_en).bin
+		sn_start_en=$((sn_start_en + 1))
+	done
+	tar --remove-file -cf ${sn_start}.tar ${sn_start_st}*
+
+else 
+  echo "zqp_p02.bin文件不存在，请放入全FF的bin文件，并命名为：zqp_p02.bin ！"
+fi
+;;
+7)
+echo "针对生产线缆QSFP/4SFP写码，仅QSFP和SFP端SN不一样，SFP端都是同一SN的情况"
+echo "解决方法：按照正常编码，编码完将QSFP端的码文件重命名为SFP端名字，QSFP端和SFP端SN从小到大一一对应"
+input_zip
+older_all=$(find ./ -type d -name "WO*")
+for older in $older_all
+do
+	port1=$older/Port1/A0/
+	[ ! -d "$port1" ] && port1=$older/Port1/Page00/ && port1_p02=$older/Port1/Page02/
+	port2=$older/Port2/A0/
+	qsfpAllSN=$(ls $port1) 
+	sfpAllSN=$(ls $port2)
+	
+	allNum=$(echo "$qsfpAllSN" | wc -l)
+	[ $allNum -ne $(echo "$sfpAllSN" | wc -l) ] && echo "QSFP端和SFP端SN数量不一致,请检查！！！" && exit
+	for num in $(seq $allNum)
+	do
+		qsfpSN=$(echo "$qsfpAllSN" | awk 'NR=="'$num'"{print $0}')
+		sfpSN=$(echo "$sfpAllSN" | awk 'NR=="'$num'"{print $0}')
+		mv -f ${port1}$qsfpSN ${port1}$sfpSN
+		[ -d "$port1_p02" ] && mv -f ${port1_p02}$qsfpSN ${port1_p02}$sfpSN
+	done
+done
+dir_name="$(date +%Y%m%d-%H%M%S).tar"
+tar --remove-files -cf $dir_name $older_all && echo -e "\n----------重命名文件 ${dir_name} 创建完成!----------\n"
+check_end
+;;
+
 *)
 	echo -e "请输入正确的工作模式！！！\n"	
 ;;
