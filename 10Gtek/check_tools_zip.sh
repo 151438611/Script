@@ -11,7 +11,7 @@ echo "1-自动检查编码"
 echo "2-手动检查编码"
 echo "3-创建兼容测试模板文件"
 echo "4-整理排板邮件中的产品类型、SN"
-echo "5-已删除，待添加新功能......"
+echo "5- pass ，待添加新功能......"
 echo "6-创建ZQP-P02全FF的bin文件(适用于SN后4位为非数字编码工具无法生成的场景)---待测试"
 echo "7-针对生产写码QSFP/4SFP、ZQP/4ZSP二端SN不一致无法写码，仅修改QSFP端命名和SFP名字保持一致"
 echo "8-自动放码：将A0/P0放入第一个文件夹即可"
@@ -445,7 +445,7 @@ mv -f $input_txt old.txt 2> /dev/null
 ;;
 
 5)
-pass
+	echo "This is nothing"
 ;;
 
 6)
