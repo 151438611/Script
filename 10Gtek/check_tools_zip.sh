@@ -151,13 +151,13 @@ if [ -n "$code_file" ] ; then
 	code_length=$(echo $((0x$code_length)))
 	# 提取编码中的第6行日期
 	code_time_line=$(echo "$code_file_hex" | awk -F "|" 'NR==6{print $2}')
-	code_time=${code_time_line: 4: 6}
+	code_time=${code_time_line:4:6}
 fi
 }
 
 check_info() {
 # 判断之前先初始化错误信息
-error_time=  ;  error_type=  ;  error_num=  ;  error_kind=  
+error_time=  ; error_type=  ; error_num=  ; error_kind=  ; error_length=
 # 核对邮件内容中的日期和编码中的日期是否一致
 if [ "${older_time:2}" = "$code_time" ]; then result_time="(ok)"
 else
@@ -191,11 +191,13 @@ else
 	error_kind="邮件的兼容<${older_kind}>和编码兼容<${code_kind}>不一致，请仔细核对编码兼容情况！！！"
 fi
 # 核对邮件内容中的长度和编码中的长度是否一致
-result_length="(-?-)"
 if [ $(expr $older_length \< 2) -eq 1 ] ; then
 	expr ${code_length:=null} \<= 1 1>/dev/null && result_length="(ok)"
 elif [ $(expr $older_length \>= 2) -eq 1 ] ; then
 	expr $older_length \>= ${code_length:=null} 1>/dev/null && expr $older_length \< $(($code_length + 2)) 1>/dev/null && result_length="(ok)"
+else 
+	result_length="(-?-)"
+	error_length="邮件的长度<${older_length}>和编码长度<${code_length}>不一致，请仔细核对编码兼容情况！！！"
 fi
 }
 
@@ -231,8 +233,8 @@ do
 			echo "邮件日期:${older_time} 产品名称:${older_type} 数量:${older_num_old} 备注:${older_kind}" >> $result
 			echo "编码日期:${code_time}${result_time} 产品类型:${code_type}${result_type} 长度:${code_length}米${result_length} 数量:${code_num}${result_num} 速率:${code_speed} 兼容:${code_kind}$result_kind}" >> $result
 			# 判断是否出现编码错误，出错就输出错误信息和编码中的十六进制文件。
-			if [ -n "${error_time}${error_type}${error_num}${error_kind}${result_length}" ] ; then
-				#echo ${error_time}${error_type}${error_num}${error_kind}${result_length} >> $result
+			if [ -n "${error_time}${error_type}${error_num}${error_kind}${error_length}" ] ; then
+				#echo ${error_time}${error_type}${error_num}${error_kind}${error_length} >> $result
 				printmark >> $result
 				echo "$code_file_hex_all" | head -n16 >> $result
 			fi
