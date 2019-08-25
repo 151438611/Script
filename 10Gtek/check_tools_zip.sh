@@ -27,9 +27,9 @@ dos2unix -q $input_txt
 input_zip() {
 input_zip=$(ls -t *.zip | head -n1)
 #判断是否存在未删除的解压出来的文件夹，删除了再解压刚传入的zip文件,-iname表示忽略大小写
-ls | grep -qi "^wo" && rm -rf WO1*
+find ./ -type d -iname "WO*" -delete
 [ -z "$input_zip" ] && echo -e "\nzip文件不存在，请重新检查！！！\n" && exit
-unzip -qo "$input_zip" || exit
+unzip -q "$input_zip" || exit
 }
 
 older_info() {
@@ -118,7 +118,7 @@ if [ -n "$code_file" ] ; then
 		"11") code_type="ZQP" ;;
 		"18") code_type="QSFP-DD" ;;
 		"0f") code_type="8644" ;;
-	*) 	code_type="请检查第0位未识别的产品类型代码：$code_type" ;;
+		*) 	code_type="请检查第0位未识别的产品类型代码：$code_type" ;;
 	esac
 	#提取编码中的第1行第13位，0C表示千兆，63/67表示10G, FF表示25G, 3C表示6G
 	code_speed=$(echo "$code_file_hex" | awk 'NR==1{print $14}')
@@ -128,7 +128,7 @@ if [ -n "$code_file" ] ; then
 		"0c") 			code_speed="1000BASE" ;;
 		"3c") 			code_speed="6G" ;;
 		"78") 			code_speed="12G" ;;
-	*) 	code_speed="请检查第13位未识别的产品速率代码：$code_speed" ;;
+		*) 	code_speed="请检查第13位未识别的产品速率代码：$code_speed" ;;
 	esac
 	[ "$code_type" = "SFP" -a "$code_speed" = "25G" ] && code_type="ZSP"
 	[ "$code_type" = "Q10" -a "$code_speed" = "10G" ] && code_speed="40G"
@@ -144,7 +144,7 @@ if [ -n "$code_file" ] ; then
 		"32 30") 		 code_kind="Alcatel-lucent" ;;
 		"58 54") 		 code_kind="Extreme" ;;
 		"47 53") 		 code_kind="Brocade" ;;
-	*) code_kind="请检查LMM加密位的编码兼容类型:$code_kind" ;;
+		*) code_kind="请检查LMM加密位的编码兼容类型:$code_kind" ;;
 	esac
 	#提取编码中的第2行第4位，表示线缆的长度
 	code_length=$(echo "$code_file_hex" | awk 'NR==2{print $4}')
@@ -209,7 +209,8 @@ rm -rf WO*
 printmark() {
 echo -e "------------------------------------------------------------------------------\n"
 }
-read -p "请选择工作模式,***直接回车***退出程序： " mode ; echo ""
+read -p "请选择工作模式,***直接回车***退出程序： " mode
+echo ""
 case $mode in
 1)
 echo "正在检查,可能需要5~30秒,请稍等......"
@@ -473,7 +474,8 @@ echo -e "\n整理完成！整理结果保存在result文件中, 请及时查看(
 ;;
 
 6)
-echo "提前：前面固定，最后位为数字 "
+echo "1、将zqp_p02.bin放入脚本根目录"
+echo "2、SN最后4位为数字 "
 if [ -f zqp_p02.bin ]; then
   read -p "请输入起始SN：" sn_start
   read -p "请输入需要生成SN的数量：" sn_end
@@ -482,25 +484,22 @@ if [ -f zqp_p02.bin ]; then
   elif [ -n "$(echo "$sn_end" | sed 's/[0-9]//g')" ]; then
 	echo "数量输入错误，不能包含字母" && exit
   fi
-  
-  for sn in $(seq $sn_end);
-  do 
-    sn_end_num=$(#sn)
-	sn_start_st=${sn_start: -$sn_end_num}
-	sn_start_en=${sn_start: 0: -$sn_end_num}
-	[ -n "$(echo "$sn_start_en" | sed 's/[0-9]//g')" ] && \
-	echo "起始SN的最后几位必须为数字类型！！！" && exit
-	
-    cp -f zqp_p02.bin ${sn_start_st}${sn_start_en}.bin
-	sn_start_en=$((sn_start_en + 1))
-  done
-	tar --remove-file -cf $sn_start.tar ${sn_start_st}*
+	# 去掉数字前面的0
+	sn_end=$(echo $sn_end | awk '{print int($0)}')
+	sn_start_st=${sn_start: 0: -4}
+	sn_start_en=${sn_start: -4}
+	sn_start_en=$(echo $sn_start_en | awk '{print int($0)}')
+	for sn in $(seq $sn_end)
+	do 
+		cp -f zqp_p02.bin ${sn_start_st}$(printf %04d $sn_start_en).bin
+		sn_start_en=$((sn_start_en + 1))
+	done
+	tar --remove-file -cf ${sn_start}.tar ${sn_start_st}*
 
 else 
   echo "zqp_p02.bin文件不存在，请放入全FF的bin文件，并命名为：zqp_p02.bin ！"
 fi
 ;;
-
 7)
 echo "针对生产线缆QSFP/4SFP写码，仅QSFP和SFP端SN不一样，SFP端都是同一SN的情况"
 echo "解决方法：按照正常编码，编码完将QSFP端的码文件重命名为SFP端名字，QSFP端和SFP端SN从小到大一一对应"
@@ -509,7 +508,7 @@ older_all=$(find ./ -type d -name "WO*")
 for older in $older_all
 do
 	port1=$older/Port1/A0/
-	[ ! -d $port1 ] && port1=$older/Port1/Page00/ && port1_p02=$older/Port1/Page02/
+	[ ! -d "$port1" ] && port1=$older/Port1/Page00/ && port1_p02=$older/Port1/Page02/
 	port2=$older/Port2/A0/
 	qsfpAllSN=$(ls $port1) 
 	sfpAllSN=$(ls $port2)
@@ -521,11 +520,11 @@ do
 		qsfpSN=$(echo "$qsfpAllSN" | awk 'NR=="'$num'"{print $0}')
 		sfpSN=$(echo "$sfpAllSN" | awk 'NR=="'$num'"{print $0}')
 		mv -f ${port1}$qsfpSN ${port1}$sfpSN
-		[ "$port1_p02" ] && mv -f ${port1_p02}$qsfpSN ${port1_p02}$sfpSN
+		[ -d "$port1_p02" ] && mv -f ${port1_p02}$qsfpSN ${port1_p02}$sfpSN
 	done
 done
 dir_name="$(date +%Y%m%d-%H%M%S).tar"
-tar --remove-files -cf $dir_name $older_all && echo -e "\n----------重命名文件"$dir_name"创建完成!----------\n"
+tar --remove-files -cf $dir_name $older_all && echo -e "\n----------重命名文件 ${dir_name} 创建完成!----------\n"
 check_end
 ;;
 8)
@@ -535,38 +534,27 @@ echo "3、若QSFP、ZQP是MCU方案放一个Page02.bin并重命名为起始SN，
 input_txt
 input_zip
 
-
-cp_page02() {
-# $1表示复制模板路径SN_start_page02.bin  	$2表示复制的数量	
-	page02=$1
-	cp_num=$2
-	[ -z "$cp_num" -o -n "$(echo "$sn_end" | sed 's/[0-9]//g')"] && \
-		echo "数量不能为空、不能包含字母，输入错误！！！" && exit
-	if [ -f "$page02" ]; then
-		dir_file=$(dirname $page02)
-		p02_name=$(basename $page02)
-		p02_name_start=${p02_name%.*}
-		p02_name_start_4s=${p02_name_start: 0: -4}
-		p02_name_start_4e=${p02_name_start: -4}
-		p02_name_end=${p02_name#*.}
-		# 因起始SN存在，刚总数需要减1
-		cp_num=$(($cp_num - 1))
-		for n in $(seq $cp_num);
-		do
-			sum_end=$(($p02_name_start_4e + $n))
-			cp -n $page02 ${dir_file}/${p02_name_start_4s}$(printf %04d $sum_end).${p02_name_end}
-		done
-	 else
-	 echo "$page02 文件不存在！！！" && continue
-	fi
-}
-page02_n() {
-	#提取邮件中的产品SN，示例：S180701230001
-	older_sn=$(echo $older_all | awk '{print $6}' | awk -F"-" '{print $1}') 
-	#提取订单编码数量,示例：30
-	older_num=$(echo $older_all | awk '{print $5}')
-	if [ -d "$1/Port1/Page02" ]; then
-		cp_page02 $(ls ${older_id}/Port1/Page02/ | grep $older_sn) $older_num
+copy_page02() {
+	if [ -d "${older_id}/Port1/Page02" ]; then
+		page02_sn=$(find ${older_id}/Port1/Page02/ -type f -iname "${older_sn}*")
+		cp_num=$older_num
+		if [ -f "$page02_sn" ]; then
+			dir_file=$(dirname $page02_sn)
+			p02_name=$(basename $page02_sn)
+			p02_name_start=${p02_name%.*}
+			p02_name_start_4s=${p02_name_start: 0: -4}
+			p02_name_start_4e=${p02_name_start: -4}
+			p02_name_end=${p02_name#*.}
+			# 因起始SN存在，刚总数需要减1
+			cp_num=$(($cp_num - 1))
+			for n in $(seq $cp_num);
+			do
+				sum_end=$(($p02_name_start_4e + $n))
+				cp -n $page02_sn ${dir_file}/${p02_name_start_4s}$(printf %04d $sum_end).${p02_name_end}
+			done
+		 else
+		 echo "$page02 文件不存在！！！" && continue
+		fi
 	fi
 }
 # cp选项: -r递归 -n不覆盖同名文件 -f覆盖同名文件
@@ -617,6 +605,10 @@ do
 	older_all=$(cat $input_txt | grep -a $older_id)
 	#提取邮件中的产品名称，示例：CAB-10GSFP-P3M
 	older_type=$(echo $older_all | awk '{print $4}')
+	#提取邮件中的产品SN，示例：S180701230001
+	older_sn=$(echo $older_all | awk '{print $6}' | awk -F"-" '{print $1}') 
+	#提取订单编码数量,示例：30
+	older_num=$(echo $older_all | awk '{print $5}')
 	if [ -n "$(echo $older_type | grep -i 10gsfp)" ]; then
 		if [ -d ${older_id}/Port2/A0 -a -d ${older_id}/Port2/A2 ]; then
 			sfp_mcu_zsp $older_id
@@ -628,13 +620,13 @@ do
 	elif [ -n "$(echo $older_type | grep -i "zsp/zsp")" ]; then
 		sfp_mcu_zsp $older_id
 	elif [ -n "$(echo $older_type | grep -Ei "q10/4s|qsfp/4sfp|zqp/4zsp|qsfp/4xfp")" ]; then
-		page02_n
+		copy_page02
 		qsfp_zqp_4sfp_4zsp $older_id
 	elif [ -n "$(echo $older_type | grep -Ei "q10/q10|qsfp/qsfp|zqp/zqp|8644/8644|8644/8088|qsfp/8088")" ]; then
-		page02_n
+		copy_page02
 		qsfp_zqp_eeprom_mcu $older_id
 	elif [ -n "$(echo $older_type | grep -i "zqp/2zqp")" ]; then
-		page02_n
+		copy_page02
 		zqp_2zqp $older_id
 	else 
 		echo "没有匹配到 $older_id 订单的产品类型！！！"
@@ -645,6 +637,6 @@ zip -qrm $dir_name $older_list && echo -e "\n----------放码完成! $dir_name -
 rm -f old.zip $input_zip
 ;;
 *)
-echo -e "请输入正确的工作模式！！！\n"	
+	echo -e "请输入正确的工作模式！！！\n"	
 ;;
 esac
