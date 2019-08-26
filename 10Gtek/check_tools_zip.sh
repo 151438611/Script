@@ -42,7 +42,8 @@ older_sn=$(echo $older_all | awk '{print $6}' | awk -F"-" '{print $1}')
 # 提取邮件中的产品名称，示例：CAB-10GSFP-P3M
 older_type=$(echo $older_all | awk '{print $4}') 
 # 提取内容中的备注,示例：通用/OEM中性码，VN：Optech，PN：OPQSFP-T-05-PCB
-older_remark=$(echo $older_all | awk '{print $8}')
+older_remark=$(echo $older_all | awk '{print $8$9$10$11$12}')
+[ -z "$older_remark" ] && older_remark="无备注"
 
 # 提取邮件中的需求长度，单位CM/M;判断特殊情况：CAB-10GSFP-P65CM的编码长度位为00
 if [ -z "$(echo "$older_type" | grep -i cm)" ]; then
@@ -108,8 +109,9 @@ code_file=$(find ./ -type f -name ${older_sn}.bin | sort | head -n1)
 if [ -n "$code_file" ] ; then
 	# hexdump参数： -s偏移量 -n指定字节
 	code_file_hex_all=$(hexdump -vC $code_file)
-	[ -z "$(echo $older_type | grep -Ei "qsfp|q10")" -o -n "$(echo $older_remark | grep -i mcu)" ] && \
-	code_file_hex=$(hexdump -vC $code_file -n 128) || code_file_hex=$(hexdump -vC $code_file -s 128 -n 256)
+	[ -n "$(echo $older_type | grep -Ei "qsfp|q10")" -a -z "$(echo $older_remark | grep -i mcu)" ] && \
+		code_file_hex=$(hexdump -vC $code_file -s 128 -n 256) || code_file_hex=$(hexdump -vC $code_file -n 128) 
+	
 	# 提取编码中的第0位，03表示SFP类型，06表示XFP类型, 0D表示40G-QSFP, 11表示100G-ZQP，0F表示8644
 	code_type=$(echo "$code_file_hex" | awk 'NR==1{print $2}')
 	case $code_type in
@@ -137,14 +139,15 @@ if [ -n "$code_file" ] ; then
 	# 提取编码中的第7行第96位-98位，"48 33 43"表示H3C码, "00 00 00"表示OEM码,因思科码96位不同，所以只判断第97 98位，"00 11"表示思科码
 	code_kind=$(echo "$code_file_hex" | awk 'NR==7{print $3,$4}')
 	case $code_kind in
-		"00 00") 		 code_kind="OEM" ;;
-		"33 43") 		 code_kind="H3C" ;;
-		"00 11"|"43 11") code_kind="Cisco" ;;
-		"34 30"|"34 11") code_kind="Juniper" ;;
-		"61 20") 		 code_kind="Arista" ;;
+		"00 00") 		 code_kind=OEM ;;
+		"33 43") 		 code_kind=H3C ;;
+		"00 11"|"43 11") code_kind=Cisco ;;
+		"34 30"|"34 11") code_kind=Juniper ;;
+		"61 20") 		 code_kind=Arista ;;
 		"32 30") 		 code_kind="Alcatel-lucent" ;;
-		"58 54") 		 code_kind="Extreme" ;;
-		"47 53") 		 code_kind="Brocade" ;;
+		"58 54") 		 code_kind=Extreme ;;
+		"47 53") 		 code_kind=Brocade ;;
+		"10 00") 		 code_kind=Dell ;;
 		*) code_kind="请检查LMM加密位的编码兼容类型: $code_kind" ;;
 	esac
 	# 提取编码中的第2行第4位，表示线缆的长度
@@ -231,7 +234,7 @@ do
 		if [ -n "$code_file" ] ; then
 			check_info
 			# 输出检查结果信息
-			echo "邮件日期:${older_time} 产品名称:${older_type} 数量:${older_num_old} 备注:${older_kind}" >> $result
+			echo "邮件日期:${older_time} 产品名称:${older_type} 数量:${older_num_old} 备注:${older_remark}" >> $result
 			echo "编码日期:${code_time}${result_time} 产品类型:${code_type}${result_type} 长度:${code_length}米${result_length} 数量:${code_num}${result_num} 速率:${code_speed} 兼容:${code_kind}${result_kind}" >> $result
 			# 判断是否出现编码错误，出错就输出错误信息和编码中的十六进制文件。
 			if [ -n "${error_time}${error_type}${error_num}${error_kind}${error_length}" ] ; then
@@ -276,14 +279,14 @@ do
 			check_info
 			# 输出检查结果信息
 			echo "生产订单号：${older_id}"
-			echo "邮件日期:${older_time} 产品名称:${older_type} 数量:${older_num_old} 备注:${older_kind}"
-			echo "编码日期:${code_time}${result_time} 产品类型:${code_type}${result_type} 长度:${code_length}米${result_length} 数量:"$code_num""$result_num" 速率:"$code_speed" 兼容:"$code_kind""$result_kind""
+			echo "邮件日期:${older_time} 产品名称:${older_type} 数量:${older_num_old} 备注:${older_remark}"
+			echo "编码日期:${code_time}${result_time} 产品类型:${code_type}${result_type} 长度:${code_length}米${result_length} 数量:${code_num}${result_num} 速率:${code_speed} 兼容:${code_kind}${result_kind}"
 			# 判断是否出现编码错误，出错就输出错误信息和编码中的十六进制文件。
-			[ -n "${error_time}${error_type}${error_num}${error_kind}" ] && echo "${error_time}${error_type}${error_num}${error_kind}"
+			[ -n "${error_time}${error_type}${error_num}${error_kind}${error_length}" ] && echo "${error_time}${error_type}${error_num}${error_kind}${error_length}"
 			printmark
 			# 输出编码中的十六进制文件，仅输出20行。
-			echo "$code_file_hex_all" | head -n20 
-			else echo -e "\n没有找到SN为"$older_sn"编码！！！"
+			echo "$code_file_hex_all" | head -n16 
+			else echo -e "\n没有找到SN为${older_sn}编码！！！"
 			fi
 		else
 			echo "没有找到对应的编码文件夹,请重新检查！！！" 
@@ -459,7 +462,7 @@ copy_page02() {
 	if [ -d "${older_id}/Port1/Page02" ]; then
 		page02_sn=$(find ${older_id}/Port1/Page02/ -type f -iname "${older_sn}*")
 		cp_num=$older_num
-		if [ -n "$page02_sn" ]; then
+		if [ -n "$page02_sn" -a $cp_num -ne 1 ]; then
 			dir_file=$(dirname $page02_sn)
 			p02_name=$(basename $page02_sn)
 			p02_name_start=${p02_name%.*}
@@ -474,7 +477,7 @@ copy_page02() {
 				cp -n $page02_sn ${dir_file}/${p02_name_start_4s}$(printf %04d $sum_end).${p02_name_end}
 			done
 		else
-		 echo "${older_id}/Port1/Page02/ SN文件不存在！！！" && continue
+		 echo "${older_id}/Port1/Page02/ 数量为1 或 SN文件不存在！！！" && continue
 		fi
 	fi
 }
