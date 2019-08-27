@@ -57,17 +57,6 @@ else
 	fi
 fi
 
-# 判断邮件中要求的编码类型，H3C表示H3C码, OEM表示OEM码,默认表示思科兼容
-if [ -n "$(echo $older_type | grep -i 10sfp)" -a -n "$(echo $older_remark | grep -Ei "h3c|hp")" ]; then older_kind=H3C
-# 暂时只有备注(欧普 OEM 中性码等关键字，才使用OEM通用码，非思科码代替)
-elif [ -n "$(echo $older_remark | grep -i oem | grep -i optech)" ]; then older_kind=OEM
-elif [ -n "$(echo $older_remark | grep -i juniper)" ]; then older_kind=Juniper
-elif [ -n "$(echo $older_remark | grep -i arista)" ]; then older_kind=Arista
-elif [ -n "$(echo $older_remark | grep -i brocade)" ]; then older_kind=Brocade
-# 非以上备注，都使用思科码代替
-else older_kind="Cisco"
-fi
-
 # 提取订单编码数量,示例：30
 older_num_old=$(echo $older_all | awk '{print $5}')
 case $older_kind in
@@ -99,6 +88,19 @@ case $older_kind in
 	fi 
 	;;
 esac
+# 判断邮件中要求的编码类型，H3C表示H3C码, OEM表示OEM码,默认表示思科兼容
+if [ -n "$(echo $older_remark | grep -Ei "h3c|hp")" ]; then older_kind=H3C
+# 暂时只有备注(欧普 OEM 中性码等关键字，才使用OEM通用码，非思科码代替)
+elif [ -n "$(echo $older_remark | grep -i oem | grep -i optech)" ]; then older_kind=OEM
+elif [ -n "$(echo $older_remark | grep -i juniper)" -a $older_num_old -ge 100 ]; then older_kind=Juniper
+elif [ -n "$(echo $older_remark | grep -i arista)" -a $older_num_old -ge 100 ]; then older_kind=Arista
+elif [ -n "$(echo $older_remark | grep -i alcatel)" -a $older_num_old -ge 100 ]; then older_kind="Alcatel-lucent"
+elif [ -n "$(echo $older_remark | grep -i brocade)" -a $older_num_old -ge 100 ]; then older_kind=Brocade
+elif [ -n "$(echo $older_remark | grep -Ei "dell|force")" -a $older_num_old -ge 100 ]; then older_kind=Dell
+# 非以上备注默认思科码代替
+else older_kind=Cisco
+fi
+
 }
 
 code_info() {
@@ -148,6 +150,8 @@ if [ -n "$code_file" ] ; then
 		"58 54") 		 code_kind=Extreme ;;
 		"47 53") 		 code_kind=Brocade ;;
 		"10 00") 		 code_kind=Dell ;;
+		"50 A0"|"50 A2") code_kind=HPP ;;
+		"41 31") 		 code_kind=Avaya ;;
 		*) code_kind="请检查LMM加密位的编码兼容类型: $code_kind" ;;
 	esac
 	# 提取编码中的第2行第4位，表示线缆的长度
@@ -280,7 +284,7 @@ do
 			# 输出检查结果信息
 			echo "生产订单号：${older_id}"
 			echo "邮件日期:${older_time} 产品名称:${older_type} 数量:${older_num_old} 备注:${older_remark}"
-			echo "编码日期:${code_time}${result_time} 产品类型:${code_type}${result_type} 长度:${code_length}米${result_length} 数量:${code_num}${result_num} 速率:${code_speed} 兼容:${code_kind}${result_kind}"
+			echo -e "编码日期:${code_time}\033[43;30m${result_time}\033[0m 产品类型:${code_type}\033[43;30m${result_type}\033[0m 长度:${code_length}米\033[43;30m${result_length}\033[0m 数量:${code_num}\033[43;30m${result_num}\033[0m 速率:${code_speed} 兼容:${code_kind}\033[43;30m${result_kind}\033[0m"
 			# 判断是否出现编码错误，出错就输出错误信息和编码中的十六进制文件。
 			[ -n "${error_time}${error_type}${error_num}${error_kind}${error_length}" ] && echo "${error_time}${error_type}${error_num}${error_kind}${error_length}"
 			printmark
