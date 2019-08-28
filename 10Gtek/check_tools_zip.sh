@@ -90,13 +90,18 @@ case $older_kind in
 esac
 # 判断邮件中要求的编码类型，H3C表示H3C码, OEM表示OEM码,默认表示思科兼容
 if [ -n "$(echo $older_remark | grep -Ei "h3c|hp")" ]; then older_kind=H3C
-# 暂时只有备注(欧普 OEM 中性码等关键字，才使用OEM通用码，非思科码代替)
+# 临时使用---超过200pcs东莞直接收货所以兼容一定要正确, 设置超过100pcs严格按兼容编码
 elif [ -n "$(echo $older_remark | grep -i oem | grep -i optech)" ]; then older_kind=OEM
 elif [ -n "$(echo $older_remark | grep -i juniper)" -a $older_num_old -ge 100 ]; then older_kind=Juniper
-elif [ -n "$(echo $older_remark | grep -i arista)" -a $older_num_old -ge 100 ]; then older_kind=Arista
+elif [ -n "$(echo $older_remark | grep -i arista)" -a $older_num_old -ge 100 ]; then 
+	[ -n "$(echo $older_type | grep -Ei "qsfp|q10")" ] && older_kind=Arista || older_kind=OEM
 elif [ -n "$(echo $older_remark | grep -i alcatel)" -a $older_num_old -ge 100 ]; then older_kind="Alcatel-lucent"
 elif [ -n "$(echo $older_remark | grep -i brocade)" -a $older_num_old -ge 100 ]; then older_kind=Brocade
-elif [ -n "$(echo $older_remark | grep -Ei "dell|force")" -a $older_num_old -ge 100 ]; then older_kind=Dell
+elif [ -n "$(echo $older_remark | grep -Ei "dell|force")" -a $older_num_old -ge 100 ]; then 
+	[ -n "$(echo $older_type | grep -i 10sfp)" ] && older_kind=Dell || older_kind=OEM
+elif [ -n "$(echo $older_remark | grep -i "mellanox")" -a $older_num_old -ge 100 ]; then 
+	[ -n "$(echo $older_type | grep -i zqp)" ] && older_kind=Mellanox || older_kind=OEM
+elif [ -n "$(echo $older_remark | grep -Ei "huawei|intel|extreme")" -a $older_num_old -ge 100 ]; then older_kind=OEM
 # 非以上备注默认思科码代替
 else older_kind=Cisco
 fi
@@ -152,6 +157,7 @@ if [ -n "$code_file" ] ; then
 		"10 00") 		 code_kind=Dell ;;
 		"50 A0"|"50 A2") code_kind=HPP ;;
 		"41 31") 		 code_kind=Avaya ;;
+		"39 32") 		 code_kind=Mellanox ;;
 		*) code_kind="请检查LMM加密位的编码兼容类型: $code_kind" ;;
 	esac
 	# 提取编码中的第2行第4位，表示线缆的长度
