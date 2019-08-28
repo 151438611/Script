@@ -245,7 +245,7 @@ do
 			check_info
 			# 输出检查结果信息
 			echo "邮件日期:${older_time} 产品名称:${older_type} 数量:${older_num_old} 备注:${older_remark}" >> $result
-			echo "编码日期:${code_time}${result_time} 产品类型:${code_type}${result_type} 长度:${code_length}米${result_length} 数量:${code_num}${result_num} 速率:${code_speed} 兼容:${code_kind}${result_kind}" >> $result
+			echo "编码日期:${code_time}${result_time} 产品类型:${code_type}${result_type} 长度:${code_length}米${result_length} 数量:${code_num}${result_num} 速率:${code_speed} 兼容<200pcs以下默认思科兼容>:${code_kind}${result_kind}" >> $result
 			# 判断是否出现编码错误，出错就输出错误信息和编码中的十六进制文件。
 			if [ -n "${error_time}${error_type}${error_num}${error_kind}${error_length}" ] ; then
 				#echo ${error_time}${error_type}${error_num}${error_kind}${error_length} >> $result
@@ -290,7 +290,7 @@ do
 			# 输出检查结果信息
 			echo "生产订单号：${older_id}"
 			echo "邮件日期:${older_time} 产品名称:${older_type} 数量:${older_num_old} 备注:${older_remark}"
-			echo -e "编码日期:${code_time}\033[43;30m${result_time}\033[0m 产品类型:${code_type}\033[43;30m${result_type}\033[0m 长度:${code_length}米\033[43;30m${result_length}\033[0m 数量:${code_num}\033[43;30m${result_num}\033[0m 速率:${code_speed} 兼容:${code_kind}\033[43;30m${result_kind}\033[0m"
+			echo -e "编码日期:${code_time}\033[43;30m${result_time}\033[0m 产品类型:${code_type}\033[43;30m${result_type}\033[0m 长度:${code_length}米\033[43;30m${result_length}\033[0m 数量:${code_num}\033[43;30m${result_num}\033[0m 速率:${code_speed} 兼容<200pcs以下默认思科兼容>:${code_kind}\033[43;30m${result_kind}\033[0m"
 			# 判断是否出现编码错误，出错就输出错误信息和编码中的十六进制文件。
 			[ -n "${error_time}${error_type}${error_num}${error_kind}${error_length}" ] && echo "${error_time}${error_type}${error_num}${error_kind}${error_length}"
 			printmark
