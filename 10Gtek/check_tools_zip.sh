@@ -64,7 +64,7 @@ case $older_kind in
 	older_num=$(($older_num_old * 2 + 5)) 
 	;;
 *)
-	if [ -n "$(echo $older_type | grep -Ei "10gsfp|xfp/xfp")" ]; then older_num=$(($older_num_old * 3 + 1))
+	if [ -n "$(echo $older_type | grep -Ei "10gsfp|xfp/xfp|0sfp")" ]; then older_num=$(($older_num_old * 3 + 1))
 	elif [ -n "$(echo $older_type | grep -Ei "zsp/zsp|xfp/sfp")" ]; then older_num=$(($older_num_old * 2 + 1))
 	elif [ -n "$(echo $older_type | grep -Ei "q10/q10|qsfp/qsfp|8644/qsfp|8644/8644|8644/8088|qsfp/8088")" ]; then
 		if [ -n "$(echo $older_remark | grep -i mcu)" ]; then 
@@ -116,7 +116,7 @@ code_file=$(find ./ -type f -name ${older_sn}.bin | sort | head -n1)
 if [ -n "$code_file" ] ; then
 	# hexdump参数： -s偏移量 -n指定字节
 	code_file_hex_all=$(hexdump -vC $code_file)
-	[ -n "$(echo $older_type | grep -Ei "qsfp|q10")" -a -z "$(echo $older_remark | grep -i mcu)" ] && \
+	[ -n "$(echo $older_type | grep -Ei "qsfp|q10|8644")" -a -z "$(echo $older_remark | grep -i mcu)" ] && \
 		code_file_hex=$(hexdump -vC $code_file -s 128 -n 256) || code_file_hex=$(hexdump -vC $code_file -n 128) 
 	
 	# 提取编码中的第0位，03表示SFP类型，06表示XFP类型, 0D表示40G-QSFP, 11表示100G-ZQP，0F表示8644
@@ -543,7 +543,7 @@ do
 	older_sn=$(echo $older_all | awk '{print $6}' | awk -F"-" '{print $1}') 
 	# 提取订单编码数量,示例：30
 	older_num=$(echo $older_all | awk '{print $5}')
-	if [ -n "$(echo $older_type | grep -i 10gsfp)" ]; then
+	if [ -n "$(echo $older_type | grep -Ei "10gsfp|0sfp")" ]; then
 		if [ -d ${older_id}/Port2/A0 -a -d ${older_id}/Port2/A2 ]; then
 			sfp_mcu_zsp $older_id
 		elif [ -d ${older_id}/Port2/A0 -a ! -d ${older_id}/Port2/A2 ]; then
@@ -553,7 +553,7 @@ do
 		fi
 	elif [ -n "$(echo $older_type | grep -i "zsp/zsp")" ]; then
 		sfp_mcu_zsp $older_id
-	elif [ -n "$(echo $older_type | grep -Ei "q10/4s|qsfp/4sfp|zqp/4zsp|qsfp/4xfp")" ]; then
+	elif [ -n "$(echo $older_type | grep -Ei "q10/4s|qsfp/4sfp|zqp/4zsp|qsfp/4xfp|q10/2s|zqp/2zsp")" ]; then
 		copy_page02
 		qsfp_zqp_4sfp_4zsp $older_id
 	elif [ -n "$(echo $older_type | grep -Ei "q10/q10|qsfp/qsfp|zqp/zqp|8644/8644|8644/8088|qsfp/8088")" ]; then
