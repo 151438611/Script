@@ -478,6 +478,7 @@ copy_page02() {
 			p02_name_start=${p02_name%.*}
 			p02_name_start_4s=${p02_name_start: 0: -4}
 			p02_name_start_4e=${p02_name_start: -4}
+			p02_name_start_4e=$(echo $p02_name_start_4e | awk '{print int($0)}')
 			p02_name_end=${p02_name#*.}
 			# 因起始SN存在，刚总数需要减1
 			cp_num=$(($cp_num - 1))
