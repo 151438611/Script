@@ -7,7 +7,7 @@ bin_dir=/etc/storage/bin ; [ -d "$bin_dir" ] || mkdir -p $bin_dir
 startup=/etc/storage/started_script.sh
 cron=/etc/storage/cron/crontabs/$(nvram get http_username)
 sh_name=$(basename $0)
-main_url="http://frp.xiongxinyi.cn:11111/file"
+main_url="http://frp2.xiongxinyi.cn:37511/file"
 sh_url="${main_url}/autoChangeAp_padavan.sh"
 grep -qi $sh_name $cron || echo "*/30 * * * * sh $bin_dir/$sh_name" >> $cron
 startup_ap="sleep 30 ; wget -P /tmp $sh_url && mv -f /tmp/$(basename $sh_url) $bin_dir/$sh_name ; sh $bin_dir/$sh_name"
@@ -30,7 +30,7 @@ grep -qi comment $apinput || \
 cat << END >> $apinput
 # 自动中继AP的wifi信息请填在(comment和comment之间)处
 <<'comment'
-# 填写格式(不可填错) ：无线频率Ghz(2/5)+ssid+password+wlan_ip(选填),示例:2+TPLINK+12345678
+# 填写格式(不可填错) ：无线频率Ghz(2/5)+ssid+password+wlan_ip(选填),示例:2+TPLINK+12345678+1
 # 多个Wifi用空格或换行分隔,若中继wifi无密码则不填写, wlan_ip可不填表示wlan动态获取IP
 # 第一个为主连接Wifi，每天会自动强制连接主Wifi一次，如果主Wifi不能使用请及时修改---不影响自动切换Wifi功能
 
