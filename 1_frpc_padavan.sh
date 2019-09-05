@@ -8,9 +8,11 @@
 # Jun	      20180808  Created.
 #################################################################
 export PATH=/bin:/sbin:/usr/bin:/usr/sbin:$PATH
-frpclog=/tmp/frpc.log
-[ -f $frpclog ] || echo $(date +"%F %T") > $frpclog
-download_url=http://frp2.xiongxinyi.cn:37511/file/
+
+download_url="http://frp2.xiongxinyi.cn:37511/file/"
+log=/tmp/frpc.log
+[ -f $log ] || echo $(date +"%F %T") > $log
+
 
 # ------------------------- add crontab、startup、enable SSH -----------------------
 bin_dir=/etc/storage/bin
@@ -39,12 +41,15 @@ token=xxx
 server_port=7000
 # ----- 是否开启ttyd(web_ssh)、Telnet(或远程桌面)、简单的http_file文件服务; 0表示不开启，1表示开启 -----
 ttyd_enable=0
-if [ $ttyd_enable -eq 1 ]; then ttyd=/tmp/ttyd; ttyd_port=7800; fi 
+if [ $ttyd_enable -eq 1 ]; then 
+	ttyd=/tmp/ttyd
+	ttyd_port=7800
+fi 
 
 # ----- ttyd、frpc的下载地址、frpcini设置临时配置(默认/tmp/)还是永久保存配置(/etc/storage/) ------
 ttyd_url=${download_url}frp/ttyd_linux.mipsel
 frpc_url1=${download_url}frp/frpc_linux_mipsle
-frpc_url2=http://opt.cn2qq.com/opt-file/frpc
+frpc_url2="http://opt.cn2qq.com/opt-file/frpc"
 
 udisk=$(mount | awk '$1~"/dev/" && $3~"/media/"{print $3}' | head -n1)
 udisk=${udisk:=/tmp}
@@ -139,9 +144,9 @@ fi
 # ------------------------- start frpc ---------------------
 ping -c2 -w5 114.114.114.114 && \
   if [ -z "$(pidof $frpc_name)" ] ; then
-    echo "$(date +"%F %T") $frpc_name was not runing ; start $frpc_name ..." >> $frpclog
+    echo "$(date +"%F %T") $frpc_name was not runing ; start $frpc_name ..." >> $log
     exec $frpc -c $frpcini &
   else 
-    echo "$(date +"%F %T") $frpc_name is runing , Don't do anything !" >> $frpclog
+    echo "$(date +"%F %T") $frpc_name is runing , Don't do anything !" >> $log
   fi
 
