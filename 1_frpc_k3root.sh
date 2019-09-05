@@ -10,7 +10,7 @@ startup_frpc="sleep 50 ; wget -P /tmp/ $frpc_sh && mv -f /tmp/$(basename $frpc_s
 grep -qi "$frpc_name" /opt/started_script.sh || echo "$startup_frpc" >> /opt/started_script.sh
 cron_reboot="5 5 * * * [ -n \"\$(date +%d | grep 5)\" ] && reboot || ping -c2 -w5 114.114.114.114 || reboot"
 grep -qi "reboot" $crontab || echo "$cron_reboot" >> $crontab
-cron_frpc="15 * * * * [ \$(date +%k) -eq 5 ] && killall -q frpc ; sh /opt/$frpc_name"
+cron_frpc="15 * * * * sh /opt/$frpc_name"
 grep -qi "$frpc_name" $crontab || echo "$cron_frpc" >> $crontab
 
 lanip=$(nvram get lan_ipaddr) && i=$(echo $lanip | cut -d . -f 3)
