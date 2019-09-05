@@ -3,7 +3,7 @@
 # Armbian中crontab $PATH=/usr/bin:/bin
 # 添加计划任务： 
 # 5 5 * * * [ $(date +\%u) -eq 6 ] && /sbin/reboot || ping -c2 -w5 114.114.114.114 || /sbin/reboot
-# 20 * * * * [ $(date +\%k) -eq 5 ] && killall -q frpc ; sleep 8 && bash /opt/frpc/frpc.sh
+# 20 * * * * /bin/bash /opt/frpc/frpc.sh
 
 export PATH=/bin:/sbin:/usr/bin:/usr/sbin:$PATH
 frpclog=/tmp/frpc.log
