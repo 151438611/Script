@@ -39,9 +39,6 @@ iptables -A INPUT -i $vm_nic -j ACCEPT
 iptables -A FORWARD -i $vm_nic -j ACCEPT
 [ -z "$(echo "$iptables_forward" | awk '$7 == "'$vm_nic'" {print $7}')" ] && \
 iptables -A FORWARD -o $vm_nic -j ACCEPT
-# 添加 iptables nat 规则
-[ -z "$(echo "$iptables_nat" | awk '$7 == "'$vm_nic'" {print $7}')" ] && \
-iptables -t nat -A POSTROUTING -o $vm_nic -j MASQUERADE
 
 # 5、判断 route 是否添加路由策略
 dest_net=192.168.3.0
