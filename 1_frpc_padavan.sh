@@ -9,7 +9,7 @@
 #################################################################
 export PATH=/bin:/sbin:/usr/bin:/usr/sbin:$PATH
 
-download_url="http://frp2.xiongxinyi.cn:37511/file/"
+download_url="http://frp.xiongxinyi.cn:30100/file/"
 log=/tmp/frpc.log
 [ -f $log ] || echo $(date +"%F %T") > $log
 
