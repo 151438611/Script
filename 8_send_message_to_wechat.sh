@@ -27,7 +27,8 @@ new=$(ifconfig eth0 | awk '/inet/ && /netmask/ {print $2}')
 if [ "$old" != "$new" ] ; then
   echo $new > $log
   SCKEY="SCU36809T708f06ef5fe3f800464d5a8ece07a15b5c01e42cad1d0"
-  text="armbian_NEW_${new}_OLD_$old"
+  text="IP_NEW_${new}_OLD_$old"
   dest="10gtek_armbian_N1_IP_changed"
+  #dest="wzt_IP_changed"
   wget -O /tmp/ftqq https://sc.ftqq.com/$SCKEY.send?text="$text"\&desp="$dest" &> /dev/null	
 fi
