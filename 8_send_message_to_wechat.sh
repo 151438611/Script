@@ -15,7 +15,7 @@ if [ "$old" != "$new" ] ; then
   wget -O /tmp/ftqq https://sc.ftqq.com/$SCKEY.send?text="$text"\&desp="$dest" &> /dev/null
 fi
 
-#===================== for armbian_N1 ================================
+#===================== for armbian_N1 amd64 ================================
 #!/bin/bash
 export PATH=/bin:/sbin:/usr/bin:/usr/sbin:$PATH
 log=/tmp/wechat_old.log
@@ -23,6 +23,7 @@ log=/tmp/wechat_old.log
 
 old=$(cat $log)
 new=$(ifconfig eth0 | awk '/inet/ && /netmask/ {print $2}')
+#new=$(curl https://ip.cn | awk -F \" '{print $4}')
 if [ "$old" != "$new" ] ; then
   echo $new > $log
   SCKEY="SCU36809T708f06ef5fe3f800464d5a8ece07a15b5c01e42cad1d0"
