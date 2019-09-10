@@ -2,15 +2,14 @@
 
 &#10161; -----------------------frp客户端配置------------------------------------------
 - 路由器自动下载并执行frpc脚本（下发时把frpc.sh填写完整并放在服务端目录/tools/frp中,然后重启路由器即可）：<br>
-`wget -P /tmp http://14.116.146.xx:11111/file/frp/frpc_padavan.sh && mv -f /tmp/frpc_padavan.sh /etc/storage/bin/frpc.sh ; sh /etc/storage/bin/frpc.sh`
+`wget -P /tmp http://frp.xiongxinyi.cn:30100/file/frp/frpc_padavan.sh && mv -f /tmp/frpc_padavan.sh /etc/storage/bin/frpc.sh ; sh /etc/storage/bin/frpc.sh`
 
 &#10161; -----------------------使用说明-----------------------------------------------
 - MT7620、MT7621属于`mipsle`架构 , BCM4709属于`arm`架构 , AR9344属于`mips`架构
-- 服务端公网IP：14.116.146.**  43.225.157.*** 路由器默认密码：***
 - 注意：1、http配置local_ip = 127.0.0.1，访问web页面将不需要登陆密码； 2、SSH配置local_ip = 127.0.0.1 无影响
 - 设备命名规则：地址+产品型号/名字缩写(多个后面+1)_设备SN后2位(IP)，示例：`szk2p_20、jhk2_28...`
 - WIFI命名规则：运营商(大写)_地址缩写(多个后面+1)+频段，示例：`ChinaNet_gx24g1、CMCC_sz5g...`
-- SSH端口设定规则（默认随机）：100+设备SN最2位，示例：`10020、10005...`
+- SSH端口设定规则（默认随机）：300+设备SN最2位，示例：`30020、30005...`
 - 子域名sudomain设定规则：地址缩写(多个后面+1)+网关(SN后2位)，示例：`sz20、jh28...`
 - 定时任务汇总：
 ```
