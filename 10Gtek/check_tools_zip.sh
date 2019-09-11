@@ -14,7 +14,7 @@ echo "3-创建兼容测试模板文件"
 echo "4-整理排板邮件中的产品类型、SN"
 echo "5-自动放码：只需放入Port1或Port2，将自动复制到其他Port; 若有Page02放一个并重命名为起始SN即可"
 echo "6-创建ZQP-P02全FF的bin文件(适用于SN后4位为非数字编码工具无法生成的场景)---待测试"
-echo "7-针对生产写码QSFP/4SFP、ZQP/4ZSP二端SN不一致无法写码，仅修改QSFP端命名和SFP名字保持一致"
+echo "7-针对生产写码QSFP/4SFP、ZQP/4ZSP二端SN不一致无法写码，仅修改QSFP端SN命名，和SFP端SN保持一致"
 echo ""
 result=./result
 # 获取需求的邮件编码信息文件
@@ -602,20 +602,25 @@ else
 fi
 ;;
 7)
-echo "针对生产线缆QSFP/4SFP写码，仅QSFP和SFP端SN不一样，SFP端都是同一SN的情况"
-echo "解决方法：按照正常编码，编码完将QSFP端的码文件重命名为SFP端名字，QSFP端和SFP端SN从小到大一一对应"
+echo "针对生产线缆QSFP/4SFP、ZQP/4ZSP写码，仅Q和S端SN不一样，所有S端都是同一SN的情况"
+echo "解决方法：按照正常编码，编码完将Q端的码文件重命名为S端名字，Q端和S端SN从小到大一一对应"
 input_zip
 older_all=$(find ./ -type d -name "WO*")
 for older in $older_all
 do
+	# QSFP-EEPROM 模板目录为 Port1/A0
 	port1=$older/Port1/A0/
+	# QSFP/ZQP-MCU 模板目录为 Port1/LMM Page00 Page02
 	[ ! -d "$port1" ] && port1=$older/Port1/Page00/ && port1_p02=$older/Port1/Page02/
+	# SFP/ZSP 模板目录为:  Port2/A0
 	port2=$older/Port2/A0/
+	
 	qsfpAllSN=$(ls $port1) 
 	sfpAllSN=$(ls $port2)
 	
 	allNum=$(echo "$qsfpAllSN" | wc -l)
-	[ $allNum -ne $(echo "$sfpAllSN" | wc -l) ] && echo "QSFP端和SFP端SN数量不一致,请检查！！！" && exit
+	
+	[ $allNum -ne $(echo "$sfpAllSN" | wc -l) ] && echo "QSFP端 和 SFP端 SN数量不一致,请检查 ！！！" && exit
 	for num in $(seq $allNum)
 	do
 		qsfpSN=$(echo "$qsfpAllSN" | awk 'NR=="'$num'"{print $0}')
