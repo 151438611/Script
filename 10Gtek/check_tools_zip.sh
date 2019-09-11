@@ -471,6 +471,7 @@ echo "3、若QSFP、ZQP是MCU方案放Page02.bin并重命名为起始SN,一个�
 input_txt
 input_zip
 copy_page02() {
+	# 查找订单下面是否有Page02文件夹，并找出起始SN的编码,然后开始复制 ......
 	if [ -d "${older_id}/Port1/Page02" ]; then
 		page02_sn=$(find ${older_id}/Port1/Page02/ -type f -iname "${older_sn}*")
 		cp_num=$older_num
@@ -510,29 +511,22 @@ zsp_eeprom() {
 		echo "$1/Port2 文件夹不存在，调用 zsp_eeprom 模板错误！！！" && continue
 	fi
 }
-qsfp_zqp_eeprom_mcu() {
-	if [ -d $1/Port1/ ]; then
+qsfp_zqp_2zqp_eeprom_mcu() {
+	if [ -d $1/Port1 ]; then
 		cp -rn $1/Port1/* $1/Port6/
+		[ -d $1/Port2 ] && cp -rn $1/Port1/* $1/Port2/
 		[ -d $1/Port1/A0 ] && cp -n $1/Port1/A0/* $1/
 	else 
-		echo "$1/Port1 文件夹不存在，调用 qsfp_zqp_eeprom_mcu 模板错误！！！" && continue
+		echo "$1/Port1 文件夹不存在，调用 qsfp_zqp_2zqp_eeprom_mcu 模板错误！！！" && continue
 	fi
 }
 qsfp_4sfp_zqp_4zsp() {
-	if [ -d $1/Port2/ ]; then
+	if [ -d $1/Port2 ]; then
 		cp -rn $1/Port2/* $1/Port3/
 		cp -rn $1/Port2/* $1/Port4/
 		cp -rn $1/Port2/* $1/Port5/
 	else 
-		echo "$1/Port2/ 文件夹不存在，调用 qsfp_4sfp_zqp_4zsp 模板错误！！！" && continue
-	fi
-}
-zqp_2zqp() {
-	if [ -d $1/Port1 ]; then
-		cp -rn $1/Port1/* $1/Port2/
-		cp -rn $1/Port1/* $1/Port6/
-	else
-		echo "$1/Port1/ 文件夹不存在，调用 zqp_2zqp 模板错误！！！" && continue
+		echo "$1/Port2 文件夹不存在，调用 qsfp_4sfp_zqp_4zsp 模板错误！！！" && continue
 	fi
 }
 
@@ -554,12 +548,9 @@ do
 	elif [ -n "$(echo $older_type | grep -Ei "q10/4s|qsfp/4sfp|zqp/4zsp|qsfp/4xfp|q10/2s|zqp/2zsp")" ]; then
 		copy_page02
 		qsfp_4sfp_zqp_4zsp $older_id
-	elif [ -n "$(echo $older_type | grep -Ei "q10/q10|qsfp/qsfp|zqp/zqp|8644/8644|8644/8088|qsfp/8088")" ]; then
+	elif [ -n "$(echo $older_type | grep -Ei "q10/q10|qsfp/qsfp|zqp/zqp|zqp/2zqp|8644/8644|8644/8088|qsfp/8088")" ]; then
 		copy_page02
-		qsfp_zqp_eeprom_mcu $older_id
-	elif [ -n "$(echo $older_type | grep -i "zqp/2zqp")" ]; then
-		copy_page02
-		zqp_2zqp $older_id
+		qsfp_zqp_2zqp_eeprom_mcu $older_id
 	else 
 		echo "没有匹配到 $older_id 订单的产品类型！！！"
 	fi
