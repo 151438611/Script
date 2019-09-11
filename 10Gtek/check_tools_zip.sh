@@ -94,16 +94,16 @@ esac
 if [ -n "$(echo $older_all | grep -Ei "10gsfp|0sfp" |grep -Ei "h3c|hp")" ]; then older_kind=H3C
 # 临时使用---超过200pcs东莞直接收货所以兼容一定要正确, 设置超过100pcs严格按兼容编码
 elif [ -n "$(echo $older_remark | grep -i oem | grep -i optech)" ]; then older_kind=OEM
-elif [ -n "$(echo $older_remark | grep -i juniper)" -a $older_num_old -ge 100 ]; then older_kind=Juniper
-elif [ -n "$(echo $older_remark | grep -i arista)" -a $older_num_old -ge 100 ]; then 
+elif [ -n "$(echo $older_remark | grep -i juniper)" -a $older_num_old -ge 150 ]; then older_kind=Juniper
+elif [ -n "$(echo $older_remark | grep -i arista)" -a $older_num_old -ge 150 ]; then 
 	[ -n "$(echo $older_type | grep -Ei "qsfp|q10")" ] && older_kind=Arista || older_kind=OEM
-elif [ -n "$(echo $older_remark | grep -i alcatel)" -a $older_num_old -ge 100 ]; then older_kind="Alcatel-lucent"
-elif [ -n "$(echo $older_remark | grep -i brocade)" -a $older_num_old -ge 100 ]; then older_kind=Brocade
-elif [ -n "$(echo $older_remark | grep -Ei "dell|force")" -a $older_num_old -ge 100 ]; then 
+elif [ -n "$(echo $older_remark | grep -i alcatel)" -a $older_num_old -ge 150 ]; then older_kind="Alcatel-lucent"
+elif [ -n "$(echo $older_remark | grep -i brocade)" -a $older_num_old -ge 150 ]; then older_kind=Brocade
+elif [ -n "$(echo $older_remark | grep -Ei "dell|force")" -a $older_num_old -ge 150 ]; then 
 	[ -n "$(echo $older_type | grep -i 10gsfp)" ] && older_kind=Dell || older_kind=OEM
-elif [ -n "$(echo $older_remark | grep -i "mellanox")" -a $older_num_old -ge 100 ]; then 
+elif [ -n "$(echo $older_remark | grep -i "mellanox")" -a $older_num_old -ge 150 ]; then 
 	[ -n "$(echo $older_type | grep -i zqp)" ] && older_kind=Mellanox || older_kind=OEM
-elif [ -n "$(echo $older_remark | grep -Ei "huawei|intel|extreme")" -a $older_num_old -ge 100 ]; then older_kind=OEM
+elif [ -n "$(echo $older_remark | grep -Ei "huawei|intel|extreme")" -a $older_num_old -ge 150 ]; then older_kind=OEM
 # 非以上备注默认思科码代替
 else older_kind=Cisco
 fi
@@ -474,7 +474,7 @@ copy_page02() {
 	if [ -d "${older_id}/Port1/Page02" ]; then
 		page02_sn=$(find ${older_id}/Port1/Page02/ -type f -iname "${older_sn}*")
 		cp_num=$older_num
-		if [ -n "$page02_sn" -a $cp_num -ne 1 ]; then
+		if [ -n "$page02_sn" -a $cp_num -gt 1 ]; then
 			dir_file=$(dirname $page02_sn)
 			p02_name=$(basename $page02_sn)
 			p02_name_start=${p02_name%.*}
@@ -482,7 +482,7 @@ copy_page02() {
 			p02_name_start_4e=${p02_name_start: -4}
 			p02_name_start_4e=$(echo $p02_name_start_4e | awk '{print int($0)}')
 			p02_name_end=${p02_name#*.}
-			# 因起始SN存在，刚总数需要减1
+			# 因起始SN存在，则总数需要减1
 			cp_num=$(($cp_num - 1))
 			for n in $(seq $cp_num)
 			do
@@ -490,7 +490,7 @@ copy_page02() {
 				cp -n $page02_sn ${dir_file}/${p02_name_start_4s}$(printf %04d $sum_end).${p02_name_end}
 			done
 		else
-		 echo "${older_id}/Port1/Page02/ 数量为1 或 SN文件不存在！！！" && continue
+		 echo "${older_id}/Port1/Page02/ 下SN文件不存在！！！" && continue
 		fi
 	fi
 }
