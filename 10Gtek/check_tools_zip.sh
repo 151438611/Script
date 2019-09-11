@@ -620,6 +620,7 @@ do
 	
 	allNum=$(echo "$qsfpAllSN" | wc -l)
 	
+	[ -d "$port1_p02" ] && [ $(ls $port1_p02 | wc -l) -ne $(echo "$sfpAllSN" | wc -l) ] && echo "QSFP端Page02 和 SFP端 SN数量不一致,请检查 ！！！" && exit
 	[ $allNum -ne $(echo "$sfpAllSN" | wc -l) ] && echo "QSFP端 和 SFP端 SN数量不一致,请检查 ！！！" && exit
 	for num in $(seq $allNum)
 	do
