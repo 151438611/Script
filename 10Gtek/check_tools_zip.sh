@@ -495,35 +495,36 @@ copy_page02() {
 	fi
 }
 # cp选项: -r递归 -n不覆盖同名文件 -f覆盖同名文件
-sfp_eeprom() {
-	if [ -d $1/Port2/A0 ]; then 
-		cp -n $1/Port2/A0/* $1/Port5/A0/
-		cp -n $1/Port2/A0/* $1/
+sfp_eeprom_mcu() {
+	if [ -d $1/Port2 ]; then
+		cp -rn $1/Port2/* $1/Port5/
+		[ ! -d $1/Port2/A2 ] && cp -n $1/Port2/A0/* $1/
 	else
-		echo "$1/Port2/A0 文件夹不存在，调用 sfp_eeprom 模板错误！！！" && continue
+		echo "$1/Port2 文件夹不存在，调用 sfp_eeprom_mcu 模板错误！！！" && continue
 	fi
 }
-sfp_mcu_zsp() {
-	if [ -d $1/Port2/ ]; then
+zsp_eeprom() {
+	if [ -d $1/Port2 ]; then
 		cp -rn $1/Port2/* $1/Port5/
-	else 
-		echo "$1/Port2/ 文件夹不存在，调用 sfp_mcu_zsp 模板错误！！！" && continue
+	else
+		echo "$1/Port2 文件夹不存在，调用 zsp_eeprom 模板错误！！！" && continue
 	fi
 }
 qsfp_zqp_eeprom_mcu() {
 	if [ -d $1/Port1/ ]; then
 		cp -rn $1/Port1/* $1/Port6/
+		[ -d $1/Port1/A0 ] && cp -n $1/Port1/A0/* $1/
 	else 
-		echo "$1/Port1/ 文件夹不存在，调用 qsfp_zqp_eeprom_mcu 模板错误！！！" && continue
+		echo "$1/Port1 文件夹不存在，调用 qsfp_zqp_eeprom_mcu 模板错误！！！" && continue
 	fi
 }
-qsfp_zqp_4sfp_4zsp() {
+qsfp_4sfp_zqp_4zsp() {
 	if [ -d $1/Port2/ ]; then
 		cp -rn $1/Port2/* $1/Port3/
 		cp -rn $1/Port2/* $1/Port4/
 		cp -rn $1/Port2/* $1/Port5/
 	else 
-		echo "$1/Port2/ 文件夹不存在，调用 qsfp_zqp_4sfp_4zsp 模板错误！！！" && continue
+		echo "$1/Port2/ 文件夹不存在，调用 qsfp_4sfp_zqp_4zsp 模板错误！！！" && continue
 	fi
 }
 zqp_2zqp() {
@@ -547,18 +548,12 @@ do
 	# 提取订单编码数量,示例：30
 	older_num=$(echo $older_all | awk '{print $5}')
 	if [ -n "$(echo $older_type | grep -Ei "10gsfp|0sfp")" ]; then
-		if [ -d ${older_id}/Port2/A0 -a -d ${older_id}/Port2/A2 ]; then
-			sfp_mcu_zsp $older_id
-		elif [ -d ${older_id}/Port2/A0 -a ! -d ${older_id}/Port2/A2 ]; then
-			sfp_eeprom $older_id
-		else 
-		 	echo "$older_id 订单无A0文件，放码失败，请重新检查！！！"
-		fi
+		sfp_eeprom_mcu $older_id
 	elif [ -n "$(echo $older_type | grep -i "zsp/zsp")" ]; then
-		sfp_mcu_zsp $older_id
+		zsp_eeprom $older_id
 	elif [ -n "$(echo $older_type | grep -Ei "q10/4s|qsfp/4sfp|zqp/4zsp|qsfp/4xfp|q10/2s|zqp/2zsp")" ]; then
 		copy_page02
-		qsfp_zqp_4sfp_4zsp $older_id
+		qsfp_4sfp_zqp_4zsp $older_id
 	elif [ -n "$(echo $older_type | grep -Ei "q10/q10|qsfp/qsfp|zqp/zqp|8644/8644|8644/8088|qsfp/8088")" ]; then
 		copy_page02
 		qsfp_zqp_eeprom_mcu $older_id
