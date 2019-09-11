@@ -72,7 +72,7 @@ case $older_kind in
 		if [ -n "$(echo $older_remark | grep -i mcu)" ]; then 
 			older_num=$(($older_num_old * 4 + 5))
 		else 
-			older_num=$(($older_num_old * 2 + 1))
+			older_num=$(($older_num_old * 3 + 1))
 		fi
 	elif [ -n "$(echo $older_type | grep -Ei "q10/4s|qsfp/4sfp|qsfp/4xfp")" ] ; then 
 		if [ -n "$(echo $older_remark | grep -i mcu | grep -Ei "h3c|hp")" ]; then 
