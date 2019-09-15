@@ -49,6 +49,6 @@ if [ -n "$(pidof ${edge##*/})" ]; then
 	echo "$(date +"%F %T")	${edge##*/} $ipadd is runing , Don't do anything !" >> $log
 else
 	echo "$(date +"%F %T")	${edge##*/} $ipadd was not runing ; start ${edge##*/} ..." >> $log
-	exec $edge -d $vmnic_name -c $community_name -a $ipadd -s $netmask -l $supernode_ip_port
+	exec $edge -r -d $vmnic_name -c $community_name -a $ipadd -s $netmask -l $supernode_ip_port
 fi
 
