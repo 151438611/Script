@@ -60,7 +60,7 @@ fi
 
 # 提取订单编码数量,示例：30
 older_num_old=$(echo $older_all | awk '{print $5}')
-[ -n "$(echo $older_all | grep -Ei "10gsfp|0sfp" | grep -Ei "h3c|hp")" ] && older_kind=H3C
+[ -n "$(echo $older_all | grep -Ei "10gsfp|0sfp" | grep -Ei "h3c|hp")" ] && older_kind=H3C || older_kind=null
 case $older_kind in
 "H3C")
 	older_num=$(($older_num_old * 2 + 5)) 
@@ -81,6 +81,12 @@ case $older_kind in
 			older_num=$(($older_num_old * 6 + 3))
 		else 
 			older_num=$(($older_num_old * 5 + 1))
+		fi
+	elif [ -n "$(echo $older_type | grep -Ei "q10/2s|qsfp/2s")" ] ; then
+		if [ -n "$(echo $older_remark | grep -i mcu)" ]; then
+			older_num=$(($older_num_old * 4 + 3))
+		else
+			older_num=$(($older_num_old * 3 + 1))
 		fi
 	elif [ -n "$(echo $older_type | grep -i "zqp/zqp")" ]; then older_num=$(($older_num_old * 4 + 5))
 	elif [ -n "$(echo $older_type | grep -i "zqp/4zsp")" ]; then older_num=$(($older_num_old * 6 + 3))
@@ -475,7 +481,7 @@ copy_page02() {
 	if [ -d "${older_id}/Port1/Page02" ]; then
 		page02_sn=$(find ${older_id}/Port1/Page02/ -type f -iname "${older_sn}*")
 		cp_num=$older_num
-		if [ -n "$page02_sn" -a $cp_num -gt 1 ]; then
+		if [ -n "$page02_sn" -a "$cp_num" -gt 1 ]; then
 			dir_file=$(dirname $page02_sn)
 			p02_name=$(basename $page02_sn)
 			p02_name_start=${p02_name%.*}
@@ -491,14 +497,15 @@ copy_page02() {
 				cp -n $page02_sn ${dir_file}/${p02_name_start_4s}$(printf %04d $sum_end).${p02_name_end}
 			done
 		else
-		 echo "${older_id}/Port1/Page02/ 下SN文件不存在！！！" && continue
+			[ "$cp_num" -eq 1 ] && echo "${older_id}/Port1/Page02/ 下SN数量为1个！！！" || \
+			echo "${older_id}/Port1/Page02/ 下SN文件不存在！！！" 
 		fi
 	fi
 }
 # cp选项: -r递归 -n不覆盖同名文件 -f覆盖同名文件
 sfp_eeprom_mcu() {
 	if [ -d $1/Port2 ]; then
-		cp -rn $1/Port2/* $1/Port5/
+		[ -d $1/Port5 ] && cp -rn $1/Port2/* $1/Port5/
 		[ ! -d $1/Port2/A2 ] && cp -n $1/Port2/A0/* $1/
 	else
 		echo "$1/Port2 文件夹不存在，调用 sfp_eeprom_mcu 模板错误！！！" && continue
@@ -506,15 +513,15 @@ sfp_eeprom_mcu() {
 }
 zsp_eeprom() {
 	if [ -d $1/Port2 ]; then
-		cp -rn $1/Port2/* $1/Port5/
+		[ -d $1/Port5 ] && cp -rn $1/Port2/* $1/Port5/
 	else
 		echo "$1/Port2 文件夹不存在，调用 zsp_eeprom 模板错误！！！" && continue
 	fi
 }
 qsfp_zqp_2zqp_eeprom_mcu() {
 	if [ -d $1/Port1 ]; then
-		cp -rn $1/Port1/* $1/Port6/
 		[ -d $1/Port2 ] && cp -rn $1/Port1/* $1/Port2/
+		[ -d $1/Port6 ] && cp -rn $1/Port1/* $1/Port6/
 		[ -d $1/Port1/A0 ] && cp -n $1/Port1/A0/* $1/
 	else 
 		echo "$1/Port1 文件夹不存在，调用 qsfp_zqp_2zqp_eeprom_mcu 模板错误！！！" && continue
@@ -522,9 +529,9 @@ qsfp_zqp_2zqp_eeprom_mcu() {
 }
 qsfp_4sfp_zqp_4zsp() {
 	if [ -d $1/Port2 ]; then
-		cp -rn $1/Port2/* $1/Port3/
-		cp -rn $1/Port2/* $1/Port4/
-		cp -rn $1/Port2/* $1/Port5/
+		[ -d $1/Port3 ] && cp -rn $1/Port2/* $1/Port3/
+		[ -d $1/Port4 ] && cp -rn $1/Port2/* $1/Port4/
+		[ -d $1/Port5 ] && cp -rn $1/Port2/* $1/Port5/
 	else 
 		echo "$1/Port2 文件夹不存在，调用 qsfp_4sfp_zqp_4zsp 模板错误！！！" && continue
 	fi
