@@ -1,5 +1,5 @@
 #!/bin/bash
-# n2n edge for Linux amd64、arm64、mipsle , unsupport Openwrt
+# n2n edge for Linux amd64、arm64、mipsle , unsupport Openwrt ,需要使用root用户运行
 # 超级节点 supernode -l port &
 
 # 设置 supernode 超级节点信息
@@ -9,7 +9,6 @@ vmnic_name=n2n_edge
 community_name=n2n
 ipadd=10.0.0.x
 netmask=255.255.255.0
-
 # 是否加密(加密后仅密码一致的节点可互相通信),会影响速度 --- 不建议使用
 N2N_KEY=	
 
@@ -49,6 +48,7 @@ if [ -n "$(pidof ${edge##*/})" ]; then
 	echo "$(date +"%F %T")	${edge##*/} $ipadd is runing , Don't do anything !" >> $log
 else
 	echo "$(date +"%F %T")	${edge##*/} $ipadd was not runing ; start ${edge##*/} ..." >> $log
+	[ $N2N_KEY ] && \
+	exec $edge -r -d $vmnic_name -c $community_name -a $ipadd -s $netmask -l $supernode_ip_port -k $N2N_KEY || \
 	exec $edge -r -d $vmnic_name -c $community_name -a $ipadd -s $netmask -l $supernode_ip_port
 fi
-
