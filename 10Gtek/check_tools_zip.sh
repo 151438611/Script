@@ -552,10 +552,10 @@ do
 		sfp_eeprom_mcu $older_id
 	elif [ -n "$(echo $older_type | grep -i "zsp/zsp")" ]; then
 		zsp_eeprom $older_id
-	elif [ -n "$(echo $older_type | grep -Ei "q10/4s|qsfp/4sfp|zqp/4zsp|qsfp/4xfp|q10/2s|zqp/2zsp")" ]; then
+	elif [ -n "$(echo $older_type | grep -Ei "q10/4s|qsfp/4sfp|zqp/4zsp|qsfp/4xfp|q10/2s|q10/1s|zqp/2zsp")" ]; then
 		copy_page02
 		qsfp_4sfp_zqp_4zsp $older_id
-	elif [ -n "$(echo $older_type | grep -Ei "q10/q10|qsfp/qsfp|zqp/zqp|zqp/2zqp|8644/8644|8644/8088|qsfp/8088")" ]; then
+	elif [ -n "$(echo $older_type | grep -Ei "q10/q10|qsfp/qsfp|zqp/zqp|zqp/2zqp|q14/q14|8644/8644|8644/8088|qsfp/8088")" ]; then
 		copy_page02
 		qsfp_zqp_2zqp_eeprom_mcu $older_id
 	else 
