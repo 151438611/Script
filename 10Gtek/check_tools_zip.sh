@@ -68,7 +68,7 @@ case $older_kind in
 *)
 	if [ -n "$(echo $older_type | grep -Ei "10gsfp|xfp/xfp|0sfp")" ]; then older_num=$(($older_num_old * 3 + 1))
 	elif [ -n "$(echo $older_type | grep -Ei "zsp/zsp|xfp/sfp")" ]; then older_num=$(($older_num_old * 2 + 1))
-	elif [ -n "$(echo $older_type | grep -Ei "q10/q10|qsfp/qsfp|8644/qsfp|8644/8644|8644/8088|qsfp/8088")" ]; then
+	elif [ -n "$(echo $older_type | grep -Ei "q10/q10|qsfp/qsfp|8644/qsfp|8644/8644|8644/8088|qsfp/8088|q14/q14")" ]; then
 		if [ -n "$(echo $older_remark | grep -i mcu)" ]; then 
 			older_num=$(($older_num_old * 4 + 5))
 		else 
@@ -81,6 +81,12 @@ case $older_kind in
 			older_num=$(($older_num_old * 6 + 3))
 		else 
 			older_num=$(($older_num_old * 5 + 1))
+		fi
+	elif [ -n "$(echo $older_type | grep -Ei "q10/1s|qsfp/1s")" ] ; then
+		if [ -n "$(echo $older_remark | grep -i mcu)" ]; then
+			older_num=$(($older_num_old * 3 + 3))
+		else
+			older_num=$(($older_num_old * 2 + 1))
 		fi
 	elif [ -n "$(echo $older_type | grep -Ei "q10/2s|qsfp/2s")" ] ; then
 		if [ -n "$(echo $older_remark | grep -i mcu)" ]; then
@@ -124,7 +130,7 @@ code_file=$(find ./ -type f -name ${older_sn}.bin | sort | head -n1)
 if [ -n "$code_file" ] ; then
 	# hexdump参数： -s偏移量 -n指定字节
 	code_file_hex_all=$(hexdump -vC $code_file)
-	[ -n "$(echo $older_type | grep -Ei "qsfp|q10|8644")" -a -z "$(echo $older_remark | grep -i mcu)" ] && \
+	[ -n "$(echo $older_type | grep -Ei "qsfp|q10|8644|q14")" -a -z "$(echo $older_remark | grep -i mcu)" ] && \
 		code_file_hex=$(hexdump -vC $code_file -s 128 -n 256) || code_file_hex=$(hexdump -vC $code_file -n 128) 
 	
 	# 提取编码中的第0位，03表示SFP类型，06表示XFP类型, 0D表示40G-QSFP, 11表示100G-ZQP，0F表示8644
@@ -146,11 +152,13 @@ if [ -n "$code_file" ] ; then
 		"0c") 			code_speed="1000BASE" ;;
 		"3c") 			code_speed="6G" ;;
 		"78") 			code_speed="12G" ;;
+		"8d") 			code_speed="14G" ;;
 		*) 	code_speed="请检查第13位未识别的产品速率代码：$code_speed" ;;
 	esac
 	[ "$code_type" = "SFP" -a "$code_speed" = "25G" ] && code_type="ZSP"
-	[ "$code_type" = "Q10" -a "$code_speed" = "10G" ] && code_speed="40G"
-	[ "$code_type" = "ZQP" -a "$code_speed" = "25G" ] && code_speed="100G"
+	[ "$code_type" = "Q10" -a "$code_speed" = "10G" ] && code_type="Q10" && code_speed="40G"
+	[ "$code_type" = "Q10" -a "$code_speed" = "14G" ] && code_type="Q14" && code_speed="56G"
+	[ "$code_type" = "ZQP" -a "$code_speed" = "25G" ] && code_type="ZQP" && code_speed="100G"
 	# 提取编码中的第7行第96位-98位，"48 33 43"表示H3C码, "00 00 00"表示OEM码,因思科码96位不同，所以只判断第97 98位，"00 11"表示思科码
 	code_kind=$(echo "$code_file_hex" | awk 'NR==7{print $3,$4}')
 	case $code_kind in
@@ -187,7 +195,7 @@ else
 	error_time="邮件中的日期<${older_time}>和编码日期<${code_time}>不一致，请仔细核对编码日期！！！"
 fi
 # 核对邮件内容中的产品类型和编码中的是否一致
-if [ -n "$(echo $older_type | grep -i qsfp)" ]; then
+if [ -n "$(echo $older_type | grep -i "qsfp/8644")" ]; then
 	if [ "$code_type" = Q10 -o "$code_type" = 8644 ]; then result_type="(ok)"
 	else
 		result_type="(-error-)"
