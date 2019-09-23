@@ -22,7 +22,7 @@ else
 	exit
 fi	
 
-if [ -n "$confPath" -a ! -f $confPath ];then
+if [ -n "$confPath" -a ! -f $confPath ]; then
 	echo "$(date +"%F %T") $confPath file does not exist ! ! !" >> $log
 	exit
 fi
