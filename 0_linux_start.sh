@@ -5,7 +5,7 @@
 # 请输入完整路径
 exePath="/opt/frpc/frpc" && exeName=${exePath##*/}
 confPath="/opt/frpc/frpc.ini"
-exeCommand="exec $exePath -c $confPath"
+exeCommand="$exePath -c $confPath"
 
 log="/tmp/${exeName}.log"
 
@@ -18,7 +18,7 @@ else
 	exit
 fi	
 
-if [ -n "$confPath" -a ! -f $confPath ];then
+if [ -n "$confPath" -a ! -f $confPath ]; then
 	echo "$(date +"%F %T") $confPath file does not exist ! ! !" >> $log
 	exit
 fi
