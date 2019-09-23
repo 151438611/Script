@@ -1,7 +1,6 @@
 #!/bin/bash
 # 简单的适用于可启动的脚本，示例: frp、filebrowser、ttyd
 # 需求：1、执行文件已存在
-# 
 
 # 请输入完整路径
 exePath="/opt/frpc/frpc" && exeName=${exePath##*/}
@@ -30,4 +29,3 @@ else
 	echo "$(date +"%F %T") $exeName was not runing ; start $exeName ... " >> $log
 	exec $exeCommand &
 fi
-
