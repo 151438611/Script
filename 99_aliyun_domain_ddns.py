@@ -1,6 +1,8 @@
 #!/usr/bin/python3
 # coding=utf-8
+# create date: 20190920 by xj
 # First need installed : pip3 install aliyun-python-sdk-core-v3 aliyun-python-sdk-alidns
+# Aliyun_API: https://api.aliyun.com/?spm=a2c4e.11153940.0.0.71e757fcrl4KBh#/?product=Alidns&api=DescribeSubDomainRecords&params={}&tab=DEMO&lang=PYTHON
 
 import os, json
 from aliyunsdkcore.client import AcsClient
