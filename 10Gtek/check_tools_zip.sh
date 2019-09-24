@@ -38,7 +38,13 @@ older_all=$(cat $input_txt | grep -a $older_id)
 # 提取内容中的日期,示例：20180515
 older_time=$(echo $older_all | awk '{print $1}')
 # 提取邮件中的产品SN，示例：S180701230001
-older_sn=$(echo $older_all | awk '{print $6}' | awk -F"-" '{print $1}') 
+older_sn_info=$(echo $older_all | awk '{print $6}')
+older_sn=
+for sn_start in $older_sn_info
+do 
+	older_sn=$(echo $older_sn ${sn_start%-*})
+done
+
 # 提取邮件中的产品名称，示例：CAB-10GSFP-P3M
 older_type=$(echo $older_all | awk '{print $4}') 
 # 提取内容中的备注,示例：通用/OEM中性码，VN：Optech，PN：OPQSFP-T-05-PCB
@@ -459,19 +465,22 @@ input_txt
 echo "-------------- 产品类型 ------------"
 awk '{print $4}' $input_txt | awk -F"M" '{print $1"M"}'
 echo "-------------- 起始SN --------------"
-awk '{print $6}' $input_txt | awk -F"-" '{print $1}'
-echo "-------------- 截止SN --------------"
+#awk '{print $6}' $input_txt | awk -F"-" '{print $1}'
 snall=$(awk '{print $6}' $input_txt)
-for sn in $snall
+for sn_start in $snall
 do 
-	sn_start=$(echo $sn | awk -F"-" '{print $1}')
-	if [ -n "$(echo $sn | grep "-")" ] ; then
-		sn_end=$(echo $sn | awk -F"-" '{print $2}')
-		
-		num1=${#sn_end}
-		echo "${sn_start: 0: -$num1}$sn_end"
+	echo ${sn_start%-*}
+done
+echo "-------------- 截止SN --------------"
+for sn_end in $snall
+do 
+	sn_st=${sn_end%-*}
+	if [ -n "$(echo $sn_end | grep "-")" ] ; then
+		sn_en=$(echo ${sn_end##*-})
+		num1=${#sn_en}
+		echo "${sn_st: 0: -$num1}$sn_en"
 	else 
-		echo "$sn"
+		echo "$sn_end"
 	fi
 done
 echo -e "-------------- 整理完成 ------------\n"
