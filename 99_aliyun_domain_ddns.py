@@ -69,4 +69,4 @@ def main():
 		setDomainRecordStatus(recordRecordId, "Enable")
 
 if __name__ == '__main__':
- main()
+	main()
