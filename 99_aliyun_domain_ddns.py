@@ -8,10 +8,12 @@ import os, json
 from aliyunsdkcore.client import AcsClient
 from aliyunsdkalidns.request.v20150109.DescribeSubDomainRecordsRequest import DescribeSubDomainRecordsRequest
 from aliyunsdkalidns.request.v20150109.UpdateDomainRecordRequest import UpdateDomainRecordRequest
+from aliyunsdkalidns.request.v20150109.SetDomainRecordStatusRequest import SetDomainRecordStatusRequest
+
 
 # 输入下列信息； domainName表示被自动修改IP的域名名称
-client = AcsClient('AccessKeyID', 'AccessKeySecret', 'cn-hangzhou')
-domainName = "frp.xiongxinyi.cn"
+client = AcsClient('accessKeyId', 'accessSecret', 'cn-hangzhou')
+domainName = "frp1.xiongxinyi.cn"
 
 def getRealIP():
     ipInfo = os.popen("curl https://ip.cn").read()
@@ -27,7 +29,7 @@ def getDomainRecords(demain_ch):
     request.set_accept_format('json')
     request.set_SubDomain(demain_ch)
     response = client.do_action_with_exception(request)
-    #print(str(response, encoding='utf-8'))
+    print("getDomainRecordsInfo Success : ", str(response, encoding='utf-8'))
     response = json.loads(response)
     record = response['DomainRecords']["Record"][0]
     # RR 示例： frp
@@ -48,10 +50,19 @@ def updateDomainRecord(RR, myIP, RecordId, Type):
     request.set_Type(Type)
     request.set_Value(myIP)
     response = client.do_action_with_exception(request)
-    print(str(response, encoding='utf-8'))
+    print("updateDomainRecordInfo Success : ", str(response, encoding='utf-8'))
+	
+def setDomainRecordStatus(recordId, status):
+	# 传入被修改域名的RecordId和状态(Enable启动或Disable暂停)
+	request = SetDomainRecordStatusRequest()
+	request.set_RecordId(recordId)
+	request.set_Status(status)
+	response = client.do_action_with_exception(request)
+	print("setDomainRecordStatusInfo Success : ", str(response, encoding='utf-8'))
 
 myIP = getRealIP()
 recordRR, recordValue, recordRecordId, recordType = getDomainRecords(domainName)
 if myIP != recordValue :
     updateDomainRecord(recordRR, myIP, recordRecordId, recordType)
+    setDomainRecordStatus(recordRecordId, "Enable")
 
