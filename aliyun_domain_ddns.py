@@ -1,6 +1,7 @@
 #!/usr/bin/env python
-#coding=utf-8
+# coding=utf-8
 # 需要首先安装: pip3 install aliyun-python-sdk-core-v3 aliyun-python-sdk-alidns
+
 import os
 import json
 from aliyunsdkcore.client import AcsClient
@@ -46,6 +47,9 @@ def updateDomainRecord(RR, myIP, RecordId, Type):
     print(str(response, encoding='utf-8'))
 
 myIP = getRealIP()
+if len(myIP) == 0 :
+    print("ip is empty, Get IP is Fail !!!")
+    exit()
 recordRR, recordValue, recordRecordId, recordType = getDomainRecords(domainName)
 if myIP != recordValue :
     updateDomainRecord(recordRR, myIP, recordRecordId, recordType)
