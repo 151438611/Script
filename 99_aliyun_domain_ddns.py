@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 # coding=utf-8
-# 需要首先安装: pip3 install aliyun-python-sdk-core-v3 aliyun-python-sdk-alidns
+# First need installed : pip3 install aliyun-python-sdk-core-v3 aliyun-python-sdk-alidns
 
 import os, json
 from aliyunsdkcore.client import AcsClient
