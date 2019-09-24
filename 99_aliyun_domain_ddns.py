@@ -17,11 +17,11 @@ domainName = "frp1.xiongxinyi.cn"
 def getRealIP():
     ipInfo = os.popen("curl https://ip.cn").read()
     getIP = ipInfo.split('"')[3]
-    if len(getIP) == 0 :
+    if len(getIP) == 0:
         print("IP is empty, Get IP is Fail !!!")
         exit()
-	else :
-		print("Get IP Success : ", getIP)
+    else:
+        print("Get IP Success : %s \n" % getIP)
     return getIP
 
 def getDomainRecords(demain_ch):
@@ -30,7 +30,7 @@ def getDomainRecords(demain_ch):
     request.set_accept_format('json')
     request.set_SubDomain(demain_ch)
     response = client.do_action_with_exception(request)
-    print("getDomainRecordsInfo Success : ", str(response, encoding='utf-8'), "\n")
+    print("GetDomainRecordsInfo Success : \n", str(response, encoding='utf-8'), "\n")
     response = json.loads(response)
     record = response['DomainRecords']["Record"][0]
     # RR 示例： frp
@@ -51,7 +51,7 @@ def updateDomainRecord(RR, myIP, RecordId, Type):
     request.set_Type(Type)
     request.set_Value(myIP)
     response = client.do_action_with_exception(request)
-    print("updateDomainRecordInfo Success : ", str(response, encoding='utf-8'), "\n")
+    print("UpdateDomainRecordInfo Success : \n", str(response, encoding='utf-8'), "\n")
 	
 def setDomainRecordStatus(recordId, status):
 	# 传入被修改域名的RecordId和状态(Enable启动或Disable暂停)
@@ -59,14 +59,16 @@ def setDomainRecordStatus(recordId, status):
 	request.set_RecordId(recordId)
 	request.set_Status(status)
 	response = client.do_action_with_exception(request)
-	print("setDomainRecordStatusInfo Success : ", str(response, encoding='utf-8'), "\n")
+	print("SetDomainRecordStatusInfo Success : \n", str(response, encoding='utf-8'), "\n")
 
 def main():
 	myIP = getRealIP()
 	recordRR, recordValue, recordRecordId, recordType = getDomainRecords(domainName)
-	if myIP != recordValue :
+	if myIP == recordValue:
+		print("Current IP is the same as DomainRecord %s \n" % myIP)
+	else:
 		updateDomainRecord(recordRR, myIP, recordRecordId, recordType)
 		setDomainRecordStatus(recordRecordId, "Enable")
-
+	
 if __name__ == '__main__':
 	main()
