@@ -2,8 +2,7 @@
 # coding=utf-8
 # 需要首先安装: pip3 install aliyun-python-sdk-core-v3 aliyun-python-sdk-alidns
 
-import os
-import json
+import os, json
 from aliyunsdkcore.client import AcsClient
 from aliyunsdkalidns.request.v20150109.DescribeSubDomainRecordsRequest import DescribeSubDomainRecordsRequest
 from aliyunsdkalidns.request.v20150109.UpdateDomainRecordRequest import UpdateDomainRecordRequest
