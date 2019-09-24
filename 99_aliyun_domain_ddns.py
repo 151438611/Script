@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 #coding=utf-8
 # create date: 20190920 by xj
-# First need installed : pip3 install aliyun-python-sdk-core-v3 aliyun-python-sdk-alidns
+# First installed : pip3 install aliyun-python-sdk-core-v3 aliyun-python-sdk-alidns
 # Aliyun_API: https://api.aliyun.com/?spm=a2c4e.11153940.0.0.71e757fcrl4KBh#/?product=Alidns&api=DescribeSubDomainRecords&params={}&tab=DEMO&lang=PYTHON
 
 import os, json
@@ -17,7 +17,7 @@ def getRealIP():
     ipInfo = os.popen("curl https://ip.cn").read()
     getIP = ipInfo.split('"')[3]
     if len(getIP) == 0 :
-        print("ip is empty, Get IP is Fail !!!")
+        print("IP is empty, Get IP is Fail !!!")
         exit()
     return getIP
 
