@@ -14,6 +14,9 @@ domainName = "frp.xiongxinyi.cn"
 def getRealIP():
     ipInfo = os.popen("curl https://ip.cn").read()
     getIP = ipInfo.split('"')[3]
+    if len(getIP) == 0 :
+        print("ip is empty, Get IP is Fail !!!")
+        exit()
     return getIP
 
 def getDomainRecords(demain_ch):
@@ -46,9 +49,6 @@ def updateDomainRecord(RR, myIP, RecordId, Type):
     print(str(response, encoding='utf-8'))
 
 myIP = getRealIP()
-if len(myIP) == 0 :
-    print("ip is empty, Get IP is Fail !!!")
-    exit()
 recordRR, recordValue, recordRecordId, recordType = getDomainRecords(domainName)
 if myIP != recordValue :
     updateDomainRecord(recordRR, myIP, recordRecordId, recordType)
