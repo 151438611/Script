@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/python3
 # coding=utf-8
 # 需要首先安装: pip3 install aliyun-python-sdk-core-v3 aliyun-python-sdk-alidns
 
