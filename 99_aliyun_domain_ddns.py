@@ -10,7 +10,6 @@ from aliyunsdkalidns.request.v20150109.DescribeSubDomainRecordsRequest import De
 from aliyunsdkalidns.request.v20150109.UpdateDomainRecordRequest import UpdateDomainRecordRequest
 from aliyunsdkalidns.request.v20150109.SetDomainRecordStatusRequest import SetDomainRecordStatusRequest
 
-
 # 输入下列信息； domainName表示被自动修改IP的域名名称
 client = AcsClient('accessKeyId', 'accessSecret', 'cn-hangzhou')
 domainName = "frp1.xiongxinyi.cn"
@@ -21,6 +20,8 @@ def getRealIP():
     if len(getIP) == 0 :
         print("IP is empty, Get IP is Fail !!!")
         exit()
+	else :
+		print("Get IP Success : ", getIP)
     return getIP
 
 def getDomainRecords(demain_ch):
@@ -29,7 +30,7 @@ def getDomainRecords(demain_ch):
     request.set_accept_format('json')
     request.set_SubDomain(demain_ch)
     response = client.do_action_with_exception(request)
-    print("getDomainRecordsInfo Success : ", str(response, encoding='utf-8'))
+    print("getDomainRecordsInfo Success : ", str(response, encoding='utf-8'), "\n")
     response = json.loads(response)
     record = response['DomainRecords']["Record"][0]
     # RR 示例： frp
@@ -50,7 +51,7 @@ def updateDomainRecord(RR, myIP, RecordId, Type):
     request.set_Type(Type)
     request.set_Value(myIP)
     response = client.do_action_with_exception(request)
-    print("updateDomainRecordInfo Success : ", str(response, encoding='utf-8'))
+    print("updateDomainRecordInfo Success : ", str(response, encoding='utf-8'), "\n")
 	
 def setDomainRecordStatus(recordId, status):
 	# 传入被修改域名的RecordId和状态(Enable启动或Disable暂停)
@@ -58,11 +59,14 @@ def setDomainRecordStatus(recordId, status):
 	request.set_RecordId(recordId)
 	request.set_Status(status)
 	response = client.do_action_with_exception(request)
-	print("setDomainRecordStatusInfo Success : ", str(response, encoding='utf-8'))
+	print("setDomainRecordStatusInfo Success : ", str(response, encoding='utf-8'), "\n")
 
-myIP = getRealIP()
-recordRR, recordValue, recordRecordId, recordType = getDomainRecords(domainName)
-if myIP != recordValue :
-    updateDomainRecord(recordRR, myIP, recordRecordId, recordType)
-    setDomainRecordStatus(recordRecordId, "Enable")
+def main():
+	myIP = getRealIP()
+	recordRR, recordValue, recordRecordId, recordType = getDomainRecords(domainName)
+	if myIP != recordValue :
+		updateDomainRecord(recordRR, myIP, recordRecordId, recordType)
+		setDomainRecordStatus(recordRecordId, "Enable")
 
+if __name__ == '__main__':
+ main()
