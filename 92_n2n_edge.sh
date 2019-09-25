@@ -1,5 +1,5 @@
 #!/bin/bash
-# n2n edge for Linux amd64、arm64、mipsle , unsupport Openwrt ,需要使用root用户运行
+# n2n edge for Linux amd64、arm64、mipsle , unsupport Openwrt ,需要安装ifconfig命令，使用root用户运行
 # 超级节点 supernode -l port &
 
 # 设置 supernode 超级节点信息
