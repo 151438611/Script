@@ -351,6 +351,7 @@ Cisco-2960G
 Cisco-3560
 Cisco-3064
 Cisco-5548
+Cisco-3232C
 Cisco-92160
 Dell-ForceS4810
 Edgecore-5712
@@ -372,7 +373,6 @@ Cisco-3232C
 Cisco-92160
 Dell-ForceS4810
 Edgecore-5712
-Edgecore-7712
 H3C-S5120
 HP-2910
 HP-5900
@@ -389,7 +389,6 @@ Cisco-3232C
 Cisco-92160
 Dell-ForceS4810
 Edgecore-5712
-Edgecore-7712
 HP-5900
 Huawei-CE6855
 IBM-G8264
@@ -400,7 +399,6 @@ Juniper-QFX5100"
 "100g"|"200g")
 swtich="Cisco-3232C
 Cisco-92160
-Edgecore-7712
 Mellanox-SB7800
 Juniper-QFX5200"
 ;;
