@@ -3,7 +3,7 @@
 # 超级节点 supernode -l port &
 
 # 设置 supernode 超级节点信息
-supernode_ip_port=frp.xiongxinyi.cn:44275
+supernode_ip_port=frp.xiongxinyi.cn:8000
 # 设置 edge 节点信息
 vmnic_name=n2n_edge
 community_name=n2n
