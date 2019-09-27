@@ -9,10 +9,9 @@
 # 请输入完整路径
 exePath="/opt/filebrowser" && exeName=${exePath##*/}
 confPath=""
-exeCommand="$exePath -a 0.0.0.0 -d /opt/filebrowser.db -p 8080 -l /tmp/filebrowser.log"
+exeCommand="$exePath -a 0.0.0.0 -d /media/sda1/filebrowser.db -p 8081 -l /tmp/filebrowser.log"
 
 log="/tmp/${exeName}.log"
-
 cd $(dirname $exePath)
 # 判断执行文件是否存在，且有执行权限
 if [ -f "$exePath" -a -n "$exePath" ]; then
