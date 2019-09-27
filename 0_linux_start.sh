@@ -1,8 +1,13 @@
 #!/bin/bash
 # 简单的适用于可启动的脚本，示例: frp、filebrowser、ttyd、edge、supernode ......
-# 需求：1、执行文件已存在
+# 需求：1、执行文件已存在 ；示例：
+# frp : frpc -c frpc.ini &
+# ttyd : ttyd -p 7800 -m 5 -d 0 /bin/login &
+# filebrowser : filebrowser -a 0.0.0.0 -p 8081 -d /media/sda1/filebrowser.db -l /tmp/filebrowser.log &
+# n2n edge : edge -r -d n2nEdge -c n2n -a 10.0.0.41 -s 255.255.255.0 -l frp.xiongxinyi.cn:8000
+# n2n supernode : supernode -l 8000 &
 
-# 请输入完整路径
+# 请输入文件绝对路径
 exePath="/opt/frpc/frpc" && exeName=${exePath##*/}
 confPath="/opt/frpc/frpc.ini"
 exeCommand="$exePath -c $confPath"
