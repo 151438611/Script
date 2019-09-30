@@ -108,7 +108,7 @@ if [ "$apssid_old" != "$apssid" ] ; then
 		radio2_restart
 		radio5_restart
 	fi
-  echo "$(date +"%F %T") Old_WIFI was $apssid_old , Already switched $apssid ! " >> $log
+    echo "$(date +"%F %T") Old_WIFI was $apssid_old , Already switched $apssid ! " >> $log
 else  
 	echo "$(date +"%F %T") Current_WIFI is $apssid , Don't do anything ! " >> $log
 fi
