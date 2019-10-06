@@ -30,7 +30,7 @@ grep -qi comment $apinput || \
 cat << END >> $apinput
 # 自动中继AP的wifi信息请填在(comment和comment之间)处
 <<'comment'
-# 填写格式(不可填错) ：无线频率Ghz(2/5)+ssid+password+wlan_ip(选填),示例:2+TPLINK+12345678+1
+# 填写格式(不可填错) ：无线频率Ghz(2/5)+ssid+password+wlan_ip(选填)+wlan_channel(选填),示例:2+TPLINK+12345678+1+13
 # 多个Wifi用空格或换行分隔,若中继wifi无密码则不填写, wlan_ip可不填表示wlan动态获取IP
 # 第一个为主连接Wifi，每天会自动强制连接主Wifi一次，如果主Wifi不能使用请及时修改---不影响自动切换Wifi功能
 
@@ -41,12 +41,18 @@ aplist2=$(sed -r 's/^[ \t]+//g' $apinput | grep "^[25]+")
 aplist=$(echo "$aplist1 $aplist2" | awk '{for(apl=1 ; apl<=NF ; apl++){print $apl}}')
 [ -z "$aplist" ] && exit
 apssidlist=$(echo "$aplist" | awk -F+ '{print $2}')
-rt=$(nvram get rt_mode_x) ; wl=$(nvram get wl_mode_x)
-if   [ $rt -ne 0 -a $wl -eq 0 ]; then apssid=$(nvram get rt_sta_ssid) ; band_old=2
-elif [ $rt -eq 0 -a $wl -ne 0 ]; then apssid=$(nvram get wl_sta_ssid) ; band_old=5
+rt=$(nvram get rt_mode_x)
+wl=$(nvram get wl_mode_x)
+if   [ $rt -ne 0 -a $wl -eq 0 ]; then 
+	apssid=$(nvram get rt_sta_ssid)
+	band_old=2
+elif [ $rt -eq 0 -a $wl -ne 0 ]; then 
+	apssid=$(nvram get wl_sta_ssid)
+	band_old=5
 elif [ $rt -eq 0 -a $wl -eq 0 ]; then 
-  apssid=null ; band_old=0
-  echo "$(date +"%F %T") ----- Wireless_bridge is disable ; It will force enable ! -----" >> $log
+	apssid=null
+	band_old=0
+	echo "$(date +"%F %T") ----- Wireless_bridge is disable ; It will force enable ! -----" >> $log
 fi
 # check internet status 
 ping_timeout=$(ping -c2 -w5 $ip1 | awk -F "/" '$0~"min/avg/max"{print int($4)}')
@@ -78,6 +84,7 @@ printf "%-10s %-8s %-20s %-12s\n" $(date +"%F %T") SSID:$apssid Netstat:DOWN >> 
 	[ -z "$apssid" ] && continue
 	appasswd=$(echo $ap | cut -d + -f 3)
 	gwip=$(echo $ap | cut -d + -f 4)
+	channel=$(echo $ap | cut -d + -f 5)
   
 # 设置路由器的2.4G和5G接口名称interface_name:# k2p_2.4G_iface是rax0 ; k2p_5G_iface是ra0 ; k2/newifi3_2.4G_iface是ra0 ; k2/newifi3_5G_iface是rai0
 	if [ "$band" = 2 ] ; then
@@ -129,7 +136,15 @@ printf "%-10s %-8s %-20s %-12s\n" $(date +"%F %T") SSID:$apssid Netstat:DOWN >> 
 		nvram set ${sta_auth_mode}=open
 	fi
 
-	if [ -z "$gwip" ] ; then
+	if [ -n "$gwip" -a -n "$channel" ]; then
+	#--- 指定静态WAN_IP，中继获取IP更快速稳定 -------------------------
+		nvram set wan_proto=static
+		static_ip=$(expr 190 + $(date +%S))
+		nvram set wan_ipaddr=192.168.$gwip.$static_ip
+		nvram set wan_netmask=255.255.255.0
+		nvram set wan_gateway=192.168.$gwip.1
+		nvram set ${channel_x}=${channel:=0}
+	else
 		scanwifi
 		apinfo=$(echo "$scanlist" | grep "$apssid")
 		[ -z "$apinfo" ] && \
@@ -150,17 +165,9 @@ printf "%-10s %-8s %-20s %-12s\n" $(date +"%F %T") SSID:$apssid Netstat:DOWN >> 
 			[ "$router" = k2 ] && channel=$(echo $apinfo | awk '{print $1}')
 			[ "$router" = k2p ] && channel=$(echo $apinfo | awk '{print $2}')
 # "rt/wl_channel"=0表示自动选择信道
-			nvram set ${channel_x}=$channel
+			nvram set ${channel_x}=${channel:=0}
 			nvram set wan_proto=dhcp
 		fi
-	else
-#--- 指定静态WAN_IP，中继获取IP更快速稳定 -------------------------
-		nvram set wan_proto=static
-		static_ip=$(expr 190 + $(date +%S))
-		nvram set wan_ipaddr=192.168.$gwip.$static_ip
-		nvram set wan_netmask=255.255.255.0
-		nvram set wan_gateway=192.168.$gwip.1
-		nvram set ${channel_x}=0
     fi 
 
     nvram set wan_dnsenable_x=0
