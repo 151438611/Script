@@ -21,7 +21,7 @@ elif [ -n "$(echo $host_name | grep -Ei "k2|youku")" ]; then router=k2
 else 
 	echo "!!! The router is Unsupported device , exit !!!" >> $log && exit
 fi
-# ===2、输入指定被中继的wifi帐号密码,格式{ 无线频段(2|5)+ssid+password+wan_ip },默认加密方式为WPA2-PSK/AES===
+# ===2、输入指定被中继的wifi帐号密码,格式{ 无线频段(2|5)+ssid+password+wan_ip(选填)+wlan_channel(选填) },默认加密方式为WPA2-PSK/AES===
 # === 若wifi未加密则password为空，wlan_ip可不填表示wlan动态获取IP
 apinput=/etc/storage/ez_buttons_script.sh
 ap=$(sed -r 's/^[ \t]+//g' $apinput | awk '/^[2,5]+/ {print $1}' | head -n1 )
@@ -29,6 +29,7 @@ band=$(echo $ap | cut -d + -f 1)
 apssid=$(echo $ap | cut -d + -f 2) && [ -z "$apssid" ] && exit
 appasswd=$(echo $ap | cut -d + -f 3)
 gwip=$(echo $ap | cut -d + -f 4)
+channel=$(echo $ap | cut -d + -f 5)
 
 rt=$(nvram get rt_mode_x)
 wl=$(nvram get wl_mode_x)
@@ -78,8 +79,6 @@ if [ "$apssid_old" != "$apssid" ] ; then
 	nvram set ${sta_auto}=1
 	nvram set ${sta_wisp}=1
 	if [ -n "$appasswd" ]; then 
-		nvram set ${sta_wpa_mode}=2
-		nvram set ${sta_crypto}=aes
 		nvram set ${sta_auth_mode}=psk
 		nvram set ${sta_wpa_psk}=$appasswd
 		nvram set ${sta_wpa_mode}=2
@@ -88,7 +87,15 @@ if [ "$apssid_old" != "$apssid" ] ; then
 		nvram set ${sta_auth_mode}=open
 	fi
 
-	if [ -z "$gwip" ]; then
+	if [ -n "$gwip" -a -n "$channel" ]; then
+	#--- 指定静态WAN_IP，中继获取IP更快速稳定 -------------------------
+		nvram set wan_proto=static
+		static_ip=$(expr 190 + $(date +%S))
+		nvram set wan_ipaddr=192.168.$gwip.$static_ip
+		nvram set wan_netmask=255.255.255.0
+		nvram set wan_gateway=192.168.$gwip.1
+		nvram set ${channel_x}=${channel:=0}
+	else
 		scanwifi
 		apinfo=$(echo "$scanlist" | grep "$apssid")
 		[ -z "$apinfo" ] && \
@@ -96,23 +103,24 @@ if [ "$apssid_old" != "$apssid" ] ; then
 		do 
 			scanwifi
 			apinfo=$(echo "$scanlist" | grep "$apssid")
-			[ -n "$apinfo" ] && break
-			sleep 3
+			[ -n "$apinfo" ] && break 
+			sleep 3 
 		done
 		if [ -n "$apinfo" ]; then
+# k2p_$scanlist infomation example:
+# No  Ch  SSID      BSSID               Security       Siganl(%)W-Mode   ExtCH  NT WPS DPID BcnRept
+# 5   3   AVP-LINK  64:51:7e:01:0c:5c   WPA2PSK/AES    76      11b/g/n   NONE   In YES      NO   
+# k2_$scanlist infomation example:
+# Ch  SSID      BSSID               Security       Siganl(%)W-Mode   ExtCH  NT WPS DPID BcnRept
+# 3   AVP-LINK  64:51:7e:01:0c:5c   WPA2PSK/AES    76      11b/g/n   NONE   In YES      NO 
 			[ "$router" = k2 ] && channel=$(echo $apinfo | awk '{print $1}')
 			[ "$router" = k2p ] && channel=$(echo $apinfo | awk '{print $2}')
-			nvram set ${channel_x}=$channel
+# "rt/wl_channel"=0表示自动选择信道
+			nvram set ${channel_x}=${channel:=0}
 			nvram set wan_proto=dhcp
 		fi
-	else 
-		nvram set ${channel_x}=0
-		nvram set wan_proto=static
-		static_ip=$(expr 190 + $(date +%S))
-		nvram set wan_ipaddr=192.168.$gwip.$static_ip
-		nvram set wan_netmask=255.255.255.0
-		nvram set wan_gateway=192.168.$gwip.1
-	fi 
+    fi 
+	
 	nvram set wan_dnsenable_x=0
 	nvram set wan_dns1_x=114.114.114.114
 	nvram set wan_dns2_x=1.2.4.8
