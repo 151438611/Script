@@ -41,6 +41,9 @@ addIptables() {
 	[ -z "$(iptables -vnL INPUT | grep -i ACCEPT)" ] && \
 	[ -z "$(iptables -vnL INPUT | grep $vmnic_name)" ] && \
 	iptables -A INPUT -i $vmnic_name -j ACCEPT
+	#[ -n "$(route -n | grep 192.168.11.)" ] || route add -host 192.168.11.1 gw 10.0.0.11
+	#[ -n "$(route -n | grep 192.168.75.)" ] || route add -net 192.168.75.0/24 gw 10.0.0.75
+	#[ -n "$(route -n | grep 192.168.5.)" ] || route add -host 192.168.5.1 gw 10.0.0.50
 }
 
 if [ ! -x $edge ]; then
