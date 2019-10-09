@@ -60,9 +60,10 @@ ping -c 2 -w 3 114.114.114.114 && \
 if [ -n "$(pidof ${edge##*/})" ]; then
 	echo "$(date +"%F %T")	${edge##*/} $ipadd is runing , Don't do anything !" >> $log
 else
-	addIptables
+	
 	echo "$(date +"%F %T")	${edge##*/} $ipadd was not runing ; start ${edge##*/} ..." >> $log
 	[ $N2N_KEY ] && \
-	exec $edge -r -d $vmnic_name -c $community_name -a $ipadd -s $netmask -l $supernode_ip_port -k $N2N_KEY || \
-	exec $edge -r -d $vmnic_name -c $community_name -a $ipadd -s $netmask -l $supernode_ip_port
+	$edge -r -d $vmnic_name -c $community_name -a $ipadd -s $netmask -l $supernode_ip_port -k $N2N_KEY || \
+	$edge -r -d $vmnic_name -c $community_name -a $ipadd -s $netmask -l $supernode_ip_port
+	addIptables
 fi
