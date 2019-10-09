@@ -13,7 +13,6 @@ download_url="http://frp.xiongxinyi.cn:30100/file/"
 log=/tmp/frpc.log
 [ -f $log ] || echo $(date +"%F %T") > $log
 
-
 # ------------------------- add crontab、startup、enable SSH -----------------------
 bin_dir=/etc/storage/bin
 [ -d "$bin_dir" ] || mkdir -p $bin_dir
@@ -106,7 +105,7 @@ token = $token
 user = $host_name
 protocol = tcp
 pool_count = 8
-admin_addr = 127.0.0.1
+admin_addr = 0.0.0.0
 admin_port = 7400
 admin_user = admin
 admin_pwd = admin
