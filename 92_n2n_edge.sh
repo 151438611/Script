@@ -38,8 +38,9 @@ case $hw_type in
 esac
 
 addIptables() {
-	[ -z "$(iptables -vnL INPUT | grep -i ACCEPT)" ] && [ -z "$(iptables -vnL INPUT | grep $vmnic_name)" ] && \
-		iptables -A INPUT -i $vmnic_name -j ACCEPT
+	[ -z "$(iptables -vnL INPUT | grep -i ACCEPT)" ] && \
+	[ -z "$(iptables -vnL INPUT | grep $vmnic_name)" ] && \
+	iptables -A INPUT -i $vmnic_name -j ACCEPT
 }
 
 if [ ! -x $edge ]; then
