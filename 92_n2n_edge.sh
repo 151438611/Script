@@ -7,7 +7,7 @@ supernode_ip_port=frp.xiongxinyi.cn:8000
 # 设置 edge 节点信息
 vmnic_name=n2nEdge
 community_name=n2n
-ipadd=10.0.0.x
+ipadd=10.0.0.75
 netmask=255.255.255.0
 # 是否加密(加密后仅密码一致的节点可互相通信) --- 会影响速度，不建议使用此选项
 N2N_KEY=	
@@ -38,21 +38,22 @@ case $hw_type in
 esac
 
 addIptables() {
-	[ -z "$(iptables -vnL INPUT | grep "Chain INPUT" |grep -i ACCEPT)" ] && \
+	[ -z "$(iptables -vnL INPUT | grep "Chain INPUT" | grep -i ACCEPT)" ] && \
 	[ -z "$(iptables -vnL INPUT | grep $vmnic_name)" ] && \
 	iptables -A INPUT -i $vmnic_name -j ACCEPT
+	[ -z "$(iptables -vnL FORWARD | grep "Chain FORWARD" | grep -i ACCEPT)" ] && \
+	[ -z "$(iptables -vnL FORWARD | grep $vmnic_name)" ] && \
+	iptables -A FORWARD -i $vmnic_name -j ACCEPT
 	# for VmwareDebian
 	#[ -n "$(route -n | grep 192.168.11.)" ] || route add -host 192.168.11.1 gw 10.0.0.11
+	#[ -n "$(route -n | grep 192.168.75.)" ] || route add -net 192.168.75.0/24 gw 10.0.0.11
 	#[ -n "$(iptables -t nat -vnL | grep 192.168.11.)" ] || \
 	#	iptables -t nat -A POSTROUTING -d 192.168.11.1 -j SNAT --to-source 10.0.0.15
 	
 	#[ -n "$(route -n | grep 192.168.5.)" ] || route add -host 192.168.5.1 gw 10.0.0.50
 	#[ -n "$(iptables -t nat -vnL | grep 192.168.5.)" ] || \
 	#	iptables -t nat -A POSTROUTING -d 192.168.5.1 -j SNAT --to-source 10.0.0.15
-	
-	#[ -n "$(route -n | grep 192.168.75.)" ] || route add -net 192.168.75.0/24 gw 10.0.0.75
-	#[ -n "$(iptables -t nat -vnL | grep 192.168.75.)" ] || \
-	#	iptables -t nat -A POSTROUTING -d 192.168.75.0/24 -j SNAT --to-source 10.0.0.15
+
 }
 
 if [ ! -x $edge ]; then
