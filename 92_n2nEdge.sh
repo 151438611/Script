@@ -55,7 +55,6 @@ addIptables() {
 	#[ -n "$(route -n | grep 192.168.5.)" ] || route add -host 192.168.5.1 gw 10.0.0.50
 	#[ -n "$(iptables -t nat -vnL | grep 192.168.5.)" ] || \
 	#	iptables -t nat -A POSTROUTING -d 192.168.5.1 -j SNAT --to-source 10.0.0.15
-
 }
 
 if [ ! -x $edge ]; then
@@ -68,11 +67,10 @@ ping -c 2 -w 3 114.114.114.114 && \
 if [ -n "$(pidof ${edge##*/})" ]; then
 	echo "$(date +"%F %T")	${edge##*/} $ipadd is runing , Don't do anything !" >> $log
 else
-	
-	echo "$(date +"%F %T")	${edge##*/} $ipadd was not runing ; start ${edge##*/} ..." >> $log
 	[ $N2N_KEY ] && \
 	$edge -r -d $vmnic_name -c $community_name -a $ipadd -s $netmask -l $supernode_ip_port -k $N2N_KEY || \
 	$edge -r -d $vmnic_name -c $community_name -a $ipadd -s $netmask -l $supernode_ip_port
 	sleep 3
 	addIptables
+	echo "$(date +"%F %T")	${edge##*/} $ipadd was not runing ; start ${edge##*/} ..." >> $log
 fi
