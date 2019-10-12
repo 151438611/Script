@@ -49,6 +49,8 @@ addIptables() {
 	#[ -n "$(route -n | grep 192.168.75.)" ] || route add -net 192.168.75.0/24 gw 10.0.0.11
 	#[ -n "$(iptables -t nat -vnL | grep 192.168.11.)" ] || \
 	#	iptables -t nat -A POSTROUTING -d 192.168.11.1 -j SNAT --to-source 10.0.0.15
+	#[ -n "$(iptables -t nat -vnL | grep 192.168.75.)" ] || \
+	#	iptables -t nat -A POSTROUTING -d 192.168.75./24 -j SNAT --to-source 10.0.0.15
 	
 	#[ -n "$(route -n | grep 192.168.5.)" ] || route add -host 192.168.5.1 gw 10.0.0.50
 	#[ -n "$(iptables -t nat -vnL | grep 192.168.5.)" ] || \
