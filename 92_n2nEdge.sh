@@ -73,5 +73,6 @@ else
 	[ $N2N_KEY ] && \
 	$edge -r -d $vmnic_name -c $community_name -a $ipadd -s $netmask -l $supernode_ip_port -k $N2N_KEY || \
 	$edge -r -d $vmnic_name -c $community_name -a $ipadd -s $netmask -l $supernode_ip_port
+	sleep 3
 	addIptables
 fi
