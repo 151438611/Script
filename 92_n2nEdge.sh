@@ -7,7 +7,7 @@ supernode_ip_port=frp.xiongxinyi.cn:8000
 # 设置 edge 节点信息
 vmnic_name=n2nEdge
 community_name=n2n
-ipadd=10.0.0.75
+ipadd=10.0.0.x
 netmask=255.255.255.0
 # 是否加密(加密后仅密码一致的节点可互相通信) --- 会影响速度，不建议使用此选项
 N2N_KEY=	
