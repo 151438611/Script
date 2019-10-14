@@ -48,20 +48,11 @@ frpcini=$bin_dir/frpc.ini
 download_frpc() {
   killall -q $frpc_name
   rm -f $frpc
-  wget -c -O $frpc $frpc_url1 &
-  sleep 60
-  killall -q wget
+  wget -c -t 3 -T 10 -O $frpc $frpc_url1 &
   chmod +x $frpc
-  frpc_ver=$($frpc -v)
-  if [ -z "$frpc_ver" ]; then
-    wget -c -O $frpc $frpc_url &
-    sleep 60
-    killall -q wget
-    frpc_ver=$($frpc -v)
-    if [ -z "$frpc_ver" ]; then
-      rm -f $frpc
-      wget -c -O $frpc $frpc_url2
-    fi
+  if [ -z "$($frpc -v)" ]; then
+    rm -f $frpc
+    wget -c -t 3 -T 10 -O $frpc $frpc_url2
   fi 
 }
  $frpc -v || download_frpc
