@@ -59,7 +59,7 @@ frpcini=$bin_dir/frpc.ini
 download_ttyd() {
   killall -q ttyd
   rm -f $ttyd
-  wget -c -O $ttyd $ttyd_url
+  wget -c -t 3 -T 10 -O $ttyd $ttyd_url
   chmod +x $ttyd
 }
 if [ $ttyd_enable -eq 1 ] ; then 
@@ -73,20 +73,11 @@ fi
 download_frpc() {
   killall -q $frpc_name
   rm -f $frpc
-  wget -c -O $frpc $frpc_url1 &
-  sleep 60
-  killall -q wget
+  wget -c -t 3 -T 10 -O $frpc $frpc_url1
   chmod +x $frpc
-  frpc_ver=$($frpc -v)
-  if [ -z "$frpc_ver" ]; then
-    wget -c -O $frpc $frpc_url &
-    sleep 60
-    killall -q wget
-    frpc_ver=$($frpc -v)
-    if [ -z "$frpc_ver" ]; then
+    if [ -z "$($frpc -v)" ]; then
       rm -f $frpc
-      wget -c -O $frpc $frpc_url2
-    fi
+      wget -c -t 3 -T 10 -O $frpc $frpc_url2
   fi 
 }
  $frpc -v || download_frpc
