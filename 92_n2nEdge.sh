@@ -36,6 +36,24 @@ case $hw_type in
 		fi
 	;;
 esac
+addIPRoutes() {
+	# 传入$1为目标主机/网段、$2为网关地址
+	[ -z "$1" -o -z "$2" ] && echo "传入目标地址或网关地址为空，添加路由规则失败 ，请重新检查 ！！！" 
+	destIP=$1
+	gw=$2
+	# 判断IP是否有效，将IP地址转成列表 --- 此命令仅适用于x86_64的Linux系统，在Padavan中无法运行，停用判断
+	#destIP1=(${destIP//\./ })	
+	#if [ "${destIP1[0]}" -lt 255 -a "${destIP1[1]}" -lt 255 -a "${destIP1[2]}" -lt 255 -a "${destIP1[3]}" -lt 255 ]; then
+	# 如果IP的最后一位为0表示一个网段，如果不是0表示一个主机
+	#[ "${destIP1[3]}" -eq 0 ] && destIP="${destIP}/24"
+	#[ -n "$(ip route | grep $)"]
+	#else
+	#	echo "传入目标地址不是有效的IP地址，添加路由规则失败 ，请重新检查 ！！！" 
+	#fi
+	tmpIP=$(echo ${destIP}$gw | tr -d [0-9])
+	[ "$tmpIP" != ...... -o "$tmpIP" != .../... ] && echo "传入目标地址或网关地址无效，添加路由规则失败 ，请重新检查 ！！！"  && return
+	[ -n "$(ip route | grep $destIP)"] || ip route add $destIP via $gw
+}
 
 addIptables() {
 	[ -z "$(iptables -vnL INPUT | grep "Chain INPUT" | grep -i ACCEPT)" ] && \
@@ -44,14 +62,26 @@ addIptables() {
 	[ -z "$(iptables -vnL FORWARD | grep "Chain FORWARD" | grep -i ACCEPT)" ] && \
 	[ -z "$(iptables -vnL FORWARD | grep $vmnic_name)" ] && \
 	iptables -A FORWARD -i $vmnic_name -j ACCEPT
-	# for VmwareDebian
-	#[ -n "$(route -n | grep 192.168.75.)" ] || ip route add 192.168.75.0/24 via 10.0.0.75
+	# for wzt_VmwareDebian
+	#addIPRoutes 192.168.75.0/24 10.0.0.75
 	#[ -n "$(iptables -t nat -vnL | grep 192.168.75.)" ] || \
 	#	iptables -t nat -A POSTROUTING -d 192.168.75.0/24 -j SNAT --to-source 10.0.0.15
 	
-	#[ -n "$(route -n | grep 192.168.5.)" ] || ip route add 192.168.5.1 via 10.0.0.5
+	#addIPRoutes 192.168.5.1 10.0.0.5
 	#[ -n "$(iptables -t nat -vnL | grep 192.168.5.)" ] || \
 	#	iptables -t nat -A POSTROUTING -d 192.168.5.1 -j SNAT --to-source 10.0.0.15
+	
+	#addIPRoutes 192.168.84.1 10.0.0.5
+	#[ -n "$(iptables -t nat -vnL | grep 192.168.84.)" ] || \
+	#	iptables -t nat -A POSTROUTING -d 192.168.84.1 -j SNAT --to-source 10.0.0.15
+	# 需要在gxk2_05的路由器上开启 iptables -t nat -A POSTROUTING -d 192.168.84.1 -j SNAT --to-source 192.168.84.240
+	
+	# for jh_YoukuL1
+	#[ -n "$(iptables -t nat -vnL | grep 192.168.75.)" ] || \
+	#	iptables -t nat -A POSTROUTING -d 192.168.75.0/24 -j SNAT --to-source 192.168.75.211
+	# for gxk2_05
+	#[ -n "$(iptables -t nat -vnL | grep 192.168.84.)" ] || \
+	#	iptables -t nat -A POSTROUTING -d 192.168.84.1 -j SNAT --to-source 192.168.84.240
 }
 
 if [ ! -x $edge ]; then
