@@ -86,7 +86,7 @@ addIptables() {
 
 if [ ! -x $edge ]; then
 	rm -f $edge
-	wget -O $edge $down_url
+	wget -c -t 3 -T 10 -O $edge $down_url
 	chmod 555 $edge
 fi
 
