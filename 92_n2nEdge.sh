@@ -66,15 +66,15 @@ addIptables() {
 	iptables -A FORWARD -i $vmnic_name -j ACCEPT
 	# for wzt_VmwareDebian
 	#addIPRoutes 192.168.75.0/24 10.0.0.75
-	#[ -n "$(iptables -t nat -vnL | grep 192.168.75.)" ] || \
+	#[ -n "$(iptables -t nat -vnL | grep 192.168.75.0/24)" ] || \
 	#	iptables -t nat -A POSTROUTING -d 192.168.75.0/24 -j SNAT --to-source 10.0.0.15
 	
 	#addIPRoutes 192.168.5.1 10.0.0.5
-	#[ -n "$(iptables -t nat -vnL | grep 192.168.5.)" ] || \
-	#	iptables -t nat -A POSTROUTING -d 192.168.5.1 -j SNAT --to-source 10.0.0.15
+	#[ -n "$(iptables -t nat -vnL | grep 192.168.5.0/24)" ] || \
+	#	iptables -t nat -A POSTROUTING -d 192.168.5.0/24 -j SNAT --to-source 10.0.0.15
 	
 	#addIPRoutes 192.168.84.1 10.0.0.5
-	#[ -n "$(iptables -t nat -vnL | grep 192.168.84.)" ] || \
+	#[ -n "$(iptables -t nat -vnL | grep 192.168.84.1)" ] || \
 	#	iptables -t nat -A POSTROUTING -d 192.168.84.1 -j SNAT --to-source 10.0.0.15
 	# 需要在gxk2_05的路由器上开启 iptables -t nat -A POSTROUTING -d 192.168.84.1 -j SNAT --to-source 192.168.84.240
 	
