@@ -50,9 +50,11 @@ addIPRoutes() {
 	#else
 	#	echo "传入目标地址不是有效的IP地址，添加路由规则失败 ，请重新检查 ！！！" 
 	#fi
-	tmpIP=$(echo ${destIP}$gw | tr -d [0-9])
-	[ "$tmpIP" != ...... -o "$tmpIP" != .../... ] && echo "传入目标地址或网关地址无效，添加路由规则失败 ，请重新检查 ！！！"  && return
-	[ -n "$(ip route | grep $destIP)"] || ip route add $destIP via $gw
+	if [ -z "$(echo ${destIP}$gw | tr -d [0-9] | grep -E "......|.../...")" ]; then
+		echo "传入目标地址或网关地址无效，添加路由规则失败 ，请重新检查 ！！！"
+		return
+	fi
+	[ -n "$(ip route | grep $destIP)" ] || ip route add $destIP via $gw
 }
 
 addIptables() {
