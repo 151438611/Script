@@ -64,9 +64,9 @@ download_ttyd() {
 }
 if [ $ttyd_enable -eq 1 ] ; then 
   [ -f $ttyd ] || download_ttyd
-  if [ -z "$(pidof ttyd)" ] ; then
+    if [ -z "$(pidof ttyd)" ] ; then
       $ttyd -p $ttyd_port -m 3 -d 0 /bin/login &
-  fi
+    fi
 fi
 
 # -------------------------- frpc -----------------------------
@@ -78,7 +78,7 @@ download_frpc() {
     if [ -z "$($frpc -v)" ]; then
       rm -f $frpc
       wget -c -t 3 -T 10 -O $frpc $frpc_url2
-  fi 
+    fi 
 }
  $frpc -v || download_frpc
 chmod +x $frpc
