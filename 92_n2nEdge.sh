@@ -45,11 +45,11 @@ addIptables() {
 	[ -z "$(iptables -vnL FORWARD | grep $vmnic_name)" ] && \
 	iptables -A FORWARD -i $vmnic_name -j ACCEPT
 	# for VmwareDebian
-	#[ -n "$(route -n | grep 192.168.75.)" ] || ip route add 192.168.75.0/24 via 10.0.0.11
+	#[ -n "$(route -n | grep 192.168.75.)" ] || ip route add 192.168.75.0/24 via 10.0.0.75
 	#[ -n "$(iptables -t nat -vnL | grep 192.168.75.)" ] || \
 	#	iptables -t nat -A POSTROUTING -d 192.168.75.0/24 -j SNAT --to-source 10.0.0.15
 	
-	#[ -n "$(route -n | grep 192.168.5.)" ] || ip route add 192.168.5.1 via 10.0.0.50
+	#[ -n "$(route -n | grep 192.168.5.)" ] || ip route add 192.168.5.1 via 10.0.0.5
 	#[ -n "$(iptables -t nat -vnL | grep 192.168.5.)" ] || \
 	#	iptables -t nat -A POSTROUTING -d 192.168.5.1 -j SNAT --to-source 10.0.0.15
 }
