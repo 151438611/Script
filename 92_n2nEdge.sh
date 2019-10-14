@@ -65,26 +65,26 @@ addIptables() {
 	[ -z "$(iptables -vnL FORWARD | grep $vmnic_name)" ] && \
 	iptables -A FORWARD -i $vmnic_name -j ACCEPT
 	# for wzt_VmwareDebian
-	ip1=192.168.75.0/24
+	#ip1=192.168.75.0/24
 	#addIPRoutes $ip1 10.0.0.75
 	#[ -n "$(iptables -t nat -vnL | grep $ip1)" ] || \
 	#	iptables -t nat -A POSTROUTING -d $ip1 -j SNAT --to-source 10.0.0.15
-	ip2=192.168.5.0/24
+	#ip2=192.168.5.0/24
 	#addIPRoutes $ip2 10.0.0.5
 	#[ -n "$(iptables -t nat -vnL | grep $ip2)" ] || \
 	#	iptables -t nat -A POSTROUTING -d $ip2 -j SNAT --to-source 10.0.0.15
-	ip3=192.168.84.1
+	#ip3=192.168.84.1
 	#addIPRoutes $ip3 10.0.0.5
 	#[ -n "$(iptables -t nat -vnL | grep $ip3)" ] || \
 	#	iptables -t nat -A POSTROUTING -d $ip3 -j SNAT --to-source 10.0.0.15
 	# 需要在gxk2_05路由器上开启 iptables -t nat -A POSTROUTING -d 192.168.84.1 -j SNAT --to-source 192.168.84.240
 	
 	# for jh_YoukuL1
-	ip4=192.168.75.0/24
+	#ip4=192.168.75.0/24
 	#[ -n "$(iptables -t nat -vnL | grep $ip4)" ] || \
 	#	iptables -t nat -A POSTROUTING -d $ip4 -j SNAT --to-source 192.168.75.200
 	# for gxk2_05
-	ip5=192.168.84.1
+	#ip5=192.168.84.1
 	#[ -n "$(iptables -t nat -vnL | grep $ip5)" ] || \
 	#	iptables -t nat -A POSTROUTING -d $ip5 -j SNAT --to-source 192.168.84.240
 }
