@@ -60,8 +60,8 @@ chmod +x $frpc
 
 # ------------------------- frpc.ini -------------------------
 if [ ! -f "$frpcini" ]; then
-  lanip=$(nvram get lan_ipaddr) && i=$(echo $lanip | cut -d . -f 3)
-  host_name=$(nvram get computer_name)
+  lanip=$(uci get network.lan.ipaddr) && i=$(echo $lanip | cut -d . -f 3)
+  host_name=$(uci get system.@system[0].hostname)
   subdomain=${host_name}$i
 cat << END > $frpcini
 [common]
