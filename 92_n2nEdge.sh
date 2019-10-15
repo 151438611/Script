@@ -65,6 +65,9 @@ addIptables() {
 	[ -z "$(iptables -vnL FORWARD | grep $vmnic_name)" ] && \
 	iptables -A FORWARD -i $vmnic_name -j ACCEPT
 	# for wzt_VmwareDebian
+	#ip0=10.0.0.0/24
+	#[ -n "$(iptables -t nat -vnL | grep $ip0)" ] || \
+	#	iptables -t nat -A POSTROUTING -s $ip0 -j SNAT --to-source 192.168.3.177
 	#ip1=192.168.75.0/24
 	#addIPRoutes $ip1 10.0.0.75
 	#[ -n "$(iptables -t nat -vnL | grep $ip1)" ] || \
