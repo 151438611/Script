@@ -67,7 +67,7 @@ addIptables() {
 	# for wzt_VmwareDebian
 	#ip0=10.0.0.0/24
 	#[ -n "$(iptables -t nat -vnL | grep $ip0)" ] || \
-	#	iptables -t nat -A POSTROUTING -s $ip0 -j SNAT --to-source 192.168.3.177
+	#	iptables -t nat -A POSTROUTING -s $ip0 -d 192.168.3.0/24 -j SNAT --to-source 192.168.3.177
 	#ip1=192.168.75.0/24
 	#addIPRoutes $ip1 10.0.0.75
 	#[ -n "$(iptables -t nat -vnL | grep $ip1)" ] || \
