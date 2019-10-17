@@ -86,10 +86,12 @@ addIptables() {
 	#ip4=192.168.75.0/24
 	#[ -n "$(iptables -t nat -vnL | grep $ip4)" ] || \
 	#	iptables -t nat -A POSTROUTING -d $ip4 -j SNAT --to-source 192.168.75.200
-	# for gxk2_05
-	#ip5=192.168.84.1
-	#[ -n "$(iptables -t nat -vnL | grep $ip5)" ] || \
-	#	iptables -t nat -A POSTROUTING -d $ip5 -j SNAT --to-source 192.168.84.240
+	
+	# for szK2P_20
+	#ip4=192.168.3.0/24
+	#addIPRoutes $ip2 10.0.0.15
+	#[ -n "$(iptables -t nat -vnL | grep $ip4)" ] || \
+	#	iptables -t nat -A POSTROUTING -d $ip4 -j SNAT --to-source 192.168.75.200
 }
 
 if [ ! -x $edge ]; then
