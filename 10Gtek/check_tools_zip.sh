@@ -363,6 +363,7 @@ Huawei-S3700
 Huawei-S5700
 Huawei-CE6855
 IBM-G8264
+Mikrotik-CRS309_1G_8S+PC
 Juniper-QFX5100"
 ;;
 "10g"|"25g")
@@ -379,6 +380,7 @@ HP-5900
 Huawei-S5700
 Huawei-CE6855
 IBM-G8264
+Mikrotik-CRS309_1G_8S+PC
 Juniper-QFX5100"
 ;;
 "40g"|"56g")
@@ -422,6 +424,7 @@ HP-5900
 Huawei-S3700
 Huawei-S5700
 IBM-G8264
+Mikrotik-CRS309_1G_8S+PC
 Mellanox-SB7800
 Juniper-QFX5200
 Juniper-QFX5100"
