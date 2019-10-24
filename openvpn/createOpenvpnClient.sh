@@ -4,6 +4,7 @@
 # $1传入创建的用户名称
 userName=$1
 [ -z "$userName" ] && echo "use COMMAND: bash createOpenvpnClient.sh userName" && exit
+
 [ -z "$(which openvpn)" ] && ecgo "Openvpn command does not exist , Please install openvpn !!!" && echo exit 
 
 isFileDir() {
@@ -22,13 +23,16 @@ serverCA=${serverEasyrsa}/pki/ca.crt
 serverDH=${serverEasyrsa}/pki/dh.pem
 serverCRT=${serverEasyrsa}/pki/issued/server.crt
 serverKEY=${serverEasyrsa}/pki/private/server.key
+[ -f $serverCA ] || isFileDir $serverCA
+[ -f $serverDH ] || isFileDir $serverDH
+[ -f $serverCRT ] || isFileDir $serverCRT
+[ -f $serverKEY ] || isFileDir $serverKEY
 
 clientCA=$serverCA
 clientCRT=${serverEasyrsa}/pki/issued/${userName}.crt
 clientKEY=${clientEasyrsa}/pki/private/${userName}.key
 
 [ -d $clientEasyrsa ] || cp -r $serverEasyrsa $clientEasyrsa
-
 cd $clientEasyrsa
 rm -rf pki
 
@@ -37,18 +41,18 @@ rm -rf pki
 
 ./easyrsa gen-req $userName nopass
 [ -f pki/reqs/${userName}.req ] || isFileDir ${clientEasyrsa}/pki/reqs/${userName}.req
-[ -f pki/private/${userName}.key ] || isFileDir ${clientEasyrsa}/pki/private/${userName}.key
+[ -f $clientKEY ] || isFileDir $clientKEY
 
 cd $serverEasyrsa
 ./easyrsa import-req ${clientEasyrsa}/pki/reqs/${userName}.req $userName
 ./easyrsa sign client $userName
-[ -f pki/issued/${userName}.crt ] || isFileDir ${serverEasyrsa}/pki/issued/${userName}.crt
+[ -f $clientCRT ] || isFileDir $clientCRT
 
 cd $openvpnClientDir
-[ -d $userName ] || mkdir -p $userName
+[ -d $userName ] || mkdir $userName
 cd $userName
 cp $clientCA .
-mv $clientCRT .
-mv $clientKEY .
+mv $clientCRT ./client.crt
+mv $clientKEY ./client.key
 tar -zcf ${userName}.tgz *
 rm -rf ${clientEasyrsa}/pki
