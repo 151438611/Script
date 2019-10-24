@@ -20,6 +20,7 @@ serverCA=${serverEasyrsa}/pki/ca.crt
 serverDH=${serverEasyrsa}/pki/dh.pem
 serverCRT=${serverEasyrsa}/pki/issued/server.crt
 serverKEY=${serverEasyrsa}/pki/private/server.key
+tlsAuth=${openvpnServerDir}/ta.key
 [ -d $serverEasyrsa ] || isNotFileDir $serverEasyrsa
 [ -f $serverCA ] || isNotFileDir $serverCA
 [ -f $serverDH ] || isNotFileDir $serverDH
@@ -52,5 +53,6 @@ cd ${openvpnClientDir}/$userName
 cp $clientCA ./
 mv $clientCRT ./client.crt
 mv $clientKEY ./client.key
+[ -f $tlsAuth ] && cp $tlsAuth ./
 tar -zcf ${userName}.tgz *
 rm -rf ${clientEasyrsa}/pki
