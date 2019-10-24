@@ -7,7 +7,7 @@ userName=$1
 
 [ -z "$(which openvpn)" ] && ecgo "Openvpn command does not exist , Please install openvpn !!!" && echo exit 
 
-isFileDir() {
+isNotFileDir() {
 	# $1表示传入路径
 	echo "$1 : No such file or directory !!!"
 	exit
@@ -15,19 +15,18 @@ isFileDir() {
 openvpnClientDir=/etc/openvpn/client
 openvpnServerDir=/etc/openvpn/server
 # easy-rsa version 3
-clientEasyrsa=${openvpnClientDir}/easy-rsa
 serverEasyrsa=${openvpnServerDir}/easy-rsa
-[ ! -d $easyrsa ] && echo "easy-rsa3 file is no exist !!!" && exit
-
 serverCA=${serverEasyrsa}/pki/ca.crt
 serverDH=${serverEasyrsa}/pki/dh.pem
 serverCRT=${serverEasyrsa}/pki/issued/server.crt
 serverKEY=${serverEasyrsa}/pki/private/server.key
-[ -f $serverCA ] || isFileDir $serverCA
-[ -f $serverDH ] || isFileDir $serverDH
-[ -f $serverCRT ] || isFileDir $serverCRT
-[ -f $serverKEY ] || isFileDir $serverKEY
+[ -d $serverEasyrsa ] || isNotFileDir $serverEasyrsa
+[ -f $serverCA ] || isNotFileDir $serverCA
+[ -f $serverDH ] || isNotFileDir $serverDH
+[ -f $serverCRT ] || isNotFileDir $serverCRT
+[ -f $serverKEY ] || isNotFileDir $serverKEY
 
+clientEasyrsa=${openvpnClientDir}/easy-rsa
 clientCA=$serverCA
 clientCRT=${serverEasyrsa}/pki/issued/${userName}.crt
 clientKEY=${clientEasyrsa}/pki/private/${userName}.key
@@ -37,21 +36,20 @@ cd $clientEasyrsa
 rm -rf pki
 
 ./easyrsa init-pki
-[ -d pki ] || isFileDir ${clientEasyrsa}/pki
+[ -d pki ] || isNotFileDir ${clientEasyrsa}/pki
 
 ./easyrsa gen-req $userName nopass
-[ -f pki/reqs/${userName}.req ] || isFileDir ${clientEasyrsa}/pki/reqs/${userName}.req
-[ -f $clientKEY ] || isFileDir $clientKEY
+[ -f pki/reqs/${userName}.req ] || isNotFileDir ${clientEasyrsa}/pki/reqs/${userName}.req
+[ -f $clientKEY ] || isNotFileDir $clientKEY
 
 cd $serverEasyrsa
 ./easyrsa import-req ${clientEasyrsa}/pki/reqs/${userName}.req $userName
 ./easyrsa sign client $userName
-[ -f $clientCRT ] || isFileDir $clientCRT
+[ -f $clientCRT ] || isNotFileDir $clientCRT
 
-cd $openvpnClientDir
-[ -d $userName ] || mkdir $userName
-cd $userName
-cp $clientCA .
+[ -d ${openvpnClientDir}/$userName ] || mkdir -p ${openvpnClientDir}/$userName
+cd ${openvpnClientDir}/$userName
+cp $clientCA ./
 mv $clientCRT ./client.crt
 mv $clientKEY ./client.key
 tar -zcf ${userName}.tgz *
