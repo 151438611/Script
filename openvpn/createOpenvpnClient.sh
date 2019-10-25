@@ -3,7 +3,7 @@
 
 # $1传入创建的用户名称
 userName=$1
-[ -z "$userName" ] && echo "use COMMAND: bash createOpenvpnClient.sh userName" && exit
+[ -z "$userName" ] && echo "USE COMMAND: bash createOpenvpnClient.sh userName" && exit
 
 [ -z "$(which openvpn)" ] && ecgo "Openvpn command does not exist , Please install openvpn !!!" && echo exit 
 
