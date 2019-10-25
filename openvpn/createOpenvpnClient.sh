@@ -5,7 +5,7 @@
 userName=$1
 [ -z "$userName" ] && echo "USE COMMAND: bash createOpenvpnClient.sh userName" && exit
 
-[ -z "$(which openvpn)" ] && ecgo "Openvpn command does not exist , Please install openvpn !!!" && echo exit 
+[ -z "$(which openvpn)" ] && echo "Openvpn command does not exist , Please install openvpn !!!" && echo exit 
 
 isNotFileDir() {
 	# $1表示传入路径
