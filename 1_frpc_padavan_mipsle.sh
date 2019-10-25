@@ -19,15 +19,11 @@ bin_dir=/etc/storage/bin
 sh_name=$(basename $0)
 user_name=$(nvram get http_username)
 cron=/etc/storage/cron/crontabs/$user_name
-startup=/etc/storage/started_script.sh
-sh_url=${download_url}frp/frpc_padavan.sh
 
 cron_reboot="5 5 * * * [ -n \"\$(date +%d | grep 5)\" ] && reboot || ping -c2 -w5 114.114.114.114 || reboot"
-grep -qi "reboot" $cron || echo "$cron_reboot" >> $cron
+grep -qi reboot $cron || echo "$cron_reboot" >> $cron
 cron_sh="20 * * * * sh $bin_dir/$sh_name"
-grep -qi $sh_name $cron || echo "$cron_sh" >> $cron
-startup_sh="sleep 30 ; wget -P /tmp $sh_url && mv -f /tmp/$(basename $sh_url) $bin_dir/$sh_name ; sh $bin_dir/$sh_name"
-grep -qi $sh_name $startup || echo "$startup_sh" >> $startup
+grep -qi frp $cron || echo "$cron_sh" >> $cron
 
 # 开启从wan口访问路由器和ssh服务(默认关闭)，即从上级路由直接访问下级路由或ssh服务
 #[ $(nvram get misc_http_x) -eq 0 ] && nvram set misc_http_x=1 && nvram set misc_httpport_x=80 && nvram commit
