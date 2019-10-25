@@ -14,7 +14,7 @@ isNotFileDir() {
 openvpnClientDir=/etc/openvpn/client
 openvpnServerDir=/etc/openvpn/server
 # easy-rsa version 3
-serverEasyrsa=${openvpnServerDir}/easy-rsa
+serverEasyrsa=${openvpnServerDir}/easyrsa3
 serverCA=${serverEasyrsa}/pki/ca.crt
 serverDH=${serverEasyrsa}/pki/dh.pem
 serverCRT=${serverEasyrsa}/pki/issued/server.crt
@@ -26,7 +26,7 @@ tlsAuth=${openvpnServerDir}/ta.key
 [ -f $serverCRT ] || isNotFileDir $serverCRT
 [ -f $serverKEY ] || isNotFileDir $serverKEY
 
-clientEasyrsa=${openvpnClientDir}/easy-rsa
+clientEasyrsa=${openvpnClientDir}/easyrsa3
 clientCA=$serverCA
 clientCRT=${serverEasyrsa}/pki/issued/${userName}.crt
 clientKEY=${clientEasyrsa}/pki/private/${userName}.key
