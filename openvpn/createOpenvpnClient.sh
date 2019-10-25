@@ -3,14 +3,13 @@
 
 # $1传入创建的用户名称
 userName=$1
-[ -z "$userName" ] && echo "USE COMMAND: bash createOpenvpnClient.sh UserName" && exit
-
-[ -z "$(which openvpn)" ] && echo "openvpn command does not exist , Please install openvpn !!!" && echo exit 
+[ -z "$userName" ] && echo "USE COMMAND: bash createOpenvpnClient.sh UserName" && exit 1
+[ -z "$(which openvpn)" ] && echo "openvpn command does not exist , Please install openvpn !!!" && echo exit 1
 
 isNotFileDir() {
 	# $1表示传入路径
 	echo "$1 : No such file or directory !!!"
-	exit
+	exit 1
 }
 openvpnClientDir=/etc/openvpn/client
 openvpnServerDir=/etc/openvpn/server
@@ -45,6 +44,7 @@ rm -rf pki
 
 cd $serverEasyrsa
 ./easyrsa import-req ${clientEasyrsa}/pki/reqs/${userName}.req $userName
+[ $? -ne 0 ] && echo "./easyrsa import-req error!!!" && exit 1
 ./easyrsa sign client $userName
 [ -f $clientCRT ] || isNotFileDir $clientCRT
 
