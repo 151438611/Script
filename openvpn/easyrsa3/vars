@@ -91,7 +91,7 @@ set_var EASYRSA_DN	"org"
 set_var EASYRSA_REQ_COUNTRY	"CN"
 set_var EASYRSA_REQ_PROVINCE	"Guangdong"
 set_var EASYRSA_REQ_CITY	"ShenZhen"
-set_var EASYRSA_REQ_ORG	"ShenZhen"
+set_var EASYRSA_REQ_ORG		"ShenZhen"
 set_var EASYRSA_REQ_EMAIL	"xj@xj.com"
 set_var EASYRSA_REQ_OU		"My Organizational Unit"
 
