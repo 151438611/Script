@@ -3,9 +3,9 @@
 
 # $1传入创建的用户名称
 userName=$1
-[ -z "$userName" ] && echo "USE COMMAND: bash createOpenvpnClient.sh userName" && exit
+[ -z "$userName" ] && echo "USE COMMAND: bash createOpenvpnClient.sh UserName" && exit
 
-[ -z "$(which openvpn)" ] && echo "Openvpn command does not exist , Please install openvpn !!!" && echo exit 
+[ -z "$(which openvpn)" ] && echo "openvpn command does not exist , Please install openvpn !!!" && echo exit 
 
 isNotFileDir() {
 	# $1表示传入路径
@@ -53,6 +53,7 @@ cd ${openvpnClientDir}/$userName
 cp $clientCA ./
 cp $clientCRT ./
 cp $clientKEY ./
+cp ${clientEasyrsa}/pki/reqs/${userName}.req ./
 [ -f $tlsAuth ] && cp $tlsAuth ./
 tar -zcf ../${userName}.tgz *
 cd ..
