@@ -51,8 +51,9 @@ cd $serverEasyrsa
 [ -d ${openvpnClientDir}/$userName ] || mkdir -p ${openvpnClientDir}/$userName
 cd ${openvpnClientDir}/$userName
 cp $clientCA ./
-mv $clientCRT ./client.crt
-mv $clientKEY ./client.key
+cp $clientCRT ./
+cp $clientKEY ./
 [ -f $tlsAuth ] && cp $tlsAuth ./
-tar -zcf ${userName}.tgz *
-rm -rf ${clientEasyrsa}/pki
+tar -zcf ../${userName}.tgz *
+cd ..
+rm -rf ${clientEasyrsa}/pki $userName
