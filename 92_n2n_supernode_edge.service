@@ -1,0 +1,18 @@
+[Unit]
+Description=N2N supernode/edge Service 
+After=network-online.target
+Wants=network-online.target
+Documentation=https://github.com/ntop/n2n
+
+[Service]
+Type=simple
+#WorkingDirectory=/opt/
+ExecStart=/opt/supernode -l 8000
+#ExecStart=/opt/edge -r -d n2nEdge -c n2n -a 10.1.1.5 -s 255.255.255.0 -l n2n.xxy123.ltd:8000  
+ExecReload=/bin/kill -HUP $MAINPID
+KillMode=process
+RestartSec=10s
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
