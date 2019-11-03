@@ -1,0 +1,18 @@
+[Unit]
+Description=FRP Service 
+After=network-online.target
+Wants=network-online.target
+Documentation=https://github.com/fatedier/frp
+
+[Service]
+Type=simple
+#WorkingDirectory=/opt/frp
+#ExecStart=/opt/frp/frps -c /opt/frp/frps.ini
+ExecStart=/opt/frpc/frpc -c /opt/frpc/frpc.ini  
+ExecReload=/opt/frpc/frpc -c /opt/frpc/frpc.ini reload
+KillMode=process
+RestartSec=10s
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
