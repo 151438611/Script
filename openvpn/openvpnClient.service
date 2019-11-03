@@ -11,13 +11,17 @@ Type=notify
 PrivateTmp=true
 WorkingDirectory=/etc/openvpn/client
 ExecStart=/usr/sbin/openvpn --daemon --config /etc/openvpn/client/client.conf --writepid /var/run/openvpn/openvpn.pid
-CapabilityBoundingSet=CAP_IPC_LOCK CAP_NET_ADMIN CAP_NET_RAW CAP_SETGID CAP_SETUID CAP_SYS_CHROOT CAP_DAC_OVERRIDE
+ExecReload=/bin/kill -HUP $MAINPID
+CapabilityBoundingSet=CAP_IPC_LOCK CAP_NET_ADMIN CAP_NET_BIND_SERVICE CAP_NET_RAW CAP_SETGID CAP_SETUID CAP_SYS_CHROOT CAP_DAC_OVERRIDE CAP_AUDIT_WRITE
 LimitNPROC=10
+PIDFile=/var/run/openvpn/openvpn.pid
 DeviceAllow=/dev/null rw
 DeviceAllow=/dev/net/tun rw
 ProtectSystem=true
 ProtectHome=true
 KillMode=process
+RestartSec=5s
+Restart=on-failure
 
 [Install]
 WantedBy=multi-user.target
