@@ -21,7 +21,7 @@ DeviceAllow=/dev/net/tun rw
 ProtectSystem=true
 ProtectHome=true
 KillMode=process
-RestartSec=5s
+RestartSec=10s
 Restart=on-failure
 
 [Install]
