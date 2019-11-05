@@ -3,7 +3,7 @@
 MT7620、MT7621属于mipsle架构体系 ； BCM4709属于armv5架构体系 ； AR9344属于mips架构体系<br>
 ip：14.116.146.** <br>
 bind_port:7000 <br>
-kcp_bind_port:7000 --- 比tcp更可靠快速，客户端[common]需配置:server_port = 7000 ; protocol = kcp <br>
+kcp_bind_port:7000 --- 客户端[common]需配置:server_port = 7000 ; protocol = kcp <br>
 vhost_http_port:7080 <br>
 vhost_https_port:7443 <br>
 dashboard_port = 7500 <br>
