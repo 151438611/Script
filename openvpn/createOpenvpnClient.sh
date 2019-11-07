@@ -1,5 +1,6 @@
 #!/bin/bash
 # 用于自己创建Openvpn Client的证书并整理/etc/openvpn/client/UserName中
+# 创建好的文件: /etc/openvpn/client/UserName.tgz ; 复制到客户端并配置即可
 
 # $1传入创建的用户名称
 userName=$1
