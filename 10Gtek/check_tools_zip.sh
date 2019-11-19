@@ -67,6 +67,7 @@ fi
 # 提取订单编码数量,示例：30
 older_num_old=$(echo $older_all | awk '{print $5}')
 # 20191119新增10gsfp线缆的MCU方案
+older_kind=
 [ -n "$(echo $older_all | grep -Ei "10gsfp|0sfp" | grep -i mcu)" ] && older_kind=CiscoMCU
 [ -n "$(echo $older_all | grep -Ei "10gsfp|0sfp" | grep -Ei "h3c|hp")" ] && older_kind=H3C
 [ -z "$older_kind" ] && older_kind=null
