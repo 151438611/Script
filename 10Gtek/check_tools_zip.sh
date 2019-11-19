@@ -66,9 +66,12 @@ fi
 
 # 提取订单编码数量,示例：30
 older_num_old=$(echo $older_all | awk '{print $5}')
-[ -n "$(echo $older_all | grep -Ei "10gsfp|0sfp" | grep -Ei "h3c|hp")" ] && older_kind=H3C || older_kind=null
+# 20191119新增10gsfp线缆的MCU方案
+[ -n "$(echo $older_all | grep -Ei "10gsfp|0sfp" | grep -i mcu)" ] && older_kind=CiscoMCU
+[ -n "$(echo $older_all | grep -Ei "10gsfp|0sfp" | grep -Ei "h3c|hp")" ] && older_kind=H3C
+[ -z "$older_kind" ] && older_kind=null
 case $older_kind in
-"H3C")
+"H3C"|"CiscoMCU")
 	older_num=$(($older_num_old * 2 + 5)) 
 	;;
 *)
@@ -111,6 +114,8 @@ esac
 # 判断邮件中要求的编码类型，H3C表示H3C码, OEM表示OEM码,默认表示思科兼容
 if [ -n "$(echo $older_all | grep -Ei "10gsfp|0sfp" |grep -Ei "h3c|hp")" ]; then older_kind=H3C
 # 临时使用---超过200pcs东莞直接收货所以兼容一定要正确, 设置超过100pcs严格按兼容编码
+# 20191119新增10gsfp线缆的MCU方案
+elif [ -n "$(echo $older_all | grep -Ei "10gsfp|0sfp" |grep -i mcu)" ]; then older_kind=CiscoMCU
 elif [ -n "$(echo $older_remark | grep -i oem | grep -i optech)" ]; then older_kind=OEM
 elif [ -n "$(echo $older_remark | grep -i juniper)" -a $older_num_old -ge 150 ]; then older_kind=Juniper
 elif [ -n "$(echo $older_remark | grep -i arista)" -a $older_num_old -ge 150 ]; then 
@@ -222,6 +227,8 @@ else
 fi
 # 核对邮件内容中的兼容性和编码中的兼容性是否一致
 if [ "$older_kind" = "$code_kind" ] ; then result_kind="(ok)"
+# 20191119新增10gsfp线缆的MCU方案
+elif [ "$older_kind" = CiscoMCU -a "$code_kind" = Cisco ]; then result_kind="(ok)"
 else
 	result_kind="(-error!-)"
 	error_kind="邮件的兼容<${older_kind}>和编码兼容<${code_kind}>不一致，请仔细核对编码兼容情况！！！"
