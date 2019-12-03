@@ -26,14 +26,14 @@ dest_port=22
 frp_dir=/media/AiDisk_a2/frp/
 # ------- scp to youku-L1_TF ----------
 if [ "$router" = youku ]; then
-  dest_ip=admin@frp.xiongxinyi.cn
+  dest_ip=admin@ovpn.xxy1.ltd
   dest_dir=/media/AiCard_01/data
   dest_port=30111
   frp_dir=/media/AiCard_01/frp/
 fi
 # ------- scp to szk2p_usb ----------
 if [ "$router" = szk2p ]; then
-  dest_ip=admin@frp.xiongxinyi.cn
+  dest_ip=admin@ovpn.xxy1.ltd
   dest_dir=/media/AiDisk_a1/data
   dest_port=30320
   frp_dir=/media/AiDisk_a1/frp/
