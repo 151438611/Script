@@ -20,7 +20,7 @@ src8=
 source="$src0 $src1 $src2 $src3 $src4 $src5 $src6 $src7 $src8"
 
 # ------- scp to jhk2p_75_usb ----------
-if [ "$router" = youku ]; then
+if [ "$router" = jhk2p ]; then
   dest_ip=admin@frp.xxy1.ltd
   dest_dir=/media/AiDisk_a2/data
   dest_port=35175
