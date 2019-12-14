@@ -4,7 +4,7 @@
 # 用于淘宝网的抢购活动，准备工作：
 #   1、安装软件和浏览器驱动：pip install selenium==3.14.1
 #   2、因淘宝网密码登陆需要划块验证，无法通过；建议提前3~5分钟运行，使用手机淘宝app扫码手动登陆
-#   3、需要将活动商品事先添加进购物车，脚本只负责到时间提交
+#   3、需要将活动商品事先添加进购物车，脚本只负责到时间提交(大概在10秒内)
 # 脚本工作流程：
 #   打开淘宝购物车---自动跳转登陆页面---扫码登陆---判断抢购时间---进入购物车---点击结算---提交订单---手动付款完成
 import time, datetime
@@ -26,7 +26,7 @@ else:
 def login():
     # 购物网站地址，格式(一定要加前缀)： https://xxx.com
     browser.get("https://cart.taobao.com/cart.htm")
-    # 打开网页后等待页面加载完成，需要一点时间
+    # 打开网页后等待页面加载完成，根据网速不同，需要一点时间
     time.sleep(3)
     #browser.find_element_by_link_text("亲，请登录").click()
     # 登陆方式：默认扫码登陆0 密码登陆1
@@ -69,7 +69,7 @@ def shoping():
                     try:
                         if browser.find_element_by_id("J_SelectAll1"):
                             browser.find_element_by_id("J_SelectAll1").click()
-                            time.sleep(random.randint(2, 5))
+                            time.sleep(3)
                             print(f"已勾选所有商品，等待结算......")
                             break
                     except:
@@ -97,7 +97,7 @@ def shoping():
                     pass
             break
         else:
-            print(f"未到抢购时间：", now_time, " ，请耐心等待")
+            print(f"未到抢购时间：", now_time, " ，请耐心等待......")
             time.sleep(1)
 
 def main():
