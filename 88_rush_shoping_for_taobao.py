@@ -100,7 +100,7 @@ def shoping():
             break
         else:
             #print(f"未到抢购时间：", now_time, " ，请耐心等待......")
-            time.sleep(1)
+            time.sleep(2)
 
 def main():
     login()
