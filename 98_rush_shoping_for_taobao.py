@@ -33,10 +33,10 @@ def login():
     password_login = 0
     if password_login == 0:
         #pass
-        input("请打开手机淘宝app扫码网页上的二维码登陆，完成后按 Enter回车键 继续执行后面的代码")
+        input("请打开 手机淘宝 扫码网页上的二维码登陆，完成后按 Enter键 继续执行后面的代码")
         time.sleep(1)
     elif password_login == 1:
-        # 淘宝密码登陆无法输入划块验证，建议使用扫码登陆
+        # 密码登陆无法输入划块验证，建议使用扫码登陆
         browser.find_element_by_link_text("密码登录").click()
         browser.find_element_by_id("TPL_username_1").send_keys("xjunking")
         browser.find_element_by_id("TPL_password_1").send_keys("Xj456456")
