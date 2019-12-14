@@ -11,7 +11,7 @@ import time, datetime
 from selenium import webdriver
 
 # 先定义抢购时间，格式："2020-01-01 00:01:00"
-buy_time = "2019-12-14 17:50:00"
+buy_time = "2019-12-14 23:50:00"
 # 浏览器驱动存放路径,格式："D:\Python37\Scripts\chromedriver.exe"；若在环境变量中可不写
 driver_path="D:\Python37\Scripts\chromedriver.exe"
 # 打开网页
@@ -43,9 +43,10 @@ def login():
         browser.find_element_by_id("J_SubmitStatic").click()
         time.sleep(3)
     # 检查是否登陆成功，判断是否出现 "消息"
-    if browser.find_element_by_xpath("//span[@class='J_Tmsg_Logo_Text tmsg_logo_text']"):
-        print(f"登陆成功！", browser.find_element_by_xpath("//span[@class='J_Tmsg_Logo_Text tmsg_logo_text']").text)
-    else:
+    try:
+        if browser.find_element_by_xpath("//span[@class='J_Tmsg_Logo_Text tmsg_logo_text']"):
+            print(f"登陆成功！", browser.find_element_by_xpath("//span[@class='J_Tmsg_Logo_Text tmsg_logo_text']").text)
+    except:
         print(f"登陆失败，请重新登陆！！！")
         exit(1)
 
@@ -57,9 +58,10 @@ def shoping():
             # 登陆购物车
             browser.get("https://cart.taobao.com/cart.htm")
             time.sleep(2)
-            if browser.find_element_by_xpath("//span[@class='J_Tmsg_Logo_Text tmsg_logo_text']"):
-                print(f"已登陆成功！", browser.find_element_by_xpath("//span[@class='J_Tmsg_Logo_Text tmsg_logo_text']").text)
-            else:
+            try:
+                if browser.find_element_by_xpath("//span[@class='J_Tmsg_Logo_Text tmsg_logo_text']"):
+                    print(f"已登陆成功！", browser.find_element_by_xpath("//span[@class='J_Tmsg_Logo_Text tmsg_logo_text']").text)
+            except:
                 print(f"登陆已失败，正在重新登陆......")
                 login()
             # 勾选购物车列表：1表示全选 0表示手动勾选
