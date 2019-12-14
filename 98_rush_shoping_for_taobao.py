@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 #coding:utf-8
+# Author: XJ Date: 20191214
 # 用于淘宝网的抢购活动，准备工作：
 #   1、安装软件和浏览器驱动：pip install selenium==3.14.1
 #   2、因淘宝网密码登陆需要划块验证，无法通过；建议提前3~5分钟运行，使用手机淘宝app扫码手动登陆
