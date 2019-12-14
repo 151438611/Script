@@ -99,7 +99,7 @@ def shoping():
                     pass
             break
         else:
-            print(f"未到抢购时间：", now_time, " ，请耐心等待......")
+            #print(f"未到抢购时间：", now_time, " ，请耐心等待......")
             time.sleep(1)
 
 def main():
