@@ -22,6 +22,7 @@ if driver_path:
     browser = webdriver.Chrome(options=options, executable_path=driver_path)
 else:
     browser = webdriver.Chrome(options=options)
+browser.implicitly_wait(5)
 
 def login():
     # 购物网站地址，格式(一定要加前缀)： https://xxx.com
@@ -34,7 +35,6 @@ def login():
     if password_login == 0:
         #pass
         input("请打开 手机淘宝 扫码网页上的二维码登陆，完成后按 Enter键 继续执行后面的代码")
-        time.sleep(1)
     elif password_login == 1:
         # 密码登陆无法输入划块验证，建议使用扫码登陆
         browser.find_element_by_link_text("密码登录").click()
@@ -57,7 +57,6 @@ def shoping():
             print(f"现在时间：",now_time," ,正在抢购......")
             # 登陆购物车
             browser.get("https://cart.taobao.com/cart.htm")
-            time.sleep(2)
             try:
                 if browser.find_element_by_xpath("//span[@class='J_Tmsg_Logo_Text tmsg_logo_text']"):
                     print(f"已登陆成功！", browser.find_element_by_xpath("//span[@class='J_Tmsg_Logo_Text tmsg_logo_text']").text)
@@ -71,7 +70,7 @@ def shoping():
                     try:
                         if browser.find_element_by_id("J_SelectAll1"):
                             browser.find_element_by_id("J_SelectAll1").click()
-                            time.sleep(3)
+                            # time.sleep(3)
                             print(f"已勾选所有商品，等待结算......")
                             break
                     except:
@@ -85,7 +84,7 @@ def shoping():
                     if browser.find_element_by_id("J_SmallSubmit"):
                         browser.find_element_by_id("J_SmallSubmit").click()
                         print(f"正在提交结算.....")
-                        time.sleep(3)
+                        # time.sleep(3)
                         break
                 except:
                     pass
