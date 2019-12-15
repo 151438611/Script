@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 #coding:utf-8
+# 用于恩山论坛(www.right.com.cn)每日登陆签到
 
 import time
 from selenium import webdriver
@@ -8,8 +9,8 @@ from selenium import webdriver
 driver_path="D:\Python37\Scripts\chromedriver.exe"
 # 打开网页
 options = webdriver.ChromeOptions()
-#options.add_argument("--headless")  # 使用无界面选项
-#options.add_argument("--disable-gpu")   # 如果不加这个选项 有时候定位会出现问题,定位会偏左
+options.add_argument("--headless")  # 使用无界面选项
+options.add_argument("--disable-gpu")   # 如果不加这个选项 有时候定位会出现问题,定位会偏左
 if driver_path:
     browser = webdriver.Chrome(options=options, executable_path=driver_path)
 else:
