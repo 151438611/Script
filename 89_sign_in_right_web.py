@@ -9,8 +9,10 @@ from selenium import webdriver
 driver_path="D:\Python37\Scripts\chromedriver.exe"
 # 打开网页
 options = webdriver.ChromeOptions()
-options.add_argument("--headless")  # 使用无界面选项
-options.add_argument("--disable-gpu")   # 如果不加这个选项 有时候定位会出现问题,定位会偏左
+# 使用无界面选项
+options.add_argument("--headless")
+# 如果不加这个选项 有时候定位会出现问题,定位会偏左
+options.add_argument("--disable-gpu")
 if driver_path:
     browser = webdriver.Chrome(options=options, executable_path=driver_path)
 else:
@@ -18,6 +20,7 @@ else:
 browser.implicitly_wait(5)
 username = "xx."
 password = "xx"
+
 def login():
     browser.get("https://www.right.com.cn/forum/")
     browser.find_element_by_xpath("//input[@id='ls_username' and @name='username' and @type='text']").send_keys(username)
