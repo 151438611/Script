@@ -6,7 +6,6 @@ import os
 import TickerConfig
 from config.urlConf import urls
 
-
 def getDrvicesID(session):
     """
     :return:
