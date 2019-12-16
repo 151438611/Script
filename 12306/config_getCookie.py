@@ -15,14 +15,16 @@ def getDrvicesID(session):
         from selenium import webdriver
         cookies = []
         # 解决放镜像里 DevToolsActivePort file doesn't exist的问题
-        options = webdriver.ChromeOptions()
-        if os.name != 'nt' and TickerConfig.CHROME_CHROME_PATH:
-            options = webdriver.ChromeOptions()
-            options.binary_location = TickerConfig.CHROME_CHROME_PATH
-            options.add_argument("--no-sandbox")
-            options.add_argument("--headless")
+        #options = webdriver.ChromeOptions()
+        # 因Centos7_Desktop中默认浏览器为Firefox,将Chrome替换为Firefox
+        options = webdriver.FirefoxOptions()
+        options.add_argument("--headless")
+        options.add_argument("--disable-gpu")
+        #if os.name != 'nt' and TickerConfig.CHROME_CHROME_PATH:
+            #options.binary_location = TickerConfig.CHROME_CHROME_PATH
+            #options.add_argument("--no-sandbox")
         #driver = webdriver.Chrome(executable_path=TickerConfig.CHROME_PATH,chrome_options=options)
-        driver = webdriver.Firefox(executable_path=TickerConfig.CHROME_PATH)
+        driver = webdriver.Firefox(executable_path=TickerConfig.CHROME_PATH,options=options)
         driver.get("https://www.12306.cn/index/index.html")
         time.sleep(8)
         for c in driver.get_cookies():
