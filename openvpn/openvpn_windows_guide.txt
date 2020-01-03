@@ -1,8 +1,11 @@
 1、先安装Windows Openvpn软件
+
 2、将配置文件和证书共5个（ca.crt 、ta.key、wztxx.crt、wztxx.key、client.ovpn）文件复制到openvpn/config目录
      所有客户端证书 ca.crt ta.key 证书相同，仅 wztxx.crt wztxx.key 证书不一样
+     
 3.1、修改client.ovpn配置文件，使用写字板打开，修改配置文件中cert和key后面的名字:将 client.xxx 改成 wztxx.xxx
 3.2、若不修改client.ovpn，则需要修改证书文件 wztxx.crt、wztxx.key 重命名为 client.crt、client.key ; 让配置和证书名称保持一致
+
 4、打开openvpnGUI，右键选择连接即可
 
 5、重要配置说明：
