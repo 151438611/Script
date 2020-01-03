@@ -54,7 +54,7 @@ cd ${openvpnClientDir}/$userName
 cp $clientCA ./
 cp $clientCRT ./
 cp $clientKEY ./
-cp ${clientEasyrsa}/pki/reqs/${userName}.req ./
+#cp ${clientEasyrsa}/pki/reqs/${userName}.req ./
 [ -f $tlsAuth ] && cp $tlsAuth ./
 tar -zcf ../${userName}.tgz *
 cd ..
