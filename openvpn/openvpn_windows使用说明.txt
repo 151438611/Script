@@ -1,0 +1,16 @@
+1、先安装Windows Openvpn软件
+2、将配置文件和证书共5个（ca.crt 、ta.key、wztxx.crt、wztxx.key、client.ovpn）文件复制到openvpn/config目录
+     所有客户端证书 ca.crt ta.key 证书相同，仅 wztxx.crt wztxx.key 证书不一样
+3.1、修改client.ovpn配置文件，使用写字板打开，修改配置文件中cert和key后面的名字:将 client.xxx 改成 wztxx.xxx
+3.2、若不修改client.ovpn，则需要修改证书文件 wztxx.crt、wztxx.key 重命名为 client.crt、client.key ; 让配置和证书名称保持一致
+4、打开openvpnGUI，右键选择连接即可
+
+5、重要配置说明：
+	服务端分配的dhcp网段： 10.2.2.0/24
+	服务端对wztxx客户端已开启静态ip地址分配，wzt01 02 03...对应静态IP为 10.2.2.11 12 13... ，并开启全局流量经过服务端路由（可单独关闭某个客户端的全局流量不经过服务端，仅连接服务端；若需要全局流量走服务端可手动在客户端配置路由表即可）
+	服务端端口号/协议械：tun udp/19452 ；尽量不要修改协议和模式，端口号更改后所有客户端都需要更改
+	服务端加密模式：cipher AES-256-CBC ；客户端也需要保持一致否则无法连接
+	服务端开启 tls-auth 认证功能 ，传输更安全；客户端也需要开启否则无法连接
+	服务端未开启压缩传输，压缩会占用一些cpu资源，对于一些小型设备例如路由器等嵌入式设备会造成cpu紧张，不建议开启
+	客户端证书仅支持同一时间一台设备使用，不能同时多台设备重复使用
+	
