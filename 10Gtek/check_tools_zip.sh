@@ -118,16 +118,16 @@ if [ -n "$(echo $older_all | grep -Ei "10gsfp|0sfp" |grep -Ei "h3c|hp")" ]; then
 # 20191119新增10gsfp线缆的MCU方案
 elif [ -n "$(echo $older_all | grep -Ei "10gsfp|0sfp" |grep -i mcu)" ]; then older_kind=CiscoMCU
 elif [ -n "$(echo $older_remark | grep -i oem | grep -i optech)" ]; then older_kind=OEM
-elif [ -n "$(echo $older_remark | grep -i juniper)" -a $older_num_old -ge 150 ]; then older_kind=Juniper
-elif [ -n "$(echo $older_remark | grep -i arista)" -a $older_num_old -ge 150 ]; then 
-	[ -n "$(echo $older_type | grep -Ei "qsfp|q10")" ] && older_kind=Arista || older_kind=OEM
-elif [ -n "$(echo $older_remark | grep -i alcatel)" -a $older_num_old -ge 150 ]; then older_kind="Alcatel-lucent"
-elif [ -n "$(echo $older_remark | grep -i brocade)" -a $older_num_old -ge 150 ]; then older_kind=Brocade
-elif [ -n "$(echo $older_remark | grep -Ei "dell|force")" -a $older_num_old -ge 150 ]; then 
+elif [ -n "$(echo $older_remark | grep -i juniper)" -a $older_num_old -ge 100 ]; then older_kind=Juniper
+elif [ -n "$(echo $older_remark | grep -i arista)" -a $older_num_old -ge 100 ]; then 
+	[ -n "$(echo $older_type | grep -Ei "qsfp|q10|zsp")" ] && older_kind=Arista || older_kind=OEM
+elif [ -n "$(echo $older_remark | grep -i alcatel)" -a $older_num_old -ge 100 ]; then older_kind="Alcatel-lucent"
+elif [ -n "$(echo $older_remark | grep -i brocade)" -a $older_num_old -ge 100 ]; then older_kind=Brocade
+elif [ -n "$(echo $older_remark | grep -Ei "dell|force")" -a $older_num_old -ge 100 ]; then 
 	[ -n "$(echo $older_type | grep -i 10gsfp)" ] && older_kind=Dell || older_kind=OEM
-elif [ -n "$(echo $older_remark | grep -i "mellanox")" -a $older_num_old -ge 150 ]; then 
+elif [ -n "$(echo $older_remark | grep -i "mellanox")" -a $older_num_old -ge 100 ]; then 
 	[ -n "$(echo $older_type | grep -i zqp)" ] && older_kind=Mellanox || older_kind=OEM
-elif [ -n "$(echo $older_remark | grep -Ei "huawei|intel|extreme")" -a $older_num_old -ge 150 ]; then older_kind=OEM
+elif [ -n "$(echo $older_remark | grep -Ei "huawei|intel|extreme")" -a $older_num_old -ge 100 ]; then older_kind=OEM
 # 非以上备注默认思科码代替
 else older_kind=Cisco
 fi
