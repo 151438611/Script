@@ -56,6 +56,6 @@ cp $clientCRT ./
 cp $clientKEY ./
 #cp ${clientEasyrsa}/pki/reqs/${userName}.req ./
 [ -f $tlsAuth ] && cp $tlsAuth ./
-tar -zcf ../${userName}.tgz *
+tar -cf ../${userName}.tar *
 cd ..
 rm -rf ${clientEasyrsa}/pki $userName
