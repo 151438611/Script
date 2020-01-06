@@ -3,6 +3,6 @@
 
 log=/tmp/ip.txt
 
-ipinfo=$(curl -q https://ip.cn | awk -F \" '{print $4}')
+ipinfo=$(curl -q https://ip.cn 2> /dev/null | awk -F \" '{print $4}')
 
 echo "$(date +"%F %T") IP: $ipinfo" >> $log
