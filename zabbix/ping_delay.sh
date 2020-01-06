@@ -5,7 +5,7 @@
 #  1 需要修改 zabbix_server.conf 和 zabbix_agentd.conf 中的 Timeout=10 或更长
 #  2 chmod +x ping_delay.sh
 # zabbix_agentd.conf: UserParameter=ping.delay[*],/bin/bash /etc/zabbix/ping_delay.sh $1
-# zabbix_agentd.conf: UserParameter=get_public_ip,/bin/curl https://ip.cn 2> /dev/null | awk -F \" '{print $4}'   # 监控本地网络的公网IP变化
+# zabbix_agentd.conf: UserParameter=get.publicIP,/bin/curl https://ip.cn 2> /dev/null | awk -F \" '{print $4}'   # 监控本地网络的公网IP变化
 
 #export PATH=/bin:/sbin:/usr/bin:/usr/sbin:$PATH
 
