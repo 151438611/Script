@@ -6,10 +6,11 @@
 if [ $# -eq 0 ]; then  
     echo "input arg error!" 
 fi 
+
 # 数据库状态检查
 MysqlAdmin=/usr/bin/mysqladmin
-MysqlUser=mysqlcheck
-MysqlPassword=mysqlcheck
+MysqlUser=xxx
+MysqlPassword=xxx
 MysqlHost=localhost
 MysqlPort=3306
 MysqlConnect="$MysqlAdmin -u$MysqlUser -p$MysqlPassword -h$MysqlHost -P$MysqlPort"
