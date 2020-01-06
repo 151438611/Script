@@ -1,10 +1,12 @@
 #!/bin/bash
-# 适用Zabbix-agent，用于检测系统状态
-# 
+# 适用Zabbix-agent，用于检测Mysql状态
+# zabbix_agentd.conf:
+# UserParameter=mysql.status[*],/bin/bash /etc/zabbix/mysql_status.sh $1
 
 # 检查参数是否正确 
 if [ $# -eq 0 ]; then  
     echo "input arg error!" 
+    exit 1
 fi 
 
 # 数据库状态检查
