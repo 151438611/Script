@@ -8,7 +8,7 @@ grep -qi $(basename $0) $cron || echo -e "\n23 23 * * * sh /etc/storage/bin/$(ba
 
 from_add=xiongjun0928@163.com
 username=${from_add%@*}
-userpasswd=xiongjun
+userpasswd=xiongxxx
 smtp_add=smtp.${from_add#*@}
 to_add=xiongjun0928@foxmail.com
 cc_add=jun_xiong@10gsfp.com
