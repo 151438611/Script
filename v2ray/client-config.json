@@ -50,7 +50,7 @@
             "type": "field",
             "outboundTag": "blackhole_drop",
             "domain": [
-                // 个人常用国外域名,格式 "domain:",
+                // 个人常用国外域名,格式： "domain:",
                 "domain:google.com",
                 "domain:google.com.hk",    
                 "domain:github.com",
