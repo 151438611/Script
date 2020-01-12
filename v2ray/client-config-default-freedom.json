@@ -68,6 +68,8 @@
                 "domain:amazon.com",
                 "domain:amazon.co.jp",
                 "domain:ssl-images-amazon.com",
+                "domain:media-amazon.com",
+                "domain:amazonaws.com",
                 
                 "domain:wikipedia.org",
                 "domain:v2ray.com"
