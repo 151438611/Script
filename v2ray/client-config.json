@@ -23,7 +23,6 @@
     "outbounds": [
         {
         "protocol": "freedom",
-        //"tag": "direct_connect",   // 取消tag表示所有默认出口
         "settings": {}
         },
         {
@@ -47,8 +46,7 @@
     ],
     "routing": {
         "domainStrategy": "AsIs",
-        "rules": [  
-            {
+        "rules": [{
             "type": "field",
             "outboundTag": "blackhole_drop",
             "domain": [
@@ -62,6 +60,6 @@
                 "domain:v2ray.com"
                 ]
             }]
-      }, 
+    }, 
     "mux": {"enabled": true}
 }
