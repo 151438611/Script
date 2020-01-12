@@ -48,7 +48,7 @@
         "domainStrategy": "AsIs",
         "rules": [{
             "type": "field",
-            "outboundTag": "blackhole_drop",
+            "outboundTag": "out_v2ray_server",
             "domain": [
                 // 个人常用国外域名,格式： "domain:",
                 "domain:google.com",
