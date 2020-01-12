@@ -21,7 +21,12 @@
             }
         }],
     "outbounds": [
-    {
+        {
+        "protocol": "freedom",
+        //"tag": "direct_connect",   // 取消tag表示所有默认出口
+        "settings": {}
+        },
+        {
         "protocol": "vmess", 
         "settings": {
         "vnext": [{
@@ -30,23 +35,18 @@
             "users": [{
                 "id": "11f98504-f22a-4665-b617-af52ed4c4e15",
                 "alterId": 64 }]  
-          }]
-      },
-      "tag": "out_v2ray_server" 
-      },
-      {
-        "protocol": "freedom",
-        //"tag": "direct_connect",   // 取消tag表示所有默认出口
-        "settings": {}
-      },
-      {
+                  }]
+                  },
+        "tag": "out_v2ray_server" 
+        },
+        {
         "protocol": "blackhole",
         "settings": {},
         "tag": "blackhole_drop"
-      }
+        }
     ],
     "routing": {
-        "domainStrategy": "IPOnDemand",
+        "domainStrategy": "AsIs",
         "rules": [  
             {
             "type": "field",
