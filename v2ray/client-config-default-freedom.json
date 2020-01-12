@@ -70,7 +70,8 @@
                 "domain:ssl-images-amazon.com",
                 "domain:media-amazon.com",
                 "domain:amazonaws.com",
-                
+                "domain:hpe.com",
+
                 "domain:wikipedia.org",
                 "domain:v2ray.com"
                 ]
