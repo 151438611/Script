@@ -1,5 +1,5 @@
 // 客户端配置
-// 适用于指定域名走v2ray-server，默认直连，提高效率
+// 适用于指定规则 某些国外域名走v2ray-server，默认直连，提高效率
 {
     "log": {
         "loglevel": "warning",   
