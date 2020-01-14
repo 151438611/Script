@@ -13,6 +13,8 @@
 </head>
 <body>
     <a href="./mysql/index.php" target="_blank"><img border="0" src="./mariadb.jpg" /></a>
+    <a href="https://192.168.200.200" target="_blank"><img border="0" src="./zabbix.jpg" /></a>
+    <a href="https://192.168.3.178" target="_blank"><img border="0" src="./kodexplorer.jpg" /></a>
     <div>
 		<p>Transceiver Module Group Compatibility Matrix</p>
 		
@@ -47,7 +49,7 @@ else { die('<script> alert("无法分辨是物料编号或产品名称 : '. $inp
 
 $db_username = "wzt";
 $db_password = "wzt";
-$db_host = "localhost";
+$db_host = "192.168.200.200";
 $db_name = "product";
 $tab_name = "product_compatibility";
 // mysqli_connect(host,username,password,dbname,port,socket);
