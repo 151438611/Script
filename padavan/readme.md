@@ -98,7 +98,8 @@ vi user/shared/defaults.c
   { "sshd_enable", "1" },
   ...
 # 4.5 添加中文语言
-
+  将CN.dict下载到trunk/user/www/dict; 并重命名为RU.dict
+  mv CN.dict RU.dict
 
 # 5 配置完,开始编码生成固件
 cd /opt/rt-n56u/trunk
