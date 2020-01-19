@@ -53,10 +53,12 @@ vi configs/boards/RT-AC54U/kernel-3.4.x.config
   CONFIG_RAETH_ESW_PORT_LAN3=1
   CONFIG_RAETH_ESW_PORT_LAN4=0
   ...
-  
+# 4.4 添加中文语言
+
+
 # 5 配置完,开始编码生成固件
 cd /opt/rt-n56u/trunk
 ./clear_tree
 ./build_firmware
-
+# 6 编码完成的固件在此目录下 /opt/rt-n56u/trunk/images  
 ```
