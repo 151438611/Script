@@ -102,6 +102,8 @@ vi user/shared/defaults.c
   mv CN.dict RU.dict
   vi trunk/user/www/Makefile
     echo "LANG_RU=简体中文" >> $(ROMFS_DIR)/www/EN.header
+    ...
+    
 # 5 配置完,开始编码生成固件
 cd /opt/rt-n56u/trunk
 ./clear_tree
