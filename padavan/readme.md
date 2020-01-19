@@ -81,6 +81,9 @@ vi user/shared/defaults.h
   #define DEF_NTP_SERVER0         "ntp.aliyun.com"
   ...
 vi user/shared/defaults.c
+  { "wan_dnsenable_x", "0" },
+  { "wan_dns1_x", "114.114.114.114" },
+  { "wan_dns2_x", "1.2.4.8" },
   { "ntp_period", "48" },
   { "di_addr0", "114.114.114.114" },
   { "di_addr1", "8.8.8.8" },
