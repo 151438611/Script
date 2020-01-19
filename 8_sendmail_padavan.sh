@@ -23,8 +23,11 @@ $($frpc status)
 $(awk -F, 'BEGIN{print "Client infomation : "} {print $1"\t"$2"\t"$3}' /tmp/static_ip.inf)
 
 =======================================================
+$(ip address | grep inet)
+
 autoChangeAp.log : 
 $(tail -n 48 /tmp/autoChangeAp.log | grep -E ":00:|WIFI")
+
 "
 #$(ifconfig | awk 'BEGIN{print "Iface_IP infomation : "}/inet addr/ || /HWaddr/ {print $0}')
 
