@@ -30,6 +30,7 @@ vi .config
   CONFIG_FIRMWARE_ENABLE_EXT4=y
   CONFIG_FIRMWARE_INCLUDE_NFSC=y
   CONFIG_FIRMWARE_INCLUDE_CIFS=y
+  CONFIG_FIRMWARE_INCLUDE_DROPBEAR=y
   ...
 vi configs/boards/RT-AC54U/board.mk
   BOARD_NUM_USB_PORTS=0
@@ -48,6 +49,11 @@ vi configs/boards/RT-AC54U/board.h
   ...
 # 4.3 修改kernel内核配置
 vi configs/boards/RT-AC54U/kernel-3.4.x.config
+  CONFIG_RALINK_MT7620=y
+  CONFIG_RT2880_DRAM_64M=y
+  CONFIG_RALINK_RAM_SIZE=64
+  CONFIG_RT2880_FLASH_AUTO=y
+  CONFIG_RT2880_UART_57600=y
   CONFIG_RALINK_UART_BRATE=57600
   CONFIG_RAETH_ESW_PORT_WAN=4
   CONFIG_RAETH_ESW_PORT_LAN1=3
@@ -55,7 +61,43 @@ vi configs/boards/RT-AC54U/kernel-3.4.x.config
   CONFIG_RAETH_ESW_PORT_LAN3=1
   CONFIG_RAETH_ESW_PORT_LAN4=0
   ...
-# 4.4 添加中文语言
+# 4.4 修改路由器系统参数
+vi user/shared/defaults.h
+  #define SYS_USER_ROOT           "admin"
+  #define DEF_LAN_ADDR            "192.168.5.1"
+  #define DEF_LAN_DHCP_BEG        "192.168.5.2"
+  #define DEF_LAN_DHCP_END        "192.168.5.244"
+  #define DEF_LAN_MASK            "255.255.255.0"
+  #define DEF_WLAN_2G_CC          "CN"
+  #define DEF_WLAN_5G_CC          "CN"
+  #define DEF_WLAN_2G_SSID        "ASUS_24G"
+  #define DEF_WLAN_5G_SSID        "ASUS_5G"
+  #define DEF_WLAN_2G_GSSID       "ASUS_GUEST_24G"
+  #define DEF_WLAN_5G_GSSID       "ASUS_GUEST_5G"
+  #define DEF_WLAN_2G_PSK         "1234567890"
+  #define DEF_WLAN_5G_PSK         "1234567890"
+  #define DEF_ROOT_PASSWORD       "admin"
+  #define DEF_TIMEZONE            "CST-8"
+  #define DEF_NTP_SERVER0         "ntp.aliyun.com"
+  ...
+vi user/shared/defaults.c
+  { "ntp_period", "48" },
+  { "di_addr0", "114.114.114.114" },
+  { "di_addr1", "8.8.8.8" },
+  { "di_addr2", "" },
+  { "di_addr3", "" },
+  { "di_addr4", " },
+  { "di_addr5", "" },
+  { "di_port0", "53" },
+  { "di_port1", "53" },
+  { "di_port2", "" },
+  { "di_port3", "" },
+  { "di_port4", "" },
+  { "di_port5", "" },
+  { "telnetd", "0" },
+  { "sshd_enable", "1" },
+  ...
+# 4.5 添加中文语言
 
 
 # 5 配置完,开始编码生成固件
