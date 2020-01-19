@@ -24,8 +24,8 @@ vi .config
   CONFIG_FIRMWARE_PRODUCT_ID="RT-AC54U"
   CONFIG_LINUXDIR=linux-3.4.x
   CONFIG_TOOLCHAIN_DIR=/opt/rt-n56u/toolchain-mipsel
-  CONFIG_FIRMWARE_CPU_600MHZ=y
-  #CONFIG_FIRMWARE_CPU_SLEEP=y
+  #CONFIG_FIRMWARE_CPU_600MHZ=y
+  CONFIG_FIRMWARE_CPU_SLEEP=y
   #CONFIG_FIRMWARE_ENABLE_USB=y
   CONFIG_FIRMWARE_ENABLE_EXT4=y
   CONFIG_FIRMWARE_INCLUDE_NFSC=y
@@ -65,8 +65,8 @@ vi configs/boards/RT-AC54U/kernel-3.4.x.config
 vi user/shared/defaults.h
   #define SYS_USER_ROOT           "admin"
   #define DEF_LAN_ADDR            "192.168.5.1"
-  #define DEF_LAN_DHCP_BEG        "192.168.5.2"
-  #define DEF_LAN_DHCP_END        "192.168.5.244"
+  #define DEF_LAN_DHCP_BEG        "192.168.5.10"
+  #define DEF_LAN_DHCP_END        "192.168.5.100"
   #define DEF_LAN_MASK            "255.255.255.0"
   #define DEF_WLAN_2G_CC          "CN"
   #define DEF_WLAN_5G_CC          "CN"
@@ -84,6 +84,7 @@ vi user/shared/defaults.c
   { "wan_dnsenable_x", "1" },
   { "wan_dns1_x", "114.114.114.114" },
   { "wan_dns2_x", "1.2.4.8" },
+  
   { "ntp_period", "48" },
   { "di_addr0", "114.114.114.114" },
   { "di_addr1", "8.8.8.8" },
