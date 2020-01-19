@@ -55,7 +55,7 @@ vi configs/boards/RT-AC54U/kernel-3.4.x.config
   ...
   
 # 5 配置完,开始编码生成固件
-cd /opt/rt-n56u/toolchain-mipsel
+cd /opt/rt-n56u/trunk
 ./clear_tree
 ./build_firmware
 
