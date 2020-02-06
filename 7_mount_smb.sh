@@ -21,6 +21,6 @@ dest=/media/hwnas
 # === mount 2 ==========================
 user=GCB01 
 password="*WGQGf"
-src=//192.168.1.250/gc-fae/2018/20181001 
+src=//192.168.1.250/gc-fae/faeTest_bak/data_backup
 dest=/media/10gtek
-#fun_mount $user $password $src $dest 
+#fun_mount $user $password $src $dest
