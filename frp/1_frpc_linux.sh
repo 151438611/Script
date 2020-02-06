@@ -1,6 +1,6 @@
 #!/bin/bash
-# 简单的适用于可启动的脚本，示例: frp、filebrowser、ttyd
-# 需求：1、执行文件和配置文件已存在
+# 适用于x86_64,arm64 Linux可启动的脚本，示例: frp filebrowser ttyd ...
+# 需求：执行文件和配置文件已存在
 
 # 请输入完整路径
 exePath="/opt/frp/frpc" && exeName=${exePath##*/}
@@ -18,10 +18,6 @@ else
 	exit
 fi	
 
-if [ -n "$confPath" -a ! -f $confPath ];then
-	echo "$(date +"%F %T") $confPath file does not exist ! ! !" >> $log
-	exit
-fi
 # 判断执行进程是否存在
 if [ -n "$(pidof $exeName)" ]; then
 	echo "$(date +"%F %T") $exeName is runing, Don't do anything !" >> $log
