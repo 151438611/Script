@@ -3,8 +3,10 @@
 # 创建好的文件: /etc/openvpn/client/UserName.tgz ; 复制到客户端并配置即可
 
 # $1传入创建的用户名称
-userName=$1
-[ -z "$userName" ] && echo "USE COMMAND: bash createOpenvpnClient.sh UserName" && exit 1
+allUserName=$@
+allUserNameNum=$#
+
+[ $allUserNameNum -eq 0 ] && echo "USE COMMAND: bash createOpenvpnClient.sh UserName1 UserName2 UserName3 ..." && exit 1
 [ -z "$(which openvpn)" ] && echo "openvpn command does not exist , Please install openvpn !!!" && echo exit 1
 
 isNotFileDir() {
@@ -29,33 +31,35 @@ tlsAuth=${openvpnServerDir}/ta.key
 
 clientEasyrsa=${openvpnClientDir}/easyrsa3
 clientCA=$serverCA
-clientCRT=${serverEasyrsa}/pki/issued/${userName}.crt
-clientKEY=${clientEasyrsa}/pki/private/${userName}.key
-
 [ -d $clientEasyrsa ] || cp -r $serverEasyrsa $clientEasyrsa
-cd $clientEasyrsa
-rm -rf pki
 
-./easyrsa init-pki
-[ -d pki ] || isNotFileDir ${clientEasyrsa}/pki
+for userName in $allUserName ;
+do 
+	cd $clientEasyrsa
+	rm -rf pki
+	./easyrsa init-pki
+	[ -d pki ] || isNotFileDir ${clientEasyrsa}/pki
+	
+	clientCRT=${serverEasyrsa}/pki/issued/${userName}.crt
+	clientKEY=${clientEasyrsa}/pki/private/${userName}.key
 
-./easyrsa gen-req $userName nopass
-[ -f pki/reqs/${userName}.req ] || isNotFileDir ${clientEasyrsa}/pki/reqs/${userName}.req
-[ -f $clientKEY ] || isNotFileDir $clientKEY
+	./easyrsa gen-req $userName nopass
+	[ -f pki/reqs/${userName}.req ] || isNotFileDir ${clientEasyrsa}/pki/reqs/${userName}.req
+	[ -f $clientKEY ] || isNotFileDir $clientKEY
 
-cd $serverEasyrsa
-./easyrsa import-req ${clientEasyrsa}/pki/reqs/${userName}.req $userName
-[ $? -ne 0 ] && echo "./easyrsa import-req error!!!" && exit 1
-./easyrsa sign client $userName
-[ -f $clientCRT ] || isNotFileDir $clientCRT
+	cd $serverEasyrsa
+	./easyrsa import-req ${clientEasyrsa}/pki/reqs/${userName}.req $userName
+	[ $? -ne 0 ] && echo "./easyrsa import-req error!!!" && exit 1
+	./easyrsa sign client $userName
+	[ -f $clientCRT ] || isNotFileDir $clientCRT
 
-[ -d ${openvpnClientDir}/$userName ] || mkdir -p ${openvpnClientDir}/$userName
-cd ${openvpnClientDir}/$userName
-cp $clientCA ./
-cp $clientCRT ./
-cp $clientKEY ./
-#cp ${clientEasyrsa}/pki/reqs/${userName}.req ./
-[ -f $tlsAuth ] && cp $tlsAuth ./
-tar -cf ../${userName}.tar *
-cd ..
-rm -rf ${clientEasyrsa}/pki $userName
+	[ -d ${openvpnClientDir}/$userName ] || mkdir -p ${openvpnClientDir}/$userName
+	cd ${openvpnClientDir}/$userName
+	cp $clientCA ./
+	cp $clientCRT ./
+	cp $clientKEY ./
+	[ -f $tlsAuth ] && cp $tlsAuth ./
+	tar -cf ../${userName}.tar *
+	cd ..
+	rm -rf $userName
+done
