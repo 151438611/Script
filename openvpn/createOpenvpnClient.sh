@@ -5,15 +5,15 @@
 # 传入脚本参数：创建的用户名称，多个用户用空格分开
 allUserName=$@
 allUserNameNum=$#
-
 [ $allUserNameNum -eq 0 ] && echo "USE COMMAND: bash createOpenvpnClient.sh UserName1 UserName2 UserName3 ..." && exit 1
-[ -z "$(which openvpn)" ] && echo "openvpn command does not exist , Please install openvpn !!!" && echo exit 1
 
 isNotFileDir() {
 	# $1表示传入路径
 	echo "$1 : No such file or directory !!!"
 	exit 1
 }
+[ -z "$(which openvpn)" ] && isNotFileDir "openvpn command is not exist"
+
 openvpnClientDir=/etc/openvpn/client
 openvpnServerDir=/etc/openvpn/server
 # easy-rsa version 3
@@ -59,7 +59,7 @@ do
 	cp $clientCRT ./
 	cp $clientKEY ./
 	[ -f $tlsAuth ] && cp $tlsAuth ./
-	tar -cf ../${userName}.tar *
-	cd ..
-	rm -rf $userName
+	tar -cf ../${userName}.tar *	
 done
+cd $openvpnClientDir
+rm -rf $allUserName
