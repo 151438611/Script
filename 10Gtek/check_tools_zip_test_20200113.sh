@@ -139,7 +139,7 @@ code_info() {
 # 统计编码文件夹下的编码数量，在后面判断是否和邮件中的数量是否一致？
 code_num=$(find ./ -type d -name $older_id -exec ls -lR {} \; | grep -c "^-")
 # 在编码文件夹中搜索SN号为001.bin或0001.bin的编码文件
-code_file=$(find ./ -type f -name ${older_sn}.bin | sort | head -n1)
+code_file=$(find ./ -type f -name ${older_sn}.bin | grep -i port | sort | head -n1)
 if [ -n "$code_file" ] ; then
 	# hexdump参数： -s偏移量 -n指定字节
 	code_file_hex_all=$(hexdump -vC $code_file)
