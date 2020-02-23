@@ -7,7 +7,7 @@ aria2_bin=$(which aria2c)
 aria2_dir=/media/AiCard_01/aria2
 aria2_conf=${aria2_dir}/aria2.conf
 aria2_session=${aria2_dir}/aria2.session
-ariaNg=${aria2_dir}/ariaNg.html
+AriaNg=${aria2_dir}/AriaNg.html
 
 FileDirNotExist() {
 	# $1 表示文件或目录不存在,退出
@@ -17,13 +17,13 @@ FileDirNotExist() {
 
 [ $aria2_bin ] || FileDirNotExist "aria2_bin does not exist !!!"
 [ -f $aria2_conf ] || FileDirNotExist "$aria2_conf does not exist !!!"
-[ -f $ariaNg ] || FileDirNotExist "$ariaNg does not exist !!!"
+[ -f $AriaNg ] || FileDirNotExist "$AriaNg does not exist !!!"
 [ -f $aria2_session ] || touch $aria2_session
 
 [ -z "$(mount | grep www)" ] && \
-{ mount -o bind /media/AiCard_01/aria2/ariaNg.html /www/Advanced_Extensions_koolproxy.asp || FileDirNotExist "$ariaNg mount failed !!!" ; }
+{ mount -o bind $AriaNg /www/Advanced_Extensions_koolproxy.asp || FileDirNotExist "$AriaNg mount failed !!!" ; }
 
 [ $(pidof ${aria2_bin##*/}) ] || \
 { $aria2_bin -D --conf-path=$aria2_conf || FileDirNotExist "$aria2_bin start failed !!!" ; }
 
-echo "$aria2_bin start success , and $ariaNg mount success ; Open WebGUI ."
+echo "$aria2_bin start success , and $AriaNg mount success ; Open WebGUI ."
