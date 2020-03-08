@@ -56,15 +56,10 @@
             "type": "field",
             "outboundTag": "direct_connect",
             "domain": ["geosite:cn"]       // 国内主流网站的域名
-          },
-          {
-            "type": "field",
-            "outboundTag": "direct_connect",
-            "ip": [
-              "geoip:cn",                   // 国内的 IP
-              "geoip:private"]              // 私有地址 IP，如路由器等
-          }]
-    }, 
+            "ip": ["geoip:cn",             // 国内的 IP
+                    "geoip:private"]       // 私有地址 IP，如路由器等
+            }
+        ]}, 
     "mux": {
         "enabled": true 
     }
