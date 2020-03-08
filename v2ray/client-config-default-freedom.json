@@ -59,7 +59,7 @@
                 "domain:youtube.com",
                 "domain:ggpht.com",
                 "domain:ytimg.com",
-                "domain:gstatic.cn",
+                "domain:gstatic.com",
                 
                 "domain:github.com",
                 "domain:github.io",
@@ -70,9 +70,29 @@
                 "domain:ssl-images-amazon.com",
                 "domain:media-amazon.com",
                 "domain:amazonaws.com",
-                "domain:hpe.com",
 
+                "domain:facebook.com",
+                "domain:fbcdn.net",
+                "domain:fbsbx.com",
+                "domain:atdmt.com",
+
+                "domain:hpe.com",
+                "domain:cisco.com",
+                "domain:broadcom.com",
+                "domain:netgear.com",
+                "domain:apk.support",
+                "domain:gvt1.com",
                 "domain:wikipedia.org",
+                "domain:openwrt.org",
+                "domain:openvpn.net",
+                "domain:archive.org",
+                "domain:bitbucket.org",
+                "domain:snia.org",
+                "domain:whoer.net",
+                "domain:quora.com",
+                "domain:quoracdn.net",
+                "domain:freeproxy.world",
+                "domain:youneed.win",
                 "domain:v2ray.com"
                 ]
             }]
