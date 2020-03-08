@@ -31,7 +31,8 @@
                 "id": "11f98504-f22a-4665-b617-af52ed4c4e15",
                 "alterId": 64 }]  
           }]
-      }},
+        }
+    },
     {
         "protocol": "freedom",
         "settings": {},
@@ -55,11 +56,11 @@
             {
             "type": "field",
             "outboundTag": "direct_connect",
-            "domain": ["geosite:cn"]       // 国内主流网站的域名
+            "domain": ["geosite:cn"],      // 国内主流网站的域名
             "ip": ["geoip:cn",             // 国内的 IP
-                    "geoip:private"]       // 私有地址 IP，如路由器等
-            }
-        ]}, 
+                   "geoip:private"]       // 私有地址 IP，如路由器等
+            }]
+     }, 
     "mux": {
         "enabled": true 
     }
