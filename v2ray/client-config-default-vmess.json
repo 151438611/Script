@@ -3,7 +3,7 @@
 {
     "log": {
         "loglevel": "warning",   
-        "access": "/var/log/v2ray_access.log", 
+        //"access": "/var/log/v2ray_access.log", 
         "error": "/var/log/v2ray_error.log"
      },
     "inbounds": [
