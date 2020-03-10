@@ -2,7 +2,7 @@
 {
   "log": {
     "loglevel": "warning",
-    "access": "/var/log/v2ray_access.log",
+    //"access": "/var/log/v2ray_access.log",
     "error": "/var/log/v2ray_error.log"
   },
   "inbounds": [
@@ -14,7 +14,7 @@
           {
             "id": "b831381d-6324-4d53-ad4f-8cda48b30811",
             "level": 1, 
-            "alterId": 64
+            "alterId": 256
           }
         ]
       }
