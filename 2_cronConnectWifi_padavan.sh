@@ -75,7 +75,7 @@ if [ "$apssid_old" != "$apssid" ] ; then
 	else exit
 	fi
 	nvram set ${sta_ssid}=$apssid
-	nvram set ${mode_x}=3
+	nvram set ${mode_x}=4
 	nvram set ${sta_auto}=1
 	nvram set ${sta_wisp}=1
 	if [ -n "$appasswd" ]; then 
