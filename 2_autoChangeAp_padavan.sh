@@ -119,7 +119,7 @@ printf "%-10s %-8s %-20s %-12s\n" $(date +"%F %T") SSID:$apssid Netstat:DOWN >> 
 	fi
 
 # "rt/wl_mode_x"桥接模式：0=[AP(禁用桥接)] 1=[WDS桥接(禁用AP)] 2=[WDS中继(桥接+AP)] 3=[AP-Client(禁用AP)] 4=[AP-Client+AP]
-	nvram set ${mode_x}=3
+	nvram set ${mode_x}=4
 # "rt/wl_sta_wisp":0=[LAN bridge] 1=[WAN (Wireless ISP)]
 	nvram set ${sta_wisp}=1
 # "rt/wl_sta_auto": 1表示勾选自动搜寻; 0表示不自动搜寻
