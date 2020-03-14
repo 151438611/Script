@@ -21,7 +21,7 @@ user_name=
 
 grep -qi padavan /proc/version && os_version=Padavan
 grep -qEi "openwrt|lede" /proc/version && os_version=Openwrt
-
+hardware_type=$(uname -m)
 log_fun() {
 	log=/tmp/${frpc##*/}.log
 	[ -f $log ] || echo $(date +"%F %T") > $log
@@ -74,7 +74,7 @@ remote_port = 0
 END
 }
 
-if [ $os_version = Padavan -a $(uname -m) = mips ]; then
+if [ $os_version = Padavan -a $hardware_type = mips ]; then
 	download_sh="${main_url}frpc.sh"
 	download_frpc="${main_url}frpc_linux_mipsle"
 	download_frpc_bak="http://opt.cn2qq.com/opt-file/frpc"
@@ -92,7 +92,7 @@ if [ $os_version = Padavan -a $(uname -m) = mips ]; then
 	#[ $(nvram get misc_http_x) -eq 0 ] && nvram set misc_http_x=1 && nvram set misc_httpport_x=80 && nvram commit
 	[ $(nvram get sshd_wopen) -eq 0 ] && nvram set sshd_wopen=1 && nvram set sshd_wport=22 && nvram commit
 	[ $(nvram get sshd_enable) -eq 0 ] && nvram set sshd_enable=1 && nvram commit
-elif [ $os_version = Openwrt -a $(uname -m) = mips ]; then
+elif [ $os_version = Openwrt -a $hardware_type = mips ]; then
 	# 暂时没有投入使用 --- 此功能待以后有需求时再修改
 	download_sh="${main_url}frpc.sh"
 	download_frpc="${main_url}frpc_linux_mips"
@@ -106,7 +106,7 @@ elif [ $os_version = Openwrt -a $(uname -m) = mips ]; then
 	cron=/etc/crontabs/root
 	startup=/etc/rc.local
 
-elif [ $(uname -m) = aarch64 -o $(uname -m) = x86_64 ]; then
+elif [ $hardware_type = aarch64 -o $hardware_type = x86_64 ]; then
 	frpc=/opt/frp/frpc
 	frpc_ini=/opt/frp/frpc.ini
 	[ -x $frpc -a -f $frpc_ini ] || { log_fun "$frpc or $frpc_ini does not exist !!!"; exit; }
@@ -136,4 +136,3 @@ ping -c2 -w5 114.114.114.114 && \
   else 
     log_fun "$(date +"%F %T") $frpc is runing , Don't do anything !" 
   fi
-
