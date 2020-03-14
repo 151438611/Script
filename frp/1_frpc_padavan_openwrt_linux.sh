@@ -86,9 +86,13 @@ if [ $os_version = Padavan ] ; then
 	cron=/etc/storage/cron/crontabs/$(nvram get http_username)
 	startup=/etc/storage/started_script.sh	
 	# 开启从wan口访问路由器和ssh服务(默认关闭)，即从上级路由直接访问下级路由或ssh服务
-	#[ $(nvram get misc_http_x) -eq 0 ] && nvram set misc_http_x=1 && nvram set misc_httpport_x=80 && nvram commit
-	[ $(nvram get sshd_wopen) -eq 0 ] && nvram set sshd_wopen=1 && nvram set sshd_wport=22 && nvram commit
-	[ $(nvram get sshd_enable) -eq 0 ] && nvram set sshd_enable=1 && nvram commit
+	#[ $(nvram get misc_http_x) -eq 0 ] && { nvram set misc_http_x=1 ; nvram set misc_httpport_x=80 ; nvram commit ; }
+	[ $(nvram get sshd_wopen) -eq 0 ] && { 
+		nvram set sshd_wopen=1
+		nvram set sshd_wport=22
+		nvram commit
+		}
+	[ $(nvram get sshd_enable) -eq 0 ] && { nvram set sshd_enable=1 ; nvram commit ; }
 elif [ $os_version = Openwrt ] ; then
 	# 暂时没有投入使用 --- 此功能待以后有需求时再修改
 	download_sh="${main_url}frpc.sh"
@@ -102,8 +106,14 @@ elif [[ $hardware_type = aarch64 || $hardware_type = x86_64 ]] ; then
 	frpc=/opt/frp/frpc
 	frpc_ini=/opt/frp/frpc.ini
 	[ -d ${frpc%/*} ] || mkdir -p ${frpc%/*}
-	[ "$hardware_type" = aarch64 ] && download_frpc="${main_url}frpc_linux_arm64" && download_frpc_b="${main_url_bak}frpc_linux_arm64"
-	[ "$hardware_type" = x86_64 ] && download_frpc="${main_url}frpc_linux_amd64" && download_frpc_b="${main_url_bak}frpc_linux_amd64"
+	[ "$hardware_type" = aarch64 ] && { 
+		download_frpc="${main_url}frpc_linux_arm64"
+		download_frpc_bak="${main_url_bak}frpc_linux_arm64"
+		}
+	[ "$hardware_type" = x86_64 ] && { 
+		download_frpc="${main_url}frpc_linux_amd64"
+		download_frpc_bak="${main_url_bak}frpc_linux_amd64"
+		}
 else 
 	log_fun "!!! Router or OS is Unsupported device , exit !!!" ; exit
 fi
