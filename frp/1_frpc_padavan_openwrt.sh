@@ -74,7 +74,7 @@ remote_port = 0
 END
 }
 
-if [ $os_version = Padavan -a $hardware_type = mips ]; then
+if [[ $os_version = Padavan && $hardware_type = mips ]]; then
 	download_sh="${main_url}frpc.sh"
 	download_frpc="${main_url}frpc_linux_mipsle"
 	download_frpc_bak="http://opt.cn2qq.com/opt-file/frpc"
@@ -92,7 +92,7 @@ if [ $os_version = Padavan -a $hardware_type = mips ]; then
 	#[ $(nvram get misc_http_x) -eq 0 ] && nvram set misc_http_x=1 && nvram set misc_httpport_x=80 && nvram commit
 	[ $(nvram get sshd_wopen) -eq 0 ] && nvram set sshd_wopen=1 && nvram set sshd_wport=22 && nvram commit
 	[ $(nvram get sshd_enable) -eq 0 ] && nvram set sshd_enable=1 && nvram commit
-elif [ $os_version = Openwrt -a $hardware_type = mips ]; then
+elif [[ $os_version = Openwrt && $hardware_type = mips ]]; then
 	# 暂时没有投入使用 --- 此功能待以后有需求时再修改
 	download_sh="${main_url}frpc.sh"
 	download_frpc="${main_url}frpc_linux_mips"
@@ -106,16 +106,16 @@ elif [ $os_version = Openwrt -a $hardware_type = mips ]; then
 	cron=/etc/crontabs/root
 	startup=/etc/rc.local
 
-elif [ $hardware_type = aarch64 -o $hardware_type = x86_64 ]; then
+elif [[ $hardware_type = aarch64 || $hardware_type = x86_64 ]]; then
 	frpc=/opt/frp/frpc
 	frpc_ini=/opt/frp/frpc.ini
-	[ -x $frpc -a -f $frpc_ini ] || { log_fun "$frpc or $frpc_ini does not exist !!!"; exit; }
+	[[ -x $frpc && -f $frpc_ini ]] || { log_fun "$frpc or $frpc_ini does not exist !!!"; exit; }
 else 
 	log_fun "!!! Router or OS is Unsupported device , exit !!!"
 	exit
 fi
 
-if [ "$os_version" = Padavan -o "$os_version" = Openwrt ]; then
+if [[ "$os_version" = Padavan || "$os_version" = Openwrt ]]; then
 	cron_reboot="5 5 * * * [ \$(date +%u) -eq 1 ] && /sbin/reboot || ping -c2 -w5 114.114.114.114 || /sbin/reboot"
 	cron_sh="20 * * * * sh $frpc_sh"
 	startup_cmd="wget -O /tmp/frpc.sh $download_sh && sh /tmp/frpc.sh"
@@ -134,5 +134,5 @@ ping -c2 -w5 114.114.114.114 && \
     log_fun "$(date +"%F %T") $frpc was not runing ; start $frpc ..."
     exec $frpc -c $frpc_ini &
   else 
-    log_fun "$(date +"%F %T") $frpc is runing , Don't do anything !" 
+    log_fun "$(date +"%F %T") $frpc is runing , Don't to do anything !" 
   fi
