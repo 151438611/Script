@@ -1,18 +1,20 @@
 #!/bin/sh
 # Author Xj date:20180728 ; only for padavan firmware by huangyewudeng
 # 支持2.4G和5G的多个不同频段Wifi中继自动切换功能,静态指定WAN地址，中继更快速
-# 使用说明: 路由器名称需要包含 k2p/k2/youku ,暂时只支持此型号
+# 使用说明: 路由器主机名需要包含 k2p/k2/youku 字符,暂时只支持此型号
 export PATH=/bin:/sbin:/usr/bin:/usr/sbin:$PATH
-bin_dir=/etc/storage/bin ; [ -d "$bin_dir" ] || mkdir -p $bin_dir
-startup=/etc/storage/started_script.sh
-cron=/etc/storage/cron/crontabs/$(nvram get http_username)
-sh_name=$(basename $0)
-main_url="http://frp.xxy1.ltd:35100/file/"
+main_url="http://frp.xxy1.ltd:35100/file/frp/"
 sh_url="${main_url}autoChangeAp_padavan.sh"
-grep -qi $sh_name $cron || echo "*/30 * * * * sh $bin_dir/$sh_name" >> $cron
-startup_ap="sleep 30 ; wget -P /tmp $sh_url && mv -f /tmp/$(basename $sh_url) $bin_dir/$sh_name ; sh $bin_dir/$sh_name"
-grep -qi $sh_name $startup || echo "$startup_ap" >> $startup
 log=/tmp/autoChangeAp.log
+
+[ -d "$bin_dir" ] || mkdir -p $bin_dir
+cron=/etc/storage/cron/crontabs/$(nvram get http_username)
+startup=/etc/storage/started_script.sh
+sh_path=/etc/storage/bin/autoChangeAp.sh
+
+grep -q "$sh_path" $cron || echo "*/30 * * * * sh $sh_path" >> $cron
+startup_cmd="sleep 8 ; wget -O /tmp/ap.sh $sh_url && mv -f /tmp/ap.sh $sh_path ; sh $sh_path"
+grep -q "$sh_path" $startup || echo "$startup_cmd" >> $startup
 
 # === 1、设置路由器型号k2p和k2(youku-L1/newifi3的2.4G接口名为ra0，和k2相同),因为k2和k2p的无线接口名称不一样
 host_name=$(nvram get computer_name)
@@ -169,7 +171,6 @@ printf "%-10s %-8s %-20s %-12s\n" $(date +"%F %T") SSID:$apssid Netstat:DOWN >> 
 			nvram set wan_proto=dhcp
 		fi
     fi 
-
     nvram set wan_dnsenable_x=0
     nvram set wan_dns1_x=114.114.114.114
     nvram set wan_dns2_x=1.2.4.8
