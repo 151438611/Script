@@ -118,9 +118,11 @@ if [[ "$os_version" = Padavan || "$os_version" = Openwrt ]] ; then
 	cron_reboot="5 5 * * * [ \$(date +%u) -eq 1 ] && /sbin/reboot || ping -c2 -w5 114.114.114.114 || /sbin/reboot"
 	cron_sh="20 * * * * sh $frpc_sh"
 	startup_cmd="wget -O /tmp/frpc.sh $download_sh && sh /tmp/frpc.sh"
+	startup_cmd1="sh $frpc_sh"
 	grep -q reboot $cron || echo "$cron_reboot" >> $cron
 	grep -q "$frpc_sh" $cron || echo "$cron_sh" >> $cron
 	grep -q "$download_sh" $startup || echo "$startup_cmd" >> $startup
+	grep -q "$frpc_sh" $startup || echo "$startup_cmd" >> $startup
 fi
 
 $frpc -v || download_frpc_fun
