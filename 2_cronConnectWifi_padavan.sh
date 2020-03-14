@@ -1,6 +1,7 @@
 #!/bin/sh
 # 使用说明: 路由器主机名需要包含 k2p/k2/youku ,暂时只支持此型号
 # 脚本会读取/etc/storage/ez_buttons_script.sh中输入的第一个Wifi信息，如果没有就退出
+
 export PATH=/bin:/sbin:/usr/bin:/usr/sbin:$PATH
 # add crontab,定时强制连接某个指定Wifi，适用于gx5 K2路由器场景
 bin_dir=/etc/storage/bin
@@ -121,7 +122,6 @@ if [ "$apssid_old" != "$apssid" ] ; then
 			nvram set wan_proto=dhcp
 		fi
     fi 
-	
 	nvram set wan_dnsenable_x=0
 	nvram set wan_dns1_x=114.114.114.114
 	nvram set wan_dns2_x=1.2.4.8
