@@ -10,7 +10,7 @@
 #################################################################
 export PATH=/bin:/sbin:/usr/bin:/usr/sbin:$PATH
 main_url="http://frp.xxy1.ltd:35100/file/frp/"
-wget -T 3 -O /dev/null $main_url || main_url="http://frp.xxy1.ltd:35300/file/frp/"
+wget -T 3 -O /dev/null $main_url 2> /dev/null || main_url="http://frp.xxy1.ltd:35300/file/frp/"
 
 grep -qi padavan /proc/version && os_version=Padavan
 grep -qEi "openwrt|lede" /proc/version && os_version=Openwrt
@@ -112,7 +112,7 @@ else
 fi
 
 download_sh="${main_url}frpc.sh"
-[ -f $frpc_sh ] || wget -t 2 -T 5 -O $frpc_sh $download_sh
+[ -f $frpc_sh ] || wget -T 5 -O $frpc_sh $download_sh
 
 if [[ "$os_version" = Padavan || "$os_version" = Openwrt ]] ; then
 	udisk=$(mount | awk '$1~"/dev/" && $3~"/media/"{print $3}' | head -n1)
