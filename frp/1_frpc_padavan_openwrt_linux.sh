@@ -15,11 +15,10 @@ wget -T 3 -O /dev/null $main_url 2> /dev/null || main_url="http://frp.xxy1.ltd:3
 grep -qi padavan /proc/version && os_version=Padavan
 grep -qEi "openwrt|lede" /proc/version && os_version=Openwrt
 hardware_type=$(uname -m)
-log_fun() {
-	log=/tmp/${frpc##*/}.log
-	[ -f $log ] || echo "$(date +"%F %T") First start" > $log
-	[ "$1" ] && echo "$1" >> $log
-}
+
+log=/tmp/frpc.log
+[ -f $log ] || echo "$(date +"%F %T") First start" > $log
+
 download_frpc_fun() {
 	killall -q ${frpc##*/}
 	rm -f $frpc
@@ -107,7 +106,7 @@ elif [[ "$hardware_type" = aarch64 || "$hardware_type" = x86_64 ]] ; then
 	frpc_sh=/opt/frp/frpc.sh
 	[ -d ${frpc%/*} ] || mkdir -p ${frpc%/*}
 else 
-	log_fun "!!! Router or OS is Unsupported device , exit !!!" ; exit
+	echo "!!! Router or OS is Unsupported device , exit !!!" >> $log ; exit
 fi
 
 download_sh="${main_url}frpc.sh"
@@ -126,13 +125,13 @@ fi
 
 $frpc -v || download_frpc_fun
 [ -f $frpc_ini ] || frpc_ini_fun
-[ -x $frpc ] && [ -f $frpc_ini ] || { log_fun "$frpc or $frpc_ini does not exist !!!" ; exit ; }
+[ -x $frpc ] && [ -f $frpc_ini ] || { echo "$frpc or $frpc_ini does not exist !!!" >> $log ; exit ; }
 
 # ------------------------- start frpc ---------------------
 ping -c2 -w5 114.114.114.114 && \
   if [ -z "$(pidof ${frpc##*/})" ] ; then
-    log_fun "$(date +"%F %T") $frpc was not runing ; start $frpc ..."
+    echo "$(date +"%F %T") $frpc was not runing ; start $frpc ..." >> $log 
     exec $frpc -c $frpc_ini &
   else 
-    log_fun "$(date +"%F %T") $frpc is runing , Don't to do anything !" 
+    echo "$(date +"%F %T") $frpc is runing , Don't do anything !" >> $log 
   fi
