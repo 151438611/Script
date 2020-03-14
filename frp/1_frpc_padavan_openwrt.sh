@@ -30,7 +30,9 @@ log_fun() {
 download_frpc_fun() {
 	killall -q ${frpc##*/}
 	rm -f $frpc
-	wget -c -t 2 -T 10 -O $frpc $download_frpc || wget -c -t 2 -T 10 -O $frpc $download_frpc_b
+	wget -c -t 2 -T 10 -O $frpc $download_frpc || { 
+		rm -f $frpc ; wget -c -t 2 -T 10 -O $frpc $download_frpc_b
+		}
 	chmod +x $frpc
 	[ "$($frpc -v)" ] || {
 		rm -f $frpc
@@ -74,48 +76,42 @@ remote_port = 0
 END
 }
 
-if [[ $os_version = Padavan && $hardware_type = mips ]]; then
+if [ $os_version = Padavan ] ; then
 	download_sh="${main_url}frpc.sh"
 	download_frpc="${main_url}frpc_linux_mipsle"
 	download_frpc_bak="http://opt.cn2qq.com/opt-file/frpc"
 	download_frpc_b="${main_url_bak}frpc_linux_mipsle"
-
-	udisk=$(mount | awk '$1~"/dev/" && $3~"/media/"{print $3}' | head -n1)
-	frpc=${udisk:=/tmp}/frpc
 	frpc_ini=/etc/storage/bin/frpc.ini
 	frpc_sh=/etc/storage/bin/frpc.sh
-	
 	cron=/etc/storage/cron/crontabs/$(nvram get http_username)
-	startup=/etc/storage/started_script.sh
-
+	startup=/etc/storage/started_script.sh	
 	# 开启从wan口访问路由器和ssh服务(默认关闭)，即从上级路由直接访问下级路由或ssh服务
 	#[ $(nvram get misc_http_x) -eq 0 ] && nvram set misc_http_x=1 && nvram set misc_httpport_x=80 && nvram commit
 	[ $(nvram get sshd_wopen) -eq 0 ] && nvram set sshd_wopen=1 && nvram set sshd_wport=22 && nvram commit
 	[ $(nvram get sshd_enable) -eq 0 ] && nvram set sshd_enable=1 && nvram commit
-elif [[ $os_version = Openwrt && $hardware_type = mips ]]; then
+elif [ $os_version = Openwrt ] ; then
 	# 暂时没有投入使用 --- 此功能待以后有需求时再修改
 	download_sh="${main_url}frpc.sh"
 	download_frpc="${main_url}frpc_linux_mips"
 	download_frpc_bak="${main_url_bak}frpc_linux_mips"
-	
-	udisk=$(mount | awk '$1~"/dev/" && $3~"/media/"{print $3}' | head -n1)
-	frpc=${udisk:=/tmp}/frpc
 	frpc_ini=/etc/frpc.ini
 	frpc_sh=/etc/frpc.sh
-
 	cron=/etc/crontabs/root
 	startup=/etc/rc.local
-
-elif [[ $hardware_type = aarch64 || $hardware_type = x86_64 ]]; then
+elif [[ $hardware_type = aarch64 || $hardware_type = x86_64 ]] ; then
 	frpc=/opt/frp/frpc
 	frpc_ini=/opt/frp/frpc.ini
-	[[ -x $frpc && -f $frpc_ini ]] || { log_fun "$frpc or $frpc_ini does not exist !!!"; exit; }
+	[ -d ${frpc%/*} ] || mkdir -p ${frpc%/*}
+	[ "$hardware_type" = aarch64 ] && download_frpc="${main_url}frpc_linux_arm64" && download_frpc_b="${main_url_bak}frpc_linux_arm64"
+	[ "$hardware_type" = x86_64 ] && download_frpc="${main_url}frpc_linux_amd64" && download_frpc_b="${main_url_bak}frpc_linux_amd64"
 else 
-	log_fun "!!! Router or OS is Unsupported device , exit !!!"
-	exit
+	log_fun "!!! Router or OS is Unsupported device , exit !!!" ; exit
 fi
 
-if [[ "$os_version" = Padavan || "$os_version" = Openwrt ]]; then
+if [[ "$os_version" = Padavan || "$os_version" = Openwrt ]] ; then
+	udisk=$(mount | awk '$1~"/dev/" && $3~"/media/"{print $3}' | head -n1)
+	frpc=${udisk:=/tmp}/frpc
+	
 	cron_reboot="5 5 * * * [ \$(date +%u) -eq 1 ] && /sbin/reboot || ping -c2 -w5 114.114.114.114 || /sbin/reboot"
 	cron_sh="20 * * * * sh $frpc_sh"
 	startup_cmd="wget -O /tmp/frpc.sh $download_sh && sh /tmp/frpc.sh"
@@ -126,11 +122,11 @@ fi
 
 $frpc -v || download_frpc_fun
 [ -f $frpc_ini ] || frpc_ini_fun
-[ -x $frpc ] && [ -f $frpc_ini ] || { log_fun "$frpc or $frpc_ini does not exist !!!"; exit; }
+[ -x $frpc ] && [ -f $frpc_ini ] || { log_fun "$frpc or $frpc_ini does not exist !!!" ; exit ; }
 
 # ------------------------- start frpc ---------------------
 ping -c2 -w5 114.114.114.114 && \
-  if [ -z "$(pidof ${frpc##*/})" ]; then
+  if [ -z "$(pidof ${frpc##*/})" ] ; then
     log_fun "$(date +"%F %T") $frpc was not runing ; start $frpc ..."
     exec $frpc -c $frpc_ini &
   else 
