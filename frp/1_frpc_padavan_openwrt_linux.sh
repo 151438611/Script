@@ -73,8 +73,7 @@ END
 }
 if [ "$os_version" = Padavan ] ; then
 	download_frpc="${main_url}frpc_linux_mipsle"
-	download_frpc_bak="${main_url_bak}frpc_linux_mipsle"
-	#download_frpc_bak="http://opt.cn2qq.com/opt-file/frpc"
+	download_frpc_bak="http://opt.cn2qq.com/opt-file/frpc"
 	
 	frpc_ini=/etc/storage/bin/frpc.ini
 	frpc_sh=/etc/storage/bin/frpc.sh
@@ -89,7 +88,7 @@ if [ "$os_version" = Padavan ] ; then
 elif [ "$os_version" = Openwrt ] ; then
 	# 暂时没有投入使用 --- 此功能待以后有需求时再修改
 	download_frpc="${main_url}frpc_linux_mips"
-	download_frpc_bak="${main_url_bak}frpc_linux_mips"
+	download_frpc_bak=
 	frpc_ini=/etc/frpc.ini
 	frpc_sh=/etc/frpc.sh
 	cron=/etc/crontabs/root
@@ -97,11 +96,11 @@ elif [ "$os_version" = Openwrt ] ; then
 elif [[ "$hardware_type" = aarch64 || "$hardware_type" = x86_64 ]] ; then
 	[ "$hardware_type" = aarch64 ] && { 
 		download_frpc="${main_url}frpc_linux_arm64"
-		download_frpc_bak="${main_url_bak}frpc_linux_arm64"
+		download_frpc_bak=
 		}
 	[ "$hardware_type" = x86_64 ] && { 
 		download_frpc="${main_url}frpc_linux_amd64"
-		download_frpc_bak="${main_url_bak}frpc_linux_amd64"
+		download_frpc_bak=
 		}
 	frpc=/opt/frp/frpc
 	frpc_ini=/opt/frp/frpc.ini
