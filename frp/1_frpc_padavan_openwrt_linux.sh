@@ -110,7 +110,7 @@ else
 fi
 
 download_sh="${main_url}frpc.sh"
-[ -f $frpc_sh ] || wget -T 5 -O $frpc_sh $download_sh
+[ -f $frpc_sh ] || { wget -T 5 -O $frpc_sh $download_sh && chmod +x $frpc_sh}
 
 if [[ "$os_version" = Padavan || "$os_version" = Openwrt ]] ; then
 	udisk=$(mount | awk '$1~"/dev/" && $3~"/media/"{print $3}' | head -n1)
