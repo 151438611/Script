@@ -9,21 +9,25 @@
 #################################################################
 export PATH=/bin:/sbin:/usr/bin:/usr/sbin:$PATH
 
-download_url="http://frp.xxy1.ltd:35100/file/"
+main_url="http://frp.xxy1.ltd:35100/file/frp/"
+sh_url="${main_url}frpc_padavan.sh"
 log=/tmp/frpc.log
 [ -f $log ] || echo $(date +"%F %T") > $log
 
 # ------------------------- add crontab、startup、enable SSH -----------------------
-bin_dir=/etc/storage/bin
+bin_dir=/etc/storage/bin/
 [ -d "$bin_dir" ] || mkdir -p $bin_dir
-sh_name=$(basename $0)
+sh_name=frpc.sh
 user_name=$(nvram get http_username)
 cron=/etc/storage/cron/crontabs/$user_name
-
 cron_reboot="5 5 * * * [ -n \"\$(date +%d | grep 5)\" ] && reboot || ping -c2 -w5 114.114.114.114 || reboot"
-grep -qi reboot $cron || echo "$cron_reboot" >> $cron
-cron_sh="20 * * * * sh $bin_dir/$sh_name"
-grep -qi frp $cron || echo "$cron_sh" >> $cron
+grep -qi $cron_reboot $cron || echo "$cron_reboot" >> $cron
+cron_sh="20 * * * * sh ${bin_dir}${sh_name}"
+grep -qi $sh_name $cron || echo "$cron_sh" >> $cron
+
+startup=/etc/storage/started_script.sh
+startup_info="sleep 5 ; wget -P /tmp $sh_url && sh /tmp/${sh_url##*/}"
+grep -qi $startup_info $startup || echo "$startup_info" >> $startup
 
 # 开启从wan口访问路由器和ssh服务(默认关闭)，即从上级路由直接访问下级路由或ssh服务
 #[ $(nvram get misc_http_x) -eq 0 ] && nvram set misc_http_x=1 && nvram set misc_httpport_x=80 && nvram commit
@@ -42,14 +46,14 @@ if [ $ttyd_enable -eq 1 ]; then
 fi 
 
 # ----- ttyd、frpc的下载地址、frpcini设置临时配置(默认/tmp/)还是永久保存配置(/etc/storage/) ------
-ttyd_url=${download_url}frp/ttyd_linux.mipsel
-frpc_url1=${download_url}frp/frpc_linux_mipsle
+ttyd_url=${main_url}ttyd_linux.mipsel
+frpc_url1=${main_url}frpc_linux_mipsle
 frpc_url2="http://opt.cn2qq.com/opt-file/frpc"
 
 udisk=$(mount | awk '$1~"/dev/" && $3~"/media/"{print $3}' | head -n1)
 udisk=${udisk:=/tmp}
-frpc=$udisk/frpc && frpc_name=${frpc##*/}
-frpcini=$bin_dir/frpc.ini
+frpc=${udisk}/frpc && frpc_name=${frpc##*/}
+frpcini=${bin_dir}/frpc.ini
 
 # -------------------------- ttyd -----------------------------
 download_ttyd() {
@@ -117,7 +121,7 @@ local_port = 80
 remote_port = 0
 END
 
-[ $ttyd_enable -eq 1 ] && \
+[ ${ttyd_enable:=0} -eq 1 ] && \
 cat << END >> $frpcini
 [ttyd]
 type = tcp
