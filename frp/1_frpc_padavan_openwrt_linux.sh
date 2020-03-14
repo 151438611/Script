@@ -17,7 +17,7 @@ grep -qEi "openwrt|lede" /proc/version && os_version=Openwrt
 hardware_type=$(uname -m)
 log_fun() {
 	log=/tmp/${frpc##*/}.log
-	[ -f $log ] || echo $(date +"%F %T") > $log
+	[ -f $log ] || echo "$(date +"%F %T") First start" > $log
 	[ "$1" ] && echo "$1" >> $log
 }
 download_frpc_fun() {
