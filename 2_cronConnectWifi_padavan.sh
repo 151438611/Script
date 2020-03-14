@@ -1,5 +1,5 @@
 #!/bin/sh
-# 使用说明: 路由器名称需要包含 k2p/k2/youku ,暂时只支持此型号
+# 使用说明: 路由器主机名需要包含 k2p/k2/youku ,暂时只支持此型号
 # 脚本会读取/etc/storage/ez_buttons_script.sh中输入的第一个Wifi信息，如果没有就退出
 export PATH=/bin:/sbin:/usr/bin:/usr/sbin:$PATH
 # add crontab,定时强制连接某个指定Wifi，适用于gx5 K2路由器场景
@@ -7,12 +7,12 @@ bin_dir=/etc/storage/bin
 [ -d "$bin_dir" ] || mkdir -p $bin_dir
 startup=/etc/storage/started_script.sh
 cron=/etc/storage/cron/crontabs/$(nvram get http_username)
-sh_name=$(basename $0)
-main_url="http://frp.xxy1.ltd:35100/file/"
+sh_path=/etc/storage/bin/cronConnectWifi.sh
+main_url="http://frp.xxy1.ltd:35100/file/frp/"
 sh_url="${main_url}cronConnectWifi_padavan.sh"
-grep -qi $sh_name $cron || echo "50 5,15 * * * sh $bin_dir/$sh_name" >> $cron
-startup_ap="wget -P /tmp $sh_url && mv -f /tmp/$(basename $sh_url) $bin_dir/$sh_name"
-grep -qi $sh_name $startup || echo "$startup_ap" >> $startup
+grep -qi $sh_path $cron || echo "50 5,15 * * * sh $sh_path" >> $cron
+startup_info="wget -O /tmp/cronwifi.sh $sh_url && mv -f /tmp/cronwifi.sh $sh_path"
+grep -qi $sh_path $startup || echo "$startup_info" >> $startup
 log=/tmp/autoChangeAp.log
 
 # ===1、设置路由器型号k2p和k2(youku-L1的2.4G接口名为ra0，和k2相同),因为k2和k2p的无线接口名称不一样==========
