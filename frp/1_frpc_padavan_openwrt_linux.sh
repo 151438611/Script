@@ -10,14 +10,7 @@
 #################################################################
 export PATH=/bin:/sbin:/usr/bin:/usr/sbin:$PATH
 main_url="http://frp.xxy1.ltd:35100/file/frp/"
-main_url_bak="http://frp.xxy1.ltd:35300/file/frp/"
-
-# ----- 1、填写服务端的IP/域名、认证密码 -----------------------
-server_addr=frp.xxy1.ltd
-server_port=7777
-token=xxxx
-user_name=
-[ "$user_name" ] || user_name=frpc_$(md5sum /proc/meminfo | cut -c 1-4)
+wget -T 3 -O /dev/null $main_url || main_url="http://frp.xxy1.ltd:35300/file/frp/"
 
 grep -qi padavan /proc/version && os_version=Padavan
 grep -qEi "openwrt|lede" /proc/version && os_version=Openwrt
@@ -30,9 +23,7 @@ log_fun() {
 download_frpc_fun() {
 	killall -q ${frpc##*/}
 	rm -f $frpc
-	wget -c -t 2 -T 10 -O $frpc $download_frpc || { 
-		rm -f $frpc ; wget -c -t 2 -T 10 -O $frpc $download_frpc_b
-		}
+	wget -c -t 2 -T 10 -O $frpc $download_frpc
 	chmod +x $frpc
 	[ "$($frpc -v)" ] || {
 		rm -f $frpc
@@ -40,9 +31,14 @@ download_frpc_fun() {
 		chmod +x $frpc
 	}
 }
-
 frpc_ini_fun() {
-cat << END > $frpc_ini
+	# ----- 1、填写服务端的IP/域名、认证密码 -----------------------
+	server_addr=frp.xxy1.ltd
+	server_port=7777
+	token=xxxx
+	user_name=
+	[ "$user_name" ] || user_name=frpc_$(md5sum /proc/meminfo | cut -c 1-4)
+	cat << END > $frpc_ini
 [common]
 server_addr = $server_addr
 server_port = $server_port
@@ -75,12 +71,11 @@ local_port = 80
 remote_port = 0
 END
 }
-
 if [ $os_version = Padavan ] ; then
-	download_sh="${main_url}frpc.sh"
 	download_frpc="${main_url}frpc_linux_mipsle"
-	download_frpc_bak="http://opt.cn2qq.com/opt-file/frpc"
-	download_frpc_b="${main_url_bak}frpc_linux_mipsle"
+	download_frpc_bak="${main_url_bak}frpc_linux_mipsle"
+	#download_frpc_bak="http://opt.cn2qq.com/opt-file/frpc"
+	
 	frpc_ini=/etc/storage/bin/frpc.ini
 	frpc_sh=/etc/storage/bin/frpc.sh
 	cron=/etc/storage/cron/crontabs/$(nvram get http_username)
@@ -88,14 +83,11 @@ if [ $os_version = Padavan ] ; then
 	# 开启从wan口访问路由器和ssh服务(默认关闭)，即从上级路由直接访问下级路由或ssh服务
 	#[ $(nvram get misc_http_x) -eq 0 ] && { nvram set misc_http_x=1 ; nvram set misc_httpport_x=80 ; nvram commit ; }
 	[ $(nvram get sshd_wopen) -eq 0 ] && { 
-		nvram set sshd_wopen=1
-		nvram set sshd_wport=22
-		nvram commit
+		nvram set sshd_wopen=1 ; nvram set sshd_wport=22 ; nvram commit
 		}
 	[ $(nvram get sshd_enable) -eq 0 ] && { nvram set sshd_enable=1 ; nvram commit ; }
 elif [ $os_version = Openwrt ] ; then
 	# 暂时没有投入使用 --- 此功能待以后有需求时再修改
-	download_sh="${main_url}frpc.sh"
 	download_frpc="${main_url}frpc_linux_mips"
 	download_frpc_bak="${main_url_bak}frpc_linux_mips"
 	frpc_ini=/etc/frpc.ini
@@ -103,9 +95,6 @@ elif [ $os_version = Openwrt ] ; then
 	cron=/etc/crontabs/root
 	startup=/etc/rc.local
 elif [[ $hardware_type = aarch64 || $hardware_type = x86_64 ]] ; then
-	frpc=/opt/frp/frpc
-	frpc_ini=/opt/frp/frpc.ini
-	[ -d ${frpc%/*} ] || mkdir -p ${frpc%/*}
 	[ "$hardware_type" = aarch64 ] && { 
 		download_frpc="${main_url}frpc_linux_arm64"
 		download_frpc_bak="${main_url_bak}frpc_linux_arm64"
@@ -114,17 +103,23 @@ elif [[ $hardware_type = aarch64 || $hardware_type = x86_64 ]] ; then
 		download_frpc="${main_url}frpc_linux_amd64"
 		download_frpc_bak="${main_url_bak}frpc_linux_amd64"
 		}
+	frpc=/opt/frp/frpc
+	frpc_ini=/opt/frp/frpc.ini
+	frpc_sh=/opt/frp/frpc.sh
+	[ -d ${frpc%/*} ] || mkdir -p ${frpc%/*}
 else 
 	log_fun "!!! Router or OS is Unsupported device , exit !!!" ; exit
 fi
 
+download_sh="${main_url}frpc.sh"
+[ -f $frpc_sh ] || wget -t 2 -T 5 -O $frpc_sh $download_sh
+
 if [[ "$os_version" = Padavan || "$os_version" = Openwrt ]] ; then
 	udisk=$(mount | awk '$1~"/dev/" && $3~"/media/"{print $3}' | head -n1)
 	frpc=${udisk:=/tmp}/frpc
-	
 	cron_reboot="5 5 * * * [ \$(date +%u) -eq 1 ] && /sbin/reboot || ping -c2 -w5 114.114.114.114 || /sbin/reboot"
 	cron_sh="20 * * * * sh $frpc_sh"
-	startup_cmd="wget -O /tmp/frpc.sh $download_sh && sh /tmp/frpc.sh"
+	startup_cmd="wget -t 2 -T 5 -O /tmp/frpc.sh $download_sh && sh /tmp/frpc.sh"
 	grep -q reboot $cron || echo "$cron_reboot" >> $cron
 	grep -q "$frpc_sh" $cron || echo "$cron_sh" >> $cron
 	grep -q "$download_sh" $startup || echo "$startup_cmd" >> $startup
