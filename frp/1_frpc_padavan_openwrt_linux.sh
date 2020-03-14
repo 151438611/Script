@@ -5,7 +5,7 @@
 #	Padavan和Openwrt系统可自动下载frpc和创建默认的frpc.ini，建议事先创建frpc.ini配置文件
 # MODIFICATION HISTORY:
 # NAME		DATE	  Description
-# ========	========  ===========================================
+# =====		========  ===========================================
 # Jun		20200314  Created
 #################################################################
 export PATH=/bin:/sbin:/usr/bin:/usr/sbin:$PATH
@@ -71,7 +71,7 @@ local_port = 80
 remote_port = 0
 END
 }
-if [ $os_version = Padavan ] ; then
+if [ "$os_version" = Padavan ] ; then
 	download_frpc="${main_url}frpc_linux_mipsle"
 	download_frpc_bak="${main_url_bak}frpc_linux_mipsle"
 	#download_frpc_bak="http://opt.cn2qq.com/opt-file/frpc"
@@ -86,7 +86,7 @@ if [ $os_version = Padavan ] ; then
 		nvram set sshd_wopen=1 ; nvram set sshd_wport=22 ; nvram commit
 		}
 	[ $(nvram get sshd_enable) -eq 0 ] && { nvram set sshd_enable=1 ; nvram commit ; }
-elif [ $os_version = Openwrt ] ; then
+elif [ "$os_version" = Openwrt ] ; then
 	# 暂时没有投入使用 --- 此功能待以后有需求时再修改
 	download_frpc="${main_url}frpc_linux_mips"
 	download_frpc_bak="${main_url_bak}frpc_linux_mips"
@@ -94,7 +94,7 @@ elif [ $os_version = Openwrt ] ; then
 	frpc_sh=/etc/frpc.sh
 	cron=/etc/crontabs/root
 	startup=/etc/rc.local
-elif [[ $hardware_type = aarch64 || $hardware_type = x86_64 ]] ; then
+elif [[ "$hardware_type" = aarch64 || "$hardware_type" = x86_64 ]] ; then
 	[ "$hardware_type" = aarch64 ] && { 
 		download_frpc="${main_url}frpc_linux_arm64"
 		download_frpc_bak="${main_url_bak}frpc_linux_arm64"
