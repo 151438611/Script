@@ -75,7 +75,7 @@ END
 }
 
 if [ $os_version = Padavan -a $(uname -m) = mips ]; then
-	download_sh="${main_url}frpc_padavan.sh"
+	download_sh="${main_url}frpc.sh"
 	download_frpc="${main_url}frpc_linux_mipsle"
 	download_frpc_bak="http://opt.cn2qq.com/opt-file/frpc"
 	download_frpc_b="${main_url_bak}frpc_linux_mipsle"
@@ -94,7 +94,7 @@ if [ $os_version = Padavan -a $(uname -m) = mips ]; then
 	[ $(nvram get sshd_enable) -eq 0 ] && nvram set sshd_enable=1 && nvram commit
 elif [ $os_version = Openwrt -a $(uname -m) = mips ]; then
 	# 暂时没有投入使用 --- 此功能待以后有需求时再修改
-	download_sh="${main_url}frpc_openwrt_mips.sh"
+	download_sh="${main_url}frpc.sh"
 	download_frpc="${main_url}frpc_linux_mips"
 	download_frpc_bak="${main_url_bak}frpc_linux_mips"
 	
