@@ -7,6 +7,7 @@ main_url="http://frp.xxy1.ltd:35100/file/frp/"
 sh_url="${main_url}autoChangeAp_padavan.sh"
 log=/tmp/autoChangeAp.log
 
+bin_dir=/etc/storage/bin
 [ -d "$bin_dir" ] || mkdir -p $bin_dir
 cron=/etc/storage/cron/crontabs/$(nvram get http_username)
 startup=/etc/storage/started_script.sh
