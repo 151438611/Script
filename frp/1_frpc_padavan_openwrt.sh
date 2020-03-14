@@ -4,9 +4,9 @@
 # DESCRIPTION: support ARM64、X86_64、Padavan_mipsle(K2、K2P、YoukuL1)、Openwrt_mips(TP-Link WR941v6、WR841v7还未测试) Linux
 #				Padavan和Openwrt系统可自动下载frpc和创建默认的frpc.ini，建议事先创建frpc.ini配置文件
 # MODIFICATION HISTORY:
-# NAME		  DATE	    Description
+# NAME		DATE	  Description
 # ========	========  ===========================================
-# Jun	      20200314  Created.
+# Jun		20200314  Created
 #################################################################
 export PATH=/bin:/sbin:/usr/bin:/usr/sbin:$PATH
 main_url="http://frp.xxy1.ltd:35100/file/frp/"
