@@ -122,7 +122,7 @@ if [[ "$os_version" = Padavan || "$os_version" = Openwrt ]] ; then
 	grep -q reboot $cron || echo "$cron_reboot" >> $cron
 	grep -q "$frpc_sh" $cron || echo "$cron_sh" >> $cron
 	grep -q "$download_sh" $startup || echo "$startup_cmd" >> $startup
-	grep -q "$frpc_sh" $startup || echo "$startup_cmd" >> $startup
+	grep -q "$frpc_sh" $startup || echo "$startup_cmd1" >> $startup
 fi
 
 $frpc -v || download_frpc_fun
