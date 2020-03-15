@@ -20,7 +20,7 @@ log=/tmp/frpc.log
 [ -f $log ] || echo "$(date +"%F %T") First start" > $log
 
 download_frpc_fun() {
-	killall -q ${frpc##*/}
+	killall -q $(basename $frpc)
 	rm -f $frpc
 	wget -c -t 2 -T 10 -O $frpc $download_frpc
 	chmod +x $frpc
@@ -104,7 +104,7 @@ elif [[ "$hardware_type" = aarch64 || "$hardware_type" = x86_64 ]] ; then
 	frpc=/opt/frp/frpc
 	frpc_ini=/opt/frp/frpc.ini
 	frpc_sh=/opt/frp/frpc.sh
-	[ -d ${frpc%/*} ] || mkdir -p ${frpc%/*}
+	[ -d $(dirname $frpc_ini) ] || mkdir -p $(dirname $frpc_ini)
 else 
 	echo "!!! Router or OS is Unsupported device , exit !!!" >> $log ; exit
 fi
@@ -131,7 +131,7 @@ $frpc -v || download_frpc_fun
 
 # ------------------------- start frpc ---------------------
 ping -c2 -w5 114.114.114.114 && \
-  if [ -z "$(pidof ${frpc##*/})" ] ; then
+  if [ -z "$(pidof $(basename $frpc))" ] ; then
     echo "$(date +"%F %T") $frpc was not runing ; start $frpc ..." >> $log 
     exec $frpc -c $frpc_ini &
   else 
