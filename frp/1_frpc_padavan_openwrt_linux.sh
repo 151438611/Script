@@ -25,6 +25,7 @@ download_frpc_fun() {
 	wget -c -t 2 -T 10 -O $frpc $download_frpc
 	chmod +x $frpc
 	[ "$($frpc -v)" ] || {
+		killall -q wget 
 		rm -f $frpc
 		wget -c -t 2 -T 10 -O $frpc $download_frpc_bak
 		chmod +x $frpc
