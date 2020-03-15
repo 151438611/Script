@@ -78,12 +78,12 @@ if [ "$os_version" = Padavan ] ; then
 	frpc_sh=/etc/storage/bin/frpc.sh
 	cron=/etc/storage/cron/crontabs/$(nvram get http_username)
 	startup=/etc/storage/started_script.sh	
-	# 开启从wan口访问路由器和ssh服务(默认关闭)，即从上级路由直接访问下级路由或ssh服务
+	# 关闭防火墙(默认开启)；或开启从wan口访问路由器和ssh服务(默认关闭)，即从上级路由直接访问下级路由或ssh服务
 	#[ $(nvram get misc_http_x) -eq 0 ] && { nvram set misc_http_x=1 ; nvram set misc_httpport_x=80 ; nvram commit ; }
-	[ $(nvram get sshd_wopen) -eq 0 ] && { 
-		nvram set sshd_wopen=1 ; nvram set sshd_wport=22 ; nvram commit
-		}
-	[ $(nvram get sshd_enable) -eq 0 ] && { nvram set sshd_enable=1 ; nvram commit ; }
+	#[ $(nvram get sshd_wopen) -eq 0 ] && { nvram set sshd_wopen=1 ; nvram set sshd_wport=22 ; nvram commit ; }
+	if [[ $(nvram get fw_enable_x) -eq 1 || $(nvram get sshd_enable) -eq 0 ]] ; then
+		nvram set sshd_enable=1 ; nvram set fw_enable_x=0 ; nvram commit
+	fi
 elif [ "$os_version" = Openwrt ] ; then
 	# 暂时没有投入使用 --- 此功能待以后有需求时再修改
 	download_frpc="${main_url}frpc_linux_mips"
