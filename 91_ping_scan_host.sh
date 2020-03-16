@@ -31,6 +31,7 @@ checkIPAddr_fun() {
 	fi
 	return 0
 }
+
 if [ $# -eq 2 ] ; then
 	checkIPAddr_fun $start_ip $end_host
 	[ $? -eq 0 ] || exit 1
