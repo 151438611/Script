@@ -116,7 +116,7 @@ download_sh="${main_url}frpc.sh"
 if [[ "$os_version" = Padavan || "$os_version" = Openwrt ]] ; then
 	udisk=$(mount | awk '$1~"/dev/" && $3~"/media/"{print $3}' | head -n1)
 	frpc=${udisk:=/tmp}/frpc
-	cron_reboot="5 5 * * * [ \$(date +%u) -eq 1 ] && /sbin/reboot || ping -c2 -w5 114.114.114.114 || /sbin/reboot"
+	cron_reboot="5 5 * * 1,5 /sbin/reboot"
 	cron_sh="20 * * * * sh $frpc_sh"
 	startup_cmd="wget -O /tmp/frpc.sh $download_sh && sh /tmp/frpc.sh"
 	startup_cmd1="sh $frpc_sh"
