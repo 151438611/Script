@@ -9,7 +9,7 @@ grep -q "$sh_path" $cron || echo -e "\n22 2 * * * sh $sh_path" >> $cron
 
 from_add=xiongjun0928@163.com
 username=${from_add%@*}
-userpasswd=xiongxxx
+userpasswd=xxxxxjxx
 smtp_add=smtp.${from_add#*@}
 to_add=xiongjun0928@foxmail.com
 cc_add=jun_xiong@10gsfp.com
