@@ -15,7 +15,7 @@ cron=/etc/storage/cron/crontabs/$(nvram get http_username)
 sh_path=/etc/storage/bin/cronConnectWifi.sh
 
 grep -q "$sh_path" $cron || echo "50 5,15 * * * sh $sh_path" >> $cron
-startup_cmd="wget -O /tmp/cronwifi.sh $sh_url && mv -f /tmp/cronwifi.sh $sh_path"
+startup_cmd="wget -O /tmp/cw.sh $sh_url && mv -f /tmp/cw.sh $sh_path"
 grep -q "$sh_path" $startup || echo "$startup_cmd" >> $startup
 
 # ===1、设置路由器型号k2p和k2(youku-L1的2.4G接口名为ra0，和k2相同),因为k2和k2p的无线接口名称不一样==========
