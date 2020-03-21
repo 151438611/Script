@@ -125,7 +125,7 @@ fi
 download_sh="${main_url}frpc.sh"
 [ -f $frpc_sh ] || { wget -O $frpc_sh $download_sh && chmod +x $frpc_sh ; }
 
-if [ "echo $hardware_type | grep -Ei "mipsle|mips|arm" ] ; then
+if [ -n "$(echo $hardware_type | grep -Ei "mipsle|mips|arm")" ] ; then
 	udisk=$(mount | awk '$1~"/dev/" && $3~"/media/"{print $3}' | head -n1)
 	frpc=${udisk:=/tmp}/frpc
 	cron_reboot="5 5 * * 1,5 /sbin/reboot"
