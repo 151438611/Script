@@ -29,7 +29,7 @@ input_txt() {
 input_zip() {
 	input_zip=$(ls -t *.zip | head -n1)
 	# 判断是否存在未删除的解压出来的文件夹，删除了再解压刚传入的zip文件,-iname表示忽略大小写
-	find ./ -type d -iname "[WM]O*" -exec rm -r {} \; 2> /dev/null
+	find ./ -type d -iname "[MW]O*" -exec rm -r {} \; 2> /dev/null
 	[ -z "$input_zip" ] && echo -e "\nxx.zip 文件不存在，请重新检查！！！\n" && exit
 	unzip -q "$input_zip" || exit
 }
@@ -289,7 +289,7 @@ do
 		fi
 	else
 		echo "没有找到${older_id}对应的编码文件夹,请重新检查！！！" >> $result
-		echo $(unzip -l $input_zip | awk -F / '/WO/{print $1}' | awk '{print $4}' | sort -u) >> $result
+		echo $(unzip -l $input_zip | awk -F / '/[MW]O/{print $1}' | awk '{print $4}' | sort -u) >> $result
 	fi
 	printmark >> $result
 	echo >> $result
@@ -332,7 +332,7 @@ do
 		else
 			echo "没有找到对应的编码文件夹,请重新检查！！！"
 			# 显示编码压缩文件中的目录内容
-			echo $(unzip -l $input_zip | awk -F / '/WO/{print $1}' | awk '{print $4","}' | sort -u)
+			echo $(unzip -l $input_zip | awk -F / '/[MW]O/{print $1}' | awk '{print $4","}' | sort -u)
 		fi
 	else echo -e "\n请重新输入完整、正确的生产单号！！！" ;  continue
 	fi
@@ -682,7 +682,7 @@ do
 		continue
 	fi
 done
-older_all=$(find ./ -type d -name "[WM]O*")
+older_all=$(find ./ -type d -name "[MW]O*")
 dir_name="$(date +%Y%m%d-%H%M%S).zip"
 zip -qrm $dir_name $older_all && echo -e "\n----------重命名文件 ${dir_name} 创建完成!----------\n"
 rm -f old.zip $input_zip
