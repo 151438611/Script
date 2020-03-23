@@ -29,8 +29,7 @@ input_txt() {
 input_zip() {
 	input_zip=$(ls -t *.zip | head -n1)
 	# 判断是否存在未删除的解压出来的文件夹，删除了再解压刚传入的zip文件,-iname表示忽略大小写
-	find ./ -type d -iname "WO*" -exec rm -r {} \; 2> /dev/null
-	find ./ -type d -iname "MO*" -exec rm -r {} \; 2> /dev/null
+	find ./ -type d -iname "[WM]O*" -exec rm -r {} \; 2> /dev/null
 	[ -z "$input_zip" ] && echo -e "\nxx.zip 文件不存在，请重新检查！！！\n" && exit
 	unzip -q "$input_zip" || exit
 }
