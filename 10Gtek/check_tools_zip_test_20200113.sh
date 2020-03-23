@@ -4,6 +4,7 @@
 # 需要软件：apt install zip unzip dos2unix
 # Author : XJ  Date: 20180519
 # 20200113 应叶工(东莞自动写码软件测试版)要求：需要所有编码都要放码到根目录(只要求SN,不要求码文件内容)
+# 20200323 因东莞生产更换新系统,致导出的产品名称格式由Q10/Q10、ZQP/ZQP...变成Q10-Q10、ZQP-ZQP...
 
 clear
 # 获取脚本当前路径,并进入脚本目录
@@ -15,7 +16,7 @@ echo "3-创建兼容交换机测试模板文件"
 echo "4-整理排板邮件中的产品类型、SN"
 echo "5-自动放码：只需放入Port1或Port2，将自动复制到其他Port; 若有Page02放一个并重命名为起始SN即可"
 echo "6-创建ZQP-P02全FF的bin文件(适用于SN后4位为非数字编码工具无法生成的场景)---待测试"
-echo "7-针对生产写码QSFP/4SFP、ZQP/4ZSP二端SN不一致无法写码，仅修改QSFP端SN命名，和SFP端SN保持一致"
+echo "7-针对生产写码10GSFP QSFP/4SFP、ZQP/4ZSP二端SN不一致无法写码，仅修改QSFP端SN命名，和SFP端SN保持一致"
 echo ""
 result=./result
 # 获取需求的邮件编码信息文件
@@ -43,12 +44,12 @@ older_time=$(echo $older_all | awk '{print $1}')
 older_sn_info=$(echo $older_all | awk '{print $6}')
 older_sn=
 for sn_start in $older_sn_info
-do 
+do
 	older_sn=$(echo $older_sn ${sn_start%-*})
 done
 
 # 提取邮件中的产品名称，示例：CAB-10GSFP-P3M
-older_type=$(echo $older_all | awk '{print $4}') 
+older_type=$(echo $older_all | awk '{print $4}')
 # 提取内容中的备注,示例：通用/OEM中性码，VN：Optech，PN：OPQSFP-T-05-PCB
 older_remark=$(echo $older_all | awk '{print $8$9$10$11$12}')
 [ -z "$older_remark" ] && older_remark="无备注"
@@ -58,9 +59,9 @@ if [ -z "$(echo "$older_type" | grep -i cm)" ]; then
 	older_length=$(echo ${older_type%M*} | sed 's/.*\(...\)$/\1/' | sed 's/[a-zA-Z]//g' | sed 's/-//g')
 	older_length=$(echo $older_length | awk '{print int($0)}')
 else
-	if [ -n "$(echo $older_type | grep -i 10sfp)" -a -n "$(echo $older_remark | grep -Ei "h3c|hp")" ]; then 
+	if [ -n "$(echo $older_type | grep -i 10sfp)" -a -n "$(echo $older_remark | grep -Ei "h3c|hp")" ]; then
 		older_length=0
-	else 
+	else
 		older_length=1
 	fi
 fi
@@ -75,23 +76,23 @@ older_kind=
 [ -z "$older_kind" ] && older_kind=null
 case $older_kind in
 "H3C"|"CiscoMCU")
-	older_num=$(($older_num_old * 3 + 5)) 
+	older_num=$(($older_num_old * 3 + 5))
 	;;
 *)
 	if [ -n "$(echo $older_type | grep -Ei "10gsfp|xfp/xfp|0sfp")" ]; then older_num=$(($older_num_old * 3 + 1))
 	elif [ -n "$(echo $older_type | grep -Ei "zsp/zsp|xfp/sfp")" ]; then older_num=$(($older_num_old * 3 + 1))
 	elif [ -n "$(echo $older_type | grep -Ei "q10/q10|qsfp/qsfp|8644/qsfp|8644/8644|8644/8088|qsfp/8088|q14/q14")" ]; then
-		if [ -n "$(echo $older_remark | grep -i mcu)" ]; then 
+		if [ -n "$(echo $older_remark | grep -i mcu)" ]; then
 			older_num=$(($older_num_old * 5 + 5))
-		else 
+		else
 			older_num=$(($older_num_old * 3 + 1))
 		fi
-	elif [ -n "$(echo $older_type | grep -Ei "q10/4s|qsfp/4sfp|qsfp/4xfp")" ] ; then 
-		if [ -n "$(echo $older_remark | grep -i mcu | grep -Ei "h3c|hp")" ]; then 
+	elif [ -n "$(echo $older_type | grep -Ei "q10/4s|qsfp/4sfp|qsfp/4xfp")" ] ; then
+		if [ -n "$(echo $older_remark | grep -i mcu | grep -Ei "h3c|hp")" ]; then
 			older_num=$(($older_num_old * 7 + 11))
-		elif [ -n "$(echo $older_remark | grep -i mcu)" ]; then 
+		elif [ -n "$(echo $older_remark | grep -i mcu)" ]; then
 			older_num=$(($older_num_old * 7 + 3))
-		else 
+		else
 			older_num=$(($older_num_old * 6 + 1))
 		fi
 	elif [ -n "$(echo $older_type | grep -Ei "q10/1s|qsfp/1s")" ] ; then
@@ -111,7 +112,7 @@ case $older_kind in
 	elif [ -n "$(echo $older_type | grep -i "zqp/2zqp")" ]; then older_num=$(($older_num_old * 7 + 7))
 	elif [ -n "$(echo $older_type | grep -i "zqp/2zsp")" ]; then older_num=$(($older_num_old * 5 + 3))
 	else older_num=$older_num_old
-	fi 
+	fi
 	;;
 esac
 # 判断邮件中要求的编码类型，H3C表示H3C码, OEM表示OEM码,默认表示思科兼容
@@ -121,13 +122,13 @@ if [ -n "$(echo $older_all | grep -Ei "10gsfp|0sfp" |grep -Ei "h3c|hp")" ]; then
 elif [ -n "$(echo $older_all | grep -Ei "10gsfp|0sfp" |grep -i mcu)" ]; then older_kind=CiscoMCU
 elif [ -n "$(echo $older_remark | grep -i oem | grep -i optech)" ]; then older_kind=OEM
 elif [ -n "$(echo $older_remark | grep -i juniper)" -a $older_num_old -ge 100 ]; then older_kind=Juniper
-elif [ -n "$(echo $older_remark | grep -i arista)" -a $older_num_old -ge 100 ]; then 
+elif [ -n "$(echo $older_remark | grep -i arista)" -a $older_num_old -ge 100 ]; then
 	[ -n "$(echo $older_type | grep -Ei "qsfp|q10|zsp")" ] && older_kind=Arista || older_kind=OEM
 elif [ -n "$(echo $older_remark | grep -i alcatel)" -a $older_num_old -ge 100 ]; then older_kind="Alcatel-lucent"
 elif [ -n "$(echo $older_remark | grep -i brocade)" -a $older_num_old -ge 100 ]; then older_kind=Brocade
-elif [ -n "$(echo $older_remark | grep -Ei "dell|force")" -a $older_num_old -ge 100 ]; then 
+elif [ -n "$(echo $older_remark | grep -Ei "dell|force")" -a $older_num_old -ge 100 ]; then
 	[ -n "$(echo $older_type | grep -i 10gsfp)" ] && older_kind=Dell || older_kind=OEM
-elif [ -n "$(echo $older_remark | grep -i "mellanox")" -a $older_num_old -ge 100 ]; then 
+elif [ -n "$(echo $older_remark | grep -i "mellanox")" -a $older_num_old -ge 100 ]; then
 	[ -n "$(echo $older_type | grep -i zqp)" ] && older_kind=Mellanox || older_kind=OEM
 elif [ -n "$(echo $older_remark | grep -Ei "huawei|intel|extreme")" -a $older_num_old -ge 100 ]; then older_kind=OEM
 # 非以上备注默认思科码代替
@@ -145,8 +146,8 @@ if [ -n "$code_file" ] ; then
 	# hexdump参数： -s偏移量 -n指定字节
 	code_file_hex_all=$(hexdump -vC $code_file)
 	[ -n "$(echo $older_type | grep -Ei "qsfp|q10|8644|q14")" -a -z "$(echo $older_remark | grep -i mcu)" ] && \
-		code_file_hex=$(hexdump -vC $code_file -s 128 -n 256) || code_file_hex=$(hexdump -vC $code_file -n 128) 
-	
+		code_file_hex=$(hexdump -vC $code_file -s 128 -n 256) || code_file_hex=$(hexdump -vC $code_file -n 128)
+
 	# 提取编码中的第0位，03表示SFP类型，06表示XFP类型, 0D表示40G-QSFP, 11表示100G-ZQP，0F表示8644
 	code_type=$(echo "$code_file_hex" | awk 'NR==1{print $2}')
 	case $code_type in
@@ -241,7 +242,7 @@ if [ $older_length = $code_length ] ; then
 	result_length="(ok)"
 elif [ $(($older_length - $code_length)) -le 1 ] ; then
 	result_length="(ok)"
-else 
+else
 	result_length="(-error?-)"
 	error_length="邮件的长度<${older_length}>和编码长度<${code_length}>不一致，请仔细核对编码兼容情况！！！"
 fi
@@ -289,7 +290,7 @@ do
 			continue
 		fi
 	else
-		echo "没有找到${older_id}对应的编码文件夹,请重新检查！！！" >> $result 
+		echo "没有找到${older_id}对应的编码文件夹,请重新检查！！！" >> $result
 		echo $(unzip -l $input_zip | awk -F / '/WO/{print $1}' | awk '{print $4}' | sort -u) >> $result
 	fi
 	printmark >> $result
@@ -309,15 +310,15 @@ do
 	read -p "请输入需要核对的生产订单号,***直接回车***退出手动检查：" scdh
 	# 判断手输的生产单号是否存在邮件内容中，思路：生产单号是唯一的，判断唯一
 	echo ""
-	[ -z $scdh ] && echo -e "正在退出手动检查编码......\n" && check_end && break 
+	[ -z $scdh ] && echo -e "正在退出手动检查编码......\n" && check_end && break
 	if [ $(cat $input_txt | awk '{print $3}' | grep -c $scdh 2>/dev/null) -eq 1 ]; then
 		# 提取手输的生产订单号全称，示例：WO180500115
-		older_id=$(cat $input_txt | awk '{print $3}' | grep $scdh) 
+		older_id=$(cat $input_txt | awk '{print $3}' | grep $scdh)
 		# 判断是否存在生产单号对应的编码文件夹
-		if [ -d $older_id ]; then 
+		if [ -d $older_id ]; then
 			older_info
 			code_info
-			if [ -n "$code_file" ]; then 
+			if [ -n "$code_file" ]; then
 			check_info
 			# 输出检查结果信息
 			echo "生产订单号：${older_id}"
@@ -327,11 +328,11 @@ do
 			[ -n "${error_time}${error_type}${error_num}${error_kind}${error_length}" ] && echo "${error_time}${error_type}${error_num}${error_kind}${error_length}"
 			printmark
 			# 输出编码中的十六进制文件，仅输出20行。
-			echo "$code_file_hex_all" | head -n16 
+			echo "$code_file_hex_all" | head -n16
 			else echo -e "\n没有找到SN为${older_sn}编码！！！"
 			fi
 		else
-			echo "没有找到对应的编码文件夹,请重新检查！！！" 
+			echo "没有找到对应的编码文件夹,请重新检查！！！"
 			# 显示编码压缩文件中的目录内容
 			echo $(unzip -l $input_zip | awk -F / '/WO/{print $1}' | awk '{print $4","}' | sort -u)
 		fi
@@ -444,7 +445,7 @@ esac
 for pr in $product
 do
 	pr=$(echo $pr | sed '{s/\//-/g ; s/ //g}')
-	[ -n "$(echo $pr | grep "^-")" ] && echo -e "\n文件名不能以 - 开头，请检查输入的产品名称！！！" && continue 
+	[ -n "$(echo $pr | grep "^-")" ] && echo -e "\n文件名不能以 - 开头，请检查输入的产品名称！！！" && continue
 	[ -d $pr ] && rm -rf ${pr}/* || mkdir -p $pr
 	for sw in $swtich
 	do
@@ -452,7 +453,7 @@ do
 		sw_file="${pr}/${pr}-${sw}.txt"
 		# 添加测试模板格式到文本文件中：指示灯、基本信息、DDM信息
 		if [ -n "$(echo $sw | grep -i "edgecore")" ]; then name="Cisco"
-		elif [ -n "$(echo $sw | grep -i "hp")" ]; then 
+		elif [ -n "$(echo $sw | grep -i "hp")" ]; then
 			echo $sw | grep -qi "2910" && name="HPP" || name="H3C"
 		else name=$(echo $sw | awk -F"-" '{print $1}')
 		fi
@@ -479,18 +480,18 @@ echo "-------------- 起始SN --------------"
 #awk '{print $6}' $input_txt | awk -F"-" '{print $1}'
 snall=$(awk '{print $6}' $input_txt)
 for sn_start in $snall
-do 
+do
 	echo ${sn_start%-*}
 done
 echo "-------------- 截止SN --------------"
 for sn_end in $snall
-do 
+do
 	sn_st=${sn_end%-*}
 	if [ -n "$(echo $sn_end | grep "-")" ] ; then
 		sn_en=$(echo ${sn_end##*-})
 		num1=${#sn_en}
 		echo "${sn_st: 0: -$num1}$sn_en"
-	else 
+	else
 		echo "$sn_end"
 	fi
 done
@@ -526,7 +527,7 @@ copy_page02() {
 			done
 		else
 			[ "$cp_num" -eq 1 ] && echo "${older_id}/Port1/Page02/ 下SN数量为1个！！！" || \
-			echo "${older_id}/Port1/Page02/ 下SN文件不存在！！！" 
+			echo "${older_id}/Port1/Page02/ 下SN文件不存在！！！"
 		fi
 	fi
 }
@@ -553,7 +554,7 @@ qsfp_zqp_2zqp_eeprom_mcu() {
 		[ -d $1/Port6 ] && cp -rn $1/Port1/* $1/Port6/
 		[ -d $1/Port1/A0 ] && cp -n $1/Port1/A0/* $1/
 		[ -d $1/Port1/Page00 ] && cp -n $1/Port1/Page00/* $1/
-	else 
+	else
 		echo "$1/Port1 文件夹不存在，调用 qsfp_zqp_2zqp_eeprom_mcu 模板错误！！！" && continue
 	fi
 }
@@ -563,7 +564,7 @@ qsfp_4sfp_zqp_4zsp() {
 		[ -d $1/Port4 ] && cp -rn $1/Port2/* $1/Port4/
 		[ -d $1/Port5 ] && cp -rn $1/Port2/* $1/Port5/
 		cp -n $1/Port2/A0/* $1/
-	else 
+	else
 		echo "$1/Port2 文件夹不存在，调用 qsfp_4sfp_zqp_4zsp 模板错误！！！" && continue
 	fi
 }
@@ -576,7 +577,7 @@ do
 	# 提取邮件中的产品名称，示例：CAB-10GSFP-P3M
 	older_type=$(echo $older_all | awk '{print $4}')
 	# 提取邮件中的产品SN，示例：S180701230001
-	older_sn=$(echo $older_all | awk '{print $6}' | awk -F"-" '{print $1}') 
+	older_sn=$(echo $older_all | awk '{print $6}' | awk -F"-" '{print $1}')
 	# 提取订单编码数量,示例：30
 	older_num=$(echo $older_all | awk '{print $5}')
 	if [ -n "$(echo $older_type | grep -Ei "10gsfp|0sfp")" ]; then
@@ -589,7 +590,7 @@ do
 	elif [ -n "$(echo $older_type | grep -Ei "q10/q10|qsfp/qsfp|zqp/zqp|zqp/2zqp|q14/q14|8644/8644|8644/8088|qsfp/8088")" ]; then
 		copy_page02
 		qsfp_zqp_2zqp_eeprom_mcu $older_id
-	else 
+	else
 		echo "没有匹配到 $older_id 订单的产品类型！！！"
 	fi
 done
@@ -615,13 +616,13 @@ if [ -f zqp_p02.bin ]; then
 	sn_start_en=${sn_start: -4}
 	sn_start_en=$(echo $sn_start_en | awk '{print int($0)}')
 	for sn in $(seq $sn_end)
-	do 
+	do
 		cp -f zqp_p02.bin ${sn_start_st}$(printf %04d $sn_start_en).bin
 		sn_start_en=$((sn_start_en + 1))
 	done
 	tar --remove-file -cf ${sn_start}.tar ${sn_start_st}*
 
-else 
+else
   echo "zqp_p02.bin文件不存在，请放入全FF的bin文件，并命名为：zqp_p02.bin ！"
 fi
 ;;
@@ -638,12 +639,12 @@ do
 	[ ! -d "$port1" ] && port1=$older/Port1/Page00/ && port1_p02=$older/Port1/Page02/
 	# SFP/ZSP 模板目录为:  Port2/A0
 	port2=$older/Port2/A0/
-	
-	qsfpAllSN=$(ls $port1) 
+
+	qsfpAllSN=$(ls $port1)
 	sfpAllSN=$(ls $port2)
-	
+
 	allNum=$(echo "$qsfpAllSN" | wc -l)
-	
+
 	[ -d "$port1_p02" ] && [ $(ls $port1_p02 | wc -l) -ne $(echo "$sfpAllSN" | wc -l) ] && echo "QSFP端Page02 和 SFP端 SN数量不一致,请检查 ！！！" && exit
 	[ $allNum -ne $(echo "$sfpAllSN" | wc -l) ] && echo "QSFP端 和 SFP端 SN数量不一致,请检查 ！！！" && exit
 	for num in $(seq $allNum)
@@ -660,6 +661,6 @@ check_end
 ;;
 
 *)
-	echo -e "请输入正确的工作模式！！！\n"	
+	echo -e "请输入正确的工作模式！！！\n"
 ;;
 esac
