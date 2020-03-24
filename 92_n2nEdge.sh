@@ -1,5 +1,6 @@
 #!/bin/bash
-# n2n edge for Linux amd64、arm64、mipsle , unsupport Openwrt ,需要安装ifconfig命令，使用root用户运行
+# n2n edge for Linux amd64、arm64、mipsle ,需要安装ifconfig命令，使用root用户运行
+# openwrt默认没有加载tun kernel module,需要重新编译安装
 # 超级节点 supernode -l port &
 
 # 设置 supernode 超级节点信息
@@ -15,25 +16,34 @@ N2N_KEY=
 log=/tmp/n2n_log.txt
 [ -f $log ] || echo $(date +"%F %T") > $log
 
-down_url="http://frp.xxy1.ltd:35100/file/"
-hw_type=$(uname -m)
+base_url="http://frp.xxy1.ltd:35100/file/n2n"
+if [ -n "$(grep -Ei "MT7620|MT7621" /proc/cpuinfo)" ] ; then
+	hw_type=mipsle
+elif [ -n "$(grep -i ARMv7 /proc/cpuinfo)" ] ; then
+	hw_type=arm
+elif [[ -n "$(grep -i ARMv8 /proc/cpuinfo)" && "$(uname -m)" = aarch64 ]] ; then
+	hw_type=arm64
+elif [ -n "$(grep -i AR7241 /proc/cpuinfo)" ] ; then
+	hw_type=mips
+elif [ "$(uname -m)" = x86_64 ] ; then
+	hw_type=amd64
+fi
 case $hw_type in 
-	x86_64)
+	amd64)
 		edge="/usr/sbin/edge"
-		down_url="${down_url}n2n/edge_linux_amd64"
+		down_url="${base_url}/edge_linux_amd64"
 	;;
-	aarch64)
+	arm64)
 		edge="/usr/sbin/edge"
-		down_url="${down_url}n2n/edge_linux_arm64"
+		down_url="${base_url}/edge_linux_arm64"
+	;;
+	mipsle)
+		edge="/etc/storage/bin/edge"
+		down_url="${base_url}/edge_padavan_mipsle"
 	;;
 	mips)
-		if [ -n "$(grep -i padavan /proc/version)" ]; then
-			edge="/etc/storage/bin/edge"
-			down_url="${down_url}n2n/edge_padavan_mipsle"
-		else
-			edge="/etc/edge"
-			down_url="${down_url}n2n/edge_openwrt_mips"
-		fi
+		edge="/etc/edge"
+		down_url="${base_url}/edge_openwrt_mips"
 	;;
 esac
 addIPRoutes() {
@@ -61,53 +71,26 @@ addIptables() {
 	[ -z "$(iptables -vnL INPUT | grep "Chain INPUT" | grep -i ACCEPT)" ] && \
 	[ -z "$(iptables -vnL INPUT | grep $vmnic_name)" ] && \
 	iptables -A INPUT -i $vmnic_name -j ACCEPT
+
 	[ -z "$(iptables -vnL FORWARD | grep "Chain FORWARD" | grep -i ACCEPT)" ] && \
 	[ -z "$(iptables -vnL FORWARD | grep $vmnic_name)" ] && \
 	iptables -A FORWARD -i $vmnic_name -j ACCEPT
-	# for wzt_VmwareDebian
-	#ip0=10.0.0.0/24
-	#[ -n "$(iptables -t nat -vnL | grep $ip0)" ] || \
-	#	iptables -t nat -A POSTROUTING -s $ip0 -d 192.168.3.0/24 -j SNAT --to-source 192.168.3.177
-	#ip1=192.168.75.0/24
-	#addIPRoutes $ip1 10.0.0.75
-	#[ -n "$(iptables -t nat -vnL | grep $ip1)" ] || \
-	#	iptables -t nat -A POSTROUTING -d $ip1 -j SNAT --to-source 10.0.0.15
-	#ip2=192.168.5.0/24
-	#addIPRoutes $ip2 10.0.0.5
-	#[ -n "$(iptables -t nat -vnL | grep $ip2)" ] || \
-	#	iptables -t nat -A POSTROUTING -d $ip2 -j SNAT --to-source 10.0.0.15
-	#ip3=192.168.84.1
-	#addIPRoutes $ip3 10.0.0.5
-	#[ -n "$(iptables -t nat -vnL | grep $ip3)" ] || \
-	#	iptables -t nat -A POSTROUTING -d $ip3 -j SNAT --to-source 10.0.0.15
-	# 需要在gxk2_05路由器上开启 iptables -t nat -A POSTROUTING -d 192.168.84.1 -j SNAT --to-source 192.168.84.240
-	
-	# for jh_YoukuL1
-	#ip4=192.168.75.0/24
-	#[ -n "$(iptables -t nat -vnL | grep $ip4)" ] || \
-	#	iptables -t nat -A POSTROUTING -d $ip4 -j SNAT --to-source 192.168.75.200
-	
-	# for szK2P_20
-	#ip4=192.168.3.0/24
-	#addIPRoutes $ip2 10.0.0.15
-	#[ -n "$(iptables -t nat -vnL | grep $ip4)" ] || \
-	#	iptables -t nat -A POSTROUTING -d $ip4 -j SNAT --to-source 192.168.75.200
 }
 
 if [ ! -x $edge ]; then
 	rm -f $edge
 	wget -c -t 3 -T 10 -O $edge $down_url
-	chmod 555 $edge
+	chmod +x $edge
 fi
 
-ping -c 2 -w 3 114.114.114.114 && \
-if [ -n "$(pidof ${edge##*/})" ]; then
-	echo "$(date +"%F %T")	${edge##*/} $ipadd is runing , Don't do anything !" >> $log
+ping -c 2 114.114.114.114 && \
+if [ -n "$(pidof $(basename $edge))" ]; then
+	echo "$(date +"%F %T")	$edge $ipadd is runing , Don't do anything !" >> $log
 else
 	[ $N2N_KEY ] && \
 	$edge -r -d $vmnic_name -c $community_name -a $ipadd -s $netmask -l $supernode_ip_port -k $N2N_KEY || \
 	$edge -r -d $vmnic_name -c $community_name -a $ipadd -s $netmask -l $supernode_ip_port
 	sleep 3
 	addIptables
-	echo "$(date +"%F %T")	${edge##*/} $ipadd was not runing ; start ${edge##*/} ..." >> $log
+	echo "$(date +"%F %T")	$edge $ipadd was not runing ; start $edge ..." >> $log
 fi
