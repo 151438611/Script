@@ -16,7 +16,7 @@ echo "3-创建兼容交换机测试模板文件"
 echo "4-整理排板邮件中的产品类型、SN"
 echo "5-自动放码：只需放入Port1或Port2，将自动复制到其他Port; 若有Page02放一个并重命名为起始SN即可"
 echo "6-创建ZQP-P02全FF的bin文件(适用于SN后4位为非数字编码工具无法生成的场景)---待测试"
-echo "7-针对生产写码10GSFP QSFP/4SFP、ZQP/4ZSP二端SN不一致无法写码，仅修改QSFP端SN命名，和SFP端SN保持一致"
+echo "7-针对生产写码10GSFP QSFP/4SFP、ZQP/4ZSP二端SN不同，无法自动写码，仅修改QSFP端SN命名，和SFP端SN保持一致"
 echo ""
 result=./result
 # 获取需求的邮件编码信息文件
@@ -78,15 +78,15 @@ older_info() {
 		older_num=$(($older_num_old * 3 + 5))
 		;;
 	*)
-		if [ -n "$(echo $older_type | grep -Ei "10gsfp|xfp/xfp|0sfp")" ]; then older_num=$(($older_num_old * 3 + 1))
-		elif [ -n "$(echo $older_type | grep -Ei "zsp/zsp|xfp/sfp")" ]; then older_num=$(($older_num_old * 3 + 1))
-		elif [ -n "$(echo $older_type | grep -Ei "q10/q10|qsfp/qsfp|8644/qsfp|8644/8644|8644/8088|qsfp/8088|q14/q14")" ]; then
+		if [ -n "$(echo $older_type | grep -Ei "10gsfp|xfp-xfp|0sfp")" ]; then older_num=$(($older_num_old * 3 + 1))
+		elif [ -n "$(echo $older_type | grep -Ei "zsp-zsp|xfp-sfp")" ]; then older_num=$(($older_num_old * 3 + 1))
+		elif [ -n "$(echo $older_type | grep -Ei "q10-q10|qsfp-qsfp|8644-qsfp|8644-8644|8644-8088|qsfp-8088|q14-q14")" ]; then
 			if [ -n "$(echo $older_remark | grep -i mcu)" ]; then
 				older_num=$(($older_num_old * 5 + 5))
 			else
 				older_num=$(($older_num_old * 3 + 1))
 			fi
-		elif [ -n "$(echo $older_type | grep -Ei "q10/4s|qsfp/4sfp|qsfp/4xfp")" ] ; then
+		elif [ -n "$(echo $older_type | grep -Ei "q10-4s|qsfp-4sfp|qsfp-4xfp")" ] ; then
 			if [ -n "$(echo $older_remark | grep -i mcu | grep -Ei "h3c|hp")" ]; then
 				older_num=$(($older_num_old * 7 + 11))
 			elif [ -n "$(echo $older_remark | grep -i mcu)" ]; then
@@ -94,42 +94,42 @@ older_info() {
 			else
 				older_num=$(($older_num_old * 6 + 1))
 			fi
-		elif [ -n "$(echo $older_type | grep -Ei "q10/1s|qsfp/1s")" ] ; then
+		elif [ -n "$(echo $older_type | grep -Ei "q10-1s|qsfp-1s")" ] ; then
 			if [ -n "$(echo $older_remark | grep -i mcu)" ]; then
 				older_num=$(($older_num_old * 4 + 3))
 			else
 				older_num=$(($older_num_old * 3 + 1))
 			fi
-		elif [ -n "$(echo $older_type | grep -Ei "q10/2s|qsfp/2s")" ] ; then
+		elif [ -n "$(echo $older_type | grep -Ei "q10-2s|qsfp-2s")" ] ; then
 			if [ -n "$(echo $older_remark | grep -i mcu)" ]; then
 				older_num=$(($older_num_old * 5 + 3))
 			else
 				older_num=$(($older_num_old * 4 + 1))
 			fi
-		elif [ -n "$(echo $older_type | grep -i "zqp/zqp")" ]; then older_num=$(($older_num_old * 5 + 5))
-		elif [ -n "$(echo $older_type | grep -i "zqp/4zsp")" ]; then older_num=$(($older_num_old * 7 + 3))
-		elif [ -n "$(echo $older_type | grep -i "zqp/2zqp")" ]; then older_num=$(($older_num_old * 7 + 7))
-		elif [ -n "$(echo $older_type | grep -i "zqp/2zsp")" ]; then older_num=$(($older_num_old * 5 + 3))
+		elif [ -n "$(echo $older_type | grep -i "zqp-zqp")" ]; then older_num=$(($older_num_old * 5 + 5))
+		elif [ -n "$(echo $older_type | grep -i "zqp-4zsp")" ]; then older_num=$(($older_num_old * 7 + 3))
+		elif [ -n "$(echo $older_type | grep -i "zqp-2zqp")" ]; then older_num=$(($older_num_old * 7 + 7))
+		elif [ -n "$(echo $older_type | grep -i "zqp-2zsp")" ]; then older_num=$(($older_num_old * 5 + 3))
 		else older_num=$older_num_old
 		fi
 		;;
 	esac
 	# 判断邮件中要求的编码类型，H3C表示H3C码, OEM表示OEM码,默认表示思科兼容
 	if [ -n "$(echo $older_all | grep -Ei "10gsfp|0sfp" |grep -Ei "h3c|hp")" ]; then older_kind=H3C
-	# 临时使用---超过200pcs东莞直接收货所以兼容一定要正确, 设置超过100pcs严格按兼容编码
+	# 临时使用---超过50pcs深圳不改码出货所以兼容一定要正确
 	# 20191119新增10gsfp线缆的MCU方案
 	elif [ -n "$(echo $older_all | grep -Ei "10gsfp|0sfp" |grep -i mcu)" ]; then older_kind=CiscoMCU
 	elif [ -n "$(echo $older_remark | grep -i oem | grep -i optech)" ]; then older_kind=OEM
-	elif [ -n "$(echo $older_remark | grep -i juniper)" -a $older_num_old -ge 100 ]; then older_kind=Juniper
-	elif [ -n "$(echo $older_remark | grep -i arista)" -a $older_num_old -ge 100 ]; then
+	elif [ -n "$(echo $older_remark | grep -i juniper)" -a $older_num_old -ge 50 ]; then older_kind=Juniper
+	elif [ -n "$(echo $older_remark | grep -i arista)" -a $older_num_old -ge 50 ]; then
 		[ -n "$(echo $older_type | grep -Ei "qsfp|q10|zsp")" ] && older_kind=Arista || older_kind=OEM
-	elif [ -n "$(echo $older_remark | grep -i alcatel)" -a $older_num_old -ge 100 ]; then older_kind="Alcatel-lucent"
-	elif [ -n "$(echo $older_remark | grep -i brocade)" -a $older_num_old -ge 100 ]; then older_kind=Brocade
-	elif [ -n "$(echo $older_remark | grep -Ei "dell|force")" -a $older_num_old -ge 100 ]; then
+	elif [ -n "$(echo $older_remark | grep -i alcatel)" -a $older_num_old -ge 50 ]; then older_kind="Alcatel-lucent"
+	elif [ -n "$(echo $older_remark | grep -i brocade)" -a $older_num_old -ge 50 ]; then older_kind=Brocade
+	elif [ -n "$(echo $older_remark | grep -Ei "dell|force")" -a $older_num_old -ge 50 ]; then
 		[ -n "$(echo $older_type | grep -i 10gsfp)" ] && older_kind=Dell || older_kind=OEM
-	elif [ -n "$(echo $older_remark | grep -i "mellanox")" -a $older_num_old -ge 100 ]; then
+	elif [ -n "$(echo $older_remark | grep -i "mellanox")" -a $older_num_old -ge 50 ]; then
 		[ -n "$(echo $older_type | grep -i zqp)" ] && older_kind=Mellanox || older_kind=OEM
-	elif [ -n "$(echo $older_remark | grep -Ei "huawei|intel|extreme")" -a $older_num_old -ge 100 ]; then older_kind=OEM
+	elif [ -n "$(echo $older_remark | grep -Ei "huawei|intel|extreme")" -a $older_num_old -ge 50 ]; then older_kind=OEM
 	# 非以上备注默认思科码代替
 	else older_kind=Cisco
 	fi
