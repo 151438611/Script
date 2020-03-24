@@ -3,8 +3,8 @@
 # 需要文件：需求的邮件编码信息、编码完后的编码压缩zip文件
 # 需要软件：apt install zip unzip dos2unix
 # Author : XJ  Date: 20180519
-# 20200113 应叶工(东莞自动写码软件测试版)要求：需要所有编码都要放码到根目录(只读取SN,不读取码内容)
-# 20200323 因东莞生产更换新系统,致导出的产品名称格式由Q10/Q10、ZQP/ZQP...变成Q10-Q10、ZQP-ZQP...
+# 20200113 应叶工(东莞自动写码软件测试版)要求：需要所有编码都要放码到根目录(只读取SN,不读取码内容); 修改生产订单码文件数量判断
+# 20200323 因东莞生产更换新系统,致导出的产品名称格式由Q10/Q10、ZQP/ZQP...变成Q10-Q10、ZQP-ZQP...; 修改生产订单中的产品名称判断
 
 clear
 # 获取脚本当前路径,并进入脚本目录
@@ -276,7 +276,7 @@ do
 			check_info
 			# 输出检查结果信息
 			echo "邮件日期:${older_time} 产品名称:${older_type} 数量:${older_num_old} 备注:${older_remark}" >> $result
-			echo "编码日期:${code_time}${result_time} 产品类型:${code_type}${result_type} 长度:${code_length}米${result_length} 数量:${code_num}${result_num} 速率:${code_speed} 兼容<200pcs以下默认思科兼容>:${code_kind}${result_kind}" >> $result
+			echo "编码日期:${code_time}${result_time} 产品类型:${code_type}${result_type} 长度:${code_length}米${result_length} 数量:${code_num}${result_num} 速率:${code_speed} 兼容<50pcs以下默认思科兼容>:${code_kind}${result_kind}" >> $result
 			# 判断是否出现编码错误，出错就输出错误信息和编码中的十六进制文件。
 			if [ -n "${error_time}${error_type}${error_num}${error_kind}${error_length}" ] ; then
 				#echo ${error_time}${error_type}${error_num}${error_kind}${error_length} >> $result
@@ -321,7 +321,7 @@ do
 			# 输出检查结果信息
 			echo "生产订单号：${older_id}"
 			echo "邮件日期:${older_time} 产品名称:${older_type} 数量:${older_num_old} 备注:${older_remark}"
-			echo -e "编码日期:${code_time}\033[43;30m${result_time}\033[0m 产品类型:${code_type}\033[43;30m${result_type}\033[0m 长度:${code_length}米\033[43;30m${result_length}\033[0m 数量:${code_num}\033[43;30m${result_num}\033[0m 速率:${code_speed} 兼容<200pcs以下默认思科兼容>:${code_kind}\033[43;30m${result_kind}\033[0m"
+			echo -e "编码日期:${code_time}\033[43;30m${result_time}\033[0m 产品类型:${code_type}\033[43;30m${result_type}\033[0m 长度:${code_length}米\033[43;30m${result_length}\033[0m 数量:${code_num}\033[43;30m${result_num}\033[0m 速率:${code_speed} 兼容<50pcs以下默认思科兼容>:${code_kind}\033[43;30m${result_kind}\033[0m"
 			# 判断是否出现编码错误，出错就输出错误信息和编码中的十六进制文件。
 			[ -n "${error_time}${error_type}${error_num}${error_kind}${error_length}" ] && echo "${error_time}${error_type}${error_num}${error_kind}${error_length}"
 			printmark
