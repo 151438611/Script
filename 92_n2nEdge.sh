@@ -1,11 +1,11 @@
 #!/bin/bash
 # n2n edge for Linux amd64、arm64、mipsle ,需要安装ifconfig命令，使用root用户运行
 # openwrt默认没有加载tun kernel module,需要重新编译安装
-# 注意事项: 所有的edge命令参数位置必须不一致,不一致有可能无法连通; 示例: edge -c xx -d xx和 edge -d -c 则无法连通
-# 超级节点 supernode -l port &
+# 注意事项: 所有的edge命令参数位置必须一致,不一致有可能无法连通; 示例: edge -c xx -d xx和 edge -d -c 则无法连通
+# 超级节点命令: supernode -l port &
 
 # 设置 supernode 超级节点信息
-supernode_ip_port=n2n.xxy1.ltd:10086
+supernode_ip_port=n2n.xxy1.ltd:xxx
 # 设置 edge 节点信息
 vmnic_name=edge
 community_name=n2nEdge
