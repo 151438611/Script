@@ -50,7 +50,7 @@ older_info() {
 	# 提取邮件中的产品名称，示例：CAB-10GSFP-P3M
 	older_type=$(echo $older_all | awk '{print $4}')
 	# 提取内容中的备注,示例：通用/OEM中性码，VN：Optech，PN：OPQSFP-T-05-PCB
-	older_remark=$(echo $older_all | awk '{print $8$9$10$11$12}')
+	older_remark=$(echo $older_all | awk '{print $8$9$10$11$12$13$14$15}')
 	[ -z "$older_remark" ] && older_remark="无备注"
 
 	# 提取邮件中的需求长度，单位CM/M;判断特殊情况：CAB-10GSFP-P65CM的编码长度位为00
