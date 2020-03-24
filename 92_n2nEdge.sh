@@ -6,8 +6,8 @@
 # 设置 supernode 超级节点信息
 supernode_ip_port=n2n.xxy1.ltd:10086
 # 设置 edge 节点信息
-vmnic_name=n2nEdge
-community_name=xiong
+vmnic_name=edge
+community_name=n2nEdge
 ipadd=10.5.5.x
 netmask=255.255.255.0
 # 是否加密(加密后仅密码一致的节点可互相通信) --- 会影响速度，不建议使用此选项
