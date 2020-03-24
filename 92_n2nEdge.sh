@@ -4,7 +4,7 @@
 # 超级节点 supernode -l port &
 
 # 设置 supernode 超级节点信息
-supernode_ip_port=frp.xxy1.ltd:10086
+supernode_ip_port=n2n.xxy1.ltd:10086
 # 设置 edge 节点信息
 vmnic_name=n2nEdge
 community_name=xiong
