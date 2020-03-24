@@ -115,7 +115,7 @@ older_info() {
 		;;
 	esac
 	# 判断邮件中要求的编码类型，H3C表示H3C码, OEM表示OEM码,默认表示思科兼容
-	if [ -n "$(echo $older_all | grep -Ei "10gsfp|0sfp" |grep -Ei "h3c|hp")" ]; then older_kind=H3C
+	if [ -n "$(echo $older_all | grep -Ei "10gsfp|0sfp" |grep -Ei "h3c|hp")" ]; then older_kind="H3C-HP"
 	# 临时使用---超过50pcs深圳不改码出货所以兼容一定要正确
 	# 20191119新增10gsfp线缆的MCU方案
 	elif [ -n "$(echo $older_all | grep -Ei "10gsfp|0sfp" |grep -i mcu)" ]; then older_kind=CiscoMCU
@@ -176,7 +176,7 @@ code_info() {
 		code_kind=$(echo "$code_file_hex" | awk 'NR==7{print $3,$4}')
 		case $code_kind in
 			"00 00") 		 code_kind=OEM ;;
-			"33 43") 		 code_kind=H3C ;;
+			"33 43"|"50 a0") 		 code_kind="H3C-HP" ;;
 			"00 11"|"43 11") code_kind=Cisco ;;
 			"34 30"|"34 11") code_kind=Juniper ;;
 			"61 20") 		 code_kind=Arista ;;
