@@ -17,6 +17,10 @@
             "alterId": 256
           }
         ]
+      },
+      "streamSettings": {
+        "network": "tcp",
+        #"wsSettings": { "path": "/ray" }
       }
     }
   ],
