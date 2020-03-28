@@ -31,6 +31,12 @@
                 "id": "11f98504-f22a-4665-b617-af52ed4c4e15",
                 "alterId": 108 }]  
           }]
+        },
+        "streamSettings": {
+        "network": "tcp",
+        "security": "auto",
+        "wsSettings": {
+          "path": "/ray"
         }
     },
     {
