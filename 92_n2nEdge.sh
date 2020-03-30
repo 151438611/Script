@@ -32,19 +32,19 @@ fi
 case $hw_type in 
 	amd64)
 		edge="/usr/sbin/edge"
-		down_url="${base_url}/edge_linux_amd64"
+		down_url="${base_url}/edge_n2n_v2_linux_amd64"
 	;;
 	arm64)
 		edge="/usr/sbin/edge"
-		down_url="${base_url}/edge_linux_arm64"
+		down_url="${base_url}/edge_n2n_v2_linux_arm64"
 	;;
 	mipsle)
 		edge="/etc/storage/bin/edge"
-		down_url="${base_url}/edge_padavan_mipsle"
+		down_url="${base_url}/edge_n2n_v2_linux_mipsel"
 	;;
 	mips)
 		edge="/etc/edge"
-		down_url="${base_url}/edge_openwrt_mips"
+		down_url="${base_url}/edge_n2n_v2_linux_mips"
 	;;
 esac
 addIPRoutes() {
