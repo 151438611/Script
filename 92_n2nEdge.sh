@@ -1,5 +1,5 @@
 #!/bin/bash
-# n2n_v2 for Linux amd64、arm64、mipsle ,需要安装ifconfig命令，使用root用户运行
+# n2n_v2 for Linux amd64、arm64、mipsel ,需要安装ifconfig命令，使用root用户运行
 # openwrt默认没有加载tun kernel module,需要重新编译安装
 # 注意事项: 所有的edge命令参数位置必须一致,不一致有可能无法连通; 示例: edge -c xx -d xx和 edge -d -c 则无法连通
 # 超级节点命令: supernode -l port &
@@ -19,7 +19,7 @@ log=/tmp/n2n_log.txt
 
 base_url="http://frp.xxy1.ltd:35100/file/n2n"
 if [ -n "$(grep -Ei "MT7620|MT7621" /proc/cpuinfo)" ] ; then
-	hw_type=mipsle
+	hw_type=mipsel
 elif [ -n "$(grep -i ARMv7 /proc/cpuinfo)" ] ; then
 	hw_type=arm
 elif [[ -n "$(grep -i ARMv8 /proc/cpuinfo)" && "$(uname -m)" = aarch64 ]] ; then
@@ -38,7 +38,7 @@ case $hw_type in
 		edge="/usr/sbin/edge"
 		down_url="${base_url}/edge_n2n_v2_linux_arm64"
 	;;
-	mipsle)
+	mipsel)
 		edge="/etc/storage/bin/edge"
 		down_url="${base_url}/edge_n2n_v2_linux_mipsel"
 	;;
