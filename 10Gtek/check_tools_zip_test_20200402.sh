@@ -6,6 +6,7 @@
 # 20200113 应叶工(东莞自动写码软件测试版)要求：需要所有编码都要放码到根目录(只读取SN,不读取码内容); 修改生产订单码文件数量判断
 # 20200323 因东莞生产更换新系统,致导出的产品名称格式由Q10/Q10、ZQP/ZQP...变成Q10-Q10、ZQP-ZQP...; 修改生产订单中的产品名称判断
 # 20200402 因10G-SFP-MCU线缆底层128和145 byte已固定为10 01，所以新增检查10G-SFP-MCU码文件中的128和145 byte是否为10 01
+#			新增 QSFP_MCU、QSFP_MCU/2SFP_EEPROM 、ZQP_MCU/2ZSP_EEPROM 线缆需加密底层的写码模板,需LMM/Page00/Page02中都放password.txt文件,修改文件数量判断,需在此备注后面添加"Encryption_bottom"来让脚本识别订单为特殊加密底层
 
 clear
 # 获取脚本当前路径,并进入脚本目录
@@ -87,7 +88,7 @@ older_info() {
 		elif [ -n "$(echo $older_type | grep -Ei "zsp-zsp|xfp-sfp")" ]; then older_num=$(($older_num_old * 3 + 1))
 		elif [ -n "$(echo $older_type | grep -Ei "q10-q10|qsfp-qsfp|8644-qsfp|8644-8644|8644-8088|qsfp-8088|q14-q14")" ]; then
 			if [ -n "$(echo $older_remark | grep -i mcu)" ]; then
-				older_num=$(($older_num_old * 5 + 5))
+				[ -n "$(echo $older_remark | grep -i Encryption_bottom)" ] && older_num=$(($older_num_old * 5 + 7)) || older_num=$(($older_num_old * 5 + 5))
 			else
 				older_num=$(($older_num_old * 3 + 1))
 			fi
@@ -107,14 +108,15 @@ older_info() {
 			fi
 		elif [ -n "$(echo $older_type | grep -Ei "q10-2s|qsfp-2s")" ] ; then
 			if [ -n "$(echo $older_remark | grep -i mcu)" ]; then
-				older_num=$(($older_num_old * 5 + 3))
+				[ -n "$(echo $older_remark | grep -i Encryption_bottom)" ] && older_num=$(($older_num_old * 5 + 5)) || older_num=$(($older_num_old * 5 + 3))
 			else
 				older_num=$(($older_num_old * 4 + 1))
 			fi
 		elif [ -n "$(echo $older_type | grep -i "zqp-zqp")" ]; then older_num=$(($older_num_old * 5 + 5))
 		elif [ -n "$(echo $older_type | grep -i "zqp-4zsp")" ]; then older_num=$(($older_num_old * 7 + 3))
 		elif [ -n "$(echo $older_type | grep -i "zqp-2zqp")" ]; then older_num=$(($older_num_old * 7 + 7))
-		elif [ -n "$(echo $older_type | grep -i "zqp-2zsp")" ]; then older_num=$(($older_num_old * 5 + 3))
+		elif [ -n "$(echo $older_type | grep -i "zqp-2zsp")" ]; then 
+			[ -n "$(echo $older_remark | grep -i Encryption_bottom)" ] && older_num=$(($older_num_old * 5 + 5)) || older_num=$(($older_num_old * 5 + 3))
 		else older_num=$older_num_old
 		fi
 		;;
