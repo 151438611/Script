@@ -76,10 +76,10 @@ older_info() {
 	# 20191119新增10gsfp线缆的MCU方案
 	older_kind=
 	[ -n "$(echo $older_all | grep -Ei "10gsfp|0sfp" | grep -i mcu)" ] && older_kind=CiscoMCU
-	[ -n "$(echo $older_all | grep -Ei "10gsfp|0sfp" | grep -Ei "h3c|hp|aruba")" ] && older_kind=H3C
+	[ -n "$(echo $older_all | grep -Ei "10gsfp|0sfp" | grep -Ei "h3c|hp|aruba")" ] && older_kind=HP-H3C-Aruba
 	[ -z "$older_kind" ] && older_kind=null
 	case $older_kind in
-	"H3C"|"CiscoMCU")
+	"HP-H3C-Aruba"|"CiscoMCU")
 		older_num=$(($older_num_old * 3 + 5))
 		;;
 	*)
@@ -120,7 +120,7 @@ older_info() {
 		;;
 	esac
 	# 判断邮件中要求的编码类型，H3C表示H3C码, OEM表示OEM码,默认表示思科兼容
-	if [ -n "$(echo $older_all | grep -Ei "10gsfp|0sfp" |grep -Ei "h3c|hp")" ]; then older_kind="H3C-HP"
+	if [ -n "$(echo $older_all | grep -Ei "10gsfp|0sfp" |grep -Ei "h3c|hp|aruba")" ]; then older_kind="HP-H3C-Aruba"
 	# 临时使用---超过50pcs深圳不改码出货所以兼容一定要正确
 	# 20191119新增10gsfp线缆的MCU方案
 	elif [ -n "$(echo $older_all | grep -Ei "10gsfp|0sfp" |grep -i mcu)" ]; then older_kind=CiscoMCU
@@ -181,7 +181,7 @@ code_info() {
 		code_kind=$(echo "$code_file_hex" | awk 'NR==7{print $3,$4}')
 		case $code_kind in
 			"00 00") 		 code_kind=OEM ;;
-			"33 43"|"50 a0") 		 code_kind="H3C-HP" ;;
+			"33 43"|"50 a0"|"50 a2") 		 code_kind="HP-H3C-Aruba" ;;
 			"00 11"|"43 11") code_kind=Cisco ;;
 			"34 30"|"34 11") code_kind=Juniper ;;
 			"61 20") 		 code_kind=Arista ;;
@@ -189,7 +189,6 @@ code_info() {
 			"58 54") 		 code_kind=Extreme ;;
 			"47 53") 		 code_kind=Brocade ;;
 			"10 00") 		 code_kind=Dell ;;
-			"50 A0"|"50 A2") code_kind=HPP ;;
 			"41 31") 		 code_kind=Avaya ;;
 			"39 32") 		 code_kind=Mellanox ;;
 			*) code_kind="请检查LMM加密位的编码兼容类型: $code_kind" ;;
@@ -294,7 +293,7 @@ do
 			check_info
 			# 输出检查结果信息
 			echo "邮件日期:${older_time} 产品名称:${older_type} 数量:${older_num_old} 备注:${older_remark}" >> $result
-			echo "编码日期:${code_time}${result_time} 产品类型:${code_type}${result_type} 长度:${code_length}米${result_length} 数量:${code_num}${result_num} 速率:${code_speed} 兼容<50pcs以下默认思科兼容>:${code_kind}${result_kind}" >> $result
+			echo "编码日期:${code_time}${result_time} 产品类型:${code_type}${result_type} 长度:${code_length}米${result_length} 数量:${code_num}${result_num} 速率:${code_speed} 兼容<50pcs以下默认思科兼容>:${code_kind}${result_kind}${error_kind}" >> $result
 			# 判断是否出现编码错误，出错就输出错误信息和编码中的十六进制文件。
 			if [ -n "${error_time}${error_type}${error_num}${error_kind}${error_length}" ] ; then
 				#echo ${error_time}${error_type}${error_num}${error_kind}${error_length} >> $result
@@ -339,7 +338,7 @@ do
 			# 输出检查结果信息
 			echo "生产订单号：${older_id}"
 			echo "邮件日期:${older_time} 产品名称:${older_type} 数量:${older_num_old} 备注:${older_remark}"
-			echo -e "编码日期:${code_time}\033[43;30m${result_time}\033[0m 产品类型:${code_type}\033[43;30m${result_type}\033[0m 长度:${code_length}米\033[43;30m${result_length}\033[0m 数量:${code_num}\033[43;30m${result_num}\033[0m 速率:${code_speed} 兼容<50pcs以下默认思科兼容>:${code_kind}\033[43;30m${result_kind}\033[0m"
+			echo -e "编码日期:${code_time}\033[43;30m${result_time}\033[0m 产品类型:${code_type}\033[43;30m${result_type}\033[0m 长度:${code_length}米\033[43;30m${result_length}\033[0m 数量:${code_num}\033[43;30m${result_num}\033[0m 速率:${code_speed} 兼容<50pcs以下默认思科兼容>:${code_kind}\033[43;30m${result_kind}${error_kind}\033[0m"
 			# 判断是否出现编码错误，出错就输出错误信息和编码中的十六进制文件。
 			[ -n "${error_time}${error_type}${error_num}${error_kind}${error_length}" ] && echo "${error_time}${error_type}${error_num}${error_kind}${error_length}"
 			printmark
