@@ -218,7 +218,7 @@ check_info() {
 		error_time="邮件中的日期<${older_time}>和编码日期<${code_time}>不一致，请仔细核对编码日期！！！"
 	fi
 	# 核对邮件内容中的产品类型和编码中的是否一致
-	if [ -n "$(echo $older_type | grep -Ei "qsfp/4sfp|qsfp/4xfp|qsfp/8644|qsfp/8088|8644/8088")" ]; then
+	if [ -n "$(echo $older_type | grep -Ei "qsfp-4sfp|qsfp-4xfp|qsfp-8644|qsfp-8088|8644-8088")" ]; then
 		if [ "$code_type" = Q10 -o "$code_type" = 8644 ]; then result_type="(ok)"
 		else
 			result_type="(-error-)"
