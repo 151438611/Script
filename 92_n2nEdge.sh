@@ -4,6 +4,8 @@
 # 注意事项: 所有的edge命令参数位置必须一致,不一致有可能无法连通; 示例: edge -c xx -d xx和 edge -d -c 则无法连通
 # 超级节点命令: supernode -l port &
 
+export PATH=/usr/sbin:/usr/bin:/sbin:/bin:$PATH
+
 # 设置 supernode 超级节点信息
 supernode_ip_port=n2n.xxy1.ltd:xxx
 # 设置 edge 节点信息
