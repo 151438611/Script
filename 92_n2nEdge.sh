@@ -101,6 +101,4 @@ else
 	$edge -r -d $vmnic_name -c $community_name -a $ipadd -s $netmask -l $supernode_ip_port -k $N2N_KEY || \
 	$edge -r -d $vmnic_name -c $community_name -a $ipadd -s $netmask -l $supernode_ip_port
 	echo "$(date +"%F %T")	$edge $ipadd was not runing ; start $edge ..." >> $log
-fi
-sleep 3
-addIptables
+fi && sleep 3 && addIptables
