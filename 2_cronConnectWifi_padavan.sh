@@ -1,4 +1,5 @@
 #!/bin/sh
+# only support Padavan
 # 使用说明: 路由器主机名需要包含 k2p/k2/youku ,暂时只支持此型号
 # 脚本会读取/etc/storage/ez_buttons_script.sh中输入的第一个Wifi信息，如果没有就退出
 # add crontab,定时强制连接某个指定Wifi，适用于gx5 K2路由器场景
@@ -91,7 +92,7 @@ if [ "$apssid_old" != "$apssid" ] ; then
 		nvram set ${sta_auth_mode}=open
 	fi
 
-	if [ -n "$gwip" -a -n "$channel" ]; then
+	if [ -n "$gwip" ]; then
 	#--- 指定静态WAN_IP，中继获取IP更快速稳定 -------------------------
 		nvram set wan_proto=static
 		static_ip=$(expr 190 + $(date +%S))
