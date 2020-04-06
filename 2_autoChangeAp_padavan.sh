@@ -139,7 +139,7 @@ printf "%-10s %-8s %-20s %-12s\n" $(date +"%F %T") SSID:$apssid Netstat:DOWN >> 
 		nvram set ${sta_auth_mode}=open
 	fi
 
-	if [ -n "$gwip" -a -n "$channel" ]; then
+	if [ -n "$gwip" ]; then
 	#--- 指定静态WAN_IP，中继获取IP更快速稳定 -------------------------
 		nvram set wan_proto=static
 		static_ip=$(expr 190 + $(date +%S))
