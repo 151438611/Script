@@ -1,5 +1,5 @@
 #!/bin/sh
-# only support Padavan
+# only for padavan firmware by huangyewudeng
 # 使用说明: 路由器主机名需要包含 k2p/k2/youku ,暂时只支持此型号
 # 脚本会读取/etc/storage/ez_buttons_script.sh中输入的第一个Wifi信息，如果没有就退出
 # add crontab,定时强制连接某个指定Wifi，适用于gx5 K2路由器场景
