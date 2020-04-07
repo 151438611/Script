@@ -1,7 +1,6 @@
 #!/bin/sh
-# Author Xj date:20180728 ; only for padavan firmware by huangyewudeng
+# Author Xj date:20180728 ; only for Padavan Firmware by HuangYeWuDeng
 # 支持2.4G和5G的多个不同频段Wifi中继自动切换功能,静态指定WAN地址，中继更快速
-# 使用说明: 路由器主机名需要包含 k2p/k2/youku 字符,暂时只支持此型号
 # 20200407 修改：不再扫描wifi信息，直接按输入的WIFI帐号密码直接连接，设置信道为0
 
 export PATH=/bin:/sbin:/usr/bin:/usr/sbin:$PATH
@@ -19,17 +18,10 @@ grep -q "$sh_path" $cron || echo "*/30 * * * * sh $sh_path" >> $cron
 startup_cmd="sleep 8 ; wget -O /tmp/ap.sh $sh_url && mv -f /tmp/ap.sh $sh_path ; sh $sh_path"
 grep -q "$sh_url" $startup || echo "$startup_cmd" >> $startup
 
-# === 1、设置路由器型号k2p和k2(youku-L1/newifi3的2.4G接口名为ra0，和k2相同),因为k2和k2p的无线接口名称不一样
-host_name=$(nvram get computer_name)
-if [ -n "$(echo $host_name | grep -i k2p)" ] ; then router=k2p
-elif [ -n "$(echo $host_name | grep -Ei "k2|youku")" ] ; then router=k2
-else echo "!!! The router is Unsupported device , exit !!!" >> $log && exit
-fi
-# === 2、设置检测网络的IP，若检测局域网状态，设成局域网IP(192.168.x.x)
+# === 1、设置检测网络的IP，若检测局域网状态，设成局域网IP(192.168.x.x)
 ip1=1.2.4.8 ; ip2=114.114.114.114
-# === 3、输入被中继的wifi帐号密码,格式{无线频段(2|5)+ssid+password+wan_ip(选填)},多个用空格或回车隔开,默认加密方式为WPA2-PSK/AES
+# === 2、输入被中继的wifi帐号密码,格式{无线频段(2|5)+ssid+password+wan_ip(选填)},多个用空格或回车隔开,默认加密方式为WPA2-PSK/AES
 # --- 若中继wifi无密码则password不填写, wlan_ip可不填表示wlan动态获取IP ；示例：2+TP-LINK+12345678+1
-aplist1=""
 apinput=/etc/storage/ez_buttons_script.sh
 grep -qi comment $apinput || \
 cat << END >> $apinput
@@ -41,9 +33,9 @@ cat << END >> $apinput
 
 comment
 END
-aplist2=$(sed -r 's/^[ \t]+//g' $apinput | grep "^[25]+")
+aplist1=$(sed -r 's/^[ \t]+//g' $apinput | grep "^[25]+")
 
-aplist=$(echo "$aplist1 $aplist2" | awk '{for(apl=1 ; apl<=NF ; apl++){print $apl}}')
+aplist=$(echo "$aplist1" | awk '{for(apl=1 ; apl<=NF ; apl++){print $apl}}')
 [ -z "$aplist" ] && exit
 apssidlist=$(echo "$aplist" | awk -F+ '{print $2}')
 rt=$(nvram get rt_mode_x)
@@ -62,7 +54,7 @@ fi
 # check internet status 
 ping_timeout=$(ping -c2 -w5 $ip1 | awk -F "/" '$0~"min/avg/max"{print int($4)}')
 [ -n "$ping_timeout" ] && [ $ping_timeout -lt 300 ] && \
-printf "%-10s %-8s %-20s %-12s %-1s\n" $(date +"%F %T") SSID:$apssid Netstat:ON Ping_timeout:${ping_timeout}ms >> $log && exit
+	printf "%-10s %-8s %-20s %-12s %-1s\n" $(date +"%F %T") SSID:$apssid Netstat:ON Ping_timeout:${ping_timeout}ms >> $log && exit
 restart_wan
 sleep 15
 
