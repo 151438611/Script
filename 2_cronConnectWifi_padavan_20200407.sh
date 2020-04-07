@@ -25,7 +25,7 @@ apinput=/etc/storage/ez_buttons_script.sh
 ap=$(sed -r 's/^[ \t]+//g' $apinput | awk '/^[2,5]+/ {print $1}' | head -n1 )
 band=$(echo $ap | cut -d + -f 1)
 apssid=$(echo $ap | cut -d + -f 2)
-[ -z "$apssid" ] && exit
+[ -z "$apssid" ] && echo "AP info is null !!!" && exit
 appasswd=$(echo $ap | cut -d + -f 3)
 gwip=$(echo $ap | cut -d + -f 4)
 channel=$(echo $ap | cut -d + -f 5)
