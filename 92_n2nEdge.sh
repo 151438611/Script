@@ -82,7 +82,7 @@ addIptables() {
 	# 适用于 szK2P_20
 	#[ -z "$(iptables -t nat -vnL POSTROUTING | grep -Ei "${vmnic_name}|${ipadd}")" ] && \
 	#iptables -t nat -A POSTROUTING -o $vmnic_name -d ${ipadd%.*}.0/24 -j SNAT --to-source $ipadd
-	# 适用于jhK2P_75，映射端口到海康E24H摄像头的web上
+	# 适用于 jhK2P_75，映射81端口到海康E24H摄像头的web上
 	#[ -z "$(iptables -t nat -vnL PREROUTING | grep -Ei "${vmnic_name}|${ipadd}")" ] && \
 	#iptables -t nat -A PREROUTING -p tcp -i ${vmnic_name} -d ${ipadd} --dport 81 -j DNAT --to 192.168.75.128:80
 }
