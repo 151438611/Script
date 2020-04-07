@@ -2,6 +2,7 @@
 # Author Xj date:20180728 ; only for padavan firmware by huangyewudeng
 # 支持2.4G和5G的多个不同频段Wifi中继自动切换功能,静态指定WAN地址，中继更快速
 # 使用说明: 路由器主机名需要包含 k2p/k2/youku 字符,暂时只支持此型号
+# 获取AP信息：扫描WIFI，获取信道
 export PATH=/bin:/sbin:/usr/bin:/usr/sbin:$PATH
 main_url="http://frp.xxy1.ltd:35100/file/frp/"
 sh_url="${main_url}autoChangeAp_padavan.sh"
