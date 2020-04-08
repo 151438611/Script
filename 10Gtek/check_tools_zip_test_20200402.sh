@@ -151,7 +151,7 @@ code_info() {
 		# hexdump参数： -s偏移量 -n指定字节
 		code_file_hex_all=$(hexdump -vC $code_file)
 		[ -n "$(echo $older_type | grep -Ei "qsfp|q10|8644|q14")" -a -z "$(echo $older_remark | grep -i mcu)" ] && \
-			code_file_hex=$(hexdump -vC $code_file -s 128 -n 256) || code_file_hex=$(hexdump -vC $code_file -n 128)
+			code_file_hex=$(hexdump -vC $code_file -s 128 -n 256) || code_file_hex=$(hexdump -vC $code_file -n 256)
 
 		# 提取编码中的第0位，03表示SFP类型，06表示XFP类型, 0D表示40G-QSFP, 11表示100G-ZQP，0F表示8644
 		code_type=$(echo "$code_file_hex" | awk 'NR==1{print $2}')
