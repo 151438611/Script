@@ -173,12 +173,15 @@ code_info() {
 		# 提取编码中的第1行第13位，0C表示千兆，63/67表示10G, FF表示25G, 3C表示6G
 		code_speed=$(echo "$code_file_hex" | awk 'NR==1{print $14}')
 		case $code_speed in
-			"67"|"63"|"64") code_speed="10G" ;;
+			"63"|"64"|"67") code_speed="10G" ;;
 			"ff") 			code_speed="25G" ;;
-			"0c") 			code_speed="1000BASE" ;;
+			"01"|"02") 		code_speed="100M" ;;
+			"0c"|"0d"|"15") code_speed="1G" ;;
+			"19") 			code_speed="2.5G" ;;
 			"3c") 			code_speed="6G" ;;
+			"55") 			code_speed="8G" ;;
 			"78") 			code_speed="12G" ;;
-			"8d") 			code_speed="14G" ;;
+			"8c"|"8d") 		code_speed="14G" ;;
 			*) 	code_speed="请检查第13位未识别的产品速率代码：$code_speed" ;;
 		esac
 		[ "$code_type" = "SFP" -a "$code_speed" = "25G" ] && code_type="ZSP"
@@ -325,10 +328,9 @@ do
 			check_info
 			# 输出检查结果信息
 			echo "邮件日期:${order_time} 产品名称:${order_type} 数量:${order_num_old} 备注:${order_remark}" >> $result
-			echo "编码日期:${code_time}${result_time} 产品类型:${code_type}${result_type} 长度:${code_length}米${result_length} 数量:${code_num}${result_num} 速率:${code_speed} SN正确:${result_sn}${error_sn}  兼容<50pcs以下默认思科兼容>:${code_kind}${result_kind}${error_kind}" >> $result
+			echo "编码日期:${code_time}${result_time} 产品类型:${code_type}${result_type} 长度:${code_length}米${result_length} 数量:${code_num}${result_num} 速率:${code_speed} SN一致:${result_sn}${error_sn}  兼容<50pcs以下默认思科兼容>:${code_kind}${result_kind}${error_kind}" >> $result
 			# 判断是否出现编码错误，出错就输出错误信息和编码中的十六进制文件。
 			if [ -n "${error_time}${error_type}${error_num}${error_kind}${error_length}${error_sn}" ] ; then
-				#echo ${error_time}${error_type}${error_num}${error_kind}${error_length} >> $result
 				printmark >> $result
 				echo "$code_file_hex_all" | head -n16 >> $result
 			fi
@@ -370,9 +372,9 @@ do
 			# 输出检查结果信息
 			echo "生产订单号：${order_id}"
 			echo "邮件日期:${order_time} 产品名称:${order_type} 数量:${order_num_old} 备注:${order_remark}"
-			echo -e "编码日期:${code_time}\033[43;30m${result_time}\033[0m 产品类型:${code_type}\033[43;30m${result_type}\033[0m 长度:${code_length}米\033[43;30m${result_length}\033[0m 数量:${code_num}\033[43;30m${result_num}\033[0m 速率:${code_speed} 兼容<50pcs以下默认思科兼容>:${code_kind}\033[43;30m${result_kind}${error_kind}\033[0m"
+			echo -e "编码日期:${code_time}\033[43;30m${result_time}\033[0m 产品类型:${code_type}\033[43;30m${result_type}\033[0m 长度:${code_length}米\033[43;30m${result_length}\033[0m 数量:${code_num}\033[43;30m${result_num}\033[0m 速率:${code_speed} SN一致:${result_sn}${error_sn} 兼容<50pcs以下默认思科兼容>:${code_kind}\033[43;30m${result_kind}${error_kind}\033[0m"
 			# 判断是否出现编码错误，出错就输出错误信息和编码中的十六进制文件。
-			[ -n "${error_time}${error_type}${error_num}${error_kind}${error_length}" ] && echo "${error_time}${error_type}${error_num}${error_kind}${error_length}"
+			[ -n "${error_time}${error_type}${error_num}${error_kind}${error_length}${error_sn}" ] && echo "${error_time}${error_type}${error_num}${error_kind}${error_length}${error_sn}"
 			printmark
 			# 输出编码中的十六进制文件，仅输出20行。
 			echo "$code_file_hex_all" | head -n16
