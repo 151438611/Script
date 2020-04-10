@@ -98,9 +98,8 @@ order_info() {
 				order_num=$(($order_num_old * 3 + 1))
 			fi
 		elif [ -n "$(echo $order_type | grep -Ei "q10-4s|qsfp-4sfp|qsfp-4xfp")" ] ; then
-			if [ -n "$(echo $order_remark | grep -i mcu | grep -Ei "h3c|hp")" ]; then
-				order_num=$(($order_num_old * 7 + 11))
-			elif [ -n "$(echo $order_remark | grep -i mcu)" ]; then
+			# 判断QSFP/4SFP、QSFP/1SFP、QSFP/4SFP，QSFP端可分EEPROM或MCU，SFP只能是EEPROM
+			if [ -n "$(echo $order_remark | grep -i mcu)" ]; then
 				order_num=$(($order_num_old * 7 + 3))
 			else
 				order_num=$(($order_num_old * 6 + 1))
