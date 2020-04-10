@@ -43,15 +43,16 @@ order_info() {
 	order_all=$(cat $input_txt | grep -a $order_id)
 	# 提取内容中的日期,示例：20180515
 	order_time=$(echo $order_all | awk '{print $1}')
+	# 提取订单编码数量,示例：30
+	order_num_old=$(echo $order_all | awk '{print $5}')
 	# 提取邮件中的产品SN，示例：S180701230001
 	order_sn_info=$(echo $order_all | awk '{print $6}')
 	order_sn=$(echo ${order_sn_info%-*})
-	if [ -n "$(echo $order_sn_info | grep "-")" ] ; then 
-		order_sn_end_1=$(echo ${order_sn_info##*-})
-		order_sn_end_num=${#order_sn_end_1}
-		order_sn_end=${order_sn: 0: -$order_sn_end_num}${order_sn_end_1}
-	else
+	if [ $order_num_old -eq 1 ] ; then 
 		order_sn_end=$order_sn
+	else
+		order_sn_end_num=${#order_num_old}
+		order_sn_end=${order_sn: 0: -$order_sn_end_num}${order_num_old}
 	fi
 
 	# 提取邮件中的产品名称，示例：CAB-10GSFP-P3M
@@ -76,9 +77,6 @@ order_info() {
 		fi
 	fi
 
-
-	# 提取订单编码数量,示例：30
-	order_num_old=$(echo $order_all | awk '{print $5}')
 	# 20191119新增10gsfp线缆的MCU方案
 	order_kind=
 	[ -n "$(echo $order_all | grep -Ei "10gsfp|0sfp" | grep -i mcu)" ] && order_kind=CiscoMCU
