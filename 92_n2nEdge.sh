@@ -18,6 +18,8 @@ N2N_KEY=
 
 log=/tmp/n2n_log.txt
 [ -f $log ] || echo $(date +"%F %T") > $log
+# 20200410 在Padavan上发现一个DNS缓存问题，有的设备缓存时间会持续1个小时甚至更久，因此增加清除缓存操作 dnsmasq -N (support OpenWrt Padavan)
+[ $(which dnsmasq) ] && dnsmasq -N
 
 base_url="http://frp.xxy1.ltd:35100/file/n2n"
 if [ -n "$(grep -Ei "MT7620|MT7621" /proc/cpuinfo)" ] ; then
