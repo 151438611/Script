@@ -45,12 +45,11 @@ order_info() {
 	order_time=$(echo $order_all | awk '{print $1}')
 	# 提取邮件中的产品SN，示例：S180701230001
 	order_sn_info=$(echo $order_all | awk '{print $6}')
+	order_sn=$(echo ${order_sn_info%-*})
 	if [ -n "$(echo $order_sn_info | grep "-")" ] ; then 
-		order_sn=$(echo ${order_sn_info%-*})
 		order_sn_end_1=$(echo ${order_sn_info##*-})
 		order_sn_end_num=${#order_sn_end_1}
 		order_sn_end=${order_sn: 0: -$order_sn_end_num}${order_sn_end_1}
-		
 	else
 		order_sn_end=$order_sn
 	fi
