@@ -26,7 +26,7 @@ result=./result
 # 获取需求的邮件编码信息文件
 input_txt() {
 	input_txt=$(ls -t *.txt | head -n1)
-	[ -z "$input_txt" ] && echo -e "\nxx.txt 文件不存在，请重新检查！！！\n" && exit
+	[ -z "$input_txt" ] && echo -e "\n编码邮件内容.txt 文件不存在，请重新检查！！！\n" && exit
 	dos2unix -q $input_txt
 }
 # 获取编码完后的编码压缩zip文件
@@ -34,7 +34,7 @@ input_zip() {
 	input_zip=$(ls -t *.zip | head -n1)
 	# 判断是否存在未删除的解压出来的文件夹，删除了再解压刚传入的zip文件,-iname表示忽略大小写
 	find ./ -type d -iname "[MW]O*" -exec rm -r {} \; 2> /dev/null
-	[ -z "$input_zip" ] && echo -e "\nxx.zip 文件不存在，请重新检查！！！\n" && exit
+	[ -z "$input_zip" ] && echo -e "\n编码文件.zip 文件不存在，请重新检查！！！\n" && exit
 	unzip -q "$input_zip" || exit
 }
 
@@ -216,7 +216,8 @@ code_info() {
 
 check_info() {
 	# 判断之前先初始化错误信息
-	error_time=  ; error_type=  ; error_num=  ; error_kind=  ; error_length=  ; error_sn=
+	error_time= ; error_type= ; error_num= ; error_kind= ; error_length= ; error_sn=
+	result_time= ; result_type= ; result_num= ; result_kind= ; result_length= ; result_sn= 
 	# 核对邮件内容中的日期和编码中的日期是否一致
 	if [ "${order_time:2}" = "$code_time" ]; then result_time="(ok)"
 	else
