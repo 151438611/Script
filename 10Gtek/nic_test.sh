@@ -1,5 +1,5 @@
 #!/bin/sh
-# 用于在Centos测试电脑上进行网卡测试
+# 用于在Centos测试电脑上进行网卡测试,需要安装 dos2unix
 # 注意：centos需要关闭selinux 和 配置或关闭firewalld：firewall-cmd --permanent --zone=public --add-port=5201/tcp
 
 #export PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:$PATH
