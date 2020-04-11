@@ -8,10 +8,10 @@ Documentation=https://github.com/fatedier/frp
 Type=simple
 #WorkingDirectory=/opt/frp
 #ExecStart=/opt/frp/frps -c /opt/frp/frps.ini
-ExecStart=/opt/frpc/frpc -c /opt/frpc/frpc.ini  
-ExecReload=/opt/frpc/frpc -c /opt/frpc/frpc.ini reload
+ExecStart=/opt/frp/frpc -c /opt/frp/frpc.ini  
+ExecReload=/opt/frp/frpc -c /opt/frp/frpc.ini reload
 KillMode=process
-RestartSec=10s
+RestartSec=60s
 Restart=on-failure
 
 [Install]
