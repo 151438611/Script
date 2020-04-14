@@ -51,8 +51,12 @@ order_info() {
 	if [ $order_num_old -eq 1 ] ; then 
 		order_sn_end=$order_sn
 	else
+		# 最后SN为起始SN加上数量，减1即可;
+		# 思路：将SN后4位分开，再将后4位加数量减1后，再和SN前面合并
 		order_sn_end_num=${#order_num_old}
-		order_sn_end=${order_sn: 0: -$order_sn_end_num}${order_num_old}
+		order_sn_1=${order_sn: -4}
+		order_sn_2=$(expr $order_sn_1 + $order_num_old - 1)
+		order_sn_end=${order_sn: 0: -4}$(echo $order_sn_2 | awk '{printf("%04d",$0)}')
 	fi
 
 	# 提取邮件中的产品名称，示例：CAB-10GSFP-P3M
@@ -63,7 +67,7 @@ order_info() {
 
 	# 提取邮件中的需求长度，单位CM/M; 判断特殊情况：CAB-10GSFP-P65CM和HP-Aruba的编码长度位为00
 	if [ -z "$(echo "$order_type" | grep -i cm)" ]; then
-		if [ -n "$(echo $order_type | grep -i 10sfp)" -a -n "$(echo $order_remark | grep -Ei "hpp|aruba")" ]; then
+		if [ -n "$(echo $order_type | grep -i 10gsfp)" -a -n "$(echo $order_remark | grep -Ei "hpp|aruba")" ]; then
 			order_length=0
 		else
 			order_length=$(echo ${order_type%M*} | sed 's/.*\(...\)$/\1/' | sed 's/[a-zA-Z]//g' | sed 's/-//g')
