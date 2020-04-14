@@ -74,7 +74,7 @@ order_info() {
 			order_length=$(echo $order_length | awk '{print int($0)}')
 		fi
 	else
-		if [ -n "$(echo $order_type | grep -i 10sfp)" -a -n "$(echo $order_remark | grep -Ei "h3c|hp")" ]; then
+		if [ -n "$(echo $order_type | grep -i 10gsfp)" -a -n "$(echo $order_remark | grep -Ei "h3c|hp")" ]; then
 			order_length=0
 		else
 			order_length=1
