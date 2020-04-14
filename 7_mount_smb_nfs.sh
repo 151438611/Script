@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # 适用于 arm64、x86_64 的Linux
 export PATH=/bin:/sbin:/usr/bin:/usr/sbin:$PATH
 
