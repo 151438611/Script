@@ -13,7 +13,7 @@ fun_mount_smb() {
 }
 fun_mount_nfs() {
 	# 需要安装NFS命令：apt install nfs-common 或 yum install nfs-utils
-	# 暂只支持nfs_vers=3.0, 不支持4.0
+	# 暂只支持nfs_vers=3.0(不支持认证), 不支持4.0
 	# 使用 "showmount -e nfsd_ip" 查看nfsd服务端的目录
 	# $1:mount_src $2:mount_dest 
 	[ -d "$2" ] || mkdir -p $2
