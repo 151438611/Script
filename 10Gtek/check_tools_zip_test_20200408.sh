@@ -375,7 +375,7 @@ do
 			# 输出检查结果信息
 			echo "生产订单号：${order_id}"
 			echo "邮件日期:${order_time} 产品名称:${order_type} 数量:${order_num_old} 备注:${order_remark}"
-			echo -e "编码日期:${code_time}\033[43;30m${result_time}\033[0m 产品类型:${code_type}\033[43;30m${result_type}\033[0m 长度:${code_length}米\033[43;30m${result_length}\033[0m 数量:${code_num}\033[43;30m${result_num}\033[0m 速率:${code_speed} SN一致:${result_sn}${error_sn} 兼容<50pcs以下默认思科兼容>:${code_kind}\033[43;30m${result_kind}${error_kind}\033[0m"
+			echo -e "编码日期:${code_time}\033[43;30m${result_time}\033[0m 产品类型:${code_type}\033[43;30m${result_type}\033[0m 长度:${code_length}米\033[43;30m${result_length}\033[0m 数量:${code_num}\033[43;30m${result_num}\033[0m 速率:${code_speed} SN一致:\033[43;30m${result_sn}\033[0m${error_sn} 兼容<50pcs以下默认思科兼容>:${code_kind}\033[43;30m${result_kind}${error_kind}\033[0m"
 			# 判断是否出现编码错误，出错就输出错误信息和编码中的十六进制文件。
 			[ -n "${error_time}${error_type}${error_num}${error_kind}${error_length}${error_sn}" ] && echo "${error_time}${error_type}${error_num}${error_kind}${error_length}${error_sn}"
 			printmark
