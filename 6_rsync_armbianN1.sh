@@ -1,4 +1,5 @@
-#!/bin/sh
+#!/bin/bash
+# for arm64 Armbian 
 # 使用rsync来定时备份config 配置文件
 export PATH=/bin:/sbin:/usr/bin:/usr/sbin:$PATH
 cron=/var/spool/cron/crontabs/root
@@ -38,13 +39,14 @@ fi
 
 chown -R armbian.armbian /media/sda1
 
-# ===== temp use =================
-sh /opt/mount_smb.sh
-if [ -n "$(mount | grep 10gtek)" ] ; then
+# ===== temp use , backup to remote_host =====
+sh /opt/mount.sh
+bak_dir=/media/nfs
+if [ -n "$(mount | grep $bak_dir)" ] ; then
   cd /media/sda1/
-  tar -zcvf /media/10gtek/backup$(date +%Y%m%d).tgz --exclude photo data
-  [ `echo $?` -eq 0 ] && echo "$(date +"%F %T") backup to 10gtek success ! " >> $rsynclog
-  sleep 60 && find /media/10gtek -type f -name "backup*" -ctime +5 -exec rm -f {} \; 
+  tar -zcvf ${bak_dir}/backup$(date +%Y%m%d).tgz --exclude photo data
+  [ `echo $?` -eq 0 ] && echo "$(date +"%F %T") backup to $bak_dir success ! " >> $rsynclog
+  sleep 60 && find $bak_dir -type f -name "backup*" -ctime +5 -exec rm -f {} \; 
 else
-  echo -e "\n$(date +"%F %T") 10gtek is not mount , rsync backup to 10gtek failse !" >> $rsynclog
+  echo -e "\n$(date +"%F %T") 10gtek is not mount , rsync backup to $bak_dir failse !" >> $rsynclog
 fi
