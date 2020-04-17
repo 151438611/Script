@@ -12,9 +12,9 @@
 	
 </head>
 <body>
-    <a href="./phpmyadmin/index.php" target="_blank"><img border="0" src="./mariadb.jpg" /></a>
-    <a href="https://192.168.3.178" target="_blank"><img border="0" src="./kodexplorer.jpg" /></a>
-    <a href="https://192.168.200.200" target="_blank"><img border="0" src="./zabbix.jpg" /></a>
+	<a href="./phpmyadmin/index.php" target="_blank"><img border="0" src="./mariadb.jpg" /></a>
+	<a href="https://192.168.3.178" target="_blank"><img border="0" src="./kodexplorer.jpg" /></a>
+	<a href="https://192.168.200.200" target="_blank"><img border="0" src="./zabbix.jpg" /></a>
 	<a href="http://192.168.200.250:5000" target="_blank"><img border="0" src="./synology.jpg" /></a>
     <div>
 		<p>Transceiver Module Group Compatibility Matrix</p>
