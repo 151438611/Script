@@ -12,10 +12,19 @@
 	
 </head>
 <body>
+	<a href="https://wx2.qq.com/" target="_blank"><img border="0" src="./weixin.jpg" /></a>
 	<a href="./phpmyadmin/index.php" target="_blank"><img border="0" src="./mariadb.jpg" /></a>
 	<a href="https://192.168.3.178" target="_blank"><img border="0" src="./kodexplorer.jpg" /></a>
-	<a href="https://192.168.200.200" target="_blank"><img border="0" src="./zabbix.jpg" /></a>
+	<a href="https://github.com/151438611/Script" target="_blank"><img border="0" src="./github.jpg" /></a>
+	<a href="https://www.right.com.cn/forum/forum-158-1.html" target="_blank"><img border="0" src="./right_ensan.jpg" /></a>
+	<a href="https://192.168.200.201" target="_blank"><img border="0" src="./zabbix.jpg" /></a>
 	<a href="http://192.168.200.250:5000" target="_blank"><img border="0" src="./synology.jpg" /></a>
+	<a href="https://192.168.200.189/ui/" target="_blank"><img border="0" src="./vmware.jpg" /></a>
+	<a href="https://yadi.sk/d/pHxaRAs-tZiei" target="_blank"><img border="0" src="./armbian.jpg" /></a>
+	<a href="https://play.google.com/store/apps" target="_blank"><img border="0" src="./google_play.jpg" /></a>
+	<a href="https://www.google.com.hk/" target="_self"><img border="0" src="./google.jpg" /></a>
+
+	
     <div>
 		<p>Transceiver Module Group Compatibility Matrix</p>
 		
