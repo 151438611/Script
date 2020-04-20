@@ -22,7 +22,7 @@ dest=/media/sda1/data/config_bak && [ -d "$dest" ] || mkdir -p $dest
 
 rsync_fun() {
 # $1表示备份的源文件/目录src , $2表示备份的目的目录dest
-  rsync -tvr --delete $1 $2
+  rsync -tqr --delete $1 $2
   [ $? -eq 0 ] && echo "$(date +"%F %T") rsync success $1" >> $rsynclog || echo "$(date +"%F %T") rsync fail--- $1" >> $rsynclog
 }
 
