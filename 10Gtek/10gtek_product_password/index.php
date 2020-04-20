@@ -33,8 +33,7 @@
 		<p>Transceiver Module Group Compatibility Matrix</p>
 		
 		<form id="frontForm" name="frontForm" action="" method="get">
-			<input class="inputKeywords" name="inputKeywords" type="text" maxlength="25" placeholder=" Please enter at least 5 keywords of Product_Name or Item_Number " value="">
-			
+			<input class="inputKeywords" name="inputKeywords" type="text" maxlength="25" placeholder=" Least 5 keywords of Product_Name or Item_Number " value="">
 			<button class="button" type="submit">清空</button>
 <!--	    <button class="button" type="button" onmouseenter="this.innerHTML=Date()" onmouseleave="this.innerHTML='时间'">时间</button> 
 -->
