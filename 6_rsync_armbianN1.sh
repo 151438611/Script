@@ -4,8 +4,7 @@
 export PATH=/bin:/sbin:/usr/bin:/usr/sbin:$PATH
 cron=/var/spool/cron/crontabs/root
 grep -qi $(basename $0) $cron || echo -e "\n40 1 * * * sh /opt/$(basename $0)" >> $cron
-rsynclog=/tmp/rsync.log
-echo "" >> $rsynclog
+rsynclog=/tmp/rsync.log ; echo "" >> $rsynclog
 
 src0=/etc/rc.local
 src1=/etc/profile
@@ -40,14 +39,14 @@ fi
 
 chown -R armbian.armbian /media/sda1
 
-# ===== temp use , backup to remote_host =====
+# ===== temp use =================
 sh /opt/mount.sh
-bak_dir=/media/nfs
-if [ -n "$(mount | grep $bak_dir)" ] ; then
+bak_dir=/media/nfs/armbian_backup
+if [ -d $bak_dir ] ; then
   cd /media/sda1/
   tar -zcvf ${bak_dir}/backup$(date +%Y%m%d).tgz --exclude photo data
   [ `echo $?` -eq 0 ] && echo "$(date +"%F %T") backup to $bak_dir success ! " >> $rsynclog
   sleep 60 && find $bak_dir -type f -name "backup*" -ctime +5 -exec rm -f {} \; 
 else
-  echo -e "\n$(date +"%F %T") 10gtek is not mount , rsync backup to $bak_dir failse !" >> $rsynclog
+  echo -e "\n$(date +"%F %T") $bak_dir is not exist , rsync backup to $bak_dir failse !" >> $rsynclog
 fi
