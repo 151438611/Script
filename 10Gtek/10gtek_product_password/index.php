@@ -28,6 +28,7 @@
 	<a href="https://tmgmatrix.cisco.com/home" target="_blank"><img border="0" src="./cisco_optics_compatibility_matrix.jpg" /></a>
 	<a href="https://www.vmware.com/resources/compatibility/search.php?deviceCategory=io" target="_blank"><img border="0" src="./vmware_compatibility_guide.jpg" /></a>
 	<a href="https://partsurfer.hpe.com/search.aspx" target="_blank"><img border="0" src="./hpe_partsurfer.jpg" /></a>
+	<a href="https://downloadcenter.intel.com/en/" target="_blank"><img border="0" src="./intel_driver.jpg" /></a>
 	
     <div>
 		<p>Transceiver Module Group Compatibility Matrix</p>
