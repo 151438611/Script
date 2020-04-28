@@ -10,7 +10,7 @@
 #################################################################
 export PATH=/bin:/sbin:/usr/bin:/usr/sbin:$PATH
 main_url="http://frp.xxy1.ltd:35100/file/frp/"
-wget -T 3 -O /dev/null $main_url 2> /dev/null || main_url="http://frp.xxy1.ltd:35300/file/frp/"
+wget --spider $main_url || main_url="http://frp.xxy1.ltd:35300/file/frp/"
 
 if [ -n "$(grep -Ei "MT7620|MT7621" /proc/cpuinfo)" ] ; then
 	hardware_type=mipsle
