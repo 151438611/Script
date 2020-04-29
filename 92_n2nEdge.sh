@@ -22,33 +22,35 @@ log=/tmp/n2n_log.txt
 [ $(which dnsmasq) ] && dnsmasq -N
 
 base_url="http://frp.xxy1.ltd:35100/file/n2n"
-if [ -n "$(grep -Ei "MT7620|MT7621" /proc/cpuinfo)" ] ; then
-	hw_type=mipsel
-elif [ -n "$(grep -i ARMv7 /proc/cpuinfo)" ] ; then
-	hw_type=arm
-elif [[ -n "$(grep -i ARMv8 /proc/cpuinfo)" && "$(uname -m)" = aarch64 ]] ; then
-	hw_type=arm64
-elif [ -n "$(grep -i AR7241 /proc/cpuinfo)" ] ; then
-	hw_type=mips
-elif [ "$(uname -m)" = x86_64 ] ; then
-	hw_type=amd64
+
+if [ -n "$(grep -i padavan /proc/version)" ] ; then
+	os_type=padavan
+elif [ -n "$(grep -i openwrt /proc/version)" ] ; then
+	os_type=openwrt
+else 
+	os_type=linux
 fi
-case $hw_type in 
-	amd64)
+
+case $(uname -m) in 
+	x86_64)
 		edge="/usr/sbin/edge"
 		down_url="${base_url}/edge_n2n_v2_linux_amd64"
 	;;
-	arm64)
+	aarch64)
 		edge="/usr/sbin/edge"
 		down_url="${base_url}/edge_n2n_v2_linux_arm64"
 	;;
-	mipsel)
-		edge="/etc/storage/bin/edge"
-		down_url="${base_url}/edge_n2n_v2_linux_mipsel"
-	;;
 	mips)
-		edge="/etc/edge"
-		down_url="${base_url}/edge_n2n_v2_linux_mips"
+		if [ "$os_type" = padavan ] ; then 
+			edge="/etc/storage/bin/edge"
+			down_url="${base_url}/edge_n2n_v2_linux_mipsel"
+		elif [ "$os_type" = openwrt ] ; then 
+			edge="/etc/edge"
+			down_url="${base_url}/edge_n2n_v2_linux_mips"
+		fi
+	;;
+	*)
+		echo "This is unsupport device !!!" | tee -a $log
 	;;
 esac
 addIPRoutes() {
