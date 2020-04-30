@@ -95,7 +95,7 @@ if [ ! -x $edge ]; then
 	chmod +x $edge
 fi
 
-ping -c 2 114.114.114.114 && \
+ping -c 2 223.5.5.5 && \
 if [ -n "$(pidof $(basename $edge))" ]; then
 	echo "$(date +"%F %T")	$edge $ipadd is runing , Don't do anything !" >> $log
 else
