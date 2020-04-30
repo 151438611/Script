@@ -141,7 +141,7 @@ $frpc -v || download_frpc_fun
 [ -x $frpc ] && [ -f $frpc_ini ] || { echo "$frpc or $frpc_ini does not exist !!!" >> $log ; exit ; }
 
 # ------------------------- start frpc ---------------------
-ping -c 2 114.114.114.114 && \
+ping -c 2 223.5.5.5 && \
   if [ -z "$(pidof $(basename $frpc))" ] ; then
     echo "$(date +"%F %T") $frpc was not runing ; start $frpc ..." >> $log 
     exec $frpc -c $frpc_ini &
