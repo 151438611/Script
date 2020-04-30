@@ -19,7 +19,7 @@ startup_cmd="sleep 8 ; wget -O /tmp/ap.sh $sh_url && mv -f /tmp/ap.sh $sh_path ;
 grep -q "$sh_url" $startup || echo "$startup_cmd" >> $startup
 
 # === 1、设置检测网络的IP，若检测局域网状态，设成局域网IP(192.168.x.x)
-ip1=1.2.4.8 ; ip2=114.114.114.114
+ip1=223.5.5.5 ; ip2=114.114.114.114
 # === 2、输入被中继的wifi帐号密码,格式{无线频段(2|5)+ssid+password+wan_ip(选填)},多个用空格或回车隔开,默认加密方式为WPA2-PSK/AES
 # --- 若中继wifi无密码则password不填写, wlan_ip可不填表示wlan动态获取IP ；示例：2+TP-LINK+12345678+1
 apinput=/etc/storage/ez_buttons_script.sh
