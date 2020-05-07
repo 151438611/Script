@@ -14,8 +14,8 @@ exeCommand="$exePath -a 0.0.0.0 -d /media/sda1/filebrowser.db -p 81 -l /tmp/file
 log="/tmp/${exeName}.log"
 cd $(dirname $exePath)
 # 判断执行文件是否存在，且有执行权限
-if [ -f "$exePath" -a -n "$exePath" ]; then
-	[ -x $exePath ] || chmod +x $exePath
+if [ -f "$exePath" ]; then
+	[ -x "$exePath" ] || chmod +x $exePath
 else
 	echo "$(date +"%F %T") $exePath file does not exist ! ! !" >> $log 
 	exit
