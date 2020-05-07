@@ -7,9 +7,9 @@
 #4 ./filebrowser -d ./filebrowser.db &  后台启动软件
 
 # 请输入完整路径
-exePath="/opt/filebrowser" && exeName=${exePath##*/}
+exePath="/opt/filebrowser" && exeName=$(basename $exePath)
 confPath=""
-exeCommand="$exePath -a 0.0.0.0 -d /media/sda1/filebrowser.db -p 8081 -l /tmp/filebrowser.log"
+exeCommand="$exePath -a 0.0.0.0 -d /media/sda1/filebrowser.db -p 81 -l /tmp/filebrowser.log"
 
 log="/tmp/${exeName}.log"
 cd $(dirname $exePath)
