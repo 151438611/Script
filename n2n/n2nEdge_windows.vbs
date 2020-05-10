@@ -3,7 +3,7 @@
 ' 2、准备2个文件( edge.exe edge.vbs )复制到 dir_run 目录，并修改相应变量名和路径
 ' 2、测试 edge.vbs 是否可正常运行
 ' 3、开机启动目录 C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Startup
-' 4、添加进计划任务：schtasks.exe /create /tn "edge" /tr "C:\PerfLogs\edge.vbs" /sc onstart
+' 4、添加进计划任务：schtasks.exe /create /tn "start_edge" /tr "C:\PerfLogs\edge.vbs" /sc onstart
 
 On Error Resume Next
 Dim dir_run, n2n
