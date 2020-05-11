@@ -2,7 +2,7 @@
 ' 1、Edge 需要安装 Windows TAP Adapter Driver (Supernode不需要此驱动); OpenVPN安装包自带TAP驱动,仅勾选TAP安装即可，安装完成可在服务中关闭OpenVPN相关服务
 ' 2、准备2个文件( edge.exe edge.vbs )复制到 dir_run 目录，并修改相应变量名和路径
 ' 2、测试 edge.vbs 是否可正常运行
-' 3、开机启动目录 C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Startup
+' 3、开机启动目录 C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Startup ; 需要登陆系统才能运行，建议使用计划任务
 ' 4、添加进计划任务：schtasks.exe /create /tn "start_edge" /tr "C:\PerfLogs\edge.vbs" /sc onstart
 
 On Error Resume Next
