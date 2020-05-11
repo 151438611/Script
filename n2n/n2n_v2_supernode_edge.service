@@ -1,0 +1,19 @@
+# Linux systemctl service
+[Unit]
+Description=N2N supernode/edge Service 
+After=network-online.target
+Wants=network-online.target
+Documentation=https://github.com/ntop/n2n
+
+[Service]
+Type=simple
+#WorkingDirectory=/opt/
+ExecStart=/opt/n2n/supernode -l 8000
+#ExecStart=/opt/n2n/edge -r -d edge -c n2nEdge -a 10.5.5.5 -s 255.255.255.0 -l n2n.xxy1.ltd:10086 
+ExecReload=/bin/kill -HUP $MAINPID
+KillMode=process
+RestartSec=60s
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
