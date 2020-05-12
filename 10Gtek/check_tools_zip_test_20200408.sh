@@ -195,15 +195,15 @@ code_info() {
 		case $code_kind in
 			"00 00") 		 code_kind=OEM ;;
 			"33 43"|"50 a0"|"50 a2") 		 code_kind="HP-H3C-Aruba" ;;
-			"00 11"|"43 11") code_kind=Cisco ;;
-			"34 30"|"34 11") code_kind=Juniper ;;
-			"61 20") 		 code_kind=Arista ;;
-			"32 30") 		 code_kind="Alcatel-lucent" ;;
-			"58 54") 		 code_kind=Extreme ;;
-			"47 53") 		 code_kind=Brocade ;;
-			"10 00"|"10 01") code_kind=Dell ;;
-			"41 31") 		 code_kind=Avaya ;;
-			"39 32") 		 code_kind=Mellanox ;;
+			"00 11"|"43 11") 	code_kind=Cisco ;;
+			"34 30"|"34 11") 	code_kind=Juniper ;;
+			"61 20") 		 	code_kind=Arista ;;
+			"32 30") 		 	code_kind="Alcatel-lucent" ;;
+			"58 54") 		 	code_kind=Extreme ;;
+			"47 53") 		 	code_kind=Brocade ;;
+			"10 00"|"10 01")	code_kind=Dell ;;
+			"41 31") 		 	code_kind=Avaya ;;
+			"39 32") 		 	code_kind=Mellanox ;;
 			*) code_kind="请检查LMM加密位的编码兼容类型: $code_kind" ;;
 		esac
 		# 提取编码中的第2行第4位，表示线缆的长度
