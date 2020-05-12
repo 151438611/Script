@@ -201,7 +201,7 @@ code_info() {
 			"32 30") 		 code_kind="Alcatel-lucent" ;;
 			"58 54") 		 code_kind=Extreme ;;
 			"47 53") 		 code_kind=Brocade ;;
-			"10 00") 		 code_kind=Dell ;;
+			"10 00"|"10 01") code_kind=Dell ;;
 			"41 31") 		 code_kind=Avaya ;;
 			"39 32") 		 code_kind=Mellanox ;;
 			*) code_kind="请检查LMM加密位的编码兼容类型: $code_kind" ;;
