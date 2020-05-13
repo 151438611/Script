@@ -188,14 +188,14 @@ code_info() {
 		code_speed=$(echo "$code_file_hex" | awk 'NR==1{print $14}')
 		case $code_speed in
 			"63"|"64"|"67") code_speed=10G ;;
-			"ff") 			code_speed=25G ;;
-			"01"|"02") 		code_speed=100M ;;
-			"0c"|"0d"|"15") code_speed=1G ;;
-			"19") 			code_speed=2.5G ;;
-			"3c") 			code_speed=6G ;;
-			"55") 			code_speed=8G ;;
-			"78") 			code_speed=12G ;;
-			"8c"|"8d") 		code_speed=14G ;;
+			"ff")	code_speed=25G ;;
+			"01"|"02")	code_speed=100M ;;
+			"0c"|"0d"|"15")	code_speed=1G ;;
+			"19")	code_speed=2.5G ;;
+			"3c")	code_speed=6G ;;
+			"55")	code_speed=8G ;;
+			"78")	code_speed=12G ;;
+			"8c"|"8d")	code_speed=14G ;;
 			*) 	code_speed="请检查第13位未识别的产品速率代码：$code_speed" ;;
 		esac
 		if [ "$code_type" = SFP -a "$code_speed" = 1G ]; then code_type=1GSFP
@@ -229,16 +229,16 @@ code_info() {
 					code_kind=OEM 
 				fi
 			;;
-			"33 43"|"50 a0"|"50 a2") 		 code_kind=HP-H3C-Aruba ;;
-			"00 11"|"43 11") 	code_kind=Cisco ;;
-			"34 30"|"34 11") 	code_kind=Juniper ;;
-			"61 20") 		 	code_kind=Arista ;;
-			"32 30") 		 	code_kind=Alcatel-lucent ;;
-			"58 54") 		 	code_kind=Extreme ;;
-			"47 53") 		 	code_kind=Brocade ;;
+			"33 43"|"50 a0"|"50 a2")	code_kind=HP-H3C-Aruba ;;
+			"00 11"|"43 11")	code_kind=Cisco ;;
+			"34 30"|"34 11")	code_kind=Juniper ;;
+			"61 20")	code_kind=Arista ;;
+			"32 30")	code_kind=Alcatel-lucent ;;
+			"58 54")	code_kind=Extreme ;;
+			"47 53")	code_kind=Brocade ;;
 			"10 00"|"10 01")	code_kind=Dell ;;
-			"41 31") 		 	code_kind=Avaya ;;
-			"39 32") 		 	code_kind=Mellanox ;;
+			"41 31")	code_kind=Avaya ;;
+			"39 32")	code_kind=Mellanox ;;
 			*) code_kind="请检查LMM加密位的编码兼容类型: $code_kind" ;;
 		esac
 		# 提取编码中的第2行第4位，表示线缆的长度
@@ -259,31 +259,29 @@ check_info() {
 	error_time= ; error_type= ; error_num= ; error_kind= ; error_length= ; error_sn=
 	result_time= ; result_type= ; result_num= ; result_kind= ; result_length= ; result_sn= 
 	# 核对邮件内容中的日期和编码中的日期是否一致
-	if [ "${order_time:2}" = "$code_time" ]; then result_time="(ok)"
-	else
+	[ "${order_time:2}" = "$code_time" ] && result_time="(ok)" || {
 		result_time="(-error!-)"
 		error_time="邮件中的日期<${order_time}>和编码日期<${code_time}>不一致，请仔细核对编码日期！！！"
-	fi
+	}
 	# 核对邮件内容中的产品类型和编码中的是否一致
 	if [ -n "$(echo $order_type | grep -Ei "qsfp-4sfp|qsfp-4xfp|qsfp-8644|qsfp-8088|8644-8088")" ]; then
-		if [ "$code_type" = Q10 -o "$code_type" = 8644 ]; then result_type="(ok)"
+		if [ "$code_type" = Q10 -o "$code_type" = 8644 ]; then 
+			result_type="(ok)"
 		else
 			result_type="(-error-)"
 			error_type="邮件中的产品名称<${order_type}>和编码类型<${code_type}>不一致，请仔细核对编码类型！！！"
 		fi
 	else
-		if [ -n "$(echo $order_type | grep -i $code_type)" ] ; then result_type="(ok)"
-		else
+		[ -n "$(echo $order_type | grep -i $code_type)" ] && result_type="(ok)" || {
 			result_type="(-error-)"
 			error_type="邮件中的产品名称<${order_type}>和编码类型<${code_type}>不一致，请仔细核对编码类型！！！"
-		fi
+		}
 	fi
 	# 核对邮件内容中的数量和编码中的数量是否一致
-	if [ $order_num -eq $code_num ] ; then result_num="(ok)"
-	else
+	[ $order_num -eq $code_num ] && result_num="(ok)" || {
 		result_num="(-error!-)"
 		error_num="邮件中的数量<${order_num_old}>和编码数量<${code_num}>不一致，请仔细核对编码数量！！！"
-	fi
+	}
 	# 核对邮件内容中的兼容性和编码中的兼容性是否一致
 	if [ "$order_kind" = "$code_kind" ] ; then 
 		if [ -n "$(echo $order_all | grep -i 10gsfp | grep -i mcu)" ] ; then
@@ -370,10 +368,10 @@ do
 			echo "邮件日期:${order_time} 产品名称:${order_type} 数量:${order_num_old} 备注:${order_remark}" >> $result
 			echo "编码日期:${code_time}${result_time} 产品类型:${code_type}${result_type} 长度:${code_length}米${result_length} 数量:${code_num}${result_num} 速率:${code_speed} SN一致:${result_sn}${error_sn} 兼容:${code_kind}${result_kind}${error_kind}" >> $result
 			# 判断是否出现编码错误，出错就输出错误信息和编码中的十六进制文件。
-			if [ -n "${error_time}${error_type}${error_num}${error_kind}${error_length}${error_sn}" ] ; then
+			[ -n "${error_time}${error_type}${error_num}${error_kind}${error_length}${error_sn}" ] && {
 				printmark >> $result
 				echo "$code_file_hex_all" | head -n16 >> $result
-			fi
+				}
 		else
 			echo "没有找到SN为 "$order_sn" 编码！！！" >> $result
 			continue
@@ -386,7 +384,7 @@ do
 	echo >> $result
 done
 check_end
-echo -e "\n---检查完成！结果保存在result文件中,下次运行会自动覆盖,请及时查看(方法:cat result)!---\n"
+echo -e "\n--- 检查完成！结果保存在 result 文件中,下次运行会自动覆盖,请及时查看(方法 : cat result )! ---\n"
 ;;
 
 2)
@@ -399,7 +397,7 @@ do
 	read -p "请输入需要核对的生产订单号,***直接回车***退出手动检查：" scdh
 	# 判断手输的生产单号是否存在邮件内容中，思路：生产单号是唯一的，判断唯一
 	echo ""
-	[ -z $scdh ] && echo -e "正在退出手动检查编码......\n" && check_end && break
+	[ -z $scdh ] && { echo -e "正在退出手动检查编码......\n" ; check_end ; break ; }
 	if [ $(cat $input_txt | awk '{print $3}' | grep -c $scdh 2>/dev/null) -eq 1 ]; then
 		# 提取手输的生产订单号全称，示例：WO180500115
 		order_id=$(cat $input_txt | awk '{print $3}' | grep $scdh)
@@ -546,11 +544,9 @@ do
 			echo $sw | grep -qi "2910" && name="HPP" || name="H3C"
 		else name=$(echo $sw | awk -F"-" '{print $1}')
 		fi
-		if [ -n "$(echo $pr | grep -Ei "cab|aoc|-t")" ]; then
-			echo -e "$name code , Indictor_light is UP/DOWN , Basic_infomation is OK/ERROR , DDM is NONE .\n\n" > $sw_file
-		else
+		[ -n "$(echo $pr | grep -Ei "cab|aoc|-t")" ] && \
+			echo -e "$name code , Indictor_light is UP/DOWN , Basic_infomation is OK/ERROR , DDM is NONE .\n\n" > $sw_file || \
 			echo -e "$name code , Indictor_light is UP/DOWN , Basic_infomation is OK/ERROR , DDM is OK/ERROR .\n\n" > $sw_file
-		fi
 		unix2dos -q $sw_file
 	done
 done
