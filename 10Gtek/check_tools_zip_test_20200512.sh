@@ -85,15 +85,15 @@ order_info() {
 
 	# 20191119新增10gsfp线缆的MCU方案
 	order_kind=
-	[ -n "$(echo $order_all | grep -Ei "10gsfp|0sfp" | grep -i mcu)" ] && order_kind=CiscoMCU
-	[ -n "$(echo $order_all | grep -Ei "10gsfp|0sfp" | grep -Ei "h3c|hp|aruba")" ] && order_kind=HP-H3C-Aruba
+	[ -n "$(echo $order_all | grep -i 10gsfp | grep -i mcu)" ] && order_kind=CiscoMCU
+	[ -n "$(echo $order_all | grep -i 10gsfp | grep -Ei "h3c|hp|aruba")" ] && order_kind=HP-H3C-Aruba
 	[ -z "$order_kind" ] && order_kind=null
 	case $order_kind in
 	"HP-H3C-Aruba"|"CiscoMCU")
 		order_num=$(($order_num_old * 3 + 5))
 		;;
 	*)
-		if [ -n "$(echo $order_type | grep -Ei "10gsfp|xfp-xfp|0sfp")" ]; then order_num=$(($order_num_old * 3 + 1))
+		if [ -n "$(echo $order_type | grep -Ei "10gsfp|xfp-xfp")" ]; then order_num=$(($order_num_old * 3 + 1))
 		elif [ -n "$(echo $order_type | grep -Ei "zsp-zsp|xfp-sfp")" ]; then order_num=$(($order_num_old * 3 + 1))
 		elif [ -n "$(echo $order_type | grep -Ei "q10-q10|qsfp-qsfp|8644-qsfp|8644-8644|8644-8088|qsfp-8088|q14-q14")" ]; then
 			if [ -n "$(echo $order_remark | grep -i mcu)" ]; then
@@ -131,13 +131,13 @@ order_info() {
 		;;
 	esac
 	# --- 临时增加: CAB-1GSFP-PxM长度检查,默认使用的千兆光模块码,码中铜缆长度标识为 0 ---
-	[ -n "$(echo "$order_type" | grep -i 1gsfp)" ] && { order_length=0 ; order_num=$(($order_num_old * 3 + 5)) ; }
+	[ -n "$(echo "$order_type" | grep -i 1gsfp)" ] && { order_length=0 ; order_num=$(($order_num_old * 3 + 3)) ; }
 	
 	# 判断邮件中要求的编码类型，H3C表示H3C码, OEM表示OEM码,默认表示思科兼容
-	if [ -n "$(echo $order_all | grep -Ei "10gsfp|0sfp" |grep -Ei "h3c|hp|aruba")" ]; then order_kind="HP-H3C-Aruba"
+	if [ -n "$(echo $order_all | grep -i 10gsfp |grep -Ei "h3c|hp|aruba")" ]; then order_kind="HP-H3C-Aruba"
 	# 临时使用 --- 超过50pcs深圳不改码出货所以兼容一定要正确 --- 20200512不再区分数量，全部检测
 	# 20191119新增10gsfp线缆的MCU方案
-	elif [ -n "$(echo $order_all | grep -Ei "10gsfp|0sfp" |grep -i mcu)" ]; then order_kind=CiscoMCU
+	elif [ -n "$(echo $order_all | grep -i 10gsfp |grep -i mcu)" ]; then order_kind=CiscoMCU
 	elif [ -n "$(echo $order_remark | grep -i oem | grep -i optech)" ]; then order_kind=OEM
 	elif [ -n "$(echo $order_remark | grep -i Arista)" ]; then
 		[ -n "$(echo $order_type | grep -Ei "qsfp|q10|zsp")" ] && order_kind=Arista || order_kind=OEM
@@ -365,7 +365,7 @@ do
 			check_info
 			# 输出检查结果信息
 			echo "邮件日期:${order_time} 产品名称:${order_type} 数量:${order_num_old} 备注:${order_remark}" >> $result
-			echo "编码日期:${code_time}${result_time} 产品类型:${code_type}${result_type} 长度:${code_length}米${result_length} 数量:${code_num}${result_num} 速率:${code_speed} SN一致:${result_sn}${error_sn}  兼容<50pcs以下默认思科兼容>:${code_kind}${result_kind}${error_kind}" >> $result
+			echo "编码日期:${code_time}${result_time} 产品类型:${code_type}${result_type} 长度:${code_length}米${result_length} 数量:${code_num}${result_num} 速率:${code_speed} SN一致:${result_sn}${error_sn} 兼容:${code_kind}${result_kind}${error_kind}" >> $result
 			# 判断是否出现编码错误，出错就输出错误信息和编码中的十六进制文件。
 			if [ -n "${error_time}${error_type}${error_num}${error_kind}${error_length}${error_sn}" ] ; then
 				printmark >> $result
@@ -409,7 +409,7 @@ do
 			# 输出检查结果信息
 			echo "生产订单号：${order_id}"
 			echo "邮件日期:${order_time} 产品名称:${order_type} 数量:${order_num_old} 备注:${order_remark}"
-			echo -e "编码日期:${code_time}\033[43;30m${result_time}\033[0m 产品类型:${code_type}\033[43;30m${result_type}\033[0m 长度:${code_length}米\033[43;30m${result_length}\033[0m 数量:${code_num}\033[43;30m${result_num}\033[0m 速率:${code_speed} SN一致:\033[43;30m${result_sn}\033[0m${error_sn} 兼容<50pcs以下默认思科兼容>:${code_kind}\033[43;30m${result_kind}${error_kind}\033[0m"
+			echo -e "编码日期:${code_time}\033[43;30m${result_time}\033[0m 产品类型:${code_type}\033[43;30m${result_type}\033[0m 长度:${code_length}米\033[43;30m${result_length}\033[0m 数量:${code_num}\033[43;30m${result_num}\033[0m 速率:${code_speed} SN一致:\033[43;30m${result_sn}\033[0m${error_sn} 兼容:${code_kind}\033[43;30m${result_kind}${error_kind}\033[0m"
 			# 判断是否出现编码错误，出错就输出错误信息和编码中的十六进制文件。
 			[ -n "${error_time}${error_type}${error_num}${error_kind}${error_length}${error_sn}" ] && echo "${error_time}${error_type}${error_num}${error_kind}${error_length}${error_sn}"
 			printmark
@@ -659,7 +659,7 @@ do
 	order_sn=$(echo $order_all | awk '{print $6}' | awk -F"-" '{print $1}')
 	# 提取订单编码数量,示例：30
 	order_num=$(echo $order_all | awk '{print $5}')
-	if [ -n "$(echo $order_type | grep -Ei "10gsfp|0sfp")" ]; then
+	if [ -n "$(echo $order_type | grep -i 10gsfp)" ]; then
 		sfp_zsp_eeprom_mcu $order_id
 	elif [ -n "$(echo $order_type | grep -i "zsp-zsp")" ]; then
 		sfp_zsp_eeprom_mcu $order_id
@@ -723,7 +723,7 @@ do
 		# 判断是否存在生产单号对应的编码文件夹
 		if [ -d $order_id ]; then
 			order_info
-			if [ -n "$(echo $order_type | grep -Ei "10gsfp|0sfp|xfp-xfp|zsp-zsp")" ]; then 
+			if [ -n "$(echo $order_type | grep -Ei "10gsfp|xfp-xfp|zsp-zsp")" ]; then 
 				# 10G-SFP ZSP的放码模板结构为：Port2/A0 Port5/A0
 				port2=${order_id}/Port2/A0/
 				port5=${order_id}/Port5/A0/
