@@ -286,22 +286,18 @@ check_info() {
 	# 核对邮件内容中的兼容性和编码中的兼容性是否一致
 	if [ "$order_kind" = "$code_kind" ] ; then 
 		if [ -n "$(echo $order_all | grep -i 10gsfp | grep -i mcu)" ] ; then
-			if [ "${code_128btye}${code_145btye}" = "1001" ] ; then result_kind="(ok)"
-			else
+			[ "${code_128btye}${code_145btye}" = "1001" ] && result_kind="(ok)" || {
 				result_kind="(-error!-)"
 				error_kind="10G-SFP-MCU方案中的第128<${code_128btye}>和145<${code_145btye}>字节不是10 01，请重新核对编码！！！"
-			fi
-		else 
-			result_kind="(ok)"
+			}
+		else result_kind="(ok)"
 		fi
 	# 20191119新增10gsfp线缆的MCU方案
 	elif [ "$order_kind" = CiscoMCU -a "$code_kind" = Cisco ]; then 
-		if [ "${code_128btye}${code_145btye}" = "1001" ] ; then 
-			result_kind="(ok)"
-		else
-			result_kind="(-error!-)"
-			error_kind="10G-SFP-MCU方案中的第128<${code_128btye}>和145<${code_145btye}>字节不是10 01，请重新核对编码！！！"
-		fi
+		[ "${code_128btye}${code_145btye}" = "1001" ] && result_kind="(ok)" || {
+				result_kind="(-error!-)"
+				error_kind="10G-SFP-MCU方案中的第128<${code_128btye}>和145<${code_145btye}>字节不是10 01，请重新核对编码！！！"
+			}
 	else
 		result_kind="(-error!-)"
 		error_kind="邮件的兼容<${order_kind}>和编码兼容<${code_kind}>不一致，请仔细核对编码兼容情况！！！"
