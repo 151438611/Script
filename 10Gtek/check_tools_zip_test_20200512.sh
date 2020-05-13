@@ -246,7 +246,7 @@ code_info() {
 		# 提取编码中的第6行日期
 		code_time_line=$(echo "$code_file_hex" | awk -F "|" 'NR==6{print $2}')
 		code_time=${code_time_line:4:6}
-		if [ -n "$(echo $order_all | grep -Ei "10gsfp|0sfp" | grep -i mcu)" ] ; then
+		if [ -n "$(echo $order_all | grep -i 10gsfp | grep -i mcu)" ] ; then
 			code_128btye=$(echo "$code_file_hex" | awk 'NR==9{print $2}')
 			code_145btye=$(echo "$code_file_hex" | awk 'NR==10{print $3}')
 		fi
@@ -285,7 +285,7 @@ check_info() {
 	fi
 	# 核对邮件内容中的兼容性和编码中的兼容性是否一致
 	if [ "$order_kind" = "$code_kind" ] ; then 
-		if [ -n "$(echo $order_all | grep -Ei "10gsfp|0sfp" | grep -i mcu)" ] ; then
+		if [ -n "$(echo $order_all | grep -i 10gsfp | grep -i mcu)" ] ; then
 			if [ "${code_128btye}${code_145btye}" = "1001" ] ; then result_kind="(ok)"
 			else
 				result_kind="(-error!-)"
@@ -295,7 +295,13 @@ check_info() {
 			result_kind="(ok)"
 		fi
 	# 20191119新增10gsfp线缆的MCU方案
-	elif [ "$order_kind" = CiscoMCU -a "$code_kind" = Cisco ]; then result_kind="(ok)"
+	elif [ "$order_kind" = CiscoMCU -a "$code_kind" = Cisco ]; then 
+		if [ "${code_128btye}${code_145btye}" = "1001" ] ; then 
+			result_kind="(ok)"
+		else
+			result_kind="(-error!-)"
+			error_kind="10G-SFP-MCU方案中的第128<${code_128btye}>和145<${code_145btye}>字节不是10 01，请重新核对编码！！！"
+		fi
 	else
 		result_kind="(-error!-)"
 		error_kind="邮件的兼容<${order_kind}>和编码兼容<${code_kind}>不一致，请仔细核对编码兼容情况！！！"
