@@ -6,11 +6,11 @@
 # 20200113 应叶工(东莞自动写码软件测试版)要求：需要所有编码都要放码到根目录(只读取SN,不读取码内容); 修改生产订单码文件数量判断
 # 20200323 因东莞生产更换新系统,致导出的产品名称格式由Q10/Q10、ZQP/ZQP...变成Q10-Q10、ZQP-ZQP...; 修改生产订单中的产品名称判断
 # 20200402 因10G-SFP-MCU线缆底层128和145 byte已固定为10 01，所以新增检查10G-SFP-MCU码文件中的128和145 byte是否为10 01
-#   新增 QSFP_MCU、QSFP_MCU/2SFP_EEPROM、ZQP_MCU/ZQP_MCU、ZQP_MCU/2ZSP_EEPROM 线缆需加密底层的写码模板,需LMM/Page00/Page02中都放password.txt文件,
-#   修改文件数量判断,需在此备注后面添加"Encryption_bottom"来让脚本识别订单为特殊加密底层
+#	新增 QSFP_MCU、QSFP_MCU/2SFP_EEPROM、ZQP_MCU/ZQP_MCU、ZQP_MCU/2ZSP_EEPROM 线缆需加密底层的写码模板,需LMM/Page00/Page02中都放password.txt文件,
+#	修改文件数量判断,需在此备注后面添加"Encryption_bottom"来让脚本识别订单为特殊加密底层
 # 20200408 新增检查码中的起始SN和末尾SN是否和码文件SN命名一致
-# 20200512 修改兼容性检查，不再区分50pcs数量以上按兼容要求编码，数量以下按通用编码了；统一更改所有都按兼容要求编码
-#	新增CAB-1GSFP-PxM检查模板，和SFP-MCU放码模块一致
+# 20200512 修改兼容性检查,不再区分50pcs数量来使用不同的兼容码;统一更改所有都按兼容要求编码
+#	新增CAB-1GSFP-PxM检查模板,和SFP-MCU放码模块类似,只是无Password.txt
 
 clear
 # 获取脚本当前路径,并进入脚本目录
