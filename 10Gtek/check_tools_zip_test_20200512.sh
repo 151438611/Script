@@ -6,10 +6,11 @@
 # 20200113 应叶工(东莞自动写码软件测试版)要求：需要所有编码都要放码到根目录(只读取SN,不读取码内容); 修改生产订单码文件数量判断
 # 20200323 因东莞生产更换新系统,致导出的产品名称格式由Q10/Q10、ZQP/ZQP...变成Q10-Q10、ZQP-ZQP...; 修改生产订单中的产品名称判断
 # 20200402 因10G-SFP-MCU线缆底层128和145 byte已固定为10 01，所以新增检查10G-SFP-MCU码文件中的128和145 byte是否为10 01
-#    新增 QSFP_MCU、QSFP_MCU/2SFP_EEPROM、ZQP_MCU/ZQP_MCU、ZQP_MCU/2ZSP_EEPROM 线缆需加密底层的写码模板,需LMM/Page00/Page02中都放password.txt文件,
-#    修改文件数量判断,需在此备注后面添加"Encryption_bottom"来让脚本识别订单为特殊加密底层
+#   新增 QSFP_MCU、QSFP_MCU/2SFP_EEPROM、ZQP_MCU/ZQP_MCU、ZQP_MCU/2ZSP_EEPROM 线缆需加密底层的写码模板,需LMM/Page00/Page02中都放password.txt文件,
+#   修改文件数量判断,需在此备注后面添加"Encryption_bottom"来让脚本识别订单为特殊加密底层
 # 20200408 新增检查码中的起始SN和末尾SN是否和码文件SN命名一致
 # 20200512 修改兼容性检查，不再区分50pcs数量以上按兼容要求编码，数量以下按通用编码了；统一更改所有都按兼容要求编码
+#	新增CAB-1GSFP-PxM检查模板，和SFP-MCU放码模块一致
 
 clear
 # 获取脚本当前路径,并进入脚本目录
@@ -129,6 +130,9 @@ order_info() {
 		fi
 		;;
 	esac
+	# --- 临时增加: CAB-1GSFP-PxM长度检查,默认使用的千兆光模块码,码中铜缆长度标识为 0 ---
+	[ -n "$(echo "$order_type" | grep -i 1gsfp)" ] && { order_length=0 ; order_num=$(($order_num_old * 3 + 5)) ; }
+	
 	# 判断邮件中要求的编码类型，H3C表示H3C码, OEM表示OEM码,默认表示思科兼容
 	if [ -n "$(echo $order_all | grep -Ei "10gsfp|0sfp" |grep -Ei "h3c|hp|aruba")" ]; then order_kind="HP-H3C-Aruba"
 	# 临时使用 --- 超过50pcs深圳不改码出货所以兼容一定要正确 --- 20200512不再区分数量，全部检测
@@ -193,6 +197,8 @@ code_info() {
 			"8c"|"8d") 		code_speed="14G" ;;
 			*) 	code_speed="请检查第13位未识别的产品速率代码：$code_speed" ;;
 		esac
+		[ "$code_type" = "SFP" -a "$code_speed" = "1G" ] && code_type="1GSFP"
+		[ "$code_type" = "SFP" -a "$code_speed" = "10G" ] && code_type="10GSFP"
 		[ "$code_type" = "SFP" -a "$code_speed" = "25G" ] && code_type="ZSP"
 		[ "$code_type" = "Q10" -a "$code_speed" = "10G" ] && code_type="Q10" && code_speed="40G"
 		[ "$code_type" = "Q10" -a "$code_speed" = "14G" ] && code_type="Q14" && code_speed="56G"
