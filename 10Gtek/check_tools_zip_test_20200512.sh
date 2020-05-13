@@ -94,39 +94,27 @@ order_info() {
 		elif [ -n "$(echo $order_type | grep -Ei "zsp-zsp|xfp-sfp")" ]; then order_num=$(($order_num_old * 3 + 1))
 		elif [ -n "$(echo $order_type | grep -Ei "q10-q10|qsfp-qsfp|8644-qsfp|8644-8644|8644-8088|qsfp-8088|q14-q14")" ]; then
 			if [ -n "$(echo $order_remark | grep -i mcu)" ]; then
-				[ -n "$(echo $order_remark | grep -i Encryption_bottom)" ] && \
-					order_num=$(($order_num_old * 5 + 9)) || order_num=$(($order_num_old * 5 + 5))
+				[ "$(echo $order_remark | grep -i Encryption_bottom)" ] && order_num=$(($order_num_old * 5 + 9)) || order_num=$(($order_num_old * 5 + 5))
 			else
 				order_num=$(($order_num_old * 3 + 1))
 			fi
 		elif [ -n "$(echo $order_type | grep -Ei "q10-4s|qsfp-4sfp|qsfp-4xfp")" ] ; then
 			# 判断QSFP/4SFP、QSFP/1SFP、QSFP/4SFP，QSFP端可分EEPROM或MCU，SFP只能是EEPROM
-			if [ -n "$(echo $order_remark | grep -i mcu)" ]; then
-				order_num=$(($order_num_old * 7 + 3))
-			else
-				order_num=$(($order_num_old * 6 + 1))
-			fi
+			[ "$(echo $order_remark | grep -i mcu)" ] && order_num=$(($order_num_old * 7 + 3)) || order_num=$(($order_num_old * 6 + 1))
 		elif [ -n "$(echo $order_type | grep -Ei "q10-1s|qsfp-1s")" ] ; then
-			if [ -n "$(echo $order_remark | grep -i mcu)" ]; then
-				order_num=$(($order_num_old * 4 + 3))
-			else
-				order_num=$(($order_num_old * 3 + 1))
-			fi
+			[ "$(echo $order_remark | grep -i mcu)" ] && order_num=$(($order_num_old * 4 + 3)) || order_num=$(($order_num_old * 3 + 1))
 		elif [ -n "$(echo $order_type | grep -Ei "q10-2s|qsfp-2s")" ] ; then
 			if [ -n "$(echo $order_remark | grep -i mcu)" ]; then
-				[ -n "$(echo $order_remark | grep -i Encryption_bottom)" ] && \
-					order_num=$(($order_num_old * 5 + 5)) || order_num=$(($order_num_old * 5 + 3))
+				[ -n "$(echo $order_remark | grep -i Encryption_bottom)" ] && order_num=$(($order_num_old * 5 + 5)) || order_num=$(($order_num_old * 5 + 3))
 			else
 				order_num=$(($order_num_old * 4 + 1))
 			fi
 		elif [ -n "$(echo $order_type | grep -i zqp-zqp)" ]; then 
-			[ -n "$(echo $order_remark | grep -i Encryption_bottom)" ] && \
-				order_num=$(($order_num_old * 5 + 9)) || order_num=$(($order_num_old * 5 + 5))
+			[ -n "$(echo $order_remark | grep -i Encryption_bottom)" ] && order_num=$(($order_num_old * 5 + 9)) || order_num=$(($order_num_old * 5 + 5))
 		elif [ -n "$(echo $order_type | grep -i zqp-4zsp)" ]; then order_num=$(($order_num_old * 7 + 3))
 		elif [ -n "$(echo $order_type | grep -i zqp-2zqp)" ]; then order_num=$(($order_num_old * 7 + 7))
 		elif [ -n "$(echo $order_type | grep -i zqp-2zsp)" ]; then 
-			[ -n "$(echo $order_remark | grep -i Encryption_bottom)" ] && \
-				order_num=$(($order_num_old * 5 + 5)) || order_num=$(($order_num_old * 5 + 3))
+			[ -n "$(echo $order_remark | grep -i Encryption_bottom)" ] && order_num=$(($order_num_old * 5 + 5)) || order_num=$(($order_num_old * 5 + 3))
 		else order_num=$order_num_old
 		fi
 		;;
@@ -182,7 +170,7 @@ code_info() {
 			"11") code_type=ZQP ;;
 			"18") code_type=QSFP-DD ;;
 			"0f") code_type=8644 ;;
-			*) 	code_type="请检查第0位未识别的产品类型代码：$code_type" ;;
+			*)	code_type="请检查第0位未识别的产品类型代码：$code_type" ;;
 		esac
 		# 提取编码中的第1行第13位，0C表示千兆，63/67表示10G, FF表示25G, 3C表示6G
 		code_speed=$(echo "$code_file_hex" | awk 'NR==1{print $14}')
@@ -196,7 +184,7 @@ code_info() {
 			"55")	code_speed=8G ;;
 			"78")	code_speed=12G ;;
 			"8c"|"8d")	code_speed=14G ;;
-			*) 	code_speed="请检查第13位未识别的产品速率代码：$code_speed" ;;
+			*)	code_speed="请检查第13位未识别的产品速率代码：$code_speed" ;;
 		esac
 		if [ "$code_type" = SFP -a "$code_speed" = 1G ]; then code_type=1GSFP
 		elif [ "$code_type" = SFP -a "$code_speed" = 10G ]; then code_type=10GSFP
@@ -225,8 +213,7 @@ code_info() {
 				# Mikrotik码已全部停用,使用Cisco码代替
 				elif [ -n "$(echo "$code_file_hex" | grep -i Mikrotik)" ]; then code_kind=Mikrotik
 				elif [ -n "$(echo "$code_file_hex" | grep -i Ruijie)" ]; then code_kind=Ruijie
-				else
-					code_kind=OEM 
+				else code_kind=OEM 
 				fi
 			;;
 			"33 43"|"50 a0"|"50 a2")	code_kind=HP-H3C-Aruba ;;
@@ -239,7 +226,7 @@ code_info() {
 			"10 00"|"10 01")	code_kind=Dell ;;
 			"41 31")	code_kind=Avaya ;;
 			"39 32")	code_kind=Mellanox ;;
-			*) code_kind="请检查LMM加密位的编码兼容类型: $code_kind" ;;
+			*)	code_kind="请检查LMM加密位的编码兼容类型: $code_kind" ;;
 		esac
 		# 提取编码中的第2行第4位，表示线缆的长度
 		code_length=$(echo "$code_file_hex" | awk 'NR==2{print $4}')
@@ -247,10 +234,10 @@ code_info() {
 		# 提取编码中的第6行日期
 		code_time_line=$(echo "$code_file_hex" | awk -F "|" 'NR==6{print $2}')
 		code_time=${code_time_line:4:6}
-		if [ -n "$(echo $order_all | grep -i 10gsfp | grep -i mcu)" ] ; then
+		[ "$(echo $order_all | grep -i 10gsfp | grep -i mcu)" ] && {
 			code_128btye=$(echo "$code_file_hex" | awk 'NR==9{print $2}')
 			code_145btye=$(echo "$code_file_hex" | awk 'NR==10{print $3}')
-		fi
+			}
 	fi
 }
 
@@ -275,20 +262,20 @@ check_info() {
 		[ -n "$(echo $order_type | grep -i $code_type)" ] && result_type="(ok)" || {
 			result_type="(-error-)"
 			error_type="邮件中的产品名称<${order_type}>和编码类型<${code_type}>不一致，请仔细核对编码类型！！！"
-		}
+			}
 	fi
 	# 核对邮件内容中的数量和编码中的数量是否一致
 	[ $order_num -eq $code_num ] && result_num="(ok)" || {
 		result_num="(-error!-)"
 		error_num="邮件中的数量<${order_num_old}>和编码数量<${code_num}>不一致，请仔细核对编码数量！！！"
-	}
+		}
 	# 核对邮件内容中的兼容性和编码中的兼容性是否一致
 	if [ "$order_kind" = "$code_kind" ] ; then 
 		if [ -n "$(echo $order_all | grep -i 10gsfp | grep -i mcu)" ] ; then
 			[ "${code_128btye}${code_145btye}" = "1001" ] && result_kind="(ok)" || {
 				result_kind="(-error!-)"
 				error_kind="10G-SFP-MCU方案中的第128<${code_128btye}>和145<${code_145btye}>字节不是10 01，请重新核对编码！！！"
-			}
+				}
 		else result_kind="(ok)"
 		fi
 	# 20191119新增10gsfp线缆的MCU方案
@@ -296,7 +283,7 @@ check_info() {
 		[ "${code_128btye}${code_145btye}" = "1001" ] && result_kind="(ok)" || {
 				result_kind="(-error!-)"
 				error_kind="10G-SFP-MCU方案中的第128<${code_128btye}>和145<${code_145btye}>字节不是10 01，请重新核对编码！！！"
-			}
+				}
 	else
 		result_kind="(-error!-)"
 		error_kind="邮件的兼容<${order_kind}>和编码兼容<${code_kind}>不一致，请仔细核对编码兼容情况！！！"
