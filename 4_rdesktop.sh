@@ -18,5 +18,8 @@ option="-g 1280x960 -r disk:opt_share=/opt -r sound:local -r clipboard:PRIMARYCL
 
 #option="-f -r disk:opt_share=/opt -r sound:local -r clipboard:PRIMARYCLIPBOARD -P -x l"
 
+RPC=$(which rdesktop)
+[ $RPC ] || { echo "rdesktop : command not found; Please install the command first !" && exit 2; } 
+
 [ "$(pidof rdesktop)" ] || \
-	exec rdesktop -u $USERNAME -p "$PASSWORD" $option $HOST
+	exec $RPC -u $USERNAME -p "$PASSWORD" $option $HOST
