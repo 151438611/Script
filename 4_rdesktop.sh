@@ -1,7 +1,8 @@
 #!/bin/bash
-# "Usage: bash rdesktop.sh User Host ;"
+# "Usage: bash rdesktop.sh User Host"
 
-echo "Usage: bash rdesktop.sh User Host ;"
+echo "Usage: bash rdesktop.sh User Host"
+echo "if Input User/Host is Empty, then User/Host is Default;"
 
 host=192.168.20.22
 rpd_user=Jun
