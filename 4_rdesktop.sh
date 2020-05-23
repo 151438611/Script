@@ -15,8 +15,8 @@ GEOMETRY=1280x960
 
 [ -z "$HOST" -a -z "$USERNAME" ] && echo "RPC Login User or Host not is Empty" && exit 2
 
-option="-g $GEOMETRY -r disk:opt_share=/opt -r sound:local -r clipboard:PRIMARYCLIPBOARD -P -x l"
-#option="-f -r disk:opt_share=/opt -r sound:local -r clipboard:PRIMARYCLIPBOARD -P -x l"
+option="-g $GEOMETRY -r disk:opt_share=/opt -r sound:local -r clipboard:PRIMARYCLIPBOARD -P -x l -z"
+#option="-f -r disk:opt_share=/opt -r sound:local -r clipboard:PRIMARYCLIPBOARD -P -x l -z"
 
 RPC=$(which rdesktop)
 [ $RPC ] || { echo "rdesktop : command not found; Please install the command first !" && exit 2; } 
