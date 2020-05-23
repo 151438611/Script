@@ -1,20 +1,21 @@
 #!/bin/bash
 # Install : apt install rdesktop
-# Usage Eamples : bash rdesktop.sh User Host
+# Usage Eamples : bash rdesktop.sh $1_Host $2_User $3_Screen_resolution
 
-echo -e "Usage: bash rdesktop.sh User Host \nIf Input User/Host is Empty, then User/Host is Default ;\n"
+echo -e "Usage: bash rdesktop.sh \$1_Host \$2_User \$3_Screen_resolution \nIf Input User/Host is Empty, then User/Host is Default ;\n"
 
 HOST=192.168.20.22
 USERNAME=Jun
 PASSWORD=
+GEOMETRY=1280x960
 
 [ $1 ] && USERNAME=$1
 [ $2 ] && HOST=$2
+[ $3 ] && GEOMETRY=$3
 
 [ -z "$HOST" -a -z "$USERNAME" ] && echo "RPC Login User or Host not is Empty" && exit 2
 
-option="-g 1280x960 -r disk:opt_share=/opt -r sound:local -r clipboard:PRIMARYCLIPBOARD -P -x l"
-
+option="-g $GEOMETRY -r disk:opt_share=/opt -r sound:local -r clipboard:PRIMARYCLIPBOARD -P -x l"
 #option="-f -r disk:opt_share=/opt -r sound:local -r clipboard:PRIMARYCLIPBOARD -P -x l"
 
 RPC=$(which rdesktop)
