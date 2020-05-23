@@ -9,8 +9,8 @@ USERNAME=Jun
 PASSWORD=
 GEOMETRY=1280x960
 
-[ $1 ] && USERNAME=$1
-[ $2 ] && HOST=$2
+[ $1 ] && HOST=$1
+[ $2 ] && USERNAME=$2
 [ $3 ] && GEOMETRY=$3
 
 [ -z "$HOST" -a -z "$USERNAME" ] && echo "RPC Login User or Host not is Empty" && exit 2
