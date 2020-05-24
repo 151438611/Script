@@ -9,7 +9,7 @@ HOST=192.168.20.22
 USERNAME=Jun
 PASSWORD=
 #OPTION="-g 1280x960 -P -x l -z -r disk:share=/tmp -r sound:local -r clipboard:PRIMARYCLIPBOARD"
-OPTION="-P -r disk:share=/tmp -r sound:off -r clipboard:PRIMARYCLIPBOARD"
+OPTION="-P -r disk:share=/tmp -r sound:local -r clipboard:PRIMARYCLIPBOARD"
 
 [ $1 ] && HOST=$1
 [ $2 ] && USERNAME=$2
