@@ -28,7 +28,7 @@ RPC=$(which rdesktop)
 [ $RPC ] || { echo "rdesktop : command not found; Please install the command first !" && exit 2; } 
 
 if [ -n "$(pgrep -a rdesktop | grep $HOST)" ]; then
-	echo "The $HOST computer is under remote control !"
+	echo "The $HOST computer is under remote control !" 
 else
-	exec $RPC $HOST -u $USERNAME -p "$PASSWORD" $OPTION $OPTION_O
+	exec $RPC $HOST -u $USERNAME -p "$PASSWORD" $OPTION $OPTION_O &
 fi
