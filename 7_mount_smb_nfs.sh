@@ -7,8 +7,8 @@ fun_mount_smb() {
 	# $1:username $2:password $3:mount_src $4:mount_dest 
 	[ -d "$4" ] || mkdir -p $4
 	if [ -z "$(mount | grep "$3 on $4")" ] ; then
-		mount -t cifs $3 $4 -o username=$1,password=$2,rw,file_mode=0777,dir_mode=0777,vers=2.0 &> /dev/null || \
-		mount -t cifs $3 $4 -o username=$1,password=$2,rw,file_mode=0777,dir_mode=0777,vers=1.0
+		mount -t cifs $3 $4 -o username=$1,password=$2,rw,file_mode=0777,dir_mode=0777,iocharset=utf8,vers=2.0 &> /dev/null || \
+		mount -t cifs $3 $4 -o username=$1,password=$2,rw,file_mode=0777,dir_mode=0777,iocharset=utf8,vers=1.0
 	fi
 }
 fun_mount_nfs() {
