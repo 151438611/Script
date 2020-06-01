@@ -5,7 +5,7 @@
 ' 4、添加进计划任务：schtasks.exe /create /tn "frpc" /tr "C:\PerfLogs\frpc.vbs" /sc onstart
 
 On Error Resume Next
-Dim dir_run,exeFile,conFile
+Dim dir_run, exeFile, conFile
 ' 注意dir_run目录后面要带反斜杠 \
 dir_run = "C:\PerfLogs\"
 exeFile = "frpc.exe"
