@@ -4,9 +4,6 @@
 ' 3、开机启动目录 C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Startup ; 需要登陆系统才能运行，建议使用计划任务
 ' 4、添加进计划任务：schtasks.exe /create /tn "frpc" /tr "C:\PerfLogs\frpc.vbs" /sc onstart
 
-' 适用于Windows的程序启动脚本范例
-' 建议设置计划任务：开机启动、定时启动
-
 On Error Resume Next
 Dim dir_run,exeFile,conFile
 ' 注意dir_run目录后面要带反斜杠 \
