@@ -1,18 +1,3 @@
-[Unit]
-Description=V2Ray Client Service
-After=network.target
-Wants=network.target
-[Service]
-Type=simple
-PIDFile=/run/v2ray.pid
-ExecStart=/opt/v2ray/v2ray -config /opt/v2ray/config.json
-Restart=on-failure
-# Don't restart in the case of configuration error
-RestartPreventExitStatus=23
-[Install]
-WantedBy=multi-user.target
-
-# ===============================
 # 官方的提供的systemd
 [Unit]
 Description=V2Ray Service
