@@ -2,7 +2,7 @@
 ' 建议设置计划任务：开机启动、定时启动
 
 On Error Resume Next
-Dim dir_run,exeFile,conFile
+Dim dir_run, exeFile, conFile
 ' 注意dir_run目录后面要带反斜杠 \
 dir_run = "C:\PerfLogs\v2ray\"
 exeFile = "wv2ray.exe"
