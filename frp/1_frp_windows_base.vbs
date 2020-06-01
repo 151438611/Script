@@ -4,18 +4,23 @@
 ' 3、开机启动目录 C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Startup ; 需要登陆系统才能运行，建议使用计划任务
 ' 4、添加进计划任务：schtasks.exe /create /tn "frpc" /tr "C:\PerfLogs\frpc.vbs" /sc onstart
 
+' 适用于Windows的程序启动脚本范例
+' 建议设置计划任务：开机启动、定时启动
+
 On Error Resume Next
-Dim dir_run,frp,frpini
+Dim dir_run,exeFile,conFile
 ' 注意dir_run目录后面要带反斜杠 \
 dir_run = "C:\PerfLogs\"
-frp = "frpc.exe"
-frpini = "frpc.ini"
+exeFile = "frpc.exe"
+conFile = "frpc.ini"
+
 ' ------判断系统进程是否存在-------------------------------
-Set proc = GetObject("winmgmts:\\.\root\cimv2")
-Set procfrp = proc.ExecQuery("select * from win32_process where name = 'frpc.exe'")
-For Each pf In procfrp
-  frpProcess = True 
+Set allProcess = GetObject("winmgmts:\\.\root\cimv2")
+Set findProcess = allProcess.ExecQuery("select * from win32_process where name = 'frpc.exe'")
+For Each fp In findProcess
+  exeProcess = True
 Next
+
 set objShell = WScript.CreateObject("WScript.Shell")
-If Not frpProcess Then objShell.Run (dir_run & frp & " -c " & dir_run & frpini), 0 End If
+If Not exeProcess Then objShell.Run (dir_run & exeFile & " -c " & dir_run & conFile), 0 End If
 WScript.Quit
