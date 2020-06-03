@@ -8,7 +8,7 @@
      },
     "inbounds": [
           {
-          "port": 1080,
+          "port": 49452,
           "protocol": "socks",
           "sniffing": {
             "enabled": true,
@@ -33,20 +33,20 @@
           }]
         },
         "streamSettings": {
-        "network": "tcp",
-        "security": "auto"
-        #"wsSettings": { "path": "/ray" }
-    },
-    {
+			#"wsSettings": { "path": "/ray" },
+			"network": "tcp",
+			"security": "auto"
+		},
+		{
         "protocol": "freedom",
         "settings": {},
         "tag": "direct_connect"
-    },
-    {
+		},
+		{
         "protocol": "blackhole",
         "settings": {},
         "tag": "blackhole_drop"
-    }],
+		}],
     "routing": {
         "domainStrategy": "IPOnDemand",
         "rules": [
@@ -54,8 +54,8 @@
             "type": "field",
             "outboundTag": "blackhole_drop",
             "domain": [
-                "domain:qq.com",            // 指定域名禁止访问
-                "domain:sina.com"]
+                "domain:qqq.com",            // 指定域名禁止访问
+                "domain:sinaa.com"]
             },
             {
             "type": "field",
