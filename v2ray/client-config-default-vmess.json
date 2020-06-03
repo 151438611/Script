@@ -1,14 +1,14 @@
 // 客户端配置
-// 适用于默认走vmess服务器，仅指定规则的 国内域名或IP freedom直连，效率低
+// 适用于默认走vmess服务器，仅指定规则的 国内域名或IP freedom直连
 {
     "log": {
-        "loglevel": "warning",   
-        //"access": "/var/log/v2ray_access.log", 
+        "loglevel": "warning",
+        //"access": "/var/log/v2ray_access.log",
         "error": "/var/log/v2ray_error.log"
      },
     "inbounds": [
           {
-          "port": 1080, 
+          "port": 1080,
           "protocol": "socks",
           "sniffing": {
             "enabled": true,
@@ -22,14 +22,14 @@
         }],
     "outbounds": [
     {
-        "protocol": "vmess", 
+        "protocol": "vmess",
         "settings": {
         "vnext": [{
-            "address": "server-ip-doname", 
-            "port": 30000, 
+            "address": "server-ip-doname",
+            "port": 29503,
             "users": [{
-                "id": "11f98504-f22a-4665-b617-af52ed4c4e15",
-                "alterId": 108 }]  
+                "id": "80b0e72e-945d-3ffc-0b88-408dd63e84be",
+                "alterId": 64 }]
           }]
         },
         "streamSettings": {
@@ -40,7 +40,7 @@
     {
         "protocol": "freedom",
         "settings": {},
-        "tag": "direct_connect" 
+        "tag": "direct_connect"
     },
     {
         "protocol": "blackhole",
@@ -49,7 +49,7 @@
     }],
     "routing": {
         "domainStrategy": "IPOnDemand",
-        "rules": [  
+        "rules": [
             {
             "type": "field",
             "outboundTag": "blackhole_drop",
@@ -68,8 +68,8 @@
             "ip": ["geoip:cn",             // 国内的 IP
                    "geoip:private"]        // 私有地址 IP，如路由器等
             }]
-     }, 
+     },
     "mux": {
-        "enabled": true 
+        "enabled": true
     }
 }
