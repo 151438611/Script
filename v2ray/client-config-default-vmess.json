@@ -69,7 +69,5 @@
                    "geoip:private"]        // 私有地址 IP，如路由器等
             }]
      },
-    "mux": {
-        "enabled": true
-    }
+    "mux": { "enabled": true }
 }
