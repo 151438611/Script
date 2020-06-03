@@ -1,4 +1,6 @@
 // 服务端配置
+// yisuyun:	80b0e72e-945d-3ffc-0b88-408dd63e84be
+// aliyun:	11f98504-f22a-4665-b617-af52ed4c4e15
 {
   "log": {
     "loglevel": "warning",
@@ -7,19 +9,19 @@
   },
   "inbounds": [
     {
-      "port": 46800,
-      "protocol": "vmess",    
+      "port": 29503,
+      "protocol": "vmess",
       "settings": {
         "clients": [
           {
-            "id": "b831381d-6324-4d53-ad4f-8cda48b30811",
-            "level": 1, 
-            "alterId": 256
+            "id": "80b0e72e-945d-3ffc-0b88-408dd63e84be",
+            "level": 1,
+            "alterId": 64
           }
         ]
       },
       "streamSettings": {
-        "network": "tcp",
+        "network": "tcp"
         #"wsSettings": { "path": "/ray" }
       }
     }
