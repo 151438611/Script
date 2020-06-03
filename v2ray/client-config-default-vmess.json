@@ -19,34 +19,40 @@
             "udp": true,
             "ip": "127.0.0.1"
             }
-        }],
+        }
+    ],
     "outbounds": [
-    {
-        "protocol": "vmess",
-        "settings": {
-        "vnext": [{
-            "address": "server-ip-doname",
-            "port": 29503,
-            "users": [{
-                "id": "80b0e72e-945d-3ffc-0b88-408dd63e84be",
-                "alterId": 64 }]
-          }]
-        },
-        "streamSettings": {
-			#"wsSettings": { "path": "/ray" },
-			"network": "tcp",
-			"security": "auto"
-		},
-		{
-        "protocol": "freedom",
-        "settings": {},
-        "tag": "direct_connect"
-		},
-		{
-        "protocol": "blackhole",
-        "settings": {},
-        "tag": "blackhole_drop"
-		}],
+			{
+			"protocol": "vmess",
+			"settings": {
+			"vnext": [
+				{
+				"address": "server_ip_address",
+				"port": 29503,
+				"users": [{
+					//"id": "80b0e72e-945d-3ffc-0b88-408dd63e84be",
+					"id": "11f98504-f22a-4665-b617-af52ed4c4e15",
+					"alterId": 64
+					}]
+				}]
+			},
+			"streamSettings": {
+				//"wsSettings": { "path": "/ray" },
+				"network": "tcp",
+				"security": "auto"
+				}
+			},
+			{
+			"protocol": "freedom",
+			"settings": {},
+			"tag": "direct"
+			},
+			{
+			"protocol": "blackhole",
+			"settings": {},
+			"tag": "blackhole_drop"
+			}
+		],
     "routing": {
         "domainStrategy": "IPOnDemand",
         "rules": [
@@ -54,20 +60,23 @@
             "type": "field",
             "outboundTag": "blackhole_drop",
             "domain": [
-                "domain:qqq.com",            // 指定域名禁止访问
-                "domain:sinaa.com"]
+                "domain:qqq.com",          // 指定域名禁止访问
+                "domain:sinaa.com"
+                ]
             },
             {
             "type": "field",
-            "outboundTag": "direct_connect",
-            "domain": ["geosite:cn"],      // 国内主流网站的域名
+            "outboundTag": "direct",
+            "domain": [ "geosite:cn" ]      // 国内主流网站的域名
             },
             {
             "type": "field",
-            "outboundTag": "direct_connect",
-            "ip": ["geoip:cn",             // 国内的 IP
-                   "geoip:private"]        // 私有地址 IP，如路由器等
-            }]
+            "outboundTag": "direct",
+            "ip": [ "geoip:cn",             // 国内的 IP
+                   "geoip:private"	// 私有地址 IP，如路由器等
+                   ]
+            }
+         ]
      },
     "mux": { "enabled": true }
 }
