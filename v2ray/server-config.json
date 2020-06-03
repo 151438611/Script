@@ -21,8 +21,8 @@
         ]
       },
       "streamSettings": {
+        #"wsSettings": { "path": "/ray" },
         "network": "tcp"
-        #"wsSettings": { "path": "/ray" }
       }
     }
   ],
