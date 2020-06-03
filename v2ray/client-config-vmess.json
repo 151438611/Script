@@ -56,14 +56,14 @@
     "routing": {
         "domainStrategy": "IPOnDemand",
         "rules": [
-            {
-            "type": "field",
-            "outboundTag": "blackhole_drop",
-            "domain": [
-                "domain:qqq.com",          // 指定域名禁止访问
-                "domain:sinaa.com"
-                ]
-            },
+            //{
+            //"type": "field",
+            //"outboundTag": "blackhole_drop",
+            //"domain": [
+                //"domain:qqq.com",          // 指定域名禁止访问
+                //"domain:sinaa.com"
+                //]
+            //},
             {
             "type": "field",
             "outboundTag": "direct",
