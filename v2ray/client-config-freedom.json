@@ -97,5 +97,5 @@
                 ]
             }]
     },
-    "mux": {"enabled": true}
+    "mux": { "enabled": true }
 }
