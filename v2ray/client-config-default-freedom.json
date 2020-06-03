@@ -2,13 +2,13 @@
 // 适用于默认直连，仅指定规则 某些国外域名走v2ray-server，提高效率
 {
     "log": {
-        "loglevel": "warning",   
-        "access": "/var/log/v2ray_access.log", 
+        "loglevel": "warning",
+        "access": "/var/log/v2ray_access.log",
         "error": "/var/log/v2ray_error.log"
      },
     "inbounds": [
           {
-          "port": 1080, 
+          "port": 1080,
           "protocol": "socks",
           "sniffing": {
             "enabled": true,
@@ -26,17 +26,17 @@
         "settings": {}
         },
         {
-        "protocol": "vmess", 
+        "protocol": "vmess",
         "settings": {
         "vnext": [{
-            "address": "server-ip-doname", 
-            "port": 30000, 
+            "address": "server-ip-doname",
+            "port": 29503,
             "users": [{
                 "id": "11f98504-f22a-4665-b617-af52ed4c4e15",
-                "alterId": 108 }]  
+                "alterId": 64 }]
                   }]
                   },
-        "tag": "out_v2ray_server" 
+        "tag": "out_v2ray_server"
         },
         {
         "protocol": "blackhole",
@@ -60,11 +60,11 @@
                 "domain:ggpht.com",
                 "domain:ytimg.com",
                 "domain:gstatic.com",
-                
+
                 "domain:github.com",
                 "domain:github.io",
                 "domain:githubusercontent.com",
-                
+
                 "domain:amazon.com",
                 "domain:amazon.co.jp",
                 "domain:ssl-images-amazon.com",
@@ -96,6 +96,6 @@
                 "domain:v2ray.com"
                 ]
             }]
-    }, 
+    },
     "mux": {"enabled": true}
 }
