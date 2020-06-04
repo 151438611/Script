@@ -6,6 +6,7 @@
         //"access": "/var/log/v2ray_access.log",
         "error": "/var/log/v2ray_error.log"
      },
+    //"mux": { "enabled": true },
     "inbounds": [
           {
           "port": 49452,
@@ -77,6 +78,5 @@
                    ]
             }
          ]
-     },
-    "mux": { "enabled": true }
+     }
 }
