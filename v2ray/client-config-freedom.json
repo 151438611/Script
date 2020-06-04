@@ -1,107 +1,109 @@
 // 客户端配置
 // 适用于默认直连，仅指定规则 某些国外域名走v2ray-server，提高效率
 {
-    "log": {
-        "loglevel": "info",
-        "access": "/var/log/v2ray_access.log",
-        "error": "/var/log/v2ray_error.log"
-     },
-    "inbounds": [{
-          "port": 49452,
-          "protocol": "socks",
-          "sniffing": {
-            "enabled": true,
-            "destOverride": ["http", "tls"]
-            },
-          "settings": {
-            "auth": "noauth",
-            "udp": false,
-            "ip": "127.0.0.1"
-            }
-        }],
-    "outbounds": [
+	"log": {
+		"loglevel": "info",
+		"access": "/var/log/v2ray_access.log",
+		"error": "/var/log/v2ray_error.log"
+	},
+	"inbounds": [{
+		"port": 49452,
+		"protocol": "socks",
+		"sniffing": {
+			"enabled": true,
+			"destOverride": ["http", "tls"]
+		},
+		"settings": {
+			"auth": "noauth",
+			"udp": false,
+			"ip": "127.0.0.1"
+		}
+	}],
+	"outbounds": [{
+			"protocol": "freedom",
+			"settings": {}
+		},
 		{
-		"protocol": "freedom",
-        "settings": {}
-        },
-        {
-        "protocol": "vmess",
-        //"mux": {"enabled": true},
-        "settings": {
-			"vnext": [
-				{
-				"address": "server_ip1",
-				"port": 2064,
-				"users": [{
-					"id": "11f98504-f22a-4665-b617-af52ed4c4e15",
-					"security": "auto",
-					"alterId": 64 }]
-				},
-				{
-				"address": "server_ip2",
-				"port": 81,
-				"users": [{
-					"id": "80b0e72e-945d-3ffc-0b88-408dd63e84be",
-					"security": "auto",
-					"alterId": 64 }]
-				}]
-        },
-        "tag": "out_v2ray_server"
-        }
-    ],
-    "routing": {
-        "domainStrategy": "AsIs",
-        "rules": [{
-            "type": "field",
-            "outboundTag": "out_v2ray_server",
-            "domain": [
-                // 个人常用国外域名,格式： "domain:",
-                "domain:google.com",
-                "domain:google.com.hk",
-                "domain:googleusercontent.com",
-                "domain:googleapis.com",
-                "domain:googlevideo.com",
-                "domain:youtube.com",
-                "domain:ggpht.com",
-                "domain:ytimg.com",
-                "domain:gstatic.com",
+			"protocol": "vmess",
+			//"mux": {"enabled": true},
+			"settings": {
+				"vnext": [{
+						"address": "server_ip1",
+						"port": 2064,
+						"users": [{
+							"id": "11f98504-f22a-4665-b617-af52ed4c4e15",
+							"security": "auto",
+							"alterId": 64
+						}]
+					},
+					{
+						"address": "server_ip2",
+						"port": 81,
+						"users": [{
+							"id": "80b0e72e-945d-3ffc-0b88-408dd63e84be",
+							"security": "auto",
+							"alterId": 64
+						}]
+					}
+				]
+			},
+			"tag": "out_v2ray_server"
+		}
+	],
+	"routing": {
+		"domainStrategy": "AsIs",
+		"rules": [{
+			"type": "field",
+			"outboundTag": "out_v2ray_server",
+			"domain": [
+				// 个人常用国外域名,格式： "domain:",
+				"domain:google.com",
+				"domain:google.com.hk",
+				"domain:googleusercontent.com",
+				"domain:googleapis.com",
+				"domain:googlevideo.com",
+				"domain:youtube.com",
+				"domain:ggpht.com",
+				"domain:ytimg.com",
+				"domain:gstatic.com",
 
-                "domain:github.com",
-                "domain:github.io",
-                "domain:githubusercontent.com",
+				"domain:github.com",
+				"domain:github.io",
+				"domain:githubusercontent.com",
 
-                "domain:amazon.com",
-                "domain:amazon.co.jp",
-                "domain:ssl-images-amazon.com",
-                "domain:media-amazon.com",
-                "domain:amazonaws.com",
+				"domain:amazon.com",
+				"domain:amazon.co.jp",
+				"domain:ssl-images-amazon.com",
+				"domain:media-amazon.com",
+				"domain:amazonaws.com",
 
-                "domain:facebook.com",
-                "domain:fbcdn.net",
-                "domain:fbsbx.com",
-                "domain:atdmt.com",
+				"domain:facebook.com",
+				"domain:fbcdn.net",
+				"domain:fbsbx.com",
+				"domain:atdmt.com",
 
-                "domain:hpe.com",
-                "domain:cisco.com",
-                "domain:broadcom.com",
-                "domain:netgear.com",
-                "domain:apk.support",
-                "domain:gvt1.com",
-                "domain:wikipedia.org",
-                "domain:openwrt.org",
-                "domain:openvpn.net",
-                "domain:archive.org",
-                "domain:bitbucket.org",
-                "domain:snia.org",
-                "domain:whoer.net",
-                "domain:quora.com",
-                "domain:quoracdn.net",
-                "domain:freeproxy.world",
-                "domain:youneed.win",
-                "domain:yadi.sk",
-                "domain:mega.nz",
-                "domain:v2ray.com"
-                ]
-            }]
-    }
+				"domain:hpe.com",
+				"domain:cisco.com",
+				"domain:broadcom.com",
+				"domain:netgear.com",
+				"domain:apk.support",
+				"domain:gvt1.com",
+				"domain:wikipedia.org",
+				"domain:openwrt.org",
+				"domain:openvpn.net",
+				"domain:archive.org",
+				"domain:bitbucket.org",
+				"domain:snia.org",
+				"domain:whoer.net",
+				"domain:quora.com",
+				"domain:quoracdn.net",
+				"domain:freeproxy.world",
+				"domain:youneed.win",
+				"domain:yadi.sk",
+				"domain:yandex.net",
+				"domain:mega.nz",
+				"domain:v2ray.com"
+			]
+		}]
+	}
 }
