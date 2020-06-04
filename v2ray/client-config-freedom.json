@@ -2,14 +2,12 @@
 // 适用于默认直连，仅指定规则 某些国外域名走v2ray-server，提高效率
 {
     "log": {
-        "loglevel": "warning",
+        "loglevel": "info",
         "access": "/var/log/v2ray_access.log",
         "error": "/var/log/v2ray_error.log"
      },
-    //"mux": { "enabled": true },
-    "inbounds": [
-          {
-          "port": 1080,
+    "inbounds": [{
+          "port": 49452,
           "protocol": "socks",
           "sniffing": {
             "enabled": true,
@@ -17,32 +15,38 @@
             },
           "settings": {
             "auth": "noauth",
-            "udp": true,
+            "udp": false,
             "ip": "127.0.0.1"
             }
         }],
     "outbounds": [
-        {
-        "protocol": "freedom",
+		{
+		"protocol": "freedom",
         "settings": {}
         },
         {
         "protocol": "vmess",
+        //"mux": {"enabled": true},
         "settings": {
-        "vnext": [{
-            "address": "server-ip-doname",
-            "port": 29503,
-            "users": [{
-                "id": "11f98504-f22a-4665-b617-af52ed4c4e15",
-                "alterId": 64 }]
-                  }]
-                  },
-        "tag": "out_v2ray_server"
+			"vnext": [
+				{
+				"address": "server_ip1",
+				"port": 2064,
+				"users": [{
+					"id": "11f98504-f22a-4665-b617-af52ed4c4e15",
+					"security": "auto",
+					"alterId": 64 }]
+				},
+				{
+				"address": "server_ip2",
+				"port": 81,
+				"users": [{
+					"id": "80b0e72e-945d-3ffc-0b88-408dd63e84be",
+					"security": "auto",
+					"alterId": 64 }]
+				}]
         },
-        {
-        "protocol": "blackhole",
-        "settings": {},
-        "tag": "blackhole_drop"
+        "tag": "out_v2ray_server"
         }
     ],
     "routing": {
@@ -94,6 +98,8 @@
                 "domain:quoracdn.net",
                 "domain:freeproxy.world",
                 "domain:youneed.win",
+                "domain:yadi.sk",
+                "domain:mega.nz",
                 "domain:v2ray.com"
                 ]
             }]

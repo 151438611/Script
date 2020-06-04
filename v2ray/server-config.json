@@ -2,34 +2,35 @@
 // yisuyun:	80b0e72e-945d-3ffc-0b88-408dd63e84be
 // aliyun:	11f98504-f22a-4665-b617-af52ed4c4e15
 {
-  "log": {
-    "loglevel": "warning",
-    //"access": "/var/log/v2ray_access.log",
-    "error": "/var/log/v2ray_error.log"
-  },
-  "inbounds": [
-    {
-      "port": 29503,
-      "protocol": "vmess",
-      "settings": {
-        "clients": [
-          {
-            "id": "80b0e72e-945d-3ffc-0b88-408dd63e84be",
-            "level": 1,
-            "alterId": 64
-          }
-        ]
-      },
-      "streamSettings": {
-        #"wsSettings": { "path": "/ray" },
-        "network": "tcp"
-      }
-    }
-  ],
-  "outbounds": [
-    {
-      "protocol": "freedom",
-      "settings": {}
-    }
-  ]
+    "log": {
+        "loglevel": "warning",
+        "access": "/var/log/v2ray_access.log",
+        "error": "/var/log/v2ray_error.log"
+    },
+    "inbounds": [
+        {
+            "port": 29503,
+            "protocol": "vmess",
+            "settings": {
+                "clients": [
+                    {
+                        "id": "80b0e72e-945d-3ffc-0b88-408dd63e84be",
+                        //"level": 1,
+                        "alterId": 78,
+                        "security": "auto"
+                    }
+                ]
+            },
+            "streamSettings": {
+                "network": "tcp"
+            }
+        }
+    ],
+    "outbounds": [
+        {
+            "protocol": "freedom",
+            "settings": {
+            }
+        }
+    ]
 }

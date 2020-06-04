@@ -1,81 +1,91 @@
 // 客户端配置
 // 适用于默认走vmess服务器，仅指定规则的 国内域名或IP freedom直连
 {
-    "log": {
-        "loglevel": "warning",
-        //"access": "/var/log/v2ray_access.log",
-        "error": "/var/log/v2ray_error.log"
-     },
-    "inbounds": [
-          {
-          "port": 49452,
-          "protocol": "socks",
-          "sniffing": {
-            "enabled": true,
-            "destOverride": ["http", "tls"]
-            },
-          "settings": {
-            "auth": "noauth",
-            "udp": true,
-            "ip": "127.0.0.1"
-            }
-        }
-    ],
-    "outbounds": [
-			{
+	"log": {
+		"loglevel": "warning",
+		"access": "/var/log/v2ray_access.log",
+		"error": "/var/log/v2ray_error.log"
+	},
+	"inbounds": [{
+		"port": 49452,
+		"protocol": "socks",
+		"sniffing": {
+			"enabled": true,
+			"destOverride": ["http", "tls"]
+		},
+		"settings": {
+			"auth": "noauth",
+			"udp": false,
+			"ip": "127.0.0.1"
+		}
+	}],
+	"outbounds": [{
 			"protocol": "vmess",
 			"settings": {
-			"vnext": [
-				{
-				"address": "server_ip_address",
-				"port": 29503,
-				"users": [{
-					//"id": "80b0e72e-945d-3ffc-0b88-408dd63e84be",
-					"id": "11f98504-f22a-4665-b617-af52ed4c4e15",
-					"alterId": 64
-					}]
-				}]
+				"vnext": [
+					{
+						"address": "server_ip",
+						"port": 11594,
+						"users": [{
+							"id": "11f98504-f22a-4665-b617-af52ed4c4e15",
+							"security": "auto",
+							"alterId": 68
+						}]
+					}
+				]
 			},
 			"streamSettings": {
-				//"wsSettings": { "path": "/ray" },
-				"network": "tcp",
-				"security": "auto"
-				}
-			},
-			{
+				"network": "tcp"
+			}
+		},
+		{
 			"protocol": "freedom",
 			"settings": {},
 			"tag": "direct"
-			},
-			{
+		},
+		{
 			"protocol": "blackhole",
 			"settings": {},
 			"tag": "blackhole_drop"
+		}
+	],
+//	"dns": {
+//		"servers": [{
+//				"address": "223.5.5.5",
+//				"port": 53,
+//				"domains": ["geosite:cn"],
+//				"expectIPs": ["geoip:cn"]
+//			},
+//			{
+//				"address": "8.8.8.8",
+//				"port": 53,
+//				"domains": ["geosite:geolocation-!cn"]
+//			},
+//			"114.114.114.114",
+//			"localhost"
+//		]
+//	},
+	"routing": {
+		"domainStrategy": "IPOnDemand",
+		"rules": [
+			{
+			"type": "field",
+			"outboundTag": "blackhole_drop",
+			"domain": [
+			"domain:qqq.com",          // 指定域名禁止访问
+			"domain:sinaa.com"
+				]
+			},
+			{
+				"type": "field",
+				"outboundTag": "direct",
+				"domain": ["geosite:cn"]
+			},
+			{
+				"type": "field",
+				"outboundTag": "direct",
+				"ip": ["geoip:cn","geoip:private"]
 			}
-		],
-    "routing": {
-        "domainStrategy": "IPOnDemand",
-        "rules": [
-            //{
-            //"type": "field",
-            //"outboundTag": "blackhole_drop",
-            //"domain": [
-                //"domain:qqq.com",          // 指定域名禁止访问
-                //"domain:sinaa.com"
-                //]
-            //},
-            {
-            "type": "field",
-            "outboundTag": "direct",
-            "domain": [ "geosite:cn" ]      // 国内主流网站的域名
-            },
-            {
-            "type": "field",
-            "outboundTag": "direct",
-            "ip": [ "geoip:cn",             // 国内的 IP
-                   "geoip:private"	// 私有地址 IP，如路由器等
-                   ]
-            }
-         ]
-     }
+		]
+	}
 }
