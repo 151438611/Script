@@ -21,16 +21,25 @@
 	}],
 	"outbounds": [{
 			"protocol": "vmess",
+			"mux": {"enabled": false},
 			"settings": {
 				"vnext": [
+					// 若有多个VPS_Server,按此格式{Server1_config},{Server2_config}...添加即可,实现负载均衡/冗余备份
 					{
-						"address": "server_ip",
-						"port": 11594,
+						"address": "server_ip1",
+						"port": 2064,
 						"users": [{
-							"id": "11f98504-f22a-4665-b617-af52ed4c4e15",
+							"id": "server_ip1_uuid",
 							"security": "auto",
-							"alterId": 68
-						}]
+							"alterId": 26 }]
+					},
+					{
+						"address": "server_ip2",
+						"port": 1055,
+						"users": [{
+							"id": "server_ip2_uuid",
+							"security": "auto",
+							"alterId": 26 }]
 					}
 				]
 			},
@@ -41,7 +50,7 @@
 		{
 			"protocol": "freedom",
 			"settings": {},
-			"tag": "direct"
+			"tag": "direct_connect"
 		},
 		{
 			"protocol": "blackhole",
@@ -78,12 +87,12 @@
 			},
 			{
 				"type": "field",
-				"outboundTag": "direct",
+				"outboundTag": "direct_connect",
 				"domain": ["geosite:cn"]
 			},
 			{
 				"type": "field",
-				"outboundTag": "direct",
+				"outboundTag": "direct_connect",
 				"ip": ["geoip:cn","geoip:private"]
 			}
 		]
