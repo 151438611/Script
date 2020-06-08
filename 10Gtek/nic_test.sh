@@ -102,9 +102,9 @@ if [ "$link_stat" = yes ] ; then
   echo -e "\n正在进行 iperf3 性能测试,请稍等 $iperf_time 秒 ......"
   iperflog=/tmp/iperf.log
   iperf3 -c $dest_ip -t $iperf_time > $iperflog
-  iperf_head=$(head $iperflog)
-  iperf_tail=$(tail $iperflog)
-  tail -n5 $iperflog
+  iperf_head=$(head -n 20 $iperflog)
+  iperf_tail=$(tail -n 20 $iperflog)
+  tail -n 20 $iperflog
   [ -n "$(echo "$iperf_tail" | grep "iperf Done")" ] && result="性能测试完成." || result="性能测试失败!" 
   echo -e "\n$result" | tee -a $log
   echo -e "$iperf_head \n...... \n$iperf_tail " >> $log 
