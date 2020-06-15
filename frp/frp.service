@@ -6,6 +6,7 @@ Documentation=https://github.com/fatedier/frp
 
 [Service]
 Type=simple
+User=nobody
 #WorkingDirectory=/opt/frp
 #ExecStart=/opt/frp/frps -c /opt/frp/frps.ini
 ExecStart=/opt/frp/frpc -c /opt/frp/frpc.ini  
