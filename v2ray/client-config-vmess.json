@@ -31,7 +31,7 @@
 						"users": [{
 							"id": "server_ip1_uuid",
 							"security": "auto",
-							"alterId": 26 }]
+							"alterId": 30 }]
 					},
 					{
 						"address": "server_ip2",
@@ -39,7 +39,7 @@
 						"users": [{
 							"id": "server_ip2_uuid",
 							"security": "auto",
-							"alterId": 26 }]
+							"alterId": 30 }]
 					}
 				]
 			},
@@ -82,8 +82,7 @@
 			"outboundTag": "blackhole_drop",
 			"domain": [
 			"domain:qqq.com",          // 指定域名禁止访问
-			"domain:sinaa.com"
-				]
+			"domain:sinaa.com"]
 			},
 			{
 				"type": "field",
