@@ -25,7 +25,7 @@
 		},
 		{
 			"protocol": "vmess",
-			"mux": {"enabled": true},
+			"mux": {"enabled": false},
 			"settings": {
 				"vnext": [{
 						"address": "server_ip1",
@@ -56,7 +56,7 @@
 			"type": "field",
 			"outboundTag": "out_v2ray_server",
 			"domain": [
-				// 个人常用国外域名,格式： "domain:",
+				// 常用国外域名,格式： "domain:",
 				"domain:google.com",
 				"domain:google.com.hk",
 				"domain:googleusercontent.com",
