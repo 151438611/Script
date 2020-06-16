@@ -33,16 +33,16 @@
 						"users": [{
 							"id": "11f98504-f22a-4665-b617-af52ed4c4e15",
 							"security": "auto",
-							"alterId": 64
+							"alterId": 30
 						}]
 					},
 					{
 						"address": "server_ip2",
-						"port": 81,
+						"port": 2064,
 						"users": [{
 							"id": "80b0e72e-945d-3ffc-0b88-408dd63e84be",
 							"security": "auto",
-							"alterId": 64
+							"alterId": 30
 						}]
 					}
 				]
@@ -102,6 +102,7 @@
 				"domain:yadi.sk",
 				"domain:yandex.net",
 				"domain:mega.nz",
+				"domain:v2fly.org",
 				"domain:v2ray.com"
 			]
 		}]
