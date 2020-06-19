@@ -36,7 +36,7 @@ changeRecordModify() {
 	recordLine='默认'
 	
 	# get public ip address
-	getIP=$(curl -q https://ip.cn | awk -F \" '{print $4}')
+	getIP=$(curl -q http://ip.sb)
 	value=$getIP
 
 	src=$(printf "GETcns.api.qcloud.com/v2/index.php?Action=%s&Nonce=%s&SecretId=%s&SignatureMethod=%s&Timestamp=%s&domain=%s&recordId=%s&recordLine=%s&recordType=%s&subDomain=%s&value=%s" $action $nonce $sId $signatureMethod $timestamp $domain $recordId $recordLine $recordType $subDomain $value)
