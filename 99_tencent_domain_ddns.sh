@@ -39,4 +39,3 @@ changeRecordModify() {
     	curl -G -d "$Params" --data-urlencode "Signature=$Signature" "$URL"
 	fi
 }
-changeRecordModify
