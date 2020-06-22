@@ -3,6 +3,7 @@
 
 log=/tmp/ip.txt
 
-ipinfo=$(curl http://ip.sb 2> /dev/null)
+publicIP=$(curl ip.3322.net 2> /dev/null)
+[ "$publicIP" ] || publicIP=$(curl ip.cip.cc 2> /dev/null)
 
-echo "$(date +"%F %T") IP: $ipinfo" | tee -a $log
+echo "$(date +"%F %T") IP: $publicIP" | tee -a $log
