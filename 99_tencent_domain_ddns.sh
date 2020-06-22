@@ -40,8 +40,8 @@ changeRecordModify() {
 		Signature=$(echo -n $SRC | openssl dgst -sha1 -hmac $SecretKey -binary | base64)
 		Params=$(printf "Action=%s&Nonce=%s&SecretId=%s&SignatureMethod=%s&Timestamp=%s&domain=%s&recordId=%s&recordLine=%s&recordType=%s&subDomain=%s&value=%s" $Action $Nonce $SecretId $SignatureMethod $Timestamp $Domain $RecordID $RecordLine $RecordType $SubDomain $RecordValue)
 		curl -G -d "$Params" --data-urlencode "Signature=$Signature" "$URL"
-		[ $? -eq 0 ] && echo "$(date +"%F %T") The Record_IP($RecordIP) is different as Public_IP($getPublicIP) , changeRecordModify success !" >> $Log || \
-			echo "$(date +"%F %T") The Record_IP($RecordIP) is different as Public_IP($getPublicIP) , but changeRecordModify fail !!!" >> $Log 
+		[ $? -eq 0 ] && echo "$(date +"%F %T") The Record_IP($RecordIP) is different as Public_IP($RecordValue) , changeRecordModify success !" >> $Log || \
+			echo "$(date +"%F %T") The Record_IP($RecordIP) is different as Public_IP($RecordValue) , but changeRecordModify fail !!!" >> $Log 
 	fi
 }
 changeRecordModify
