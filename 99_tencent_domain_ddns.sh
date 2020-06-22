@@ -34,7 +34,7 @@ changeRecordModify() {
 	RecordValue=$(curl -q ip.3322.net)
 	[ $RecordValue ] || RecordValue=$(curl -q ip.cip.cc)
     	if [ $RecordValue = $RecordIP ]; then
-		echo "$(date +"%F %T") The Record_IP($RecordIP) is same as Public_IP($getPublicIP) ." >> $Log
+		echo "$(date +"%F %T") The Record_IP($RecordIP) is same as Public_IP($RecordValue) ." >> $Log
 	else
 		SRC=$(printf "GETcns.api.qcloud.com/v2/index.php?Action=%s&Nonce=%s&SecretId=%s&SignatureMethod=%s&Timestamp=%s&domain=%s&recordId=%s&recordLine=%s&recordType=%s&subDomain=%s&value=%s" $Action $Nonce $SecretId $SignatureMethod $Timestamp $Domain $RecordID $RecordLine $RecordType $SubDomain $RecordValue)
 		Signature=$(echo -n $SRC | openssl dgst -sha1 -hmac $SecretKey -binary | base64)
