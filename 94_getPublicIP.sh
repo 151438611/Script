@@ -1,5 +1,5 @@
 #!/bin/bash
-# 获取网络的外网IP地址
+# 获取本地网络的外网IP地址
 
 log=/tmp/ip.txt
 
