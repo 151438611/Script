@@ -23,7 +23,7 @@ getRecordID() {
 	RecordIP=$(echo $AllRecord | awk -F [:,\"] '{print $13}')
 }
 getRecordID
-[ -z "$RecordID" -o -z "$RecordIP" ] && echo "Get Record ID or IP Fail !!!" && exit 1
+[ -z "$RecordID" -o -z "$RecordIP" ] && echo "Get Record ID or IP Fail !!!" >> $Log && exit 1
 
 changeRecordModify() {
 	Action=RecordModify
