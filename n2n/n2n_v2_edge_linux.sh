@@ -19,7 +19,7 @@ N2N_KEY=
 log=/tmp/n2n_log.txt
 [ -f $log ] || echo $(date +"%F %T") > $log
 
-base_url="http://frp.xxy1.ltd:35100/file/vpn_v2ray_sock5_proxy/n2n_v2"
+base_url="http://frp.xxy1.ltd:35100/file/vpn_v2ray_sock5_proxy/n2n"
 
 if [ -n "$(grep -i padavan /proc/version)" ] ; then
 	os_type=padavan
