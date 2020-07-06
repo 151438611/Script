@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 # n2n_v2 for Linux amd64、arm64、mipsel ,需要安装ifconfig命令，使用root用户运行
 # openwrt默认没有加载tun kernel module,需要重新编译安装
 # 注意事项: 所有的edge命令参数位置必须一致,不一致有可能无法连通; 示例: edge -c xx -d xx和 edge -d -c 则无法连通
