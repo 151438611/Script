@@ -19,11 +19,11 @@ N2N_KEY=
 log=/tmp/n2n_log.txt
 [ -f $log ] || echo $(date +"%F %T") > $log
 
-base_url="http://frp.xxy1.ltd:35100/file/n2n"
+base_url="http://frp.xxy1.ltd:35100/file/vpn_v2ray_sock5_proxy/n2n_v2"
 
 if [ -n "$(grep -i padavan /proc/version)" ] ; then
 	os_type=padavan
-elif [ -n "$(grep -i openwrt /proc/version)" ] ; then
+elif [ -n "$(grep -Ei "openwrt|lede" /proc/version)" ] ; then
 	os_type=openwrt
 else 
 	os_type=linux
@@ -95,7 +95,7 @@ if [ ! -x $edge ]; then
 	chmod +x $edge
 fi
 
-ping -c 2 223.5.5.5 && \
+ping -c 2 114.114.114.114 && \
 if [ -n "$(pidof $(basename $edge))" ]; then
 	echo "$(date +"%F %T")	$edge $ipadd is runing , Don't do anything !" >> $log
 else
