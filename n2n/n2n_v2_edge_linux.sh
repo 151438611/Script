@@ -43,7 +43,7 @@ case $(uname -m) in
 			edge="/etc/storage/bin/edge"
 			down_url="${base_url}/edge_n2n_v2_linux_mipsel"
 		elif [ "$os_type" = openwrt ] ; then 
-			edge="/sbin/edge"
+			edge="/usr/sbin/edge"
 			down_url="${base_url}/edge_n2n_v2_linux_mips"
 		fi
 	;;
