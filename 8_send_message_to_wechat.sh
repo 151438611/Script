@@ -25,7 +25,7 @@ log=/tmp/wechat_old.log
 
 old=$(cat $log)
 #new=$(ifconfig eth0 | awk '/inet/ && /netmask/ {print $2}')
-new=$(curl https://ip.cn | awk -F \" '{print $4}')
+new=$(curl ip.cn | awk -F \" '{print $4}')
 if [ "${old:=null}" != "$new" ] ; then
   echo $new > $log
   SCKEY="SCU36809T708f06ef5fe3f800464d5a8ece07a15b5c01e42cad1d0"
