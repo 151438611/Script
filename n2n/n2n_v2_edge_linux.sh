@@ -84,9 +84,17 @@ addIptables() {
 	# 适用于 szK2P_20
 	#[ -z "$(iptables -t nat -vnL POSTROUTING | grep -Ei "${vmnic_name}|${ipadd}")" ] && \
 	#iptables -t nat -A POSTROUTING -o $vmnic_name -d ${ipadd%.*}.0/24 -j SNAT --to-source $ipadd
+	
 	# 适用于 jhK2P_75，映射81端口到海康E24H摄像头的web上
 	#[ -z "$(iptables -t nat -vnL PREROUTING | grep -Ei "${vmnic_name}|${ipadd}")" ] && \
 	#iptables -t nat -A PREROUTING -p tcp -i ${vmnic_name} -d ${ipadd} --dport 81 -j DNAT --to 192.168.75.128:80
+	# 适用于 jhK2P_75 / gxK2_57，映射82端口到 192.168.1.1 光猫web上
+	#[ -z "$(iptables -t nat -vnL PREROUTING | grep -Ei "${vmnic_name}|${ipadd}")" ] && \
+	#iptables -t nat -A PREROUTING -p tcp -i ${vmnic_name} -d ${ipadd} --dport 82 -j DNAT --to 192.168.1.1:80
+	#[ -z "$(iptables -t nat -vnL POSTROUTING | grep -i "${vmnic_name}")" ] && \
+	#iptables -t nat -A POSTROUTING -i ${vmnic_name} -s 10.5.5.0/24 -d 192.168.1.1 -j SNAT --to 192.168.1.11
+	
+	
 }
 
 if [ ! -x $edge ]; then
