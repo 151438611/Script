@@ -15,6 +15,15 @@ echo "   注意:尽量使用端口数量相同的网卡,端口数不同的网卡
 echo "   注意:有的网卡上面第一个端口为eth1,往下依次为eth2、eth3... ;有的网卡下面第一个端口为eth1,往上为eth2、eth3..."
 echo -e "\n3、在另一台电脑上运行 "iperf3 -s" 命令,作为服务端,本机作为客户端 \n"
 
+
+read -p "此端是服务端<S>还是客户端<C>? 默认客户端<C>,请输入 <S/C> : " type
+case $type in
+	S|s) 
+		iperf3 -s
+		exit
+	;;
+esac
+
 read -p "确认测试环境是否已配置正确,默认yes,请输入 <yes/no> : " confirm
 [ "${confirm:=yes}" != yes ] && echo -e "\n请先配置好测试环境，再重新测试!\n" && exit
 echo -e "\n所有网卡端口列表: (state UP表示端口已链接, DOWN表示端口未链接)"
@@ -114,3 +123,21 @@ fi
 
 unix2dos -o $log &> /dev/null
 echo -e "\n测试完成,测试数据保存在 $log ,下次测试会覆盖掉,请及时拷出!!! \n"
+
+fun_mount_smb() {
+	# 需要安装: yum/apt install cifs-utils
+	# $1:username $2:password $3:mount_src $4:mount_dest 
+	[ -d "$4" ] || mkdir -p $4
+	if [ -z "$(mount | grep "$3 on $4")" ] ; then
+		mount -t cifs $3 $4 -o username=$1,password=$2,rw,file_mode=0777,dir_mode=0777,iocharset=utf8,vers=2.0 &> /dev/null || \
+		mount -t cifs $3 $4 -o username=$1,password=$2,rw,file_mode=0777,dir_mode=0777,iocharset=utf8,vers=1.0
+	fi
+}
+user=GCB01 
+password="*WGQGf"
+src=//192.168.10.250/gc-fae/faeTest/nictest
+dest=/media/nictest
+fun_mount_smb $user $password $src $dest
+
+[ "$(mount | grep $src)" ] && cp -f $log $dest && echo "测试数据 $log 已复制到 $src ,下次测试会覆盖掉,请及时拷出!!! "
+umount $src
