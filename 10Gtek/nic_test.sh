@@ -103,7 +103,7 @@ if [ "$link_stat" = yes ] ; then
   ping -c 2 -w 3 $dest_ip &> $pinglog &&  ping -c $count -i 0.05 $dest_ip | tee $pinglog 
   ping_head=$(head $pinglog)
   ping_tail=$(tail $pinglog)
-  [ -n "$(echo "$ping_tail" | awk '/0% packet loss/ {print $0}')" ] && result="Ping包成功,无丢包." || result="Ping包失败,或有丢包!"
+  [ -n "$(echo "$ping_tail" | awk '/ 0% packet loss/ {print $0}')" ] && result="Ping包成功,无丢包." || result="Ping包失败,或有丢包!"
   echo -e "\n$result" | tee -a $log
   echo -e "$ping_head \n......\n$ping_tail " >> $log
   mark
