@@ -17,14 +17,14 @@ fun_mount_nfs() {
 	# 使用 "showmount -e nfsd_ip" 查看nfsd服务端的目录
 	# $1:mount_src $2:mount_dest 
 	[ -d "$2" ] || mkdir -p $2
-	[ -z "$(mount | grep "$1 on $2")" ] && mount -t nfs -o vers=3 $1 $2 
+	[ -z "$(mount | grep "$1 on $2")" ] && mount -t nfs -o rw,noatime $1 $2 
 }
 fun_mount_nfs_padavan() {
 	# 需要Padavan支持nfs, rpc服务由portmap提供
 	# $1:mount_src $2:mount_dest 
 	[ -d "$2" ] || mkdir -p $2
 	[ -z "$(pidof portmap)" ] && /sbin/portmap && sleep 2
-	[ -z "$(mount | grep "$1 on $2")" ] && mount -t nfs -o vers=3 $1 $2 
+	[ -z "$(mount | grep "$1 on $2")" ] && mount -t nfs -o rw,noatime,vers=3 $1 $2 
 }
 
 # === mount smb ======================
