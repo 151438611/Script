@@ -174,14 +174,15 @@ fun_copy_result_8() {
 
 	if [ "$(mount | grep $smb_src)" ]; then
 		[ -d $smb_dest/$1 ] || mkdir -p $smb_dest/$1
-		[ $error_log ] && cp -f $log $smb_dest/$1/error_${log##*/} || cp -f $log $smb_dest/$1
+		[ "$1" ] && { [ "$error_log" ] && cp -f $log $smb_dest/$1/error_${log##*/} || cp -f $log $smb_dest/$1 ; } || \
+			{ [ "$error_log" ] && cp -f $log $smb_dest/error_${log##*/} || cp -f $log $smb_dest/ ; }
 		echo "测试数据 $log 已复制到 $smb_src/$1 ,下次测试会覆盖掉,请及时拷出 !!! "
 	fi
 	# umount $src
 	mark
 }
 
-
+# =============下面开始功能代码,上面是函数定义===========================
 net_interface=$(ip address | grep mtu | grep -E "eth1|eth2|eth3|eth4")
 net_interface_num=$(echo "$net_interface" | wc -l)
 [ $net_interface_num -lt 1 -o $net_interface_num -gt 4 ] && echo "网卡接口号显示异常:< $net_interface_num > !!! " && exit 1 
@@ -193,12 +194,11 @@ elif [ "$(ip address | grep inet | grep -E "192.168.6.201|192.168.7.201|192.168.
 	src_ip_end=201
 	dest_ip_end=101
 fi
-	
+
+# 初始化
+killall -q iperf iperf3 
 case $type in
 	S|s) 
-		# 初始化
-		killall -q iperf iperf3
-		
 		net_start=6
 		port_start=5201
 		for net_num in $(seq $net_interface_num)
