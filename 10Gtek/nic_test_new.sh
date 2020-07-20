@@ -173,7 +173,7 @@ fun_copy_result_8() {
 	fun_mount_smb $smb_user $smb_password $smb_src $smb_dest
 
 	if [ "$(mount | grep $smb_src)" ]; then
-		[ "$1" ] && [ -d $smb_dest/$1 ] || mkdir -p $smb_dest/$1
+		[ -d $smb_dest/$1 ] || mkdir -p $smb_dest/$1
 		[ $error_log ] && cp -f $log $smb_dest/$1/error_${log##*/} || cp -f $log $smb_dest/$1
 		echo "测试数据 $log 已复制到 $smb_src/$1 ,下次测试会覆盖掉,请及时拷出 !!! "
 	fi
