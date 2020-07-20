@@ -162,7 +162,7 @@ fun_iperf_test_7() {
 
 fun_copy_result_8() {
 	# 需要传入: $1目的文件夹
-	[ "$1" ] || { echo "请传入 目的文件夹 给 fun_copy_result 函数 !!!" && continue; }
+	#[ "$1" ] || { echo "请传入 目的文件夹 给 fun_copy_result 函数 !!!" && continue; }
 	unix2dos -o $log &> /dev/null
 	echo -e "\n测试完成,测试数据保存在 $log ,下次测试会覆盖掉,请及时拷出 !!! \n"
 
