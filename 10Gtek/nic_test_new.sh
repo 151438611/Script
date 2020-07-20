@@ -116,7 +116,6 @@ fun_get_net_link_5() {
 	else 
 		link_result="链路连通失败 !!! 无法继续下一步 ping包 和 iperf3性能测试 ..." 
 		error_log=yes
-		continue
 	fi
 	echo -e "\n$link_result" | tee -a $log
 	echo "$link_info" | tee -a $log
