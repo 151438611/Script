@@ -121,7 +121,6 @@ fun_get_net_link_5() {
 	fi
 	echo -e "\n$link_result" | tee -a $log
 	echo "$link_info" | tee -a $log
-	sleep 1
 	mark
 }
 
@@ -134,10 +133,9 @@ fun_ping_test_6() {
 		echo -e "\n正在进行 $ping_count 次的 Ping 包测试 ......"
 		pinglog=/tmp/ping$1.log
 		ping -c 2 -w 3 $1 &> $pinglog &&  ping -c $2 -i 0.1 $1 | tee $pinglog
-		[ -n "$(echo "$pinglog" | awk '/ 0% packet loss/ {print $0}')" ] && ping_result="Ping包成功,无丢包" || { ping_result="Ping包失败,或有丢包 !!!"; error_log=yes; }
+		[ "$(awk '/ 0% packet loss/ {print $0}' $pinglog)" ] && ping_result="Ping包成功,无丢包" || { ping_result="Ping包失败,或有丢包 !!!"; error_log=yes; }
 		echo -e "\n$ping_result" | tee -a $log
 		echo -e "$(head $pinglog) \n......\n$(tail $pinglog) " >> $log
-		sleep 1
 	fi
 	mark
 }
@@ -154,9 +152,9 @@ fun_iperf_test_7() {
 
 		# 获取网卡测试速率，并将单位 Gbits/sec 转换成 Mbits/sec
 		grep -q "\[SUM\]" $iperflog && {
-				iperf_speed=$(awk '/SUM/ && /sender/ && /bits\/sec/ {if($7 == "Gbits/sec"){print $6 * 1024} else {print $6}}' $iperflog)
+				iperf_speed=$(awk '/SUM/ && /sender/ && /bits\/sec/ {if($7 == "Gbits/sec"){print int($6 * 1024)} else {print $6}}' $iperflog)
 			} || {
-				iperf_speed=$(awk '/sender/ && /bits\/sec/ {if($7 == "Gbits/sec"){print $7 * 1024} else {print $7}}' $iperflog)
+				iperf_speed=$(awk '/sender/ && /bits\/sec/ {if($8 == "Gbits/sec"){print int($7 * 1024)} else {print $7}}' $iperflog)
 			}
 		# 判断测试速率是否达标网卡协商速率的90%
 		iperf_speed_result=
@@ -171,10 +169,9 @@ fun_iperf_test_7() {
 			40000) [ "$iperf_speed" -ge 36000 -a "$iperf_speed" -lt 40000 ] && iperf_speed_result=ok ;;
 			100000) [ "$iperf_speed" -ge 90000 -a "$iperf_speed" -lt 100000 ] && iperf_speed_result=ok ;;
 		esac
-		[ -n "$(echo "$iperf_tail" | grep "iperf Done")" -a "$iperf_speed_result" = ok ] && iperf_result="性能测试<$iperf_speed Mbits/sec>完成" || { iperf_result="性能测试失败 !!!"; error_log=yes; }
+		[ -n "$(grep "iperf Done" $iperflog)" -a "$iperf_speed_result" = ok ] && iperf_result="性能测试<$iperf_speed Mbits/sec>完成" || { iperf_result="性能测试失败 !!!"; error_log=yes; }
 		echo -e "\n$iperf_result" | tee -a $log
-		echo -e "$(head -n 20 $iperflog) \n......\n$(tail -n 20 $iperflog)" | tee -a $log 
-		sleep 1
+		echo -e "$(head -n 20 $iperflog) \n......\n$(tail -n 20 $iperflog)" >> $log 
 	fi
 	mark
 }
