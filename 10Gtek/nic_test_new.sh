@@ -2,7 +2,7 @@
 # 用于 Centos 测试电脑上进行网卡测试,需要安装 yum install net-tools iperf3 dos2unix cifs-utils
 # 注意：centos需要关闭selinux 和 配置或关闭firewalld：firewall-cmd --permanent --zone=public --add-port=5201-5204/tcp
 # 20200717新增功能: 多端口测试(多端口可依次按顺序测试,也可同时并行测试),新增手动输入文件夹
-# 20200723新增功能：增加iperf性能测试结果检查在正常速率范围内
+# 20200723新增功能：增加iperf性能测试结果检查
 
 #export PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:$PATH
 
