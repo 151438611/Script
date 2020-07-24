@@ -2,6 +2,7 @@
 # 用于 Centos 测试电脑上进行网卡测试,需要安装 yum install net-tools iperf3 dos2unix cifs-utils
 # 注意：centos需要关闭selinux 和 配置或关闭firewalld：firewall-cmd --permanent --zone=public --add-port=5201-5204/tcp
 # 20200717新增功能: 多端口测试(多端口可依次按顺序测试,也可同时并行测试),新增手动输入文件夹
+# 20200723新增功能：增加iperf性能测试结果检查在正常速率范围内
 
 #export PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:$PATH
 
@@ -111,6 +112,7 @@ fun_get_net_link_5() {
 	link_info=$(ethtool $1 2> /dev/null)
 	link_status=$(echo "$link_info" | awk '/Link detected:/{print $3}')
 	link_speed=$(echo "$link_info" |awk '/Speed:/{print int($2)}')
+	
 	if [ "$link_status" = yes -a -n "link_speed" ]; then
 		link_result="链路已连通,速率为 $link_speed Mb/s"
 	else 
@@ -119,6 +121,7 @@ fun_get_net_link_5() {
 	fi
 	echo -e "\n$link_result" | tee -a $log
 	echo "$link_info" | tee -a $log
+	sleep 1
 	mark
 }
 
@@ -131,11 +134,10 @@ fun_ping_test_6() {
 		echo -e "\n正在进行 $ping_count 次的 Ping 包测试 ......"
 		pinglog=/tmp/ping$1.log
 		ping -c 2 -w 3 $1 &> $pinglog &&  ping -c $2 -i 0.1 $1 | tee $pinglog
-		ping_head=$(head $pinglog)
-		ping_tail=$(tail $pinglog)
-		[ -n "$(echo "$ping_tail" | awk '/ 0% packet loss/ {print $0}')" ] && ping_result="Ping包成功,无丢包" || { ping_result="Ping包失败,或有丢包 !!!"; error_log=yes; }
+		[ -n "$(echo "$pinglog" | awk '/ 0% packet loss/ {print $0}')" ] && ping_result="Ping包成功,无丢包" || { ping_result="Ping包失败,或有丢包 !!!"; error_log=yes; }
 		echo -e "\n$ping_result" | tee -a $log
-		echo -e "$ping_head \n......\n$ping_tail " >> $log
+		echo -e "$(head $pinglog) \n......\n$(tail $pinglog) " >> $log
+		sleep 1
 	fi
 	mark
 }
@@ -149,12 +151,30 @@ fun_iperf_test_7() {
 		echo -e "\n正在进行 iperf3 性能测试,请稍等 $4 秒 ......"
 		iperflog=/tmp/iperf$1.log
 		iperf3 -V -B $1 -c $2 -p $3 -t $4 > $iperflog
-		iperf_head=$(head -n 20 $iperflog)
-		iperf_tail=$(tail -n 20 $iperflog)
-		tail -n 20 $iperflog
-		[ -n "$(echo "$iperf_tail" | grep "iperf Done")" ] && iperf_result="性能测试完成" || { iperf_result="性能测试失败 !!!"; error_log=yes; }
+
+		# 获取网卡测试速率，并将单位 Gbits/sec 转换成 Mbits/sec
+		grep -q "\[SUM\]" $iperflog && {
+				iperf_speed=$(awk '/SUM/ && /sender/ && /bits\/sec/ {if($7 == "Gbits/sec"){print $6 * 1024} else {print $6}}' $iperflog)
+			} || {
+				iperf_speed=$(awk '/sender/ && /bits\/sec/ {if($7 == "Gbits/sec"){print $7 * 1024} else {print $7}}' $iperflog)
+			}
+		# 判断测试速率是否达标网卡协商速率的90%
+		iperf_speed_result=
+		case $link_speed in
+			10) [ "$iperf_speed" -ge 9 -a "$iperf_speed" -lt 10 ] && iperf_speed_result=ok ;;
+			100) [ "$iperf_speed" -ge 90 -a "$iperf_speed" -lt 100 ] && iperf_speed_result=ok ;;
+			1000) [ "$iperf_speed" -ge 900 -a "$iperf_speed" -lt 1000 ] && iperf_speed_result=ok ;;
+			2500) [ "$iperf_speed" -ge 2250 -a "$iperf_speed" -lt 2500 ] && iperf_speed_result=ok ;;
+			5000) [ "$iperf_speed" -ge 4500 -a "$iperf_speed" -lt 5000 ] && iperf_speed_result=ok ;;
+			10000) [ "$iperf_speed" -ge 9000 -a "$iperf_speed" -lt 10000 ] && iperf_speed_result=ok ;;
+			25000) [ "$iperf_speed" -ge 22500 -a "$iperf_speed" -lt 25000 ] && iperf_speed_result=ok ;;
+			40000) [ "$iperf_speed" -ge 36000 -a "$iperf_speed" -lt 40000 ] && iperf_speed_result=ok ;;
+			100000) [ "$iperf_speed" -ge 90000 -a "$iperf_speed" -lt 100000 ] && iperf_speed_result=ok ;;
+		esac
+		[ -n "$(echo "$iperf_tail" | grep "iperf Done")" -a "$iperf_speed_result" = ok ] && iperf_result="性能测试<$iperf_speed Mbits/sec>完成" || { iperf_result="性能测试失败 !!!"; error_log=yes; }
 		echo -e "\n$iperf_result" | tee -a $log
-		echo -e "$iperf_head \n...... \n$iperf_tail " >> $log 
+		echo -e "$(head -n 20 $iperflog) \n......\n$(tail -n 20 $iperflog)" | tee -a $log 
+		sleep 1
 	fi
 	mark
 }
@@ -194,7 +214,7 @@ elif [ "$(ip address | grep inet | grep -E "192.168.6.201|192.168.7.201|192.168.
 	dest_ip_end=101
 fi
 
-# 初始化
+# 清除iperf进程
 killall -q iperf iperf3 
 case $type in
 	S|s) 
@@ -229,6 +249,7 @@ case $type in
 		save_dir=$(echo $save_dir | sed -r 's/[[:space:]]//g')
 
 		echo -e "\n开始自动进行测试: \n"
+		# 初始化错误日志
 		error_log=
 		
 
