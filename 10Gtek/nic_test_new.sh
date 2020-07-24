@@ -169,7 +169,7 @@ fun_iperf_test_7() {
 			40000) [ "$iperf_speed" -ge 36000 -a "$iperf_speed" -lt 40000 ] && iperf_speed_result=ok ;;
 			100000) [ "$iperf_speed" -ge 90000 -a "$iperf_speed" -lt 100000 ] && iperf_speed_result=ok ;;
 		esac
-		[ -n "$(grep "iperf Done" $iperflog)" -a "$iperf_speed_result" = ok ] && iperf_result="性能测试<$iperf_speed Mbits/sec>完成" || { iperf_result="性能测试失败 !!!"; error_log=yes; }
+		[ -n "$(grep "iperf Done" $iperflog)" -a "$iperf_speed_result" = ok ] && iperf_result="性能测试<$iperf_speed Mbits/sec>完成" || { iperf_result="性能测试<$iperf_speed Mbits/sec>失败 !!!"; error_log=yes; }
 		echo -e "\n$iperf_result" | tee -a $log
 		echo -e "$(head -n 20 $iperflog) \n......\n$(tail -n 20 $iperflog)" >> $log 
 	fi
