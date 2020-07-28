@@ -41,7 +41,6 @@ void loop()
     }
     if((Len_cm <= 10) && (Len_cm > 0))
     {
-      
       digitalWrite(RedLedPin,HIGH);
       delay(1000);
       digitalWrite(RedLedPin,LOW);
@@ -52,5 +51,6 @@ void loop()
       delay(1000);
       digitalWrite(GreenLedPin,LOW);
       }
+    Len_cm = 0;   // 检测完清零
     delay(1000);                            //take a measurement every second (1000ms)
 }
