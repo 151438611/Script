@@ -64,6 +64,12 @@ void loop()
       digitalWrite(BlueLedPin,HIGH);
       Serial.println("BlueLed is turn on");
       }
-    Len_cm = 0;          // 检测完清零,防止未检测时长亮
-    delay(800);                            //take a measurement every second (1000ms)
+     else 
+     {
+      digitalWrite(RedLedPin,LOW);
+      digitalWrite(GreenLedPin,LOW);
+      digitalWrite(BlueLedPin,LOW);
+      }
+     delay(800);                            //take a measurement every second (1000ms)
+     Len_cm = 0;          // 检测完清零,防止未检测时长亮
 }
