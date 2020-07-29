@@ -62,5 +62,5 @@ void loop()
       digitalWrite(BlueLedPin,HIGH);
       }
     Len_cm = 0;          // 检测完清零,防止未检测时长亮
-    delay(500);                            //take a measurement every second (1000ms)
+    delay(800);                            //take a measurement every second (1000ms)
 }
