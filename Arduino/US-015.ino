@@ -1,6 +1,6 @@
 /* 
 * Arduino Mega 2560 v3e
-* US-015超声波测距模块 + 3色LED灯珠; 用于距离0~10cm就亮红灯, 距离10~80cm就亮绿灯, 距离80~130cm就亮蓝灯
+* US-015超声波测距模块 + 3色LED灯珠; 用于距离0~50cm就亮红灯, 距离50~100cm就亮绿灯, 距离100~150cm就亮蓝灯
 * Len_mm = (Time_Echo_us * 0.34mm/us / 100) / 2 
 * Len_cm = (Time_Echo_us * 0.34mm/us / 1000) / 2 
 */
@@ -43,21 +43,21 @@ void loop()
       Serial.print(Len_cm, DEC);            //output result to Serial monitor 
       Serial.println(" cm");                 //output result to Serial monitor
     }
-    if((Len_cm <= 10) && (Len_cm > 0))
+    if((Len_cm <= 50) && (Len_cm > 0))
     {
       digitalWrite(GreenLedPin,LOW);
       digitalWrite(BlueLedPin,LOW);
       digitalWrite(RedLedPin,HIGH);
       Serial.println("RedLed is turn on");
       }
-    else if ((Len_cm > 10) && (Len_cm <= 80))
+    else if ((Len_cm > 50) && (Len_cm <= 100))
     {
       digitalWrite(RedLedPin,LOW);
       digitalWrite(BlueLedPin,LOW);
       digitalWrite(GreenLedPin,HIGH);
       Serial.println("GreenLed is turn on");
       }
-    else if ((Len_cm > 80) && (Len_cm <= 130))
+    else if ((Len_cm > 100) && (Len_cm <= 150))
     {
       digitalWrite(RedLedPin,LOW);
       digitalWrite(GreenLedPin,LOW);
