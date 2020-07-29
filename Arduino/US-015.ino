@@ -1,5 +1,5 @@
 /* 
-* US-015超声波测距模块
+* US-015超声波测距模块 + 3色LED灯珠; 用于距离太近就亮红灯, 距离正常就亮绿灯
 * Len_mm = (Time_Echo_us * 0.34mm/us / 100) / 2 
 * Len_cm = (Time_Echo_us * 0.34mm/us / 1000) / 2 
 */
@@ -9,7 +9,7 @@ const int TrigPin = 5;           // connect Pin 3(Arduino digital io) to Trig at
 unsigned long Time_Echo_us = 0;
 unsigned long Len_cm  = 0;
 
-const int RedLedPin = 9;
+const int RedLedPin = 9;       
 const int GreenLedPin = 8;
 
 void setup()
@@ -43,14 +43,12 @@ void loop()
     {
       digitalWrite(GreenLedPin,LOW);
       digitalWrite(RedLedPin,HIGH);
-      delay(800);
       }
     else if (Len_cm > 10)
     {
       digitalWrite(RedLedPin,LOW);
       digitalWrite(GreenLedPin,HIGH);
-      delay(800);
       }
-    Len_cm = 0;          // 检测完清零
-    delay(1000);                            //take a measurement every second (1000ms)
+    Len_cm = 0;          // 检测完清零,防止未检测时长亮
+    delay(500);                            //take a measurement every second (1000ms)
 }
