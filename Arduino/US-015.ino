@@ -1,16 +1,19 @@
 /* 
-* US-015超声波测距模块 + 3色LED灯珠; 用于距离太近就亮红灯, 距离正常就亮绿灯
+* Arduino Mega 2560 v3e
+* US-015超声波测距模块 + 3色LED灯珠; 用于距离0~10cm就亮红灯, 距离10~80cm就亮绿灯, 距离80~130cm就亮蓝灯
 * Len_mm = (Time_Echo_us * 0.34mm/us / 100) / 2 
 * Len_cm = (Time_Echo_us * 0.34mm/us / 1000) / 2 
 */
 
-const int EchoPin = 6;           // connect Pin 2(Arduino digital io) to Echo at US-015
-const int TrigPin = 5;           // connect Pin 3(Arduino digital io) to Trig at US-015
+const int EchoPin = 24;           // connect Pin 2(Arduino digital io) to Echo at US-015
+const int TrigPin = 22;           // connect Pin 3(Arduino digital io) to Trig at US-015
 unsigned long Time_Echo_us = 0;
 unsigned long Len_cm  = 0;
 
-const int RedLedPin = 9;       
-const int GreenLedPin = 8;
+const int RedLedPin = 48;       
+const int GreenLedPin = 50;
+const int BlueLedPin = 52;
+
 
 void setup()
 {  //Initialize
@@ -20,6 +23,7 @@ void setup()
 
     pinMode(RedLedPin, OUTPUT);
     pinMode(GreenLedPin, OUTPUT);
+    pinMode(BlueLedPin, OUTPUT);
 }
 
 void loop()
@@ -42,12 +46,20 @@ void loop()
     if((Len_cm <= 10) && (Len_cm > 0))
     {
       digitalWrite(GreenLedPin,LOW);
+      digitalWrite(BlueLedPin,LOW);
       digitalWrite(RedLedPin,HIGH);
       }
-    else if (Len_cm > 10)
+    else if ((Len_cm > 10) && (Len_cm <= 80))
     {
       digitalWrite(RedLedPin,LOW);
+      digitalWrite(BlueLedPin,LOW);
       digitalWrite(GreenLedPin,HIGH);
+      }
+    else if ((Len_cm > 80) && (Len_cm <= 130))
+    {
+      digitalWrite(RedLedPin,LOW);
+      digitalWrite(GreenLedPin,LOW);
+      digitalWrite(BlueLedPin,HIGH);
       }
     Len_cm = 0;          // 检测完清零,防止未检测时长亮
     delay(500);                            //take a measurement every second (1000ms)
