@@ -42,39 +42,45 @@ void loop()
         Serial.print(Len_cm, DEC);            // output result to Serial monitor 
         Serial.println(" cm");                 // output result to Serial monitor
       }
-    if((Len_cm <= 40) && (Len_cm > 0))
+    if((Len_cm <= 30) && (Len_cm > 0))
       {
         digitalWrite(GreenLedPin,LOW);
         digitalWrite(BlueLedPin,LOW);
         digitalWrite(RedLedPin,HIGH);
         Serial.println("RedLed is turn on");
         }
-    else if ((Len_cm > 40) && (Len_cm <=50))
+    else if ((Len_cm > 30) && (Len_cm <=50))
       {
         digitalWrite(GreenLedPin,LOW);
         digitalWrite(BlueLedPin,HIGH);
         digitalWrite(RedLedPin,HIGH);
         }
-    else if ((Len_cm > 50) && (Len_cm <= 90))
+    else if ((Len_cm > 50) && (Len_cm <= 80))
       {
         digitalWrite(RedLedPin,LOW);
         digitalWrite(BlueLedPin,LOW);
         digitalWrite(GreenLedPin,HIGH);
         Serial.println("GreenLed is turn on");
         }
-     else if ((Len_cm > 90) && (Len_cm <=100))
+     else if ((Len_cm > 80) && (Len_cm <=100))
       {
         digitalWrite(GreenLedPin,HIGH);
         digitalWrite(BlueLedPin,HIGH);
         digitalWrite(RedLedPin,HIGH);
         }  
-     else if ((Len_cm > 100) && (Len_cm <= 130))
+     else if ((Len_cm > 100) && (Len_cm <= 120))
       {
         digitalWrite(RedLedPin,LOW);
         digitalWrite(GreenLedPin,LOW);
         digitalWrite(BlueLedPin,HIGH);
         Serial.println("BlueLed is turn on");
         }
+      else if (Len_cm > 120)
+        {
+          digitalWrite(RedLedPin,HIGH);
+          digitalWrite(GreenLedPin,HIGH);
+          digitalWrite(BlueLedPin,HIGH);
+          }
      else 
        {
         digitalWrite(RedLedPin,LOW);
