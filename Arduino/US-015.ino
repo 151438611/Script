@@ -48,18 +48,21 @@ void loop()
       digitalWrite(GreenLedPin,LOW);
       digitalWrite(BlueLedPin,LOW);
       digitalWrite(RedLedPin,HIGH);
+      Serial.println("RedLed is turn on");
       }
     else if ((Len_cm > 10) && (Len_cm <= 80))
     {
       digitalWrite(RedLedPin,LOW);
       digitalWrite(BlueLedPin,LOW);
       digitalWrite(GreenLedPin,HIGH);
+      Serial.println("GreenLed is turn on");
       }
     else if ((Len_cm > 80) && (Len_cm <= 130))
     {
       digitalWrite(RedLedPin,LOW);
       digitalWrite(GreenLedPin,LOW);
       digitalWrite(BlueLedPin,HIGH);
+      Serial.println("BlueLed is turn on");
       }
     Len_cm = 0;          // 检测完清零,防止未检测时长亮
     delay(800);                            //take a measurement every second (1000ms)
