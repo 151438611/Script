@@ -14,7 +14,6 @@ const int RedLedPin = 48;
 const int GreenLedPin = 50;
 const int BlueLedPin = 52;
 
-
 void setup()
 {  //Initialize
     Serial.begin(9600);                        //Serial: output result to Serial monitor
