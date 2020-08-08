@@ -1,7 +1,8 @@
 #!/bin/bash
 # Install : apt install rdesktop
 # Usage Eamples : bash rdesktop.sh $1_Host $2_User $3_Password $4_OPTION(user "Option1 Option2 ...")
-# user keyboard: "Ctrl + Alt + Enter" to Full_Screen or Exit Full_Screen
+# Note: Don't Use: /opt/rdesktop.sh or ./rdesktop.sh  ; Can't Work
+# 	keyboard: "Ctrl + Alt + Enter" to Full_Screen or Exit Full_Screen
 
 echo "Usage: bash rdesktop.sh \$1_Host \$2_User \$3_Password "
 
@@ -27,7 +28,7 @@ OPTION="-P -f -x l -r disk:share=/tmp -r sound:local -r clipboard:off"
 RPC=$(which rdesktop)
 [ $RPC ] || { echo "rdesktop : command not found; Please install the command first !" && exit 2; } 
 
-if [ -n "$(pidof rdesktop)" ]; then
+if [ -n "$(pgrep -a rdesktop | grep $HOST)" ]; then
 	echo "The $HOST computer is under remote control !" 
 else
 	exec $RPC $HOST -u $USERNAME -p "$PASSWORD" $OPTION $OPTION_O &
