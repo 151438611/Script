@@ -1,7 +1,7 @@
 #!/bin/bash
 # Requirements : apt install rdesktop
-# Usage Eamples : bash rdesktop.sh $1_Host $2_User $3_Password $4_OPTION(user "Option1 Option2 ...")
-# Note: Don't Use: /opt/rdesktop.sh or ./rdesktop.sh  ; Can't Work
+# Usage Eamples : bash rdesktop.sh $1_Host $2_User $3_Password $4_OPTION(Format : "Option1 Option2 ...")
+# Note: Don't Use Format: /opt/rdesktop.sh or ./rdesktop.sh  ; Can't Work
 # 	keyboard: "Ctrl + Alt + Enter" to Full_Screen or Exit Full_Screen
 
 echo "Usage: bash rdesktop.sh \$1_Host \$2_User \$3_Password "
