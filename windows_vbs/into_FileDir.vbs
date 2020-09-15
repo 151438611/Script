@@ -4,5 +4,5 @@
 intoPath = "\\10.5.5.28\Share"
 
 intoCMD = "explorer.exe /e," & intoPath
-set objShell = CreateObject("Wscript.Shell")
+set objShell = WScript.CreateObject("Wscript.Shell")
 objShell.Run intoCMD
