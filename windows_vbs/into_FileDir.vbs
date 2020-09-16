@@ -13,9 +13,7 @@ Set exeProc = proc.ExecQuery("select * from win32_process where name = 'edge.exe
 For Each pr In exeProc
   exeProcess = True 
 Next
-
 set objShell = WScript.CreateObject("Wscript.Shell")
-
 If Not exeProcess Then 
 	objShell.Run perCMD
 	WScript.Sleep 3000
