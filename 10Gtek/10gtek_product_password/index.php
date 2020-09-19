@@ -13,13 +13,15 @@
 </head>
 <body>
 	<a href="https://wx2.qq.com/" target="_self"><img border="0" src="./weixin.jpg" /></a>
-	<a href="./phpmyadmin/index.php" target="_blank"><img border="0" src="./mariadb.jpg" /></a>
-	<a href="https://192.168.3.178" target="_self"><img border="0" src="./kodexplorer.jpg" /></a>
+	<a href="http://192.168.3.224/phpmyadmin" target="_blank"><img border="0" src="./mariadb.jpg" /></a>
+	<a href="https://192.168.3.224" target="_self"><img border="0" src="./kodexplorer.jpg" /></a>
+	<a href="http://10.5.5.11:81" target="_blank"><img border="0" src="./filebrowser.jpg" /></a>
 	<a href="https://github.com/151438611/Script" target="_blank"><img border="0" src="./github.jpg" /></a>
+	<a href="https://naotu.baidu.com/" target="_blank"><img border="0" src="./baidu_naotu.jpg" /></a>
 	<a href="https://www.right.com.cn/forum/forum-158-1.html" target="_blank"><img border="0" src="./right_ensan.jpg" /></a>
-	<a href="https://192.168.200.201" target="_blank"><img border="0" src="./zabbix.jpg" /></a>
-	<a href="http://192.168.200.250:5000" target="_blank"><img border="0" src="./synology.jpg" /></a>
-	<a href="https://192.168.200.189/ui/" target="_blank"><img border="0" src="./vmware.jpg" /></a>
+	<a href="http://192.168.200.201:81" target="_blank"><img border="0" src="./zabbix.jpg" /></a>
+	<a href="http://192.168.200.250:5000" target="_blank"><img border="0" src="./synology_dsm.jpg" /></a>
+	<a href="https://192.168.200.221/ui/" target="_blank"><img border="0" src="./vmware.jpg" /></a>
 	<a href="https://mega.nz/#F!j9QSDQSQ!6WpasOlbZYIInfw6yo4phQ" target="_blank"><img border="0" src="./armbian.jpg" /></a>
 	<!-- armbian : https://yadi.sk/d/pHxaRAs-tZiei https://yadi.sk/d/_rQgn_FosYuW0g-->
 	<a href="https://play.google.com/store/apps" target="_blank"><img border="0" src="./google_play.jpg" /></a>
@@ -28,7 +30,9 @@
 	<a href="https://tmgmatrix.cisco.com/home" target="_blank"><img border="0" src="./cisco_optics_compatibility_matrix.jpg" /></a>
 	<a href="https://www.vmware.com/resources/compatibility/search.php?deviceCategory=io" target="_blank"><img border="0" src="./vmware_compatibility_guide.jpg" /></a>
 	<a href="https://partsurfer.hpe.com/search.aspx" target="_blank"><img border="0" src="./hpe_partsurfer.jpg" /></a>
+	<a href="https://www.synology.com/zh-cn/compatibility" target="_blank"><img border="0" src="./synology_compatibility.jpg" /></a>
 	<a href="https://downloadcenter.intel.com/en/" target="_blank"><img border="0" src="./intel_driver.jpg" /></a>
+	<a href="https://ark.intel.com/content/www/us/en/ark.html" target="_blank"><img border="0" src="./intel_ark.jpg" /></a>
 	
     <div>
 		<p>Transceiver Module Group Compatibility Matrix</p>
@@ -61,9 +65,9 @@ if ($Product_Name) { $row_select = "Product_Name" ; }
 elseif ($Item_Number) { $row_select = "Item_Number" ; }
 else { die('<script> alert("无法分辨是物料编号或产品名称 : '. $inputKeywords .'"); </script>'); }
 
-$db_username = "wzt";
-$db_password = "wzt";
-$db_host = "192.168.200.200";
+$db_username = "product";
+$db_password = "product";
+$db_host = "192.168.200.201";
 $db_name = "product";
 $tab_name = "product_compatibility";
 // mysqli_connect(host,username,password,dbname,port,socket);
