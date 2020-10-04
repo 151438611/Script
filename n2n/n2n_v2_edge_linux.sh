@@ -81,7 +81,7 @@ addIptables() {
 	[ -z "$(iptables -vnL FORWARD | grep $vmnic_name)" ] && \
 	iptables -A FORWARD -i $vmnic_name -j ACCEPT
 	
-	# 适用于 szK2P_20
+	# for all routers
 	#[ -z "$(iptables -t nat -vnL POSTROUTING | grep -Ei "${vmnic_name}|${ipadd}")" ] && \
 	#iptables -t nat -A POSTROUTING -o $vmnic_name -d ${ipadd%.*}.0/24 -j SNAT --to-source $ipadd
 	
