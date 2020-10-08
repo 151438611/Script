@@ -79,15 +79,16 @@ addIptables() {
 
 	[ -z "$(iptables -vnL FORWARD | grep "Chain FORWARD" | grep -i ACCEPT)" ] && \
 	[ -z "$(iptables -vnL FORWARD | grep $vmnic_name)" ] && \
-	iptables -A FORWARD -i $vmnic_name -j ACCEPT
+	iptables -I FORWARD -i $vmnic_name -j ACCEPT
 	
 	# for all routers
-	#[ -z "$(iptables -t nat -vnL POSTROUTING | grep -Ei "${vmnic_name}|${ipadd}")" ] && \
-	#iptables -t nat -A POSTROUTING -o $vmnic_name -d ${ipadd%.*}.0/24 -j SNAT --to-source $ipadd
+	[ -z "$(iptables -t nat -vnL POSTROUTING | grep -Ei "${vmnic_name}|${ipadd}")" ] && \
+	iptables -t nat -A POSTROUTING -o $vmnic_name -d ${ipadd%.*}.0/24 -j SNAT --to-source $ipadd
 	
 	# 适用于 jhK2P_75，映射81端口到海康E24H摄像头的web上
 	#[ -z "$(iptables -t nat -vnL PREROUTING | grep -Ei "${vmnic_name}|${ipadd}")" ] && \
 	#iptables -t nat -A PREROUTING -p tcp -i ${vmnic_name} -d ${ipadd} --dport 81 -j DNAT --to 192.168.75.128:80
+	
 	# 适用于 jhK2P_75 / gxK2_57，映射82端口到 192.168.1.1 光猫web上
 	#[ -z "$(iptables -t nat -vnL PREROUTING | grep -Ei "${vmnic_name}|${ipadd}")" ] && \
 	#iptables -t nat -A PREROUTING -p tcp -i ${vmnic_name} -d ${ipadd} --dport 82 -j DNAT --to 192.168.1.1:80
