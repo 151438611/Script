@@ -79,7 +79,7 @@ addIptables() {
 
 	[ -z "$(iptables -vnL FORWARD | grep "Chain FORWARD" | grep -i ACCEPT)" ] && \
 	[ -z "$(iptables -vnL FORWARD | grep $vmnic_name)" ] && \
-	iptables -I FORWARD -i $vmnic_name -j ACCEPT
+	iptables -I FORWARD -o $vmnic_name -j ACCEPT
 	
 	# for all routers
 	[ -z "$(iptables -t nat -vnL POSTROUTING | grep -Ei "${vmnic_name}|${ipadd}")" ] && \
