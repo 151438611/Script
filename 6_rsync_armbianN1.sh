@@ -47,6 +47,7 @@ if [ -d $bak_dir ] ; then
   tar -zcvf ${bak_dir}/backup$(date +%Y%m%d).tgz --exclude photo data
   [ `echo $?` -eq 0 ] && echo "$(date +"%F %T") backup to $bak_dir success ! " >> $rsynclog
   sleep 60 && find $bak_dir -type f -name "backup*" -ctime +5 -exec rm -f {} \; 
+  cp -ur /media/sda1/data/document $bak_dir
 else
   echo -e "\n$(date +"%F %T") $bak_dir is not exist , rsync backup to $bak_dir failse !" >> $rsynclog
 fi
