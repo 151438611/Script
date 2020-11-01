@@ -1,0 +1,36 @@
+{
+    "run_type": "client",
+    "local_addr": "0.0.0.0",
+    "local_port": 35678,
+    "remote_addr": "sub.domain.com",
+    "remote_port": 443,
+    "password": [
+        "your_password"
+    ],
+    "ssl": {
+        "sni": "sub.domain.com"
+    },
+    "mux": {
+        "enabled": true,
+		"concurrency": 8,
+		
+    },
+    "router": {
+        "enabled": true,
+        "bypass": [
+            "geoip:cn",
+            "geoip:private",
+            "geosite:cn",
+            "geosite:geolocation-cn"
+        ],
+        "block": [
+            "geosite:category-ads"
+        ],
+        "proxy": [
+            "geosite:geolocation-!cn"
+        ],
+        "default_policy": "proxy",
+        "geoip": "/opt/trojan-go/geoip.dat",
+        "geosite": "/opt/trojan-go/geosite.dat"
+    }
+}
