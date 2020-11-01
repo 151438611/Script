@@ -12,23 +12,17 @@
     },
     "mux": {
         "enabled": true,
-		"concurrency": 8,
-		
+	"concurrency": 8,
+	"idle_timeout": 60
     },
     "router": {
         "enabled": true,
-        "bypass": [
-            "geoip:cn",
+        "bypass": [ "geoip:cn",
             "geoip:private",
             "geosite:cn",
-            "geosite:geolocation-cn"
-        ],
-        "block": [
-            "geosite:category-ads"
-        ],
-        "proxy": [
-            "geosite:geolocation-!cn"
-        ],
+            "geosite:geolocation-cn" ],
+        "block": [ "geosite:category-ads" ],
+        "proxy": [ "geosite:geolocation-!cn" ],
         "default_policy": "proxy",
         "geoip": "/opt/trojan-go/geoip.dat",
         "geosite": "/opt/trojan-go/geosite.dat"
