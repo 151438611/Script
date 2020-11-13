@@ -8,7 +8,7 @@
 ' On Error Resume Next
 Dim dir_run, exec
 ' 注意dir_run目录后面要带反斜杠 \
-dir_run = "C:\PerfLogs\nginx\"
+dir_run = "C:\nginx\"
 exec = "nginx.exe -p " 
 ' ------判断系统进程是否存在-------------------------------
 
