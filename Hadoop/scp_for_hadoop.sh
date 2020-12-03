@@ -21,18 +21,18 @@ if [ -n "$scp_files" ]; then
 			[ -e "$f" ] && {
 				for h in $hosts
 				do 
-					scp -r $f $h:$(dirname $f)
+					scp -r $f $h:$(dirname $f) && echo "$f transfer to $h complete ."
 				done
-			} || echo "Input File or DIR is no exist!!! "
+			} || echo "$f Input File or DIR is no exist!!! "
 		else
 			# 表示传入的是相对路径,转换成绝对路径
 			f_pwd=$(pwd)/$f
 			[ -e "$f_pwd" ] && {
 				for h in $hosts
 				do 
-					scp -r $f_pwd $h:$(dirname $f_pwd)
+					scp -r $f_pwd $h:$(dirname $f_pwd) && echo "$f_pwd transfer to $h complete ."
 				done
-			} || echo "Input File or DIR is no exist!!! "
+			} || echo "$f_pwd Input File or DIR is no exist!!! "
 		fi
 
 	done
