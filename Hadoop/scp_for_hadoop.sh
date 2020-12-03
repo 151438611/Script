@@ -16,7 +16,7 @@ if [ -n "$scp_files" ]; then
 	for f in $scp_files
 	do
 		# 判断传入的是绝对路径还是相对路径 
-		if [ -n "$(echo $f | grep ^/)" ]; then
+		if [ -n "$(echo "$f" | grep -E "^/|^~")" ]; then
 			# 表示传入的是绝对路径
 			[ -e "$f" ] && {
 				for h in $hosts
