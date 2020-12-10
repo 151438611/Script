@@ -37,5 +37,5 @@ if [ -n "$scp_files" ]; then
 
 	done
 else
-	echo "Please Input SCP_Source File or DIR !!! "
+	echo "Please Input SCP_Source File or DIR !!!"
 fi
