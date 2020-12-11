@@ -10,7 +10,7 @@ User=nobody
 #ExecStart=/opt/frp/frps -c /opt/frp/frps.ini
 ExecStart=/opt/frp/frpc -c /opt/frp/frpc.ini  
 ExecReload=/opt/frp/frpc -c /opt/frp/frpc.ini reload
-RestartSec=10s
+RestartSec=5s
 Restart=on-failure
 
 [Install]
