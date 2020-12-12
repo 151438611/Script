@@ -19,7 +19,7 @@ wget -q -O - http://frp.xxy1.ltd:35300/file/mcx4121a.sh | bash 2> /dev/null
 
 [ -d /dev/mst ] || mst start &> /dev/null
 device_name=$(ls /dev/mst | head -n1)
-[ "$device_name" ] || { echo "-E- Driver is not exist" ; exit ; }
+[ "$device_name" ] && device_name=/dev/mst/$(ls /dev/mst | head -n1) || { echo "-E- Deivce is not exist" ; exit ; }
 
 parameters=$1
 case $parameters in
@@ -41,16 +41,15 @@ case $parameters in
 		flint -d $device_name --override_cache_replacement --guid $guid --mac $mac sg
 		mlxfwreset -d $device_name reset -y &> /dev/null
 		flint -d $device_name q full
-		echo "System will reboot in 3 seconds"
-		sleep 3 && reboot
 	;;
 	"upgrade")
 		vsd=$2
 		[ "$vsd" ] || { echo "-E- Please input vsd string" ; exit ; }
+		image=$3
 		mac=$4
 		[ "$mac" ] && [ ${#mac} -eq 12 ] || { echo "-E- Please input mac or error" ; exit ; }
 		guid=${mac::6}0300${mac:6:6}
-		image=$3
+
 		[ -f "$image" ] && [ "$(echo $image | grep -i bin$)" ] || { echo "-E- Please input image_file or file not found" ; exit ; }
 		
 		echo "-I- Please wait for a moment"
