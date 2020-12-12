@@ -57,7 +57,7 @@ case $parameters in
 		mlxfwreset -d $device_name reset -y &> /dev/null
 		flint -d $device_name q full
 	;;
-	"brun")
+	"burn")
 		vsd=$2
 		[ "$vsd" ] || { echo "-E- Please input vsd string" ; exit ; }
 		image=$3
