@@ -1,7 +1,6 @@
 #!/bin/bash
 # disable someone user to login system
-
-
+# ¥50
 while :
 do
 
