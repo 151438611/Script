@@ -1,9 +1,10 @@
 #!/bin/bash
+# rename to mlxflash
 # mlxflash use: [sv SVD] [sg MAC] [upgrade SVD IMAGE.BIN MAC] [burn VSD IMAGE.BIN] [......]
-# sv VSD_NAME
-# sg MAC
-# upgrade VSD Image.bin MAC 
-# burn VSD Image.bin
+# mlxflash sv VSD_NAME
+# mlxflash sg MAC
+# mlxflash upgrade VSD Image.bin MAC 
+# mlxflash burn VSD Image.bin
 
 [ $(which mst 2> /dev/null) ] || { echo "-E- mst: command not found" ; exit ; }
 [ $(which flint 2> /dev/null) ] || { echo "-E- flint: command not found" ; exit ; }
