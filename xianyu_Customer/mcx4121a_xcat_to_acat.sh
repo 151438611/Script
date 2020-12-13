@@ -27,9 +27,11 @@ case $parameters in
 		vsd=$2
 		[ "$vsd" ] || { echo "-E- Please input vsd string" ; exit ; }
 		
-		echo "-I- Please wait for a moment"
+		echo -e "-I- Please wait for a moment\n"
 		flint -d $device_name --override_cache_replacement --vsd "$vsd" sv
+		echo 
 		mlxfwreset -d $device_name reset -y &> /dev/null
+		echo 
 		flint -d $device_name q full
 	;;
 	"sg")
@@ -37,9 +39,11 @@ case $parameters in
 		[ "$mac" ] && [ ${#mac} -eq 12 ] || { echo "-E- Please input mac or error" ; exit ; }
 		guid=${mac::6}0300${mac:6:6}
 		
-		echo "-I- Please wait for a moment"
+		echo -e "-I- Please wait for a moment\n"
 		flint -d $device_name --override_cache_replacement --guid $guid --mac $mac sg
+		echo 
 		mlxfwreset -d $device_name reset -y &> /dev/null
+		echo 
 		flint -d $device_name q full
 	;;
 	"upgrade")
@@ -52,9 +56,11 @@ case $parameters in
 
 		[ -f "$image" ] && [ "$(echo $image | grep -i bin$)" ] || { echo "-E- Please input image_file or file not found" ; exit ; }
 		
-		echo "-I- Please wait for a moment"
+		echo -e "-I- Please wait for a moment\n"
 		mlxburn -d $device_name -i $image -no_fw_ctrl -vsd "$vsd" -base_mac $mac -base_guid $guid 
+		echo 
 		mlxfwreset -d $device_name reset -y &> /dev/null
+		echo 
 		flint -d $device_name q full
 	;;
 	"burn")
@@ -67,9 +73,11 @@ case $parameters in
 		guid=$(echo "$nic_info" | grep -i base | grep -i guid | awk '{print $3}')
 		mac=$(echo "$nic_info" | grep -i base | grep -i mac | awk '{print $3}')
 		
-		echo "-I- Please wait for a moment"
+		echo -e "-I- Please wait for a moment\n"
 		mlxburn -d $device_name -i $image -allow_psid_change -base_guid $guid -base_mac $mac -vsd "$vsd"
+		echo 
 		mlxfwreset -d $device_name reset -y &> /dev/null
+		echo 
 		flint -d $device_name q full
 	;;
 	*)
