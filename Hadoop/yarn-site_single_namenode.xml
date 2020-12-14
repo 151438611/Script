@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-
+<!-- Hadoop 2.10.1 -->
 <configuration>
 <!-- Site specific YARN configuration properties -->
 
