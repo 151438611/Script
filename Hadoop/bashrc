@@ -2,6 +2,9 @@
 export JAVA_HOME=/usr/local/java
 export PATH=$PATH:$JAVA_HOME/bin
 
+export ZOOKEEPER_HOME=/usr/local/java
+export PATH=$PATH:$ZOOKEEPER_HOME/bin
+
 export HADOOP_HOME=/usr/local/hadoop
 export HADOOP_MAPRED_HOME=$HADOOP_HOME
 export HADOOP_COMMON_HOME=$HADOOP_HOME
