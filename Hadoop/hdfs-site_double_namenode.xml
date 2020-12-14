@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+<!-- Hadoop 2.10.1 -->
+
+<!-- Put site-specific property overrides in this file. -->
+<configuration>
+
+    <property>
+        <name>dfs.nameservices</name>
+        <value>hacluster</value>
+    </property>
+        <property>
+        <name>dfs.ha.namenodes.hacluster</name>
+        <value>nn1,nn2</value>
+    </property>
+    <property>
+        <name>dfs.namenode.rpc-address.hacluster.nn1</name> 
+        <value>master1:8020</value>
+    </property>
+    <property>
+        <name>dfs.namenode.rpc-address.hacluster.nn2</name>
+        <value>master2:8020</value>
+    </property>
+    <property>
+        <name>dfs.namenode.http-address.hacluster.nn1</name>
+        <value>master1:50070</value>                                           
+    </property>
+    <property>
+        <name>dfs.namenode.http-address.hacluster.nn2</name>
+        <value>master2:50070</value>
+    </property>
+    <property>
+        <name>dfs.namenode.shared.edits.dir</name> 
+        <value>qjournal://slave1:8485;slave2:8485;slave3:8485/hacluster</value>  
+    </property>
+    <property>
+        <name>dfs.journalnode.edits.dir</name>              
+        <value>/usr/local/hadoop/journal</value>
+    </property>
+    <property>
+        <name>dfs.ha.automatic-failover.enabled</name>     
+        <value>true</value>
+    </property>
+    <property>
+        <name>dfs.client.failover.proxy.provider.hacluster</name> 
+        <value>org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider</value>
+    </property>
+    <property>
+        <name>dfs.ha.fencing.methods</name>  
+        <value>
+            sshfence
+            shell(/bin/true)
+        </value>
+    </property>
+    <property>
+        <name>dfs.ha.fencing.ssh.private-key-files</name> 
+        <value>/home/ha/.ssh/id_rsa</value>
+    </property>
+    <property>
+        <name>dfs.ha.fencing.ssh.connect-timeout</name> 
+        <value>30000</value>
+    </property>
+    <property>
+        <name>dfs.namenode.name.dir</name>                              
+        <value>/usr/local/hadoop/hdfs/name</value> 
+    </property>
+    <property>
+        <name>dfs.datanode.data.dir</name>                   
+        <value>/usr/local/hadoop/hdfs/data</value> 
+    </property>
+    <property>
+        <name>dfs.replication</name>                                 
+        <value>3</value> 
+    </property>
+    
+</configuration>
