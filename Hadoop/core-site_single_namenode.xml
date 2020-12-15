@@ -12,5 +12,9 @@
         <name>hadoop.tmp.dir</name>
         <value>/usr/local/hadoop/tmp</value>
     </property>
+    <property>
+        <name>dfs.permissions.enabled</name>
+        <value>false</value>
+    </property>
 
 </configuration>
