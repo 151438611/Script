@@ -23,3 +23,7 @@ export PATH=$PATH:$HIVE_HOME/bin
 
 export SQOOP_HOME=/usr/local/sqoop
 export PATH=$PATH:$SQOOP_HOME/bin
+
+export SPARK_HOME=/usr/local/spark
+export PATH=$PATH:$SPARK_HOME/bin:$SPARK_HOME/sbin
+
