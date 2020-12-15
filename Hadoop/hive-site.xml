@@ -3,6 +3,7 @@
 <!-- Hive 2.3.7 -->
 
 <configuration>
+    
     <property>
         <name>javax.jdo.option.ConnectionURL</name>
         <value>jdbc:mysql://localhost:3306/metastore?createDatabaseIfNotExist=true&amp;characterEncoding=UTF-8&amp;useSSL=false</value>
@@ -19,4 +20,5 @@
         <name>javax.jdo.option.ConnectionPassword</name>
         <value>root</value>
     </property>
+    
 </configuration>
