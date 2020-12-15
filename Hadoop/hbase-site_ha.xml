@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+<!-- HBase 2.3.3 -->
+
+<configuration>
+ 
+    <property>
+        <name>hbase.cluster.distributed</name>
+        <value>true</value>
+    </property>
+    <property>
+        <name>hbase.rootdir</name>   
+        <value>hdfs://hacluster/hbase</value> 
+    </property>
+    <property>
+        <name>hbase.zookeeper.quorum</name>   
+        <value>slave2:2181,slave3:2181,slave1:2181</value>
+    </property>
+    <property>
+        <name>dfs.replication</name>       
+        <value>3</value>
+    </property>
+    <property>
+        <name>hbase.zookeeper.property.dataDir</name> 
+        <value>/usr/local/zookeeper/data</value>
+    </property>
+    <property>
+        <name>hbase.unsafe.stream.capability.enforce</name>
+        <value>false</value>
+    </property>
+
+</configuration>
