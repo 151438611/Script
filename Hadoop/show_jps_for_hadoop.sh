@@ -12,11 +12,12 @@ host5=slave3
 hosts="$host1 $host2 $host3 $host4 $host5"
 
 jps=$(which jps)
-
-for f in $hosts
-do
-	echo -e "\n\033[36m---------- Host: $f ----------\033[0m"
-	ssh $f $jps
-done
-
-echo 
+if [ -n "$jps" ]; then
+	for f in $hosts
+	do
+		echo -e "\033[33m---------- Host: $f ----------\033[0m"
+		echo -e "\033[36m$(ssh $f $jps)\033[0m\n"
+	done
+else
+	echo -e "\033[31mjps: command not found\033[0m"
+fi
