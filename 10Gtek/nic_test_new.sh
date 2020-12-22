@@ -144,7 +144,7 @@ fun_iperf_test_7() {
 	
 	if [ "$link_status" = yes ]; then
 		echo -e "\n正在进行 iperf3 性能测试,请稍等 $4 秒 ......"
-		iperflog=/tmp/iperf$1.log
+		iperflog=/tmp/iperf$2.log
 		iperf3 -V -B $1 -c $2 -p $3 -t $4 > $iperflog
 
 		# 获取网卡测试速率，并将单位 Gbits/sec 转换成 Mbits/sec
