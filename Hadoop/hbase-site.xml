@@ -23,7 +23,7 @@
     </property>
     <property>  
         <name>hbase.zookeeper.quorum</name>  
-        <value>localhost</value>  
+        <value>master</value>  
     </property> 
     <property>
         <name>hbase.unsafe.stream.capability.enforce</name>
