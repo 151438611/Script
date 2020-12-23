@@ -6,7 +6,8 @@
  
     <property>
         <name>hbase.cluster.distributed</name>
-        <value>false</value>
+        <value>true</value>
+        <!-- 单机false, 多主机集群用true -->
     </property>
     <property>
         <name>hbase.rootdir</name> 
