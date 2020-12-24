@@ -13,6 +13,10 @@
         <value>/usr/local/hadoop/hdfs/data</value>      
     </property>
     <property>
+        <name>dfs.namenode.secondary.http-address</name>
+        <value>master:50090</value>
+    </property>
+    <property>
         <name>dfs.replication</name>
         <value>3</value>                       
     </property>
