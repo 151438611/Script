@@ -18,7 +18,7 @@
         <value>master:19888</value>
     </property>
 
-<!-- Hadoop 3.3.0 需要添加下面的代码，否则运行计算会报错 -->
+<!-- Hadoop 3.3.0 还需添加下面的代码，否则运行计算会报错 -->
     <property>
         <name>yarn.app.mapreduce.am.env</name>
         <value>HADOOP_MAPRED_HOME=/usr/local/hadoop</value>
