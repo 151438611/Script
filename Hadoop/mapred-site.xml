@@ -1,9 +1,10 @@
 <?xml version="1.0"?>
 <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
-<!-- Hadoop 2.10.1 -->
+
 
 <configuration>
-
+    
+<!-- Hadoop 2.10.1 -->
     <property>
         <name>mapreduce.framework.name</name>
         <value>yarn</value>
@@ -17,4 +18,18 @@
         <value>master:19888</value>
     </property>
 
+<!-- Hadoop 3.3.0 需要添加下面的代码，否则运行计算会报错 -->
+    <property>
+        <name>yarn.app.mapreduce.am.env</name>
+        <value>HADOOP_MAPRED_HOME=/usr/local/hadoop</value>
+    </property>
+    <property>
+        <name>mapreduce.map.env</name>
+        <value>HADOOP_MAPRED_HOME=/usr/local/hadoop</value>
+    </property>
+    <property>
+        <name>mapreduce.reduce.env</name>
+        <value>HADOOP_MAPRED_HOME=/usr/local/hadoop</value>
+    </property>
+    
 </configuration>
