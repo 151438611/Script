@@ -8,8 +8,8 @@ zookeeper2=slave2
 zookeeper3=slave3
 zookeeper4=
 zookeeper5=
-
 zookeepers="$zookeeper1 $zookeeper2 $zookeeper3 $zookeeper4 $zookeeper5"
+
 zkPATH=/usr/local/zookeeper/bin
 case $1 in
 	"start")
