@@ -18,6 +18,7 @@
 
 <!-- Hadoop 3.3.0还需添加下面的代码，否则运行计算会报错; Hadoop 2.x可不用添加 -->
     <property>
+        <!-- 此参数可添加到 Hadoop 2.x 中 -->
         <name>yarn.app.mapreduce.am.env</name>
         <value>HADOOP_MAPRED_HOME=/usr/local/hadoop</value>
     </property>
