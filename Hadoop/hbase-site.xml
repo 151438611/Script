@@ -13,10 +13,6 @@
         <value>hdfs://master:9000/hbase</value>
     </property>
     <property>
-        <name>hbase.master.info.port</name>
-        <value>16010</value>
-    </property>
-    <property>
         <name>hbase.zookeeper.property.dataDir</name>
         <value>/usr/local/hbase/zkdata</value> 
     </property>
