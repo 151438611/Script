@@ -3,14 +3,15 @@
 # 提前: master和其他主机配置好SSH免密登陆, zookeeper集群配置正确
 
 # 主机名或IP地址; 自行填写
-zookeeper1=slave1
-zookeeper2=slave2
-zookeeper3=slave3
-zookeeper4=
-zookeeper5=
-zookeepers="$zookeeper1 $zookeeper2 $zookeeper3 $zookeeper4 $zookeeper5"
+zk1=slave1
+zk2=slave2
+zk3=slave3
+zk4=
+zk5=
+zookeepers="$zk1 $zk2 $zk3 $zk4 $zk5"
 
-zkPATH=/usr/local/zookeeper/bin
+zkPATH="/usr/local/zookeeper/bin"
+
 case $1 in
 	"start")
 		exec_command="$zkPATH/zkServer.sh start"
