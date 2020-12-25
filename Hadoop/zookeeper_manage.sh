@@ -10,16 +10,16 @@ zookeeper4=
 zookeeper5=
 
 zookeepers="$zookeeper1 $zookeeper2 $zookeeper3 $zookeeper4 $zookeeper5"
-
+zkPATH=/usr/local/zookeeper/bin
 case $1 in
 	"start")
-		exec_command="zkServer.sh start"
+		exec_command="$zkPATH/zkServer.sh start"
 	;;
 	"stop")
-		exec_command="zkServer.sh stop"
+		exec_command="$zkPATH/zkServer.sh stop"
 	;;
 	"status")
-		exec_command="zkServer.sh status"
+		exec_command="$zkPATH/zkServer.sh status"
 	;;
 	*)
 		echo -e "Usage : \033[31m$0 [start | stop | status]\033[0m"
