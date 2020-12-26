@@ -11,14 +11,14 @@ host4=
 host5=
 hosts="$host1 $host2 $host3 $host4 $host5"
 
-exec_PATH="/usr/local/kafka/bin"
+exec_dir="/usr/local/kafka/bin"
 
 case $1 in
 	"start")
-		exec_command="$exec_PATH/kafka-server-start.sh -daemon $exec_PATH/../config/server.properties"
+		exec_command="$exec_dir/kafka-server-start.sh -daemon $exec_dir/../config/server.properties"
 	;;
 	"stop")
-		exec_command="$exec_PATH/kafka-server-stop.sh"
+		exec_command="$exec_dir/kafka-server-stop.sh"
 	;;
 	*)
 		echo -e "Usage : \033[31m$0 [start | stop]\033[0m"
