@@ -1,4 +1,5 @@
 #!/bin/bash
+# for apache-zookeeper-3.6.2
 # 用于在 master 主机上管理(启动/停止/查看) zookeeper 集群服务
 # 提前: master和其他主机配置好SSH免密登陆, zookeeper 集群配置正确
 
@@ -10,17 +11,17 @@ host4=
 host5=
 hosts="$host1 $host2 $host3 $host4 $host5"
 
-exec_PATH="/usr/local/zookeeper/bin"
+exec_dir="/usr/local/zookeeper/bin"
 
 case $1 in
 	"start")
-		exec_command="$exec_PATH/zkServer.sh start"
+		exec_command="$exec_dir/zkServer.sh start"
 	;;
 	"stop")
-		exec_command="$exec_PATH/zkServer.sh stop"
+		exec_command="$exec_dir/zkServer.sh stop"
 	;;
 	"status")
-		exec_command="$exec_PATH/zkServer.sh status"
+		exec_command="$exec_dir/zkServer.sh status"
 	;;
 	*)
 		echo -e "Usage : \033[31m$0 [start | stop | status]\033[0m"
