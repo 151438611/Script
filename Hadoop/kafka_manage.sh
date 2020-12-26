@@ -1,4 +1,5 @@
 #!/bin/bash
+# for kafka_2.12-2.7.0
 # 用于在 master 主机上管理(启动/停止) kafka 集群服务
 # 提前: master和其他主机配置好SSH免密登陆, kafka 集群配置正确
 
