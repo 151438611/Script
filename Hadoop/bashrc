@@ -29,3 +29,8 @@ export PATH=$PATH:$SQOOP_HOME/bin
 export SPARK_HOME=/usr/local/spark
 export PATH=$PATH:$SPARK_HOME/bin:$SPARK_HOME/sbin
 
+export MAHOUT_HOME=/usr/local/mahout
+export PATH=$PATH:$MAHOUT_HOME/bin
+export CLASSPATH=$CLASSPATH:$MAHOUT_HOME/lib
+export MAHOUT_LOCAL=
+
