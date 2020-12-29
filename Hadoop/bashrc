@@ -1,4 +1,4 @@
-# Java Hadoop HBase Hive Spark Sqoop Mahout
+# Java Hadoop HBase Hive Spark Kafka Sqoop Mahout
 
 export JAVA_HOME=/usr/local/java
 export PATH=$PATH:$JAVA_HOME/bin
@@ -29,6 +29,9 @@ export PATH=$PATH:$SQOOP_HOME/bin
 
 export SPARK_HOME=/usr/local/spark
 export PATH=$PATH:$SPARK_HOME/bin:$SPARK_HOME/sbin
+
+export KAFKA_HOME=/usr/local/kafka
+export PATH=$PATH:$KAFKA_HOME/bin
 
 export MAHOUT_HOME=/usr/local/mahout
 export PATH=$PATH:$MAHOUT_HOME/bin
