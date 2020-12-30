@@ -27,3 +27,4 @@ if [ -n "$1" ]; then
 else
 	yellow_echo "Usage : $0 \"command\""
 fi
+
