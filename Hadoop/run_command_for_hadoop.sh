@@ -25,6 +25,6 @@ if [ -n "$1" ]; then
 		green_echo "$(ssh $host $1)\n"
 	done
 else
-	yellow_echo "Usage : $0 \"command\""
+	yellow_echo "Usage : $0 \'command\'"
 fi
 
