@@ -10,13 +10,13 @@ host4=192.168.200.252
 host5=
 hosts="$host1 $host2 $host3 $host4 $host5"
 
-green_display() {
+green_echo() {
 echo -e "\033[32m$1\033[0m"
 }
-yellow_display() {
+yellow_echo() {
 echo -e "\033[33m$1\033[0m"
 }
-red_display() {
+red_echo() {
 echo -e "\033[31m$1\033[0m"
 }
 
@@ -30,21 +30,21 @@ if [ -n "$scp_files" ]; then
 			[ -e "$sf" ] && {
 				for host in $hosts
 				do 
-					scp -r $sf $host:$(dirname $sf) && green_display "$sf transfer to $host complete ."
+					scp -r $sf $host:$(dirname $sf) && green_echo "$sf transfer to $host complete ."
 				done
-			} || red_display "$sf is not exists !!!"
+			} || red_echo "$sf is not exists !!!"
 		else
 			# 表示传入的是相对路径,转换成绝对路径
 			f_pwd=$(pwd)/$sf
 			[ -e "$f_pwd" ] && {
 				for host in $hosts
 				do 
-					scp -r $f_pwd $host:$(dirname $f_pwd) && green_display "$f_pwd transfer to $host complete ."
+					scp -r $f_pwd $host:$(dirname $f_pwd) && green_echo "$f_pwd transfer to $host complete ."
 				done
-			} || red_display "$f_pwd is not exists !!!"
+			} || red_echo "$f_pwd is not exists !!!"
 		fi
 
 	done
 else
-	yellow_display "Usage : $0 File_Path or Dir_Path "
+	yellow_echo "Usage : $0 File_Path or Dir_Path "
 fi
