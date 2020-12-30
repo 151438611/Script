@@ -11,8 +11,17 @@ host4=
 host5=
 hosts="$host1 $host2 $host3 $host4 $host5"
 
-exec_dir="/usr/local/zookeeper/bin"
+green_echo() {
+echo -e "\033[36m$1\033[0m"
+}
+yellow_echo() {
+echo -e "\033[33m$1\033[0m"
+}
+red_echo() {
+echo -e "\033[31m$1\033[0m"
+}
 
+exec_dir="/usr/local/zookeeper/bin"
 case $1 in
 	"start")
 		exec_command="$exec_dir/zkServer.sh start"
@@ -24,14 +33,14 @@ case $1 in
 		exec_command="$exec_dir/zkServer.sh status"
 	;;
 	*)
-		echo -e "Usage : \033[31m$0 [start | stop | status]\033[0m"
+		yellow_echo "Usage : $0 [ start | stop | status ]"
 		exit
 	;;
 esac
 
 for host in $hosts
 do
-	echo -e "\033[33m---------- Host: $host ----------\033[0m"
-	echo -e "\033[36m$(ssh $host $exec_command 2> /dev/null)\033[0m\n"
+	yellow_echo "---------- Host: $host $1 Zookeeper ----------"
+	green_echo "$(ssh $host $exec_command 2> /dev/null)\n"
 done
 
