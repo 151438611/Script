@@ -21,7 +21,7 @@ red_echo() {
 echo -e "\033[31m$1\033[0m"
 }
 
-if [ -n "$1"]; then
+if [ -n "$1" ]; then
 	for host in $hosts
 	do
 		yellow_echo "---------- Host: $host Running: \"$1\"----------"
