@@ -8,8 +8,17 @@ host2=slave1
 host3=slave2
 host4=192.168.200.252
 host5=
-
 hosts="$host1 $host2 $host3 $host4 $host5"
+
+green_display() {
+echo -e "\033[32m$1\033[0m"
+}
+yellow_display() {
+echo -e "\033[33m$1\033[0m"
+}
+red_display() {
+echo -e "\033[31m$1\033[0m"
+}
 
 scp_files="$@"
 if [ -n "$scp_files" ]; then
@@ -21,21 +30,21 @@ if [ -n "$scp_files" ]; then
 			[ -e "$sf" ] && {
 				for host in $hosts
 				do 
-					scp -r $sf $host:$(dirname $sf) && echo "$sf transfer to $host complete ."
+					scp -r $sf $host:$(dirname $sf) && green_display "$sf transfer to $host complete ."
 				done
-			} || echo "$sf Input File or DIR is no exist !!! "
+			} || red_display "$sf is not exists !!!"
 		else
 			# 表示传入的是相对路径,转换成绝对路径
 			f_pwd=$(pwd)/$sf
 			[ -e "$f_pwd" ] && {
 				for host in $hosts
 				do 
-					scp -r $f_pwd $host:$(dirname $f_pwd) && echo "$f_pwd transfer to $host complete ."
+					scp -r $f_pwd $host:$(dirname $f_pwd) && green_display "$f_pwd transfer to $host complete ."
 				done
-			} || echo "$f_pwd Input File or DIR is no exist !!! "
+			} || red_display "$f_pwd is not exists !!!"
 		fi
 
 	done
 else
-	echo "Please Input SCP_Source File or DIR !!!"
+	yellow_display "Usage : $0 File_Path or Dir_Path "
 fi
