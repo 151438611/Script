@@ -11,10 +11,20 @@ host4=
 host5=
 hosts="$host1 $host2 $host3 $host4 $host5"
 
-[ "$1" ] || { echo -e "Usage : \033[31m$0 \"command\"\033[0m"; exit; } 
+green_echo() {
+echo -e "\033[36m$1\033[0m"
+}
+yellow_echo() {
+echo -e "\033[33m$1\033[0m"
+}
+red_echo() {
+echo -e "\033[31m$1\033[0m"
+}
 
-for host in $hosts
-do
-	echo -e "\033[33m---------- Host: $host Running: \"$1\"----------\033[0m"
-	echo -e "\033[36m$(ssh $host $1)\033[0m\n"
-done
+[ "$1" ] && {
+	for host in $hosts
+	do
+		yellow_echo "---------- Host: $host Running: \"$1\"----------"
+		green_echo "$(ssh $host $1)\n"
+	done
+} || yellow_echo "Usage : $0 \"command\""
