@@ -4,7 +4,7 @@
 
 # 需要分发的主机名或IP地址; 自行填写
 host1=master1
-host2=master2
+host2=
 host3=slave1
 host4=slave2
 host5=slave3
