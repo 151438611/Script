@@ -8,16 +8,22 @@ host2=master2
 host3=slave1
 host4=slave2
 host5=slave3
-
 hosts="$host1 $host2 $host3 $host4 $host5"
+
+green_echo() {
+	echo -e "\033[36m$1\033[0m"
+}
+yellow_echo() {
+	echo -e "\033[33m$1\033[0m"
+}
 
 jps=$(which jps)
 if [ -n "$jps" ]; then
 	for host in $hosts
 	do
-		echo -e "\033[33m---------- Host: $host ----------\033[0m"
-		echo -e "\033[36m$(ssh $host $jps)\033[0m\n"
+		yellow_echo "---------- Host: $host ----------"
+		green_echo "$(ssh $host $jps)\n"
 	done
 else
-	echo -e "\033[31mjps: command not found\033[0m"
+	yellow_echo "jps: command not found"
 fi

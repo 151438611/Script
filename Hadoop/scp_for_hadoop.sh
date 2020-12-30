@@ -1,7 +1,6 @@
 #!/bin/bash
 # 用于hadoop master自动分发文件或配置到其他主机
 # 提前: master和其他主机配置好SSH免密登陆
-# 示例: bash scp_for_hadoop.sh ~/.bashrc file1.txt /tmp/file2.txt /tmp/dir
 
 # 需要分发的主机名或IP地址; 自行填写
 host1=master2
@@ -12,13 +11,13 @@ host5=
 hosts="$host1 $host2 $host3 $host4 $host5"
 
 green_echo() {
-echo -e "\033[32m$1\033[0m"
+	echo -e "\033[32m$1\033[0m"
 }
 yellow_echo() {
-echo -e "\033[33m$1\033[0m"
+	echo -e "\033[33m$1\033[0m"
 }
 red_echo() {
-echo -e "\033[31m$1\033[0m"
+	echo -e "\033[31m$1\033[0m"
 }
 
 scp_files="$@"
