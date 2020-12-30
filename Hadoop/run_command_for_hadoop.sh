@@ -15,6 +15,6 @@ hosts="$host1 $host2 $host3 $host4 $host5"
 
 for host in $hosts
 do
-	echo -e "\033[33m---------- Host: $host Run \"$1\"----------\033[0m"
+	echo -e "\033[33m---------- Host: $host Running: \"$1\"----------\033[0m"
 	echo -e "\033[36m$(ssh $host $1)\033[0m\n"
 done
