@@ -21,10 +21,12 @@ red_echo() {
 echo -e "\033[31m$1\033[0m"
 }
 
-[ "$1" ] && {
+if [ -n "$1"]; then
 	for host in $hosts
 	do
 		yellow_echo "---------- Host: $host Running: \"$1\"----------"
 		green_echo "$(ssh $host $1)\n"
 	done
-} || yellow_echo "Usage : $0 \"command\""
+else
+	yellow_echo "Usage : $0 \"command\""
+fi
