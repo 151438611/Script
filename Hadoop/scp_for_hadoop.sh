@@ -13,24 +13,24 @@ hosts="$host1 $host2 $host3 $host4 $host5"
 
 scp_files="$@"
 if [ -n "$scp_files" ]; then
-	for f in $scp_files
+	for sf in $scp_files
 	do
 		# 判断传入的是绝对路径还是相对路径 
-		if [ -n "$(echo "$f" | grep -E "^/|^~")" ]; then
+		if [ -n "$(echo "$sf" | grep -E "^/|^~")" ]; then
 			# 表示传入的是绝对路径
-			[ -e "$f" ] && {
-				for h in $hosts
+			[ -e "$sf" ] && {
+				for host in $hosts
 				do 
-					scp -r $f $h:$(dirname $f) && echo "$f transfer to $h complete ."
+					scp -r $sf $host:$(dirname $sf) && echo "$sf transfer to $host complete ."
 				done
-			} || echo "$f Input File or DIR is no exist !!! "
+			} || echo "$sf Input File or DIR is no exist !!! "
 		else
 			# 表示传入的是相对路径,转换成绝对路径
-			f_pwd=$(pwd)/$f
+			f_pwd=$(pwd)/$sf
 			[ -e "$f_pwd" ] && {
-				for h in $hosts
+				for host in $hosts
 				do 
-					scp -r $f_pwd $h:$(dirname $f_pwd) && echo "$f_pwd transfer to $h complete ."
+					scp -r $f_pwd $host:$(dirname $f_pwd) && echo "$f_pwd transfer to $host complete ."
 				done
 			} || echo "$f_pwd Input File or DIR is no exist !!! "
 		fi
