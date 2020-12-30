@@ -13,10 +13,10 @@ hosts="$host1 $host2 $host3 $host4 $host5"
 
 jps=$(which jps)
 if [ -n "$jps" ]; then
-	for f in $hosts
+	for host in $hosts
 	do
-		echo -e "\033[33m---------- Host: $f ----------\033[0m"
-		echo -e "\033[36m$(ssh $f $jps)\033[0m\n"
+		echo -e "\033[33m---------- Host: $host ----------\033[0m"
+		echo -e "\033[36m$(ssh $host $jps)\033[0m\n"
 	done
 else
 	echo -e "\033[31mjps: command not found\033[0m"
