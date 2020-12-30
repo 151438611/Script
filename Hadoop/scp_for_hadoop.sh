@@ -1,6 +1,7 @@
 #!/bin/bash
 # 用于hadoop master自动分发文件或配置到其他主机
 # 提前: master和其他主机配置好SSH免密登陆
+# 示例: bash scp_for_hadoop.sh ~/.bashrc file1.txt /tmp/file2.txt /tmp/dir
 
 # 需要分发的主机名或IP地址; 自行填写
 host1=master2
