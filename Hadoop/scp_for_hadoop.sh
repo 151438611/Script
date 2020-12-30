@@ -3,7 +3,7 @@
 # 提前: master和其他主机配置好SSH免密登陆
 
 # 需要分发的主机名或IP地址; 自行填写
-host1=master2
+host1=
 host2=slave1
 host3=slave2
 host4=192.168.200.252
