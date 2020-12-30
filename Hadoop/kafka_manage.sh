@@ -11,8 +11,17 @@ host4=
 host5=
 hosts="$host1 $host2 $host3 $host4 $host5"
 
-exec_dir="/usr/local/kafka/bin"
+green_echo() {
+echo -e "\033[32m$1\033[0m"
+}
+yellow_echo() {
+echo -e "\033[33m$1\033[0m"
+}
+red_echo() {
+echo -e "\033[31m$1\033[0m"
+}
 
+exec_dir="/usr/local/kafka/bin"
 case $1 in
 	"start")
 		exec_command="$exec_dir/kafka-server-start.sh -daemon $exec_dir/../config/server.properties"
@@ -21,14 +30,14 @@ case $1 in
 		exec_command="$exec_dir/kafka-server-stop.sh"
 	;;
 	*)
-		echo -e "Usage : \033[31m$0 [start | stop]\033[0m"
+		yellow_echo "Usage : $0 [ start | stop ]"
 		exit
 	;;
 esac
 
 for host in $hosts
 do
-	echo -e "\033[33m---------- $1 Host: $host ----------\033[0m"
+	yellow_echo "---------- Host: $host $1 Kafka ----------"
 	ssh $host $exec_command
 done
 
