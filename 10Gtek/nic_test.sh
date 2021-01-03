@@ -3,7 +3,7 @@
 # 注意：Centos 需要关闭 selinux 和 配置或关闭firewalld：firewall-cmd --permanent --zone=public --add-port=5201-5204/tcp
 # 20200717新增功能: 多端口测试(多端口可依次按顺序测试,也可同时并行测试),新增手动输入文件夹
 # 20200723新增功能：增加iperf3性能测试结果检查
-# 20210103新增功能：根据芯片的网卡端口数量，来识别网卡型号
+# 20210103新增功能：根据芯片型号和网口数量，来识别网卡型号
 
 #export PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:$PATH
 clear
