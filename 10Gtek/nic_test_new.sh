@@ -1,11 +1,10 @@
 #!/bin/sh
-# 用于 Centos 测试电脑上进行网卡测试,需要安装 yum install net-tools iperf3 dos2unix cifs-utils
-# 注意：centos需要关闭selinux 和 配置或关闭firewalld：firewall-cmd --permanent --zone=public --add-port=5201-5204/tcp
+# 用于 Centos 测试电脑上进行网卡测试,安装相关软件: yum install net-tools psmisc iperf3 dos2unix cifs-utils
+# 注意：Centos 需要关闭 selinux 和 配置或关闭firewalld：firewall-cmd --permanent --zone=public --add-port=5201-5204/tcp
 # 20200717新增功能: 多端口测试(多端口可依次按顺序测试,也可同时并行测试),新增手动输入文件夹
-# 20200723新增功能：增加iperf性能测试结果检查
+# 20200723新增功能：增加iperf3性能测试结果检查
 
 #export PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:$PATH
-
 clear
 echo -e "\n测试环境要求："
 echo -e "\n1、测试电脑1(上)配置IP信息 eth1:192.168.6.101 eth2:192.168.7.101 eth3:192.168.8.101 eth4:192.168.9.101"
@@ -181,7 +180,7 @@ fun_copy_result_8() {
 
 	smb_user=GCB01 
 	smb_password="*WGQGf"
-	smb_src=//192.168.10.250/gc-fae/faeTest/nictest/20200717-RMA
+	smb_src=//192.168.10.250/gc-fae/faeTest/nictest/nic_test_report
 	smb_dest=/media/nictest
 	fun_mount_smb $smb_user $smb_password $smb_src $smb_dest
 
@@ -209,7 +208,7 @@ elif [ "$(ip address | grep inet | grep -E "192.168.6.201|192.168.7.201|192.168.
 fi
 
 # 清除iperf进程
-killall -q iperf iperf3 
+killall -q iperf3
 
 read -p "此端是服务端<S>还是客户端<C>? 默认客户端<C>,请输入 <S/C> : " type
 case $type in
