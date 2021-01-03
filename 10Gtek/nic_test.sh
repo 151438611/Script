@@ -168,10 +168,10 @@ fun_get_net_hardware_2() {
 		else nic_model="model_unknow"
 		fi
 		result="识别网卡成功,参考型号：$nic_model "
-		echo -e "$result \n$net_hardware \n" | tee -a $log
+		echo -e "$result \n$net_hardware " | tee -a $log
 	elif [ $net_hardware_num -gt 5 ]; then 
 		result="识别网卡异常"
-		echo -e "$result \n$net_hardware \n" | tee -a $log
+		echo -e "$result \n$net_hardware " | tee -a $log
 		error_log=yes
 	else 
 		result="未识别插入的 PCI-E 网卡设备 !!!"
