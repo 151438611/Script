@@ -285,7 +285,7 @@ fun_copy_result_8() {
 		[ -d $smb_dest/$1 ] || mkdir -p $smb_dest/$1
 		[ "$error_log" ] && log_name=${nic_model}_MAC-${nic_mac}_${log##*/}_error.txt || ${nic_model}_MAC-${nic_mac}_${log##*/}.txt
 		cp -f $log $smb_dest/$1/$log_name
-		yellow_echo "测试数据 $log 已复制到 $smb_src/$1/$log_name 。"
+		yellow_echo "测试数据 $log 已复制到 $smb_src/$1/$log_name "
 	fi
 	# umount $src
 	mark
