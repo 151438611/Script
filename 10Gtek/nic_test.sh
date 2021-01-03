@@ -167,7 +167,7 @@ fun_get_net_hardware_2() {
 			fi
 		else nic_model="model_unknow"
 		fi
-		result="识别网卡成功,型号：$nic_model "
+		result="识别网卡成功,参考型号：$nic_model "
 		echo -e "$result \n$net_hardware \n" | tee -a $log
 	elif [ $net_hardware_num -gt 5 ]; then 
 		result="识别网卡异常"
