@@ -221,15 +221,15 @@ fun_ping_test_6() {
 	# 需要传入: $1目的IP / $2测试次数
 	[ $# -ne 2 ] && red_echo "请传入 目的IP/Ping包次数 给 fun_ping_test 函数" && continue
 	if [ "$link_status" = yes ]; then
-		echo -e "\n正在进行 $ping_count 次的 Ping 包测试 ......"
+		blue_echo "\n正在进行 $ping_count 次的 Ping 包测试 ......"
 		pinglog=/tmp/ping$1.log
 		ping -c 2 -w 3 $1 &> $pinglog &&  ping -c $2 -i 0.1 $1 | tee $pinglog
 		[ "$(awk '/ 0% packet loss/ {print $0}' $pinglog)" ] && ping_result="Ping包成功,无丢包" || \
 			{ ping_result="Ping包失败,或有丢包 !!!"; error_log=yes; }
 		echo -e "\n$ping_result" | tee -a $log
 		echo -e "$(head -n 20 $pinglog) \n......\n$(tail -n 20 $pinglog) " >> $log
+		mark
 	fi
-	mark
 }
 
 fun_iperf_test_7() {
@@ -238,7 +238,7 @@ fun_iperf_test_7() {
 	[ $# -ne 4 ] && red_echo "请传入 源IP/目的IP/端口号/测试时长 给 fun_iperf_test 函数" && continue
 
 	if [ "$link_status" = yes ]; then
-		echo -e "\n正在进行 iperf3 性能测试,请稍等 $4 秒 ......"
+		blue_echo "\n正在进行 iperf3 性能测试,请稍等 $4 秒 ......"
 		iperflog=/tmp/iperf$2.log
 		iperf3 -V -B $1 -c $2 -p $3 -t $4 > $iperflog
 		# 获取网卡测试速率，并将单位 Gbits/sec 转换成 Mbits/sec
@@ -265,8 +265,8 @@ fun_iperf_test_7() {
 			{ iperf_result="性能测试<$iperf_speed Mbits/sec>失败 !!!"; error_log=yes; }
 		echo -e "\n$iperf_result" | tee -a $log
 		echo -e "$(head -n 20 $iperflog) \n......\n$(tail -n 20 $iperflog)" >> $log 
+		mark
 	fi
-	mark
 }
 
 fun_copy_result_8() {
@@ -306,7 +306,7 @@ fi
 # 清除iperf进程
 killall -q iperf3 iperf
 
-read -p "此端是服务端<S>还是客户端<C>? 默认客户端<C>,请输入 <S/C> : " type
+read -p "此端是服务端<S>还是客户端<C>? 默认客户端,请输入 <S/C> : " type
 case $type in
 	S|s) 
 		net_start=6
@@ -366,6 +366,7 @@ case $type in
 					{ 
 					port_id=eth$port_id_tmp1
 					nic_mac=$(ifconfig $port_id | awk '/ether/{print $2}' | tr -d ":")
+					nic_mac=${nic_mac^^}
 					fun_get_net_IP $port_id $src_ip_end $dest_ip_end
 					fun_save_log_1 $port_id
 					fun_get_net_hardware_2
