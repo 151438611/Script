@@ -310,8 +310,8 @@ elif [ "$(ip address | grep inet | grep -E "192.168.6.201|192.168.7.201|192.168.
 	dest_ip_end=101
 fi
 
-# 清除iperf进程
-killall -q iperf3 iperf
+# 清除iperf进; 20210104测试实现二端同时运行服务端和客户端测试,注释此行
+#killall -q iperf3 iperf
 
 read -p "此端是服务端<S>还是客户端<C>? 默认客户端,请输入 <S/C> : " type
 case $type in
