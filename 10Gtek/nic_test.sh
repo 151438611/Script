@@ -274,7 +274,12 @@ fun_copy_result_8() {
 	#[ "$1" ] || { echo "请传入 目的文件夹 给 fun_copy_result 函数" && continue; }
 	unix2dos -o $log &> /dev/null
 	yellow_echo "\n测试完成,测试数据保存在 $log ,下次测试会覆盖掉,请及时拷出. \n"
-
+	[ "$(ip route | head -n 1 | grep 192.168.200.1)" ] && {
+		for gw in $(ip route | grep default | grep -v 192.168.200.1 | awk '{print $3}')
+		do
+			ip route del default via $gw
+		done
+	}
 	smb_user=GCB01 
 	smb_password="*WGQGf"
 	smb_src=//192.168.10.250/gc-fae/faeTest/nictest/nic_test_report
