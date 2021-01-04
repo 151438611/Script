@@ -298,7 +298,8 @@ fun_copy_result_8() {
 }
 
 # =============下面开始功能代码,上面是函数定义===========================
-net_interface_num=$(ip address | grep -cE "eth1:|eth2:|eth3:|eth4:")
+net_interface=$(ip address | grep -E "eth1:|eth2:|eth3:|eth4:")
+net_interface_num=$(echo "$net_interface" | wc -l)
 [ $net_interface_num -lt 1 -o $net_interface_num -gt 4 ] && red_echo "网卡接口号显示异常:< $net_interface_num > " && exit 1 
 
 if [ "$(ip address | grep inet | grep -E "192.168.6.101|192.168.7.101|192.168.8.101|192.168.9.101")" ]; then
