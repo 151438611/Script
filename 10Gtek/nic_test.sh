@@ -264,7 +264,7 @@ fun_iperf_test_7() {
 			iperf_result="性能测试<$iperf_speed Mbits/sec>完成" || \
 			{ iperf_result="性能测试<$iperf_speed Mbits/sec>失败 !!!"; error_log=yes; }
 		echo -e "\n$iperf_result" | tee -a $log
-		echo -e "$(head -n 20 $iperflog) \n......\n$(tail -n 20 $iperflog)" >> $log 
+		echo -e "$(head -n 30 $iperflog) \n......\n$(tail -n 30 $iperflog)" >> $log 
 		mark
 	fi
 }
