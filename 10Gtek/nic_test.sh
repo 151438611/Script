@@ -274,7 +274,7 @@ fun_copy_result_8() {
 	#[ "$1" ] || { echo "请传入 目的文件夹 给 fun_copy_result 函数" && continue; }
 	unix2dos -o $log &> /dev/null
 	yellow_echo "\n测试完成,测试数据保存在 $log ,下次测试会覆盖掉,请及时拷出. \n"
-    # 解决测试网卡作为默认网关，无法正常上网的问题
+	# 解决测试网卡作为默认网关，无法正常上网的问题
 	[ "$(ip route | head -n 1 | grep 192.168.200.1)" ] || {
 		for gw in $(ip route | grep default | grep -v 192.168.200.1 | awk '{print $3}')
 		do
@@ -310,7 +310,8 @@ elif [ "$(ip address | grep inet | grep -E "192.168.6.201|192.168.7.201|192.168.
 	dest_ip_end=101
 fi
 
-# 清除iperf进; 20210104测试实现二端同时运行服务端和客户端测试,注释此行
+# 清除iperf3进程,防止进程未正常退出影响其他端口运行; 
+# 20210104测试二端同时运行服务端和客户端,注释此行
 #killall -q iperf3 iperf
 
 read -p "此端是服务端<S>还是客户端<C>? 默认客户端,请输入 <S/C> : " type
