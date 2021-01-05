@@ -11,7 +11,7 @@ host4=
 host5=
 hosts="$host1 $host2 $host3 $host4 $host5"
 
-green_echo() {
+blue_echo() {
 	echo -e "\033[36m$1\033[0m"
 }
 yellow_echo() {
@@ -38,6 +38,6 @@ esac
 for host in $hosts
 do
 	yellow_echo "---------- Host: $host $1 Zookeeper ----------"
-	green_echo "$(ssh $host $exec_command 2> /dev/null)\n"
+	blue_echo "$(ssh $host $exec_command 2> /dev/null)\n"
 done
 
