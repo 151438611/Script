@@ -346,7 +346,7 @@ EOL
 	echo "spark.eventLog.enabled		true" >> $spark_conf/spark-defaults.conf
 	echo "spark.eventLog.dir		hdfs://$hadoop_master:9000/spark_historyserver" >> $spark_conf/spark-defaults.conf
 	echo >> $spark_conf/spark-defaults.conf
-	yellow_echo "Please Run Command: hdfs dfs -mkdir /spark_historyserver"
+	yellow_echo "Please Run Command: 'hdfs dfs -mkdir /spark_historyserver'"
 	
 	# config spark-env.sh
 	[ -f $spark_conf/spark-env.sh  ] || mv -f $spark_conf/spark-env.sh.template $spark_conf/spark-env.sh
