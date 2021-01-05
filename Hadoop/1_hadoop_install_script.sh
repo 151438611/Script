@@ -1,8 +1,8 @@
 #!/bin/bash
 # 适用于全新 hadoop 2.x 的自动下载、安装、配置脚本
 # 运行需求依赖： yum install wget curl
-# 前提： 1关闭selinux和防火墙; 配置好hosts; 配置好ssh免密码登陆; 下载安装好java, 最好下载并解压好相关软件
-# 下载地址: https://mirrors.aliyun.com/apache/ 
+# 前提： 关闭selinux和防火墙; 配置hosts; 配置ssh免密码登陆; 下载解压安装java, 最好下载并解压好相关软件
+# hadoop及组件国内下载地址: https://mirrors.aliyun.com/apache/ 
 
 # 所有路径必须写绝对路径，不能使用~/.bashrc之类
 bashrc="/root/.bashrc"
@@ -45,8 +45,8 @@ red_echo() {
 }
 echo
 read -p "请检查是否已关闭 Selinux 和 防火墙 : < Yes / No > : " is_firewall
-read -p "请检查是否已配置好 Hostname 和 /etc/hosts : < Yes / No > : " is_hosts
-read -p "请检查是否已配置好 SSH 免密码登陆 : < Yes / No > : " is_ssh
+read -p "请检查是否已配置 Hostname 和 /etc/hosts : < Yes / No > : " is_hosts
+read -p "请检查是否已配置 SSH 免密码登陆 : < Yes / No > : " is_ssh
 read -p "请检查是否已下载并解压 Java 软件包 : < Yes / No > : " is_java
 echo
 read -p "是否需要安装 Hadoop < Yes / No > : " is_hadpoop
@@ -57,7 +57,7 @@ read -p "是否需要安装 Spark < Yes / No > : " is_spark
 [ "$(echo $is_firewall | grep -i yes)" ] && [ "$(echo $is_hosts | grep -i yes)" ] && \
 [ "$(echo $is_ssh | grep -i yes)" ] && [ "$(echo $is_java | grep -i yes)" ] || \
 	{ red_echo "\n程序退出；请检查 防火墙、/etc/hosts、SSH免密登陆、Java 等环境是否配置好； \n"; exit 2; }
-# 检查 Java
+# 检查 Java ; 所有 Hadoop 生态都是基于 Java 语言, 若 Java 未安装或不存在,则无法进行下面安装
 [ -d "$java_home" ] || { red_echo "$java_home : No such directory, error exit "; exit 2; }
 [ "$(grep -i "JAVA_HOME=" $bashrc)" ] || echo 'export JAVA_HOME='$java_home >> $bashrc
 [ "$(grep -i "PATH=" $bashrc | grep -i JAVA_HOME/bin)" ] || echo 'export PATH=$PATH:$JAVA_HOME/bin' >> $bashrc
