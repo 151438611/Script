@@ -3,7 +3,7 @@
 # 提前: master和其他主机配置好SSH免密登陆
 # 示例: bash run_command_for_hadoop.sh "uname -a"
 
-# 主机名或IP地址; 自行填写
+# 被操作运行命令的主机名或IP地址; 自行填写
 host1=slave1
 host2=slave2
 host3=slave3
