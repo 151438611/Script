@@ -4,7 +4,7 @@
 # 前提： 关闭selinux和防火墙; 配置hosts; 配置ssh免密码登陆; 下载解压安装java, 最好下载并解压好相关软件
 # hadoop及组件国内下载地址: https://mirrors.aliyun.com/apache/ 
 
-# 所有路径必须写绝对路径，不能使用~/.bashrc之类
+# 以下变量可自行修改; 注意：1必须写绝对路径，不能使用~/.bashrc之类;  2定义的目录需要注意权限问题
 bashrc="/root/.bashrc"
 install_dir=/usr/local
 java_home=$install_dir/java
@@ -20,6 +20,7 @@ hadoop_slaves="slave1 slave2"
 
 hbase_home=$install_dir/hbase
 hbase_conf=$hbase_home/conf
+hbase_zkdata=$hbase_home/zkdata
 
 hive_home=$install_dir/hive
 hive_conf=$hive_home/conf
@@ -32,8 +33,10 @@ spark_slaves="master2"
 hadoop_url=https://mirrors.aliyun.com/apache/hadoop/common/current2/hadoop-2.10.1.tar.gz
 hbase_url=https://mirrors.aliyun.com/apache/hbase/2.4.0/hbase-2.4.0-bin.tar.gz
 hive_url=https://mirrors.aliyun.com/apache/hive/stable-2/apache-hive-2.3.7-bin.tar.gz
+mysql_connector_java_url=http://mirrors.163.com/mysql/Downloads/Connector-J/mysql-connector-java-5.1.49.tar.gz
 spark_url=https://mirrors.aliyun.com/apache/spark/spark-2.4.7/spark-2.4.7-bin-hadoop2.7.tgz
 
+# ========== 自定义变量 完 ==========
 bule_echo() {
 	echo -e "\033[36m$1\033[0m"
 }
@@ -224,8 +227,8 @@ EOL
 	fuhao="'"
 	sed_cmd="sed -i ${fuhao}${hbase_env_java_line}c ${sed_info}$fuhao $hbase_conf/hbase-env.sh"
 	eval ${sed_cmd}
-	zkdata=$hbase_home/zkdata
-	[ -d "$zkdata" ] || mkdir -p $zkdata
+	
+	[ -d "$hbase_zkdata" ] || mkdir -p $hbase_zkdata
 	cat << EOL > $hbase_conf/hbase-site.xml
 <?xml version="1.0"?>
 <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
@@ -241,7 +244,7 @@ EOL
     </property>
     <property>
         <name>hbase.zookeeper.property.dataDir</name>
-        <value>$zkdata</value> 
+        <value>$hbase_zkdata</value> 
     </property>
     <property>  
         <name>hbase.zookeeper.quorum</name>  
@@ -271,6 +274,14 @@ EOL
 		bule_echo "\nDecompressing ${hive_url##*/}\n"
 		tar -zxf $tmp_download/${hive_url##*/} -C $tmp_untar
 		mv ${tmp_untar}/apache-hive-* $hive_home
+	}
+	[ -f "$(ls $hive_home/lib | grep -i mysql-connector-java))" ] || {
+		wget -c -P $tmp_download $mysql_connector_java_url
+		mysql_connector_java_name_tgz=${mysql_connector_java_url##*/}
+		mysql_connector_java_name=${mysql_connector_java_name_tgz%%.t*}
+		bule_echo "\nDecompressing $mysql_connector_java_name_tgz\n"
+		tar -zxf $tmp_download/$mysql_connector_java_name_tgz -C $tmp_untar
+		cp -f $tmp_untar/$mysql_connector_java_name/${mysql_connector_java_name}.jar $hive_home/lib
 	}
 	[ -d "$hive_conf" ] || { red_echo "$hive_conf : No such directory, error exit "; exit 2; }
 	
@@ -316,7 +327,7 @@ EOL
 	source $bashrc
 	# hive 无版本测试命令
 	which hive && bule_echo "\nHive is install Success.\n" || red_echo "\nHive is install Fail.\n"
-	yellow_echo "\n注意：Hive还需要安装并配置Mysql和mysql-connector-java\n"
+	yellow_echo "\n注意：Hive 还需要安装 Mysql ,并创建 hive 用户和添加权限\n"
 }
 
 # 安装Spark
