@@ -11,7 +11,7 @@ host4=
 host5=
 hosts="$host1 $host2 $host3 $host4 $host5"
 
-green_echo() {
+blue_echo() {
 	echo -e "\033[36m$1\033[0m"
 }
 yellow_echo() {
@@ -22,7 +22,7 @@ if [ -n "$1" ]; then
 	for host in $hosts
 	do
 		yellow_echo "---------- Host: $host Running: \"$1\"----------"
-		green_echo "$(ssh $host $1)\n"
+		blue_echo "$(ssh $host $1)\n"
 	done
 else
 	yellow_echo "Usage : $0 'command'"
