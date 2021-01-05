@@ -44,10 +44,10 @@ red_echo() {
 	echo -e "\033[31m$1\033[0m"
 }
 echo
-read -p "请检查是否关闭了 Selinux 和 防火墙 : < Yes / No > : " is_firewall
+read -p "请检查是否已关闭 Selinux 和 防火墙 : < Yes / No > : " is_firewall
 read -p "请检查是否已配置好 Hostname 和 /etc/hosts : < Yes / No > : " is_hosts
 read -p "请检查是否已配置好 SSH 免密码登陆 : < Yes / No > : " is_ssh
-read -p "请检查是否已下载并解压好 Java 程序 : < Yes / No > : " is_java
+read -p "请检查是否已下载并解压 Java 软件包 : < Yes / No > : " is_java
 echo
 read -p "是否需要安装 Hadoop < Yes / No > : " is_hadpoop
 read -p "是否需要安装 HBase < Yes / No > : " is_hbase
