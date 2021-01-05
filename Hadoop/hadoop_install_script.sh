@@ -7,9 +7,9 @@
 # 所有路径必须写绝对路径，不能使用~/.bashrc之类
 bashrc="/root/.bashrc"
 install_dir=/usr/local
-java_home=$is_dir/java
+java_home=$install_dir/java
 
-hadoop_home=$is_dir/hadoop
+hadoop_home=$install_dir/hadoop
 hadoop_conf=$hadoop_home/etc/hadoop
 hadoop_namenodr_dir=$hadoop_home/hdfs/name
 hadoop_datanodr_dir=$hadoop_home/hdfs/data
@@ -18,13 +18,13 @@ hadoop_log=$hadoop_home/logs
 hadoop_master="master2"
 hadoop_slaves="slave1 slave2"
 
-hbase_home=$is_dir/hbase
+hbase_home=$install_dir/hbase
 hbase_conf=$hbase_home/conf
 
-hive_home=$is_dir/hive
+hive_home=$install_dir/hive
 hive_conf=$hive_home/conf
 
-spark_home=$is_dir/spark
+spark_home=$install_dir/spark
 spark_conf=$spark_home/conf
 spark_master="master2"
 spark_slaves="master2"
