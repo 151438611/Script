@@ -1,6 +1,6 @@
 #!/bin/bash
-# 适用于全新 hadoop 2.x 的自动下载、安装、配置脚本
-# 运行需求依赖： yum install wget curl
+# 适用于全新 hadoop 2.x 单机 master 的自动下载、安装、配置脚本
+# 运行需求依赖： yum install wget
 # 前提： 关闭selinux和防火墙; 配置hosts; 配置ssh免密码登陆; 下载解压安装java, 最好下载并解压好相关软件
 # hadoop及组件国内下载地址: https://mirrors.aliyun.com/apache/ 
 
@@ -43,6 +43,7 @@ yellow_echo() {
 red_echo() {
 	echo -e "\033[31m$1\033[0m"
 }
+
 echo
 read -p "请检查是否已关闭 Selinux 和 防火墙 : < Yes / No > : " is_firewall
 read -p "请检查是否已配置 Hostname 和 /etc/hosts : < Yes / No > : " is_hosts
@@ -288,8 +289,9 @@ EOL
 	echo >> $spark_conf/spark-defaults.conf
 	echo "spark.eventLog.enabled		true" >> $spark_conf/spark-defaults.conf
 	echo "spark.eventLog.dir		hdfs://$hadoop_master:9000/spark_historyserver" >> $spark_conf/spark-defaults.conf
-	yellow_echo "Please Run Command: hdfs dfs -mkdir /spark_historyserver"
 	echo >> $spark_conf/spark-defaults.conf
+	yellow_echo "Please Run Command: hdfs dfs -mkdir /spark_historyserver"
+	
 	# config spark-env.sh
 	[ -f $spark_conf/spark-env.sh  ] || mv -f $spark_conf/spark-env.sh.template $spark_conf/spark-env.sh
 	echo >> $spark_conf/spark-env.sh
@@ -300,9 +302,9 @@ EOL
 	echo "export HADOOP_HOME="$hadoop_home	>> $spark_conf/spark-env.sh
 	echo 'export HADOOP_CONF_DIR=$HADOOP_HOME/etc/hadoop' >> $spark_conf/spark-env.sh
 	echo 'export SPARK_DIST_CLASSPATH=$($HADOOP_HOME/bin/hadoop classpath)' >> $spark_conf/spark-env.sh
-
 	echo 'export SPARK_HISTORY_OPTS="-Dspark.history.ui.port=18080 -Dspark.history.fs.logDirectory=hdfs://'$hadoop_master':9000/spark_historyserver -Dspark.history.retainedApplications=30"' >> $spark_conf/spark-env.sh
 	echo >> $spark_conf/spark-env.sh
+	
 	# config slaves
 	rm -f $spark_conf/slaves
 	for spark_slave in $spark_slaves
