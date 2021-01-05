@@ -37,6 +37,7 @@ mysql_connector_java_url=http://mirrors.163.com/mysql/Downloads/Connector-J/mysq
 spark_url=https://mirrors.aliyun.com/apache/spark/spark-2.4.7/spark-2.4.7-bin-hadoop2.7.tgz
 
 # ========== 自定义变量 完 ==========
+
 bule_echo() {
 	echo -e "\033[36m$1\033[0m"
 }
