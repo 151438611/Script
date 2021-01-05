@@ -54,6 +54,7 @@ read -p "是否需要安装 Hadoop < Yes / No > : " is_hadpoop
 read -p "是否需要安装 HBase < Yes / No > : " is_hbase
 read -p "是否需要安装 Hive < Yes / No > : " is_hive
 read -p "是否需要安装 Spark < Yes / No > : " is_spark
+echo
 
 [ "$(echo $is_firewall | grep -i yes)" ] && [ "$(echo $is_hosts | grep -i yes)" ] && \
 [ "$(echo $is_ssh | grep -i yes)" ] && [ "$(echo $is_java | grep -i yes)" ] || \
@@ -72,11 +73,13 @@ mkdir -p $tmp_download $tmp_untar
 [ "$(echo $is_hadpoop | grep -i yes)" ] && {
 	[ -d "$hadoop_home" ] || {
 		wget -c -P $tmp_download $hadoop_url
+		bule_echo "\nDecompressing ${hadoop_url##*/}\n"
 		tar -zxf $tmp_download/${hadoop_url##*/} -C $tmp_untar
 		mv -f ${tmp_untar}/hadoop-* $hadoop_home
 	}
 	[ -d "$hadoop_conf" ] || { red_echo "\n$hadoop_conf : No such directory, error exit \n"; exit 2; }
 	mkdir -p $hadoop_namenodr_dir $hadoop_datanodr_dir $hadoop_tmp $hadoop_log
+	
 	# config hadoop-env.sh
 	[ -f "$hadoop_conf/hadoop-env.sh" ] || { red_echo "$hadoop_conf/hadoop-env.sh : No such file,exit "; exit 2; }
 	hadoop_env_java_line=$(grep -n "export JAVA_HOME=" $hadoop_conf/hadoop-env.sh | awk -F ":" '{print $1}')
@@ -84,6 +87,7 @@ mkdir -p $tmp_download $tmp_untar
 	fuhao="'"
 	sed_cmd="sed -i ${fuhao}${hadoop_env_java_line}c ${sed_info}$fuhao $hadoop_conf/hadoop-env.sh"
 	eval ${sed_cmd}
+	
 	# config core-site.xml
 	cat << EOL > $hadoop_conf/core-site.xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -102,7 +106,7 @@ mkdir -p $tmp_download $tmp_untar
 </configuration>
 EOL
 	# config hdfs-site.xml
-	dfs_replication=$(echo $hadoop_slaves | awk '{print $NR}')
+	dfs_replication=$(echo $hadoop_slaves | awk '{print NF}')
 	[ $dfs_replication -eq 1 ] && dfs_replication=1 || dfs_replication=3
 	cat << EOL > $hadoop_conf/hdfs-site.xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -210,11 +214,47 @@ EOL
 [ "$(echo $is_hbase | grep -i yes)" ] && {
 	[ -d "$hbase_home" ] || {
 		wget -c -P $tmp_download $hbase_url
+		bule_echo "\nDecompressing ${hbase_url##*/}\n"
 		tar -zxf $tmp_download/${hbase_url##*/} -C $tmp_untar
 		mv -f ${tmp_untar}/hbase-* $hbase_home
 	}
 	[ -d "$hbase_conf" ] || { red_echo "$hbase_conf : No such directory, error exit "; exit 2; }
-	
+	hbase_env_java_line=$(grep -n "export JAVA_HOME=" $hbase_conf/hbase-env.sh | awk -F ":" '{print $1}')
+	sed_info="export JAVA_HOME=$java_home"
+	fuhao="'"
+	sed_cmd="sed -i ${fuhao}${hbase_env_java_line}c ${sed_info}$fuhao $hbase_conf/hbase-env.sh"
+	eval ${sed_cmd}
+	zkdata=$hbase_home/zkdata
+	[ -d "$zkdata" ] || mkdir -p $zkdata
+	cat << EOL > $hbase_conf/hbase-site.xml
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+<configuration>
+ 
+    <property>
+        <name>hbase.cluster.distributed</name>
+        <value>true</value>
+    </property>
+    <property>
+        <name>hbase.rootdir</name> 
+        <value>hdfs://$hadoop_master:9000/hbase</value>
+    </property>
+    <property>
+        <name>hbase.zookeeper.property.dataDir</name>
+        <value>$zkdata</value> 
+    </property>
+    <property>  
+        <name>hbase.zookeeper.quorum</name>  
+        <value>$hadoop_master</value>  
+    </property> 
+    <property>
+        <name>hbase.unsafe.stream.capability.enforce</name>
+        <value>false</value>
+    </property>
+
+</configuration>
+EOL
+
 	echo >> $bashrc
 	echo 'export HBASE_HOME='$hbase_home >> $bashrc
 	echo 'export PATH=$PATH:$HBASE_HOME/bin' >> $bashrc
@@ -228,11 +268,14 @@ EOL
 [ "$(echo $is_hive | grep -i yes)" ] && {
 	[ -d "$hive_home" ] || {
 		wget -c -P $tmp_download $hive_url
+		bule_echo "\nDecompressing ${hive_url##*/}\n"
 		tar -zxf $tmp_download/${hive_url##*/} -C $tmp_untar
 		mv ${tmp_untar}/apache-hive-* $hive_home
 	}
 	[ -d "$hive_conf" ] || { red_echo "$hive_conf : No such directory, error exit "; exit 2; }
+	
 	# config hive-env.sh
+	[ -f "$hive_conf/hive-env.sh" ] || mv -f $hive_conf/hive-env.sh.template $hive_conf/hive-env.sh
 	echo >> $hive_conf/hive-env.sh
 	echo "export JAVA_HOME="$java_home >> $hive_conf/hive-env.sh
 	echo "export HADOOP_HOME="$hadoop_home >> $hive_conf/hive-env.sh
@@ -273,13 +316,14 @@ EOL
 	source $bashrc
 	# hive 无版本测试命令
 	which hive && bule_echo "\nHive is install Success.\n" || red_echo "\nHive is install Fail.\n"
-	yellow_echo "\n注意：Hive还需要安装并配置好Mysql和mysql-connector-java\n"
+	yellow_echo "\n注意：Hive还需要安装并配置Mysql和mysql-connector-java\n"
 }
 
 # 安装Spark
 [ "$(echo $is_spark | grep -i yes)" ] && {
 	[ -d "$spark_home" ] || {
 		wget -c -P $tmp_download $spark_url
+		bule_echo "\nDecompressing ${spark_url##*/}\n"
 		tar -zxf $tmp_download/${spark_url##*/} -C $tmp_untar
 		mv ${tmp_untar}/spark-* $spark_home
 	}
