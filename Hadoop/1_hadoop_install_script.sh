@@ -290,8 +290,8 @@ EOL
 <configuration>
     
     <property>
-		<name>javax.jdo.option.ConnectionURL</name>
-		<value>jdbc:mysql://localhost:3306/hive_metastore?createDatabaseIfNotExist=true&amp;characterEncoding=UTF-8&amp;useSSL=false</value>
+	<name>javax.jdo.option.ConnectionURL</name>
+	<value>jdbc:mysql://localhost:3306/hive_metastore?createDatabaseIfNotExist=true&amp;characterEncoding=UTF-8&amp;useSSL=false</value>
     </property>
     <property>
         <name>javax.jdo.option.ConnectionDriverName</name>
