@@ -10,7 +10,7 @@ host4=slave2
 host5=slave3
 hosts="$host1 $host2 $host3 $host4 $host5"
 
-green_echo() {
+blue_echo() {
 	echo -e "\033[36m$1\033[0m"
 }
 yellow_echo() {
@@ -22,7 +22,7 @@ if [ -n "$jps" ]; then
 	for host in $hosts
 	do
 		yellow_echo "---------- Host: $host ----------"
-		green_echo "$(ssh $host $jps)\n"
+		blue_echo "$(ssh $host $jps)\n"
 	done
 else
 	yellow_echo "jps: command not found"
