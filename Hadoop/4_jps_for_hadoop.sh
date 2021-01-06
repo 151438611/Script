@@ -11,6 +11,9 @@ blue_echo() {
 yellow_echo() {
 	echo -e "\033[33m$1\033[0m"
 }
+red_echo() {
+	echo -e "\033[31m$1\033[0m"
+}
 
 jps=$(which jps)
 if [ -n "$jps" ]; then
@@ -20,5 +23,5 @@ if [ -n "$jps" ]; then
 		blue_echo "$(ssh $host $jps)\n"
 	done
 else
-	yellow_echo "jps: command not found"
+	red_echo "jps: command not found"
 fi
