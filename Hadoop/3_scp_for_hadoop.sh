@@ -2,15 +2,10 @@
 # 用于hadoop master自动分发文件或配置到其他主机
 # 提前: master和其他主机配置好SSH免密登陆
 
-# 需要分发的主机名或IP地址; 自行填写
-host1=
-host2=slave1
-host3=slave2
-host4=192.168.200.252
-host5=
-hosts="$host1 $host2 $host3 $host4 $host5"
+# 自行填写: 需要分发的主机名或IP地址; 多个用空格隔开
+hosts="slave1 slave2 slave3"
 
-green_echo() {
+bule_echo() {
 	echo -e "\033[36m$1\033[0m"
 }
 yellow_echo() {
@@ -30,7 +25,7 @@ if [ -n "$scp_files" ]; then
 			[ -e "$sf" ] && {
 				for host in $hosts
 				do 
-					scp -r $sf $host:$(dirname $sf) && green_echo "$sf transfer to $host complete ."
+					scp -r $sf $host:$(dirname $sf) && bule_echo "$sf transfer to $host complete ."
 				done
 			} || red_echo "$sf is not exists !!!"
 		else
@@ -39,7 +34,7 @@ if [ -n "$scp_files" ]; then
 			[ -e "$f_pwd" ] && {
 				for host in $hosts
 				do 
-					scp -r $f_pwd $host:$(dirname $f_pwd) && green_echo "$f_pwd transfer to $host complete ."
+					scp -r $f_pwd $host:$(dirname $f_pwd) && bule_echo "$f_pwd transfer to $host complete ."
 				done
 			} || red_echo "$f_pwd is not exists !!!"
 		fi
