@@ -38,6 +38,9 @@ dest=/media/10gtek
 src=192.168.200.250:/volume1/smb_share
 dest=/media/nfs
 #fun_mount_nfs $src $dest
+src=192.168.200.250:/volume1/Rsync_Dir
+dest=/media/Rsync_Dir
+#fun_mount_nfs $src $dest
 
 # === mount nfs on Padavan ===========
 src=192.168.75.1:/media/AiDisk_a2
