@@ -217,9 +217,12 @@ EOL
 	echo 'export JAVA_LIBRARY_PATH=$HADOOP_HOME/lib/native' >> $bashrc
 	echo 'export PATH=$PATH:$HADOOP_HOME/bin:$HADOOP_HOME/sbin' >> $bashrc
 	echo >> $bashrc
+	# 在ubuntu中运行source $bashrc会自动检测是否在交互界面,不在则退出
 	source $bashrc
 	# 测试
-	hadoop version && bule_echo "\nHadoop is install Success.\n" || red_echo "\nHadoop is install Fail.\n"
+	#hadoop version && bule_echo "\nHadoop is install Success.\n" || red_echo "\nHadoop is install Fail.\n"
+	bule_echo "\nHadoop is install completed; \nPlease run command: 'source ~/.bashrc'"
+	bule_echo "Please format hdfs : 'hdfs namenode -format'\n"
 }
 
 # 安装 HBase
@@ -273,7 +276,8 @@ EOL
 	echo >> $bashrc
 	source $bashrc
 	# 测试
-	hbase version && bule_echo "\nHBase is install Success.\n" || red_echo "\nHBase is install Fail.\n"
+	#hbase version && bule_echo "\nHBase is install Success.\n" || red_echo "\nHBase is install Fail.\n"
+	bule_echo "\nHBase is install completed; \nPlease run command: 'source ~/.bashrc'"
 }
 
 # 安装 Hive
@@ -335,7 +339,8 @@ EOL
 	echo >> $bashrc
 	source $bashrc
 	# hive 无版本测试命令
-	which hive && bule_echo "\nHive is install Success.\n" || red_echo "\nHive is install Fail.\n"
+	#which hive && bule_echo "\nHive is install Success.\n" || red_echo "\nHive is install Fail.\n"
+	bule_echo "\nHive is install completed; \nPlease run command: 'source ~/.bashrc'"
 	yellow_echo "\n注意：Hive 还需要安装 Mysql ,并创建 hive 用户和添加权限\n"
 }
 
@@ -382,7 +387,8 @@ EOL
 	echo >> $bashrc
 	source $bashrc
 	# spark 无版本测试命令
-	which spark-shell && bule_echo "\nSpark is install Success.\n" || red_echo "\nSpark is install Fail.\n"
+	#which spark-shell && bule_echo "\nSpark is install Success.\n" || red_echo "\nSpark is install Fail.\n"
+	bule_echo "\nSpark is install completed; \nPlease run command: 'source ~/.bashrc'"
 }
 
 # 安装 Zookeeper
