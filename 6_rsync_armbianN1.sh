@@ -41,7 +41,7 @@ chown -R armbian.armbian /media/sda1
 
 # ===== temp use =================
 sh /opt/mount.sh
-bak_dir=/media/nfs/armbian_backup
+bak_dir=/media/Rsync_Dir
 if [ -d $bak_dir ] ; then
   cd /media/sda1/
   tar -zcvf ${bak_dir}/backup$(date +%Y%m%d).tgz --exclude photo data
