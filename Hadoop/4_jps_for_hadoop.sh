@@ -2,7 +2,7 @@
 # 用于在 master 主机上查看所有集群主机的 jps 启动服务
 # 提前: master和其他主机配置好SSH免密登陆
 
-# 自行填写：需要分发的主机名或IP地址; 多个用空格分隔
+# 自行填写：主机名或IP地址; 多个用空格分隔
 hosts="master1 slave1 slave2 slave3"
 
 blue_echo() {
