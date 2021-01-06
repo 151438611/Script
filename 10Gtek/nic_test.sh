@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # 用于 Centos 测试电脑上进行网卡测试,安装相关软件: yum install net-tools psmisc iperf3 dos2unix cifs-utils
 # 注意：Centos 需要关闭 selinux 和 配置或关闭firewalld：firewall-cmd --permanent --zone=public --add-port=5201-5204/tcp
 # 20200717新增功能: 多端口测试(多端口可依次按顺序测试,也可同时并行测试),新增手动输入文件夹
