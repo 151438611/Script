@@ -43,6 +43,9 @@ mysql_connector_java_url=http://mirrors.163.com/mysql/Downloads/Connector-J/mysq
 spark_url=https://mirrors.aliyun.com/apache/spark/spark-2.4.7/spark-2.4.7-bin-hadoop2.7.tgz
 zookeeper_url=https://mirrors.aliyun.com/apache/zookeeper/zookeeper-3.6.2/apache-zookeeper-3.6.2-bin.tar.gz
 
+tmp_download=/tmp/download
+tmp_untar=/tmp/untar
+mkdir -p $tmp_download $tmp_untar
 # ========== 自定义变量 完 ==========
 
 bule_echo() {
@@ -77,10 +80,6 @@ echo
 [ "$(grep -i "PATH=" $bashrc | grep -i JAVA_HOME/bin)" ] || echo 'export PATH=$PATH:$JAVA_HOME/bin' >> $bashrc
 source $bashrc
 java -version && bule_echo "\nJAVA is already installed\n" || { red_echo "\nJAVA is not install. error exit \n"; exit 2; }
-
-tmp_download=/tmp/download
-tmp_untar=/tmp/untar
-mkdir -p $tmp_download $tmp_untar
 
 # 安装 Hadoop
 [ "$(echo $is_hadpoop | grep -i yes)" ] && {
