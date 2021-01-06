@@ -3,13 +3,8 @@
 # 提前: master和其他主机配置好SSH免密登陆
 # 示例: bash run_command_for_hadoop.sh "uname -a"
 
-# 被操作运行命令的主机名或IP地址; 自行填写
-host1=slave1
-host2=slave2
-host3=slave3
-host4=
-host5=
-hosts="$host1 $host2 $host3 $host4 $host5"
+# 自行填写: 被操作运行命令的主机名或IP地址; 多个用空格分隔; 
+hosts="slave1 slave2 192.168.200.251"
 
 blue_echo() {
 	echo -e "\033[36m$1\033[0m"

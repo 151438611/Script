@@ -2,13 +2,8 @@
 # 用于在 master 主机上查看所有集群主机的 jps 启动服务
 # 提前: master和其他主机配置好SSH免密登陆
 
-# 需要分发的主机名或IP地址; 自行填写
-host1=master1
-host2=
-host3=slave1
-host4=slave2
-host5=slave3
-hosts="$host1 $host2 $host3 $host4 $host5"
+# 自行填写：需要分发的主机名或IP地址; 多个用空格分隔
+hosts="master1 slave1 slave2 slave3"
 
 blue_echo() {
 	echo -e "\033[36m$1\033[0m"
