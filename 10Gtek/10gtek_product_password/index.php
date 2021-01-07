@@ -13,8 +13,8 @@
 </head>
 <body>
 	<a href="https://wx2.qq.com/" target="_self"><img border="0" src="./weixin.jpg" /></a>
-	<a href="http://192.168.3.224/phpmyadmin" target="_blank"><img border="0" src="./mariadb.jpg" /></a>
-	<a href="https://192.168.3.224" target="_self"><img border="0" src="./kodexplorer.jpg" /></a>
+	<a href="http://192.168.200.21/phpmyadmin" target="_blank"><img border="0" src="./mariadb.jpg" /></a>
+	<a href="https://192.168.200.21" target="_self"><img border="0" src="./kodexplorer.jpg" /></a>
 	<a href="http://10.5.5.11:81" target="_blank"><img border="0" src="./filebrowser.jpg" /></a>
 	<a href="https://github.com/151438611/Script" target="_blank"><img border="0" src="./github.jpg" /></a>
 	<a href="https://naotu.baidu.com/" target="_blank"><img border="0" src="./baidu_naotu.jpg" /></a>
@@ -22,7 +22,7 @@
 	<a href="http://192.168.200.201:81" target="_blank"><img border="0" src="./zabbix.jpg" /></a>
 	<a href="http://192.168.200.250:5000" target="_blank"><img border="0" src="./synology_dsm.jpg" /></a>
 	<a href="https://192.168.200.221/ui/" target="_blank"><img border="0" src="./vmware.jpg" /></a>
-	<a href="https://mega.nz/#F!j9QSDQSQ!6WpasOlbZYIInfw6yo4phQ" target="_blank"><img border="0" src="./armbian.jpg" /></a>
+	<a href="https://yadi.sk/d/_rQgn_FosYuW0g" target="_blank"><img border="0" src="./armbian.jpg" /></a>
 	<!-- armbian : https://yadi.sk/d/pHxaRAs-tZiei https://yadi.sk/d/_rQgn_FosYuW0g-->
 	<a href="https://play.google.com/store/apps" target="_blank"><img border="0" src="./google_play.jpg" /></a>
 	<a href="https://www.google.com.hk/" target="_self"><img border="0" src="./google.jpg" /></a>
