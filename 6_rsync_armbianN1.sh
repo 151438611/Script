@@ -41,13 +41,14 @@ chown -R armbian.armbian /media/sda1
 
 # ===== temp use =================
 sh /opt/mount.sh
-bak_dir=/media/Rsync_Dir
+bak_dir=/media/nfs/armbian_backup
+bak_dir_tmp=/media/Rsync_Dir
 if [ -d $bak_dir ] ; then
   cd /media/sda1/
   tar -zcvf ${bak_dir}/backup$(date +%Y%m%d).tgz --exclude photo data
   [ `echo $?` -eq 0 ] && echo "$(date +"%F %T") backup to $bak_dir success ! " >> $rsynclog
   sleep 60 && find $bak_dir -type f -name "backup*" -ctime +5 -exec rm -f {} \; 
-  cp -ur /media/sda1/data/document $bak_dir
+  cp -ur /media/sda1/data/document $bak_dir_tmp
 else
   echo -e "\n$(date +"%F %T") $bak_dir is not exist , rsync backup to $bak_dir failse !" >> $rsynclog
 fi
