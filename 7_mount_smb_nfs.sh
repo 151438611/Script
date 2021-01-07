@@ -3,28 +3,28 @@
 export PATH=/bin:/sbin:/usr/bin:/usr/sbin:$PATH
 
 fun_mount_smb() {
-	# 需要安装: yum/apt install cifs-utils
-	# $1:username $2:password $3:mount_src $4:mount_dest 
-	[ -d "$4" ] || mkdir -p $4
-	if [ -z "$(mount | grep "$3 on $4")" ] ; then
-		mount -t cifs $3 $4 -o username=$1,password=$2,rw,file_mode=0777,dir_mode=0777,iocharset=utf8,vers=2.0 &> /dev/null || \
-		mount -t cifs $3 $4 -o username=$1,password=$2,rw,file_mode=0777,dir_mode=0777,iocharset=utf8,vers=1.0
-	fi
+    # 需要安装: yum/apt install cifs-utils
+    # $1:username $2:password $3:mount_src $4:mount_dest 
+    [ -d "$4" ] || mkdir -p $4
+    if [ -z "$(mount | grep "$3 on $4")" ] ; then
+        mount -t cifs $3 $4 -o username=$1,password=$2,rw,file_mode=0777,dir_mode=0777,iocharset=utf8,vers=2.0 &> /dev/null || \
+        mount -t cifs $3 $4 -o username=$1,password=$2,rw,file_mode=0777,dir_mode=0777,iocharset=utf8,vers=1.0
+    fi
 }
 fun_mount_nfs() {
-	# 需要安装NFS命令：apt install nfs-common 或 yum install nfs-utils
-	# 暂只支持nfs_vers=3.0(不支持认证), 不支持4.0
-	# 使用 "showmount -e nfsd_ip" 查看nfsd服务端的目录
-	# $1:mount_src $2:mount_dest 
-	[ -d "$2" ] || mkdir -p $2
-	[ -z "$(mount | grep "$1 on $2")" ] && mount -t nfs -o rw,noatime $1 $2 
+    # 需要安装NFS命令：apt install nfs-common 或 yum install nfs-utils
+    # 暂只支持nfs_vers=3.0(不支持认证), 不支持4.0
+    # 使用 "showmount -e nfsd_ip" 查看nfsd服务端的目录
+    # $1:mount_src $2:mount_dest 
+    [ -d "$2" ] || mkdir -p $2
+    [ -z "$(mount | grep "$1 on $2")" ] && mount -t nfs -o rw,noatime $1 $2 
 }
 fun_mount_nfs_padavan() {
-	# 需要Padavan支持nfs, rpc服务由portmap提供
-	# $1:mount_src $2:mount_dest 
-	[ -d "$2" ] || mkdir -p $2
-	[ -z "$(pidof portmap)" ] && /sbin/portmap && sleep 2
-	[ -z "$(mount | grep "$1 on $2")" ] && mount -t nfs -o rw,noatime,vers=3 $1 $2 
+    # 需要Padavan支持nfs, rpc服务由portmap提供
+    # $1:mount_src $2:mount_dest 
+    [ -d "$2" ] || mkdir -p $2
+    [ -z "$(pidof portmap)" ] && /sbin/portmap && sleep 2
+    [ -z "$(mount | grep "$1 on $2")" ] && mount -t nfs -o rw,noatime,vers=3 $1 $2 
 }
 
 # === mount smb ======================
