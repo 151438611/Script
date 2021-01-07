@@ -1,6 +1,7 @@
 #!/bin/bash
 # 用于 Centos 测试电脑上进行网卡测试,安装相关软件: yum install net-tools psmisc iperf3 dos2unix cifs-utils
-# 注意：Centos 需要关闭 selinux 和 配置或关闭firewalld：firewall-cmd --permanent --zone=public --add-port=5201-5204/tcp
+# 注意：1、必须关闭网卡的随机命名, 开启网卡按顺序命名
+# 	2、Centos 需要关闭 selinux 和 配置或关闭firewalld：firewall-cmd --permanent --zone=public --add-port=5201-5204/tcp
 # 20200717新增功能: 多端口测试(多端口可依次按顺序测试,也可同时并行测试),新增手动输入文件夹
 # 20200723新增功能：增加iperf3性能测试结果检查
 # 20210101新增功能：1 根据芯片型号和网口数量,识别网卡型号作为参考; 2 修改拷到共享盘的测试数据文件名格式为：网卡型号_MAC_eth.txt
@@ -89,7 +90,8 @@ fun_get_net_hardware_2() {
 			fi
 		elif [ -n "$(echo "$net_hardware" | grep 82576)" ]; then
 			nic_port_num=$(echo "$net_hardware" | grep -c 82576)
-			if [ $nic_port_num -eq 2 ]; then nic_model="82576-2T"
+			if [ $nic_port_num -eq 2 ]; then 
+				ethtool eth1 | grep -qi 10baseT && nic_model="82576-2T" || nic_model="82576-2S"
 			else nic_model="82576_model_unknow"
 			fi
 		elif [ -n "$(echo "$net_hardware" | grep 82580)" ]; then
@@ -105,8 +107,10 @@ fun_get_net_hardware_2() {
 			fi
 		elif [ -n "$(echo "$net_hardware" | grep -i I350)" ]; then 
 			nic_port_num=$(echo "$net_hardware" | grep -ci i350)
-			if [ $nic_port_num -eq 2 ]; then nic_model="I350-2"
-			elif [ $nic_port_num -eq 4 ]; then nic_model="I350-4"
+			if [ $nic_port_num -eq 2 ]; then 
+				ethtool eth1 | grep -qi 10baseT && nic_model="I350-2T" || nic_model="I350-2S"
+			elif [ $nic_port_num -eq 4 ]; then 
+				ethtool eth1 | grep -qi 10baseT && nic_model="I350-4T" || nic_model="I350-4S"
 			else nic_model="I350_model_unknow"
 			fi
 		elif [ -n "$(echo "$net_hardware" | grep -i BCM57810)" ]; then 
