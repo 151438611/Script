@@ -384,6 +384,8 @@ EOL
 	echo >> $bashrc
 	echo "export SPARK_HOME=$spark_home" >> $bashrc
 	echo 'export PATH=$PATH:$SPARK_HOME/bin:$SPARK_HOME/sbin' >> $bashrc
+	echo '#export PYTHONPATH=$PYTHONPATH:$SPARK_HOME/python:$SPARK_HOME/python/lib/py4j-0.10.9-src.zip' >> $bashrc
+	echo '#export PYSPARK_PYTHON=python3' >> $bashrc
 	echo >> $bashrc
 	source $bashrc
 	# spark 无版本测试命令
