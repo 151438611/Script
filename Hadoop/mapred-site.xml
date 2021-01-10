@@ -3,7 +3,7 @@
 <!-- Hadoop v2.10.1 v3.3.0 test ok -->
 
 <configuration>
-<!-- Hadoop 2.10.1 -->
+<!-- Hadoop 2.10.1 & 3.3.0 -->
     <property>
         <name>mapreduce.framework.name</name>
         <value>yarn</value>
