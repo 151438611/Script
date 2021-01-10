@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
-<!-- Hadoop v2.x:8020 v3.x:9820 ; v2.10.1 v3.3.0 ok-->
+<!-- Hadoop v2.10.1 v3.3.0 test ok ; fs.defaultFS v2.x:8020 v3.x:9820 -->
 
 <configuration>
 
