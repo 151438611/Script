@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
-<!-- Hadoop 2.10.1 -->
+<!-- Hadoop v2.x:8020 v3.x:9820 -->
 
 <configuration>
 
