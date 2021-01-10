@@ -1,4 +1,3 @@
-# Java Hadoop HBase Hive Spark Kafka Sqoop Mahout
 
 export JAVA_HOME=/usr/local/java
 export PATH=$PATH:$JAVA_HOME/bin
