@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
 <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+<!-- Hadoop v2.10.1 v3.3.0 test ok -->
 
 <configuration>
 <!-- Hadoop 2.10.1 -->
@@ -15,7 +16,6 @@
         <name>mapreduce.jobhistory.webapp.address</name>
         <value>master:19888</value>
     </property>
-
 <!-- Hadoop 3.3.0还需添加下面的代码，否则运行计算会报错; Hadoop 2.x可不用添加 -->
     <property>
         <!-- 此参数可添加到 Hadoop 2.x 中 -->
