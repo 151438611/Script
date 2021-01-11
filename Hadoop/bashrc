@@ -29,7 +29,7 @@ export PATH=$PATH:$SQOOP_HOME/bin
 
 export SPARK_HOME=/usr/local/spark
 export PATH=$PATH:$SPARK_HOME/bin:$SPARK_HOME/sbin
-#export PYTHONPATH=$PYTHONPATH:$SPARK_HOME/python:$SPARK_HOME/python/lib/py4j-0.10.9-src.zip
+#export PYTHONPATH=$PYTHONPATH:$SPARK_HOME/python:$SPARK_HOME/python/lib/py4j-0.10.7-src.zip
 #export PYSPARK_PYTHON=python3
 
 export KAFKA_HOME=/usr/local/kafka
