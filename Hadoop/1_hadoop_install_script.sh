@@ -7,7 +7,7 @@
 # 以下变量可自行修改; 注意：1必须写绝对路径，不能使用~/.bashrc之类;  2定义的目录需要注意权限问题
 bashrc="/root/.bashrc"
 install_dir=/root
-java_home=/usr/local/java
+java_home=$install_dir/java
 
 hadoop_home=$install_dir/hadoop
 hadoop_conf=$hadoop_home/etc/hadoop
