@@ -36,12 +36,12 @@ zookeeper_data=$zookeeper_home/data
 zookeeper_log=$zookeeper_home/logs
 zookeeper_hosts="master slave1 slave2"
 
-hadoop_url=https://mirrors.aliyun.com/apache/hadoop/common/current2/hadoop-2.10.1.tar.gz
-hbase_url=https://mirrors.aliyun.com/apache/hbase/2.4.0/hbase-2.4.0-bin.tar.gz
-hive_url=https://mirrors.aliyun.com/apache/hive/stable-2/apache-hive-2.3.7-bin.tar.gz
-mysql_connector_java_url=http://mirrors.163.com/mysql/Downloads/Connector-J/mysql-connector-java-5.1.49.tar.gz
-spark_url=https://mirrors.aliyun.com/apache/spark/spark-2.4.7/spark-2.4.7-bin-hadoop2.7.tgz
-zookeeper_url=https://mirrors.aliyun.com/apache/zookeeper/zookeeper-3.6.2/apache-zookeeper-3.6.2-bin.tar.gz
+hadoop_url="https://mirrors.aliyun.com/apache/hadoop/common/current2/hadoop-2.10.1.tar.gz"
+hbase_url="https://mirrors.aliyun.com/apache/hbase/2.4.0/hbase-2.4.0-bin.tar.gz"
+hive_url="https://mirrors.aliyun.com/apache/hive/stable-2/apache-hive-2.3.7-bin.tar.gz"
+mysql_connector_java_url="http://mirrors.163.com/mysql/Downloads/Connector-J/mysql-connector-java-5.1.49.tar.gz"
+spark_url="https://mirrors.aliyun.com/apache/spark/spark-2.4.7/spark-2.4.7-bin-hadoop2.7.tgz"
+zookeeper_url="https://mirrors.aliyun.com/apache/zookeeper/zookeeper-3.6.2/apache-zookeeper-3.6.2-bin.tar.gz"
 
 tmp_download=/tmp/download
 tmp_untar=/tmp/untar
