@@ -15,8 +15,8 @@ hadoop_namenodr_dir=$hadoop_home/hdfs/name
 hadoop_datanodr_dir=$hadoop_home/hdfs/data
 hadoop_tmp=$hadoop_home/tmp
 hadoop_log=$hadoop_home/logs
-hadoop_master="master2"
-hadoop_slaves="slave1 slave2"
+hadoop_master="master"
+hadoop_slaves="master slave1 slave2"
 
 hbase_home=$install_dir/hbase
 hbase_conf=$hbase_home/conf
@@ -27,8 +27,8 @@ hive_conf=$hive_home/conf
 
 spark_home=$install_dir/spark
 spark_conf=$spark_home/conf
-spark_master="master2"
-spark_slaves="master2"
+spark_master="master"
+spark_slaves="master"
 
 zookeeper_home=$install_dir/zookeeper
 zookeeper_conf=$zookeeper_home/conf
