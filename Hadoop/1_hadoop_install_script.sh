@@ -16,7 +16,7 @@ hadoop_datanodr_dir=$hadoop_home/hdfs/data
 hadoop_tmp=$hadoop_home/tmp
 hadoop_log=$hadoop_home/logs
 hadoop_master="master"
-hadoop_slaves="master slave1 slave2"
+hadoop_slaves="master slave1"
 
 hbase_home=$install_dir/hbase
 hbase_conf=$hbase_home/conf
