@@ -1,7 +1,7 @@
 #!/bin/bash
 # 适用于全新 hadoop 2.x 单机 master 的自动下载、安装、配置脚本
 # 运行需求依赖： yum install wget
-# 前提： 1、关闭selinux和防火墙; 2、配置hosts; 3、配置ssh免密码登陆; 4、下载解压安装java, 最好下载并解压好相关软件
+# 前提： 1、关闭selinux和防火墙; 2、配置hosts、(可选)配置主机名; 3、配置ssh免密码登陆; 4、下载解压安装java, 最好下载并解压好相关软件
 # hadoop及组件国内下载地址: https://mirrors.aliyun.com/apache/ 
 
 # 以下变量可自行修改; 注意：1必须写绝对路径，不能使用~/.bashrc之类;  2定义的目录需要注意权限问题
