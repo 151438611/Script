@@ -266,7 +266,15 @@ EOL
         <name>hbase.unsafe.stream.capability.enforce</name>
         <value>false</value>
     </property>
-
+    <property>
+        <name>hbase.wal.provider</name>
+        <value>filesystem</value>
+    </property>
+    <property>
+        <name>dfs.replication</name>       
+        <value>1</value>
+    </property>
+    
 </configuration>
 EOL
 
