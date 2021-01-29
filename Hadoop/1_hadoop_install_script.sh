@@ -11,11 +11,11 @@ install_dir=/home/ha
 java_home=$install_dir/java
 
 hadoop_home=$install_dir/hadoop
-hadoop_conf=$hadoop_home/etc/hadoop
-hadoop_namenodr_dir=$hadoop_home/hdfs/name
-hadoop_datanodr_dir=$hadoop_home/hdfs/data
-hadoop_tmp=$hadoop_home/tmp
-hadoop_log=$hadoop_home/logs
+hadoop_conf_dir=$hadoop_home/etc/hadoop
+hadoop_namenode_dir=$hadoop_home/hdfs/name
+hadoop_datanode_dir=$hadoop_home/hdfs/data
+hadoop_tmp_dir=$hadoop_home/tmp
+hadoop_logs_dir=$hadoop_home/logs
 hadoop_master=$host_name
 hadoop_slaves="$host_name "
 # hadoop版本支持: 2.10.1 3.2.2 3.3.0
@@ -23,22 +23,22 @@ hadoop_version=2.10.1
 hadoop_url="https://mirrors.aliyun.com/apache/hadoop/common/hadoop-${hadoop_version}/hadoop-${hadoop_version}.tar.gz"
 
 hbase_home=$install_dir/hbase
-hbase_conf=$hbase_home/conf
-hbase_zkdata=$hbase_home/zkdata
+hbase_conf_dir=$hbase_home/conf
+hbase_zkdata_dir=$hbase_home/zkdata
 hbase_regionservers=$host_name
 # hbase版本支持: 2.2.6 2.3.4 2.4.1
 hbase_version=2.4.1
 hbase_url="https://mirrors.aliyun.com/apache/hbase/${hbase_version}/hbase-${hbase_version}-bin.tar.gz"
 
 hive_home=$install_dir/hive
-hive_conf=$hive_home/conf
+hive_conf_dir=$hive_home/conf
 # hive版本支持: 2.3.8 3.1.2
 hive_version=2.3.8
 hive_url="https://mirrors.aliyun.com/apache/hive/hive-${hive_version}/apache-hive-${hive_version}-bin.tar.gz"
 mysql_connector_java_url="http://mirrors.163.com/mysql/Downloads/Connector-J/mysql-connector-java-5.1.49.tar.gz"
 
 spark_home=$install_dir/spark
-spark_conf=$spark_home/conf
+spark_conf_dir=$spark_home/conf
 spark_master=$host_name
 spark_slaves="$host_name "
 # spark版本支持: 2.4.7 3.0.1
@@ -51,9 +51,9 @@ elif [ -n "$(echo $spark_version | grep ^2)" ]; then
 fi
 
 zookeeper_home=$install_dir/zookeeper
-zookeeper_conf=$zookeeper_home/conf
-zookeeper_data=$zookeeper_home/data
-zookeeper_log=$zookeeper_home/logs
+zookeeper_conf_dir=$zookeeper_home/conf
+zookeeper_data_dir=$zookeeper_home/data
+zookeeper_logs_dir=$zookeeper_home/logs
 zookeeper_hosts="$host_name slave1 slave2"
 # zookeeper版本支持: 3.5.9 3.6.2
 zookeeper_version=3.5.9
@@ -78,9 +78,9 @@ red_echo() {
 }
 
 # 系统版本
-redhat=$(grep -iE "centos|redhat" /etc/os-release)
-debian=$(grep -iE "debian|ubuntu" /etc/os-release)
-[ "$redhat" ] && {
+redhat_os=$(grep -iE "centos|redhat" /etc/os-release)
+debian_os=$(grep -iE "debian|ubuntu" /etc/os-release)
+[ "$redhat_os" ] && {
 	setenforce 0
 	sed -i 's/SELINUX=enforcing/SELINUX=disabled/' /etc/selinux/config
 	systemctl stop firewalld
@@ -95,19 +95,19 @@ install_hadoop() {
 		tar -zxf $tmp_download/${hadoop_url##*/} -C $tmp_untar
 		mv -f ${tmp_untar}/hadoop-$hadoop_version $hadoop_home
 	}
-	[ -d "$hadoop_conf" ] || { red_echo "\n$hadoop_conf : No such directory, error exit \n"; exit 20; }
-	mkdir -p $hadoop_namenodr_dir $hadoop_datanodr_dir $hadoop_tmp $hadoop_log
+	[ -d "$hadoop_conf_dir" ] || { red_echo "\n$hadoop_conf_dir : No such directory, error exit \n"; exit 20; }
+	mkdir -p $hadoop_namenode_dir $hadoop_datanode_dir $hadoop_tmp_dir $hadoop_logs_dir
 	
 	# config hadoop-env.sh
-	[ -f "$hadoop_conf/hadoop-env.sh" ] || { red_echo "$hadoop_conf/hadoop-env.sh : No such file,exit "; exit 21; }
-	hadoop_env_java_line=$(grep -n "export JAVA_HOME=" $hadoop_conf/hadoop-env.sh | awk -F ":" '{print $1}')
+	[ -f "$hadoop_conf_dir/hadoop-env.sh" ] || { red_echo "$hadoop_conf_dir/hadoop-env.sh : No such file,exit "; exit 21; }
+	hadoop_env_java_line=$(grep -n "export JAVA_HOME=" $hadoop_conf_dir/hadoop-env.sh | awk -F ":" '{print $1}')
 	sed_info="export JAVA_HOME=$java_home"
 	fuhao="'"
-	sed_cmd="sed -i ${fuhao}${hadoop_env_java_line}c ${sed_info}$fuhao $hadoop_conf/hadoop-env.sh"
+	sed_cmd="sed -i ${fuhao}${hadoop_env_java_line}c ${sed_info}$fuhao $hadoop_conf_dir/hadoop-env.sh"
 	eval ${sed_cmd}
 	
 	# config core-site.xml
-	cat << EOL > $hadoop_conf/core-site.xml
+	cat << EOL > $hadoop_conf_dir/core-site.xml
 <?xml version="1.0" encoding="UTF-8"?>
 <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
 <configuration>
@@ -118,7 +118,7 @@ install_hadoop() {
 	</property>
 	<property>
 		<name>hadoop.tmp.dir</name>
-		<value>${hadoop_tmp}</value>
+		<value>${hadoop_tmp_dir}</value>
 	</property>
 	
 </configuration>
@@ -127,22 +127,23 @@ EOL
 	# config hdfs-site.xml
 	dfs_replication=$(echo $hadoop_slaves | awk '{print NF}')
 	[ $dfs_replication -eq 1 ] && dfs_replication=1 || dfs_replication=3
-	cat << EOL > $hadoop_conf/hdfs-site.xml
+	echo $hadoop_version | grep -q ^2 && dfs_nn_secondary_http_port=50090 || dfs_nn_secondary_http_port=9868
+	cat << EOL > $hadoop_conf_dir/hdfs-site.xml
 <?xml version="1.0" encoding="UTF-8"?>
 <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
 <configuration>
 
 	<property>
 		<name>dfs.namenode.name.dir</name>
-		<value>${hadoop_namenodr_dir}</value>
+		<value>${hadoop_namenode_dir}</value>
 	</property>
 	<property>
 		<name>dfs.datanode.data.dir</name>
-		<value>${hadoop_datanodr_dir}</value>      
+		<value>${hadoop_datanode_dir}</value>      
 	</property>
 	<property>
 		<name>dfs.namenode.secondary.http-address</name>
-		<value>${hadoop_master}:50090</value>
+		<value>${hadoop_master}:${dfs_nn_secondary_http_port}</value>
 	</property>
 	<property>
 		<name>dfs.replication</name>
@@ -158,7 +159,7 @@ EOL
 
 	# config mapred-site.xml
 	if [ -n "$(echo $hadoop_version | grep ^3.)" ]; then
-		cat << EOL > $hadoop_conf/mapred-site.xml
+		cat << EOL > $hadoop_conf_dir/mapred-site.xml
 <?xml version="1.0"?>
 <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
 <configuration>
@@ -191,7 +192,7 @@ EOL
 </configuration>
 EOL
 	else
-		cat << EOL > $hadoop_conf/mapred-site.xml
+		cat << EOL > $hadoop_conf_dir/mapred-site.xml
 <?xml version="1.0"?>
 <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
 <configuration>
@@ -218,7 +219,7 @@ EOL
 	fi
 
 	# config yarn-site.xml
-	cat << EOL > $hadoop_conf/yarn-site.xml
+	cat << EOL > $hadoop_conf_dir/yarn-site.xml
 <?xml version="1.0"?>
 <configuration>
 <!-- Site specific YARN configuration properties -->
@@ -244,12 +245,12 @@ EOL
 EOL
 
 	# config slaves/workers
-	rm -f $hadoop_conf/slaves $hadoop_conf/workers
+	rm -f $hadoop_conf_dir/slaves $hadoop_conf_dir/workers
 	for hadoop_slave in $hadoop_slaves
 	do
 		echo $hadoop_version | grep -q ^2. && \
-			echo $hadoop_slave >> $hadoop_conf/slaves || \
-			echo $hadoop_slave >> $hadoop_conf/workers
+			echo $hadoop_slave >> $hadoop_conf_dir/slaves || \
+			echo $hadoop_slave >> $hadoop_conf_dir/workers
 	done
 
 	# config ~/.bashrc
@@ -266,7 +267,12 @@ EOL
 	echo 'export PATH=$PATH:$HADOOP_HOME/bin:$HADOOP_HOME/sbin' >> $bashrc
 	# 在ubuntu中运行source $bashrc会自动检测是否在交互界面,不在则退出
 	source $bashrc
-	bule_echo "\nHadoop is install completed; \nPlease run command: 'source ~/.bashrc'"
+	[ "$redhat_os" ] && {
+		hadoop version && bule_echo "\nHadoop is install Success.\n" || red_echo "\nHadoop is install Fail.\n"
+		}
+	[ "$debian_os" ] && {
+		bule_echo "\nHadoop is install completed; \nPlease run command: 'source ~/.bashrc' \n"
+		}
 	bule_echo "First run hadoop need format hdfs : 'hdfs namenode -format'\n"
 }
 
@@ -278,17 +284,17 @@ install_hbase() {
 		tar -zxf $tmp_download/${hbase_url##*/} -C $tmp_untar
 		mv -f ${tmp_untar}/hbase-${hbase_version} $hbase_home
 	}
-	[ -d "$hbase_conf" ] || { red_echo "$hbase_conf : No such directory, error exit "; exit 22; }
-	hbase_env_java_line=$(grep -n "export JAVA_HOME=" $hbase_conf/hbase-env.sh | awk -F ":" '{print $1}')
+	[ -d "$hbase_conf_dir" ] || { red_echo "$hbase_conf_dir : No such directory, error exit "; exit 22; }
+	hbase_env_java_line=$(grep -n "export JAVA_HOME=" $hbase_conf_dir/hbase-env.sh | awk -F ":" '{print $1}')
 	sed_info="export JAVA_HOME=$java_home"
 	fuhao="'"
-	sed_cmd="sed -i ${fuhao}${hbase_env_java_line}c ${sed_info}$fuhao $hbase_conf/hbase-env.sh"
+	sed_cmd="sed -i ${fuhao}${hbase_env_java_line}c ${sed_info}$fuhao $hbase_conf_dir/hbase-env.sh"
 	eval ${sed_cmd}
 	
-	[ -d "$hbase_zkdata" ] || mkdir -p $hbase_zkdata
+	[ -d "$hbase_zkdata_dir" ] || mkdir -p $hbase_zkdata_dir
 
 	# config hbase-site.xml
-	cat << EOL > $hbase_conf/hbase-site.xml
+	cat << EOL > $hbase_conf_dir/hbase-site.xml
 <?xml version="1.0"?>
 <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
 <configuration>
@@ -303,7 +309,7 @@ install_hbase() {
     </property>
     <property>
         <name>hbase.zookeeper.property.dataDir</name>
-        <value>${hbase_zkdata}</value> 
+        <value>${hbase_zkdata_dir}</value> 
     </property>
     <property>  
         <name>hbase.zookeeper.quorum</name>  
@@ -325,16 +331,21 @@ install_hbase() {
 </configuration>
 EOL
 	# config regionservers
-	rm -f $hbase_conf/regionservers
+	rm -f $hbase_conf_dir/regionservers
 	for hbase_regionserver in $hbase_regionservers
 	do
-		echo $hbase_regionserver >> $hbase_conf/regionservers
+		echo $hbase_regionserver >> $hbase_conf_dir/regionservers
 	done
 	echo >> $bashrc
 	echo "export HBASE_HOME=$hbase_home" >> $bashrc
 	echo 'export PATH=$PATH:$HBASE_HOME/bin' >> $bashrc
 	source $bashrc
-	bule_echo "\nHBase is install completed; \nPlease run command: 'source ~/.bashrc'"
+	[ "$redhat_os" ] && {
+		hbase version && bule_echo "\nHBase is install Success.\n" || red_echo "\nHBase is install Fail.\n"
+		}
+	[ "$debian_os" ] && {
+		bule_echo "\nHBase is install completed; \nPlease run command: 'source ~/.bashrc' \n"
+		}
 }
 
 # 安装 Hive 封装函数
@@ -353,19 +364,19 @@ install_hive() {
 		tar -zxf $tmp_download/$mysql_connector_java_name_tgz -C $tmp_untar
 		cp -f $tmp_untar/$mysql_connector_java_name/${mysql_connector_java_name}.jar $hive_home/lib
 	}
-	[ -d "$hive_conf" ] || { red_echo "$hive_conf : No such directory, error exit "; exit 23; }
+	[ -d "$hive_conf_dir" ] || { red_echo "$hive_conf_dir : No such directory, error exit "; exit 23; }
 	
 	# config hive-env.sh
-	[ -f "$hive_conf/hive-env.sh" ] || mv -f $hive_conf/hive-env.sh.template $hive_conf/hive-env.sh
-	echo >> $hive_conf/hive-env.sh
-	echo "export JAVA_HOME=$java_home" >> $hive_conf/hive-env.sh
-	echo "export HADOOP_HOME=$hadoop_home" >> $hive_conf/hive-env.sh
-	echo "export HIVE_HOME=$hive_home" >> $hive_conf/hive-env.sh
-	echo "export HIVE_CONF_DIR=$hive_conf" >> $hive_conf/hive-env.sh
-	echo >> $hive_conf/hive-env.sh
+	[ -f "$hive_conf_dir/hive-env.sh" ] || mv -f $hive_conf_dir/hive-env.sh.template $hive_conf_dir/hive-env.sh
+	echo >> $hive_conf_dir/hive-env.sh
+	echo "export JAVA_HOME=$java_home" >> $hive_conf_dir/hive-env.sh
+	echo "export HADOOP_HOME=$hadoop_home" >> $hive_conf_dir/hive-env.sh
+	echo "export HIVE_HOME=$hive_home" >> $hive_conf_dir/hive-env.sh
+	echo "export HIVE_CONF_DIR=$hive_conf_dir" >> $hive_conf_dir/hive-env.sh
+	echo >> $hive_conf_dir/hive-env.sh
 	
 	# config hive-site.xml
-	cat << EOL > $hive_conf/hive-site.xml
+	cat << EOL > $hive_conf_dir/hive-site.xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
 <configuration>
@@ -394,10 +405,15 @@ EOL
 	echo "export HIVE_HOME=$hive_home" >> $bashrc
 	echo 'export PATH=$PATH:$HIVE_HOME/bin' >> $bashrc
 	source $bashrc
-	# hive 无版本测试命令
-	#which hive && bule_echo "\nHive is install Success.\n" || red_echo "\nHive is install Fail.\n"
-	bule_echo "\nHive is install completed; \nPlease run command: 'source ~/.bashrc'"
-	yellow_echo "\n注意：Hive 还需要安装 Mysql ,并创建用户和密码都为hive, 并添加权限 \n"
+	[ "$redhat_os" ] && {
+		which hive && bule_echo "\nHive is install Success.\n" || red_echo "\nHive is install Fail.\n"
+		}
+	[ "$debian_os" ] && {
+		bule_echo "\nHive is install completed; \nPlease run command: 'source ~/.bashrc' \n"
+		}
+	yellow_echo "\n注意：Hive 还需要安装 Mysql ,并创建用户和密码都为hive, 并添加权限: "
+	yellow_echo 'grant all privileges on *.* to "hive"@"%" identified by "hive";'"\nflush privileges; \n"
+	bule_echo "First run Hive need initialization Schema : 'schematool -dbType mysql -initSchema'\n"
 }
 
 # 安装 Spark 封装函数
@@ -408,43 +424,50 @@ install_spark() {
 		tar -zxf $tmp_download/${spark_url##*/} -C $tmp_untar
 		mv -f ${tmp_untar}/spark-* $spark_home
 	}
-	[ -d "$spark_conf" ] || { red_echo "\n$spark_conf : No such directory, error exit \n"; exit 24; }
+	[ -d "$spark_conf_dir" ] || { red_echo "\n$spark_conf_dir : No such directory, error exit \n"; exit 24; }
 	
 	# config spark-defaults.conf
-	[ -f $spark_conf/spark-defaults.conf  ] || mv -f $spark_conf/spark-defaults.conf.template $spark_conf/spark-defaults.conf
-	echo >> $spark_conf/spark-defaults.conf
-	echo "spark.eventLog.enabled		true" >> $spark_conf/spark-defaults.conf
-	echo "spark.eventLog.dir		hdfs://$hadoop_master:9000/spark/historyserver" >> $spark_conf/spark-defaults.conf
-	echo "spark.yarn.historyServer.address		$hadoop_master:18080" >> $spark_conf/spark-defaults.conf
-	echo >> $spark_conf/spark-defaults.conf
+	[ -f $spark_conf_dir/spark-defaults.conf  ] || mv -f $spark_conf_dir/spark-defaults.conf.template $spark_conf_dir/spark-defaults.conf
+	echo >> $spark_conf_dir/spark-defaults.conf
+	echo "spark.eventLog.enabled		true" >> $spark_conf_dir/spark-defaults.conf
+	echo "spark.eventLog.dir		hdfs://$hadoop_master:9000/spark/historyserver" >> $spark_conf_dir/spark-defaults.conf
+	echo "spark.yarn.historyServer.address		$hadoop_master:18080" >> $spark_conf_dir/spark-defaults.conf
+	echo >> $spark_conf_dir/spark-defaults.conf
 	yellow_echo "Please Run Command: 'hdfs dfs -mkdir -p /spark/historyserver'"
 	
 	# config spark-env.sh
-	[ -f $spark_conf/spark-env.sh  ] || mv -f $spark_conf/spark-env.sh.template $spark_conf/spark-env.sh
-	echo >> $spark_conf/spark-env.sh
-	echo "export JAVA_HOME=$java_home" >> $spark_conf/spark-env.sh
-	echo "export SPARK_MASTER_HOST=$hadoop_master" >> $spark_conf/spark-env.sh
-	echo "export SPARK_MASTER_PORT=7077" >> $spark_conf/spark-env.sh
-	echo "export SPARK_MASTER_WEBUI_PORT=8080" >> $spark_conf/spark-env.sh
-	echo "export HADOOP_HOME=$hadoop_home" >> $spark_conf/spark-env.sh
-	echo 'export HADOOP_CONF_DIR=$HADOOP_HOME/etc/hadoop' >> $spark_conf/spark-env.sh
-	echo 'export SPARK_DIST_CLASSPATH=$($HADOOP_HOME/bin/hadoop classpath)' >> $spark_conf/spark-env.sh
-	echo 'export SPARK_HISTORY_OPTS="-Dspark.history.ui.port=18080 -Dspark.history.fs.logDirectory=hdfs://'$hadoop_master':9000/spark/historyserver -Dspark.history.retainedApplications=30"' >> $spark_conf/spark-env.sh
-	echo >> $spark_conf/spark-env.sh
+	[ -f $spark_conf_dir/spark-env.sh  ] || mv -f $spark_conf_dir/spark-env.sh.template $spark_conf_dir/spark-env.sh
+	echo >> $spark_conf_dir/spark-env.sh
+	echo "export JAVA_HOME=$java_home" >> $spark_conf_dir/spark-env.sh
+	echo "export SPARK_MASTER_HOST=$hadoop_master" >> $spark_conf_dir/spark-env.sh
+	echo "export SPARK_MASTER_PORT=7077" >> $spark_conf_dir/spark-env.sh
+	echo "export SPARK_MASTER_WEBUI_PORT=8080" >> $spark_conf_dir/spark-env.sh
+	echo "export HADOOP_HOME=$hadoop_home" >> $spark_conf_dir/spark-env.sh
+	echo 'export HADOOP_CONF_DIR=$HADOOP_HOME/etc/hadoop' >> $spark_conf_dir/spark-env.sh
+	echo 'export SPARK_DIST_CLASSPATH=$($HADOOP_HOME/bin/hadoop classpath)' >> $spark_conf_dir/spark-env.sh
+	echo 'export SPARK_HISTORY_OPTS="-Dspark.history.ui.port=18080 -Dspark.history.fs.logDirectory=hdfs://'$hadoop_master':9000/spark/historyserver -Dspark.history.retainedApplications=30"' >> $spark_conf_dir/spark-env.sh
+	echo >> $spark_conf_dir/spark-env.sh
 	
 	# config slaves
-	rm -f $spark_conf/slaves
+	rm -f $spark_conf_dir/slaves
 	for spark_slave in $spark_slaves
 	do
-		echo $spark_slave >> $spark_conf/slaves
+		echo $spark_slave >> $spark_conf_dir/slaves
 	done
 	
 	# config ~/.bashrc
 	echo >> $bashrc
 	echo "export SPARK_HOME=$spark_home" >> $bashrc
 	echo 'export PATH=$PATH:$SPARK_HOME/bin:$SPARK_HOME/sbin' >> $bashrc
+	echo '#export PYSPARK_PYTHON=python3' >> $bashrc
+	echo '#export PYTHONPATH=$PYTHONPATH:$SPARK_HOME/python:$SPARK_HOME/python/lib/py4j-0.10.7-src.zip' >> $bashrc
 	source $bashrc
-	bule_echo "\nSpark is install completed; \nPlease run command: 'source ~/.bashrc'"
+	[ "$redhat_os" ] && {
+		which spark-shell && bule_echo "\nSpark is install Success.\n" || red_echo "\nSpark is install Fail.\n"
+		}
+	[ "$debian_os" ] && {
+		bule_echo "\nSpark is install completed; \nPlease run command: 'source ~/.bashrc' \n"
+		}
 }
 
 # 安装 Zookeeper 封装函数
@@ -457,28 +480,32 @@ install_zookeeper() {
 			tar -zxf $tmp_download/${zookeeper_url##*/} -C $tmp_untar
 			mv -f ${tmp_untar}/apache-zookeeper-* $zookeeper_home
 		}
-		[ -d "$zookeeper_conf" ] || { red_echo "\n$zookeeper_conf : No such directory, error exit \n"; exit 25; }
-		mkdir -p $zookeeper_data $zookeeper_log
-		[ -f "$zookeeper_conf/zoo.cfg" ] || mv -f $zookeeper_conf/zoo_sample.cfg $zookeeper_conf/zoo.cfg
-		zookeeper_dataDir_line=$(grep -ni "dataDir=" $zookeeper_conf/zoo.cfg | awk -F ":" '{print $1}')
-		sed_info="dataDir=$zookeeper_data"
+		[ -d "$zookeeper_conf_dir" ] || { red_echo "\n$zookeeper_conf_dir : No such directory, error exit \n"; exit 25; }
+		mkdir -p $zookeeper_data_dir $zookeeper_logs_dir
+		[ -f "$zookeeper_conf_dir/zoo.cfg" ] || mv -f $zookeeper_conf_dir/zoo_sample.cfg $zookeeper_conf_dir/zoo.cfg
+		zookeeper_data_dirDir_line=$(grep -ni "dataDir=" $zookeeper_conf_dir/zoo.cfg | awk -F ":" '{print $1}')
+		sed_info="dataDir=$zookeeper_data_dir"
 		fuhao="'"
-		sed_cmd="sed -i ${fuhao}${zookeeper_dataDir_line}c ${sed_info}$fuhao $zookeeper_conf/zoo.cfg"
+		sed_cmd="sed -i ${fuhao}${zookeeper_data_dirDir_line}c ${sed_info}$fuhao $zookeeper_conf_dir/zoo.cfg"
 		eval ${sed_cmd}
-		echo "dataLogDir=$zookeeper_log" >> $zookeeper_conf/zoo.cfg
-		echo 1 > $zookeeper_data/myid
+		echo "dataLogDir=$zookeeper_logs_dir" >> $zookeeper_conf_dir/zoo.cfg
+		echo 1 > $zookeeper_data_dir/myid
 		for zookeeper_host in $zookeeper_hosts
 		do
-			echo "server.${zh_num:=1}=${zookeeper_host}:2888:3888" >> $zookeeper_conf/zoo.cfg
+			echo "server.${zh_num:=1}=${zookeeper_host}:2888:3888" >> $zookeeper_conf_dir/zoo.cfg
 			let zh_num+=1
 		done
 		echo >> $bashrc
 		echo "export ZOOKEEPER_HOME=$zookeeper_home" >> $bashrc
 		echo 'export PATH=$PATH:$ZOOKEEPER_HOME/bin' >> $bashrc
 		source $bashrc
-		#which zkServer.sh && bule_echo "\nZookeeper is install Success.\n" || red_echo "\nZookeeper is install Fail.\n"
-		bule_echo "\nZookeeper is install completed; \nPlease run command: 'source ~/.bashrc'"
-		yellow_echo "\n注意：分发后需要修改 $zookeeper_data/myid \n"
+		[ "$redhat_os" ] && {
+			which zkServer.sh && bule_echo "\nZookeeper is install Success.\n" || red_echo "\nZookeeper is install Fail.\n"
+			}
+		[ "$debian_os" ] && {
+			bule_echo "\nZookeeper is install completed; \nPlease run command: 'source ~/.bashrc' \n"
+			}
+		yellow_echo "\n注意：分发后需要修改 $zookeeper_data_dir/myid \n"
 	else
 		red_echo "\nZookeeper安装失败,Zookeeper主机数量至少需要3个,现只有${zookeeper_host_num}个\n"
 		exit 2
