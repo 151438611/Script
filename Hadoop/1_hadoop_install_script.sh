@@ -271,9 +271,9 @@ EOL
 		hadoop version && bule_echo "\nHadoop is install Success.\n" || red_echo "\nHadoop is install Fail.\n"
 		}
 	[ "$debian_os" ] && {
-		bule_echo "\nHadoop is install completed; \nPlease run command: 'source ~/.bashrc' \n"
+		bule_echo "\nHadoop is install completed; \nPlease run command: source ~/.bashrc \n"
 		}
-	bule_echo "First run hadoop need format hdfs : 'hdfs namenode -format'\n"
+	bule_echo "First run Hadoop need format hdfs : hdfs namenode -format\n"
 }
 
 # 安装 HBase 封装函数
@@ -344,7 +344,7 @@ EOL
 		hbase version && bule_echo "\nHBase is install Success.\n" || red_echo "\nHBase is install Fail.\n"
 		}
 	[ "$debian_os" ] && {
-		bule_echo "\nHBase is install completed; \nPlease run command: 'source ~/.bashrc' \n"
+		bule_echo "\nHBase is install completed; \nPlease run command: source ~/.bashrc \n"
 		}
 }
 
@@ -409,11 +409,11 @@ EOL
 		which hive && bule_echo "\nHive is install Success.\n" || red_echo "\nHive is install Fail.\n"
 		}
 	[ "$debian_os" ] && {
-		bule_echo "\nHive is install completed; \nPlease run command: 'source ~/.bashrc' \n"
+		bule_echo "\nHive is install completed; \nPlease run command: source ~/.bashrc \n"
 		}
 	yellow_echo "\n注意：Hive 还需要安装 Mysql ,并创建用户和密码都为hive, 并添加权限: "
 	yellow_echo 'grant all privileges on *.* to "hive"@"%" identified by "hive";'"\nflush privileges; \n"
-	bule_echo "First run Hive need initialization Schema : 'schematool -dbType mysql -initSchema'\n"
+	bule_echo "First run Hive need initialization Schema : schematool -dbType mysql -initSchema \n"
 }
 
 # 安装 Spark 封装函数
@@ -466,7 +466,7 @@ install_spark() {
 		which spark-shell && bule_echo "\nSpark is install Success.\n" || red_echo "\nSpark is install Fail.\n"
 		}
 	[ "$debian_os" ] && {
-		bule_echo "\nSpark is install completed; \nPlease run command: 'source ~/.bashrc' \n"
+		bule_echo "\nSpark is install completed; \nPlease run command: source ~/.bashrc \n"
 		}
 }
 
@@ -503,7 +503,7 @@ install_zookeeper() {
 			which zkServer.sh && bule_echo "\nZookeeper is install Success.\n" || red_echo "\nZookeeper is install Fail.\n"
 			}
 		[ "$debian_os" ] && {
-			bule_echo "\nZookeeper is install completed; \nPlease run command: 'source ~/.bashrc' \n"
+			bule_echo "\nZookeeper is install completed; \nPlease run command: source ~/.bashrc \n"
 			}
 		yellow_echo "\n注意：分发后需要修改 $zookeeper_data_dir/myid \n"
 	else
