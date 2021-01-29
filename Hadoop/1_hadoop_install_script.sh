@@ -82,7 +82,7 @@ redhat_os=$(grep -iE "centos|redhat" /etc/os-release)
 debian_os=$(grep -iE "debian|ubuntu" /etc/os-release)
 [ "$redhat_os" ] && {
 	[ $(getenforce) = "Disabled" ] || red_echo "User root user run Command: \n  setenforce 0 ; sed -i 's/SELINUX=enforcing/SELINUX=disabled/' /etc/selinux/config"
-	[ "$(systemctl status firewalld | grep running)" ] || red_echo "User root user run Command: \n  systemctl stop firewalld ; systemctl disable firewalld"
+	[ "$(systemctl status firewalld | grep running)" ] && red_echo "User root user run Command: \n  systemctl stop firewalld ; systemctl disable firewalld"
 }
 
 # 安装 Hadoop 封装函数
