@@ -1,10 +1,11 @@
 #!/bin/bash
 # 适用于全新 hadoop 2.x 单机 master 的自动下载、安装、配置脚本
-# 运行需求依赖： yum install wget
-# 前提： 1、关闭selinux和防火墙; 2、配置hosts、(可选)配置主机名; 3、配置ssh免密码登陆; 4、下载解压安装java, 最好下载并解压好相关软件
+# 仅支持x86_64架构的CPU系统：Centos、Ubuntu; 运行需求依赖： yum install wget
+# 前提： 1、关闭selinux和防火墙; 2、配置/etc/hosts、(可选)配置主机名; 3、配置ssh免密码登陆; 4、下载解压安装java, 最好下载并解压好相关软件
 # hadoop及组件国内下载地址: https://mirrors.aliyun.com/apache/ 
 
 # 以下变量可自行修改; 注意：1必须写绝对路径，不能使用~/.bashrc之类;  2定义的目录需要注意权限问题
+host_name=master
 bashrc="/home/ha/.bashrc"
 install_dir=/home/ha
 java_home=$install_dir/java
@@ -15,8 +16,8 @@ hadoop_namenodr_dir=$hadoop_home/hdfs/name
 hadoop_datanodr_dir=$hadoop_home/hdfs/data
 hadoop_tmp=$hadoop_home/tmp
 hadoop_log=$hadoop_home/logs
-hadoop_master="master"
-hadoop_slaves=$hadoop_master
+hadoop_master=$host_name
+hadoop_slaves="$host_name "
 # hadoop版本支持: 2.10.1 3.2.2 3.3.0
 hadoop_version=2.10.1
 hadoop_url="https://mirrors.aliyun.com/apache/hadoop/common/hadoop-${hadoop_version}/hadoop-${hadoop_version}.tar.gz"
@@ -24,9 +25,9 @@ hadoop_url="https://mirrors.aliyun.com/apache/hadoop/common/hadoop-${hadoop_vers
 hbase_home=$install_dir/hbase
 hbase_conf=$hbase_home/conf
 hbase_zkdata=$hbase_home/zkdata
-hbase_regionservers=$hadoop_master
-# hbase版本支持: 2.2.6 2.3.4 2.4.0
-hbase_version=2.4.0
+hbase_regionservers=$host_name
+# hbase版本支持: 2.2.6 2.3.4 2.4.1
+hbase_version=2.4.1
 hbase_url="https://mirrors.aliyun.com/apache/hbase/${hbase_version}/hbase-${hbase_version}-bin.tar.gz"
 
 hive_home=$install_dir/hive
@@ -38,8 +39,8 @@ mysql_connector_java_url="http://mirrors.163.com/mysql/Downloads/Connector-J/mys
 
 spark_home=$install_dir/spark
 spark_conf=$spark_home/conf
-spark_master=$hadoop_master
-spark_slaves=$hadoop_master
+spark_master=$host_name
+spark_slaves="$host_name "
 # spark版本支持: 2.4.7 3.0.1
 spark_version=2.4.7
 if [ -n "$(echo $spark_version | grep ^3)" ]; then
@@ -53,14 +54,15 @@ zookeeper_home=$install_dir/zookeeper
 zookeeper_conf=$zookeeper_home/conf
 zookeeper_data=$zookeeper_home/data
 zookeeper_log=$zookeeper_home/logs
-zookeeper_hosts="master slave1 slave2"
+zookeeper_hosts="$host_name slave1 slave2"
 # zookeeper版本支持: 3.5.9 3.6.2
 zookeeper_version=3.5.9
 zookeeper_url="https://mirrors.aliyun.com/apache/zookeeper/zookeeper-${zookeeper_version}/apache-zookeeper-${zookeeper_version}-bin.tar.gz"
 
+# 临时下载和解压目录
 tmp_download=/tmp/download
 tmp_untar=/tmp/download_untar
-rm -rf $tmp_untar
+rm -rf $tmp_untar 
 mkdir -p $tmp_download $tmp_untar
 # ==================== 以上自定义变量 ====================
 
@@ -75,7 +77,17 @@ red_echo() {
 	echo -e "\033[31m$1\033[0m"
 }
 
-# 安装 Hadoop 函数
+# 系统版本
+redhat=$(grep -iE "centos|redhat" /etc/os-release)
+debian=$(grep -iE "debian|ubuntu" /etc/os-release)
+[ "$redhat" ] && {
+	setenforce 0
+	sed -i 's/SELINUX=enforcing/SELINUX=disabled/' /etc/selinux/config
+	systemctl stop firewalld
+	systemctl disable firewalld
+}
+
+# 安装 Hadoop 封装函数
 install_hadoop() {
 	[ -d "$hadoop_home" ] || {
 		wget -c -P $tmp_download $hadoop_url
@@ -83,11 +95,11 @@ install_hadoop() {
 		tar -zxf $tmp_download/${hadoop_url##*/} -C $tmp_untar
 		mv -f ${tmp_untar}/hadoop-$hadoop_version $hadoop_home
 	}
-	[ -d "$hadoop_conf" ] || { red_echo "\n$hadoop_conf : No such directory, error exit \n"; exit 2; }
+	[ -d "$hadoop_conf" ] || { red_echo "\n$hadoop_conf : No such directory, error exit \n"; exit 20; }
 	mkdir -p $hadoop_namenodr_dir $hadoop_datanodr_dir $hadoop_tmp $hadoop_log
 	
 	# config hadoop-env.sh
-	[ -f "$hadoop_conf/hadoop-env.sh" ] || { red_echo "$hadoop_conf/hadoop-env.sh : No such file,exit "; exit 2; }
+	[ -f "$hadoop_conf/hadoop-env.sh" ] || { red_echo "$hadoop_conf/hadoop-env.sh : No such file,exit "; exit 21; }
 	hadoop_env_java_line=$(grep -n "export JAVA_HOME=" $hadoop_conf/hadoop-env.sh | awk -F ":" '{print $1}')
 	sed_info="export JAVA_HOME=$java_home"
 	fuhao="'"
@@ -258,7 +270,7 @@ EOL
 	bule_echo "First run hadoop need format hdfs : 'hdfs namenode -format'\n"
 }
 
-# 安装 HBase 函数
+# 安装 HBase 封装函数
 install_hbase() {
 	[ -d "$hbase_home" ] || {
 		wget -c -P $tmp_download $hbase_url
@@ -266,7 +278,7 @@ install_hbase() {
 		tar -zxf $tmp_download/${hbase_url##*/} -C $tmp_untar
 		mv -f ${tmp_untar}/hbase-${hbase_version} $hbase_home
 	}
-	[ -d "$hbase_conf" ] || { red_echo "$hbase_conf : No such directory, error exit "; exit 2; }
+	[ -d "$hbase_conf" ] || { red_echo "$hbase_conf : No such directory, error exit "; exit 22; }
 	hbase_env_java_line=$(grep -n "export JAVA_HOME=" $hbase_conf/hbase-env.sh | awk -F ":" '{print $1}')
 	sed_info="export JAVA_HOME=$java_home"
 	fuhao="'"
@@ -325,7 +337,7 @@ EOL
 	bule_echo "\nHBase is install completed; \nPlease run command: 'source ~/.bashrc'"
 }
 
-# 安装 Hive 函数
+# 安装 Hive 封装函数
 install_hive() {
 	[ -d "$hive_home" ] || {
 		wget -c -P $tmp_download $hive_url
@@ -341,7 +353,7 @@ install_hive() {
 		tar -zxf $tmp_download/$mysql_connector_java_name_tgz -C $tmp_untar
 		cp -f $tmp_untar/$mysql_connector_java_name/${mysql_connector_java_name}.jar $hive_home/lib
 	}
-	[ -d "$hive_conf" ] || { red_echo "$hive_conf : No such directory, error exit "; exit 2; }
+	[ -d "$hive_conf" ] || { red_echo "$hive_conf : No such directory, error exit "; exit 23; }
 	
 	# config hive-env.sh
 	[ -f "$hive_conf/hive-env.sh" ] || mv -f $hive_conf/hive-env.sh.template $hive_conf/hive-env.sh
@@ -388,7 +400,7 @@ EOL
 	yellow_echo "\n注意：Hive 还需要安装 Mysql ,并创建用户和密码都为hive, 并添加权限 \n"
 }
 
-# 安装 Spark 函数
+# 安装 Spark 封装函数
 install_spark() {
 	[ -d "$spark_home" ] || {
 		wget -c -P $tmp_download $spark_url
@@ -396,7 +408,8 @@ install_spark() {
 		tar -zxf $tmp_download/${spark_url##*/} -C $tmp_untar
 		mv -f ${tmp_untar}/spark-* $spark_home
 	}
-	[ -d "$spark_conf" ] || { red_echo "\n$spark_conf : No such directory, error exit \n"; exit 2; }
+	[ -d "$spark_conf" ] || { red_echo "\n$spark_conf : No such directory, error exit \n"; exit 24; }
+	
 	# config spark-defaults.conf
 	[ -f $spark_conf/spark-defaults.conf  ] || mv -f $spark_conf/spark-defaults.conf.template $spark_conf/spark-defaults.conf
 	echo >> $spark_conf/spark-defaults.conf
@@ -434,7 +447,7 @@ install_spark() {
 	bule_echo "\nSpark is install completed; \nPlease run command: 'source ~/.bashrc'"
 }
 
-# 安装 Zookeeper
+# 安装 Zookeeper 封装函数
 install_zookeeper() {
 	zookeeper_host_num=$(echo $zookeeper_hosts | awk '{print NF}')
 	if [ $zookeeper_host_num -ge 3 ] ; then
@@ -444,7 +457,7 @@ install_zookeeper() {
 			tar -zxf $tmp_download/${zookeeper_url##*/} -C $tmp_untar
 			mv -f ${tmp_untar}/apache-zookeeper-* $zookeeper_home
 		}
-		[ -d "$zookeeper_conf" ] || { red_echo "\n$zookeeper_conf : No such directory, error exit \n"; exit 2; }
+		[ -d "$zookeeper_conf" ] || { red_echo "\n$zookeeper_conf : No such directory, error exit \n"; exit 25; }
 		mkdir -p $zookeeper_data $zookeeper_log
 		[ -f "$zookeeper_conf/zoo.cfg" ] || mv -f $zookeeper_conf/zoo_sample.cfg $zookeeper_conf/zoo.cfg
 		zookeeper_dataDir_line=$(grep -ni "dataDir=" $zookeeper_conf/zoo.cfg | awk -F ":" '{print $1}')
@@ -472,31 +485,31 @@ install_zookeeper() {
 	fi
 }
 
+# 开始操作安装流程
 echo
 read -p "请检查是否已关闭 Selinux 和 防火墙 : < Yes / No > : " is_firewall
-read -p "请检查是否已配置 Hostname 和 /etc/hosts : < Yes / No > : " is_hosts
-read -p "请检查是否已配置 SSH 免密码登陆 : < Yes / No > : " is_ssh
+read -p "请检查是否已配置 /etc/hosts 和 SSH 免密码登陆 : < Yes / No > : " is_ssh_hosts
 read -p "请检查是否已下载并解压 Java 软件包 : < Yes / No > : " is_java
 echo
-read -p "是否需要安装 Hadoop < Yes / No > : " is_hadpoop
+read -p "是否需要安装 Hadoop < Yes / No > : " is_hadoop
 read -p "是否需要安装 HBase < Yes / No > : " is_hbase
 read -p "是否需要安装 Hive < Yes / No > : " is_hive
 read -p "是否需要安装 Spark < Yes / No > : " is_spark
 read -p "是否需要安装 Zookeeper < Yes / No > : " is_zookeeper
 echo
 
-[ "$(echo $is_firewall | grep -i yes)" ] && [ "$(echo $is_hosts | grep -i yes)" ] && \
-[ "$(echo $is_ssh | grep -i yes)" ] && [ "$(echo $is_java | grep -i yes)" ] || \
-	{ red_echo "\n程序退出；请检查 防火墙、/etc/hosts、SSH免密登陆、Java 等环境是否配置好； \n"; exit 2; }
-# 检查 Java ; 所有 Hadoop 生态都是基于 Java 语言, 若 Java 未安装或不存在,则无法进行下面安装
-[ -d "$java_home" ] || { red_echo "$java_home : No such directory, error exit "; exit 2; }
+[ "$(echo $is_firewall | grep -i yes)" ] && [ "$(echo $is_ssh_hosts | grep -i yes)" ] && [ "$(echo $is_java | grep -i yes)" ] || \
+	{ red_echo "\n程序退出；请检查 防火墙、/etc/hosts、SSH公钥登陆、Java 等环境是否已配置好；\n"; exit 26; }
+# 检查Java; 所有Hadoop生态都是基于Java, 若Java未安装或不存在,则无法进行下面安装
+[ -d "$java_home" ] || { red_echo "$java_home : No such directory, error exit "; exit 27; }
 [ "$(grep -i "JAVA_HOME=" $bashrc)" ] || echo "export JAVA_HOME=$java_home" >> $bashrc
 [ "$(grep -i "PATH=" $bashrc | grep -i JAVA_HOME/bin)" ] || echo 'export PATH=$PATH:$JAVA_HOME/bin' >> $bashrc
 source $bashrc
-java -version && bule_echo "\nJAVA is already installed\n" || { red_echo "\nJAVA is not install. error exit \n"; exit 2; }
+java -version && bule_echo "\nJAVA is already installed\n" || { red_echo "\nJAVA is not installed. error exit \n"; exit 28; }
 
-[ "$(echo $is_hadpoop | grep -i yes)" ] && install_hadoop
+[ "$(echo $is_hadoop | grep -i yes)" ] && install_hadoop
 [ "$(echo $is_hbase | grep -i yes)" ] && install_hbase
 [ "$(echo $is_hive | grep -i yes)" ] && install_hive
 [ "$(echo $is_spark | grep -i yes)" ] && install_spark
 [ "$(echo $is_zookeeper | grep -i yes)" ] && install_zookeeper
+
