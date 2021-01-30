@@ -69,13 +69,13 @@ mkdir -p $tmp_download $tmp_untar
 # 控制台日志颜色输出
 bule_echo() {
 	echo -e "\033[36m$1\033[0m"
-}
+	}
 yellow_echo() {
 	echo -e "\033[33m$1\033[0m"
-}
+	}
 red_echo() {
 	echo -e "\033[31m$1\033[0m"
-}
+	}
 
 # 系统版本
 redhat_os=$(grep -iE "centos|redhat" /etc/os-release)
@@ -83,7 +83,7 @@ debian_os=$(grep -iE "debian|ubuntu" /etc/os-release)
 [ "$redhat_os" ] && {
 	[ $(getenforce) = "Disabled" ] || red_echo "User root user run Command: \n  setenforce 0 ; sed -i 's/SELINUX=enforcing/SELINUX=disabled/' /etc/selinux/config"
 	[ "$(systemctl status firewalld | grep running)" ] && red_echo "User root user run Command: \n  systemctl stop firewalld ; systemctl disable firewalld"
-}
+	}
 
 # 安装 Hadoop 封装函数
 install_hadoop() {
@@ -92,7 +92,7 @@ install_hadoop() {
 		bule_echo "\nDecompressing ${hadoop_url##*/}\n"
 		tar -zxf $tmp_download/${hadoop_url##*/} -C $tmp_untar
 		mv -f ${tmp_untar}/hadoop-$hadoop_version $hadoop_home
-	}
+		}
 	[ -d "$hadoop_conf_dir" ] || { red_echo "\n$hadoop_conf_dir : No such directory, error exit \n"; exit 20; }
 	mkdir -p $hadoop_namenode_dir $hadoop_datanode_dir $hadoop_tmp_dir $hadoop_logs_dir
 	
@@ -268,9 +268,7 @@ EOL
 	[ "$redhat_os" ] && {
 		hadoop version && bule_echo "\nHadoop is install Success.\n" || red_echo "\nHadoop is install Fail.\n"
 		}
-	[ "$debian_os" ] && {
-		bule_echo "\nHadoop is install completed; \nPlease run command: source ~/.bashrc \n"
-		}
+	[ "$debian_os" ] && bule_echo "\nHadoop is install completed; \nPlease run command: source ~/.bashrc \n"
 	bule_echo "First run Hadoop need format hdfs : hdfs namenode -format\n"
 }
 
@@ -281,7 +279,7 @@ install_hbase() {
 		bule_echo "\nDecompressing ${hbase_url##*/}\n"
 		tar -zxf $tmp_download/${hbase_url##*/} -C $tmp_untar
 		mv -f ${tmp_untar}/hbase-${hbase_version} $hbase_home
-	}
+		}
 	[ -d "$hbase_conf_dir" ] || { red_echo "$hbase_conf_dir : No such directory, error exit "; exit 22; }
 	hbase_env_java_line=$(grep -n "export JAVA_HOME=" $hbase_conf_dir/hbase-env.sh | awk -F ":" '{print $1}')
 	sed_info="export JAVA_HOME=$java_home"
@@ -341,9 +339,7 @@ EOL
 	[ "$redhat_os" ] && {
 		hbase version && bule_echo "\nHBase is install Success.\n" || red_echo "\nHBase is install Fail.\n"
 		}
-	[ "$debian_os" ] && {
-		bule_echo "\nHBase is install completed; \nPlease run command: source ~/.bashrc \n"
-		}
+	[ "$debian_os" ] && bule_echo "\nHBase is install completed; \nPlease run command: source ~/.bashrc \n"
 }
 
 # 安装 Hive 封装函数
@@ -353,7 +349,7 @@ install_hive() {
 		bule_echo "\nDecompressing ${hive_url##*/}\n"
 		tar -zxf $tmp_download/${hive_url##*/} -C $tmp_untar
 		mv -f ${tmp_untar}/apache-hive-${hive_version}-bin $hive_home
-	}
+		}
 	[ -f "$(ls $hive_home/lib | grep -i mysql-connector-java))" ] || {
 		wget -c -P $tmp_download $mysql_connector_java_url
 		mysql_connector_java_name_tgz=${mysql_connector_java_url##*/}
@@ -361,7 +357,7 @@ install_hive() {
 		bule_echo "\nDecompressing $mysql_connector_java_name_tgz\n"
 		tar -zxf $tmp_download/$mysql_connector_java_name_tgz -C $tmp_untar
 		cp -f $tmp_untar/$mysql_connector_java_name/${mysql_connector_java_name}.jar $hive_home/lib
-	}
+		}
 	[ -d "$hive_conf_dir" ] || { red_echo "$hive_conf_dir : No such directory, error exit "; exit 23; }
 	
 	# config hive-env.sh
@@ -406,9 +402,7 @@ EOL
 	[ "$redhat_os" ] && {
 		which hive && bule_echo "\nHive is install Success.\n" || red_echo "\nHive is install Fail.\n"
 		}
-	[ "$debian_os" ] && {
-		bule_echo "\nHive is install completed; \nPlease run command: source ~/.bashrc \n"
-		}
+	[ "$debian_os" ] && bule_echo "\nHive is install completed; \nPlease run command: source ~/.bashrc \n"
 	yellow_echo "\n注意：Hive 还需要安装 Mysql ,并创建用户和密码都为hive, 并添加权限: "
 	yellow_echo 'grant all privileges on *.* to "hive"@"%" identified by "hive";'"\nflush privileges; \n"
 	bule_echo "First run Hive need initialization Schema : schematool -dbType mysql -initSchema \n"
@@ -421,7 +415,7 @@ install_spark() {
 		bule_echo "\nDecompressing ${spark_url##*/}\n"
 		tar -zxf $tmp_download/${spark_url##*/} -C $tmp_untar
 		mv -f ${tmp_untar}/spark-* $spark_home
-	}
+		}
 	[ -d "$spark_conf_dir" ] || { red_echo "\n$spark_conf_dir : No such directory, error exit \n"; exit 24; }
 	
 	# config spark-defaults.conf
@@ -463,9 +457,7 @@ install_spark() {
 	[ "$redhat_os" ] && {
 		which spark-shell && bule_echo "\nSpark is install Success.\n" || red_echo "\nSpark is install Fail.\n"
 		}
-	[ "$debian_os" ] && {
-		bule_echo "\nSpark is install completed; \nPlease run command: source ~/.bashrc \n"
-		}
+	[ "$debian_os" ] && bule_echo "\nSpark is install completed; \nPlease run command: source ~/.bashrc \n"
 }
 
 # 安装 Zookeeper 封装函数
@@ -477,7 +469,7 @@ install_zookeeper() {
 			bule_echo "\nDecompressing ${zookeeper_url##*/}\n"
 			tar -zxf $tmp_download/${zookeeper_url##*/} -C $tmp_untar
 			mv -f ${tmp_untar}/apache-zookeeper-* $zookeeper_home
-		}
+			}
 		[ -d "$zookeeper_conf_dir" ] || { red_echo "\n$zookeeper_conf_dir : No such directory, error exit \n"; exit 25; }
 		mkdir -p $zookeeper_data_dir $zookeeper_logs_dir
 		[ -f "$zookeeper_conf_dir/zoo.cfg" ] || mv -f $zookeeper_conf_dir/zoo_sample.cfg $zookeeper_conf_dir/zoo.cfg
@@ -500,9 +492,7 @@ install_zookeeper() {
 		[ "$redhat_os" ] && {
 			which zkServer.sh && bule_echo "\nZookeeper is install Success.\n" || red_echo "\nZookeeper is install Fail.\n"
 			}
-		[ "$debian_os" ] && {
-			bule_echo "\nZookeeper is install completed; \nPlease run command: source ~/.bashrc \n"
-			}
+		[ "$debian_os" ] && bule_echo "\nZookeeper is install completed; \nPlease run command: source ~/.bashrc \n"
 		yellow_echo "\n注意：分发后需要修改 $zookeeper_data_dir/myid \n"
 	else
 		red_echo "\nZookeeper安装失败,Zookeeper主机数量至少需要3个,现只有${zookeeper_host_num}个\n"
