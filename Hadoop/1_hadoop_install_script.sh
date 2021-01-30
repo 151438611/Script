@@ -1,10 +1,10 @@
 #!/bin/bash
-# 适用于全新 hadoop 2.x 单机 master 的自动下载、安装、配置脚本
-# 仅支持x86_64架构的CPU系统：Centos、Ubuntu; 运行需求依赖： yum install wget
-# 前提： 1、关闭selinux和防火墙; 2、配置/etc/hosts、(可选)配置主机名; 3、配置ssh免密码登陆; 4、下载解压安装java, 最好下载并解压好相关软件
-# hadoop及组件国内下载地址: https://mirrors.aliyun.com/apache/ 
+# 适用于单机伪集群的自动下载、安装、配置脚本；若安装完全分布式,需要手动分发
+# 仅支持CPU为x86_64架构的Linux系统：Centos、Ubuntu; 运行需求依赖：wget
+# 前提： 1、关闭selinux和防火墙; 2、配置/etc/hosts、(可选)配置主机名; 3、配置ssh免密码登陆; 4、下载解压java, 最好下载并解压好相关软件
+# Hadoop及组件国内镜像下载地址: https://mirrors.aliyun.com/apache/ 
 
-# 以下变量可自行修改; 注意：1必须写绝对路径，不能使用~/.bashrc之类;  2定义的目录需要注意权限问题
+# 以下变量可自行修改; 注意：1、路径写绝对路径;  2、install_dir安装目录需要有读写权限
 host_name=master
 bashrc="/home/ha/.bashrc"
 install_dir=/home/ha
