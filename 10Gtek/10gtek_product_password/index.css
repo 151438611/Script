@@ -10,7 +10,7 @@ p {
 	font-family: DejaVu Sans Mono;
 	letter-spacing: -2px;
 	position: relative;
-	top: 80px;
+	top: 50px;
 	left: 280px;
 }			
 .inputKeywords {
@@ -22,7 +22,7 @@ p {
 	font-weight: none;
 	font-family: Sans-serif;
 	position: relative;
-	top: 90px;
+	top: 50px;
 	left: 280px;
 }
 .button {
@@ -33,7 +33,7 @@ p {
 	font-weight: bold; 
 	font-family: Sans-serif;
 	position: relative;
-	top: 90px;
+	top: 50px;
 	left: 290px;
 }
 fieldset {
