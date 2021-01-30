@@ -41,7 +41,6 @@
 	<a href="http://10.5.5.11:81" target="_blank"><img border="0" src="./filebrowser.jpg" /></a>
 	<a href="http://10.5.5.05" target="_blank"><img border="0" src="./router_gx_05.jpg" /></a>
 	<a href="http://10.5.5.57" target="_blank"><img border="0" src="./router_gx_57.jpg" /></a>
-	<br>
 	<a href="http://10.5.5.18:5000" target="_blank"><img border="0" src="./dsm_jh.jpg" /></a>
 	<a href="http://10.5.5.28:5000" target="_blank"><img border="0" src="./dsm_sz.jpg" /></a>
 	<a href="http://192.168.200.250:5000" target="_blank"><img border="0" src="./dsm_wzt.jpg" /></a>
@@ -117,7 +116,7 @@ function tagColor($receive, $swRecord) {
 }
 
 echo "<fieldset>";
-echo "<table class=outputData border=1 cellspacing=0 cellpadding=0 align=center>";
+echo "<table class=outputData border=1 cellspacing=0 cellpadding=3 align=center>";
 echo "<tr class=row1>
         <th>".itemNum."</th> <th>".prodName."</th> <th>".tpwd."</th>
         </tr>";
