@@ -247,8 +247,8 @@ EOL
 	for hadoop_slave in $hadoop_slaves
 	do
 		echo $hadoop_version | grep -q ^2. && \
-			echo $hadoop_slave >> $hadoop_conf_dir/slaves || \
-			echo $hadoop_slave >> $hadoop_conf_dir/workers
+		echo $hadoop_slave >> $hadoop_conf_dir/slaves || \
+		echo $hadoop_slave >> $hadoop_conf_dir/workers
 	done
 
 	# config ~/.bashrc
