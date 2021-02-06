@@ -9,8 +9,8 @@
 # Jun		20200314  Created
 #################################################################
 export PATH=/bin:/sbin:/usr/bin:/usr/sbin:$PATH
-main_url="http://frp.xxy1.ltd:35100/file/frp"
-main_url_bak="http://frp.xxy1.ltd:35300/file/frp"
+main_url="http://frp.xxy1.ltd:35100/file/frp/"
+main_url_bak="http://frp.xxy1.ltd:35300/file/frp/"
 wget -q -O /dev/null $main_url || main_url=$main_url_bak
 
 log=/tmp/frpc.log
@@ -93,11 +93,11 @@ else
 	os_type=linux
 fi
 
-download_frpc="${main_url}/frpc_linux_${hw_type}"
+download_frpc="${main_url}frpc_linux_${hw_type}"
 case $hw_type in
 	amd64|arm64)
 	# 适用于N1和x86_64架构的Linux设备
-		download_frpc_bak="${main_url_bak}/frpc_linux_${hw_type}"
+		download_frpc_bak="${main_url_bak}frpc_linux_${hw_type}"
 		frpc=/opt/frp/frpc
 		frpc_ini=/opt/frp/frpc.ini
 		frpc_sh=/opt/frp/frpc.sh
@@ -105,7 +105,7 @@ case $hw_type in
 	;;
 	arm)
 		# K2P-B1版本CPU为BCM47189，为ARM
-		download_frpc_bak="${main_url_bak}/frpc_linux_${hw_type}"
+		download_frpc_bak="${main_url_bak}frpc_linux_${hw_type}"
 		#frpc=/tmp/frpc
 		frpc_ini=/tmp/media/data/frp.ini
 		frpc_sh=/tmp/media/data/frpc.sh
@@ -114,7 +114,7 @@ case $hw_type in
 	;;
 	mips)
 		# 适用于TP-Link WR941v6、WR841v7,暂时没有投入使用，未测试
-		download_frpc_bak="${main_url_bak}/frpc_linux_${hw_type}"
+		download_frpc_bak="${main_url_bak}frpc_linux_${hw_type}"
 		#frpc=/tmp/frpc
 		frpc_ini=/etc/frpc.ini
 		frpc_sh=/etc/frpc.sh
@@ -149,7 +149,7 @@ case $hw_type in
 	;;
 esac
 
-download_sh="${main_url}/frpc.sh"
+download_sh="${main_url}frpc.sh"
 [ -f $frpc_sh ] || { wget -O $frpc_sh $download_sh && chmod +x $frpc_sh ; }
 
 if [ -n "$(echo $hw_type | grep -Ei "mipsle|mips|arm$")" ] ; then
