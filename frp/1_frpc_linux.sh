@@ -31,7 +31,7 @@ download_frpc_fun() {
 frpc_ini_fun() {
 	# ----- 1、填写服务端的IP/域名、认证密码 -----------------------
 	server_addr=frp.xxy1.ltd
-	server_port=7777
+	server_port=6666
 	token=xxxx
 	user_name=
 	[ "$user_name" ] || user_name=frpc_$(md5sum /proc/meminfo | cut -c 1-4)
