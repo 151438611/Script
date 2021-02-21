@@ -5,6 +5,9 @@
 
 # 自行填写：zookeeper集群中的主机名或IP地址; 多个主机用空格分隔
 hosts="slave1 slave2 slave3"
+# 注意：exec_dir路径后面一定要带/号
+exec_dir="/usr/local/zookeeper/bin/"
+[ -d $exec_dir ] || exec_dir=
 
 blue_echo() {
 	echo -e "\033[36m$1\033[0m"
@@ -13,16 +16,16 @@ yellow_echo() {
 	echo -e "\033[33m$1\033[0m"
 }
 
-exec_dir="/usr/local/zookeeper/bin"
+
 case $1 in
 	"start")
-		exec_command="$exec_dir/zkServer.sh start"
+		exec_command="${exec_dir}zkServer.sh start"
 	;;
 	"stop")
-		exec_command="$exec_dir/zkServer.sh stop"
+		exec_command="${exec_dir}zkServer.sh stop"
 	;;
 	"status")
-		exec_command="$exec_dir/zkServer.sh status"
+		exec_command="${exec_dir}zkServer.sh status"
 	;;
 	*)
 		yellow_echo "Usage : $0 [ start | stop | status ]"
