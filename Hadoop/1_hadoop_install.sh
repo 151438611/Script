@@ -60,8 +60,8 @@ zookeeper_version=3.5.9
 zookeeper_url="https://mirrors.aliyun.com/apache/zookeeper/zookeeper-${zookeeper_version}/apache-zookeeper-${zookeeper_version}-bin.tar.gz"
 
 # 临时下载和解压目录
-tmp_download=/tmp/download
-tmp_untar=/tmp/download_untar
+tmp_download=/tmp/hadoop_download
+tmp_untar=/tmp/hadoop_untar
 rm -rf $tmp_untar 
 mkdir -p $tmp_download $tmp_untar
 # ==================== 以上自定义变量 ====================
