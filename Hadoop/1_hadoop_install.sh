@@ -25,7 +25,7 @@ hadoop_url="https://mirrors.aliyun.com/apache/hadoop/common/hadoop-${hadoop_vers
 hbase_home=$install_dir/hbase
 hbase_conf_dir=$hbase_home/conf
 hbase_zkdata_dir=$hbase_home/zkdata
-hbase_regionservers=$host_name
+hbase_regionservers="$host_name "
 # hbase版本支持: 2.2.6 2.3.4 2.4.1
 hbase_version=2.4.1
 hbase_url="https://mirrors.aliyun.com/apache/hbase/${hbase_version}/hbase-${hbase_version}-bin.tar.gz"
