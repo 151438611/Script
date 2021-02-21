@@ -1,5 +1,6 @@
 
 export JAVA_HOME=/usr/local/java
+export JRE_HOME=$JAVA_HOME/jre
 export PATH=$PATH:$JAVA_HOME/bin
 
 export ZOOKEEPER_HOME=/usr/local/zookeeper
