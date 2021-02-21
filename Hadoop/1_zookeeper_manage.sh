@@ -16,7 +16,6 @@ yellow_echo() {
 	echo -e "\033[33m$1\033[0m"
 }
 
-
 case $1 in
 	"start")
 		exec_command="${exec_dir}zkServer.sh start"
