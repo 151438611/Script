@@ -5,6 +5,7 @@
 https://mirrors.aliyun.com/apache/hadoop/
 https://mirrors.aliyun.com/apache/hbase/
 https://mirrors.aliyun.com/apache/hive/
+https://mirrors.aliyun.com/apache/spark/
 https://mirrors.aliyun.com/apache/zookeeper/
 https://mirrors.aliyun.com/apache/kafka/
 https://mirrors.aliyun.com/apache/flume/
