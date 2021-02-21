@@ -336,6 +336,7 @@ EOL
 	echo "export HBASE_HOME=$hbase_home" >> $bashrc
 	echo 'export PATH=$PATH:$HBASE_HOME/bin' >> $bashrc
 	source $bashrc
+	mv $hbase_home/lib/client-facing-thirdparty/slf4j-log4j*.jar $hbase_home/
 	[ "$redhat_os" ] && {
 		hbase version && bule_echo "\nHBase is install Success.\n" || red_echo "\nHBase is install Fail.\n"
 		}
@@ -399,6 +400,7 @@ EOL
 	echo "export HIVE_HOME=$hive_home" >> $bashrc
 	echo 'export PATH=$PATH:$HIVE_HOME/bin' >> $bashrc
 	source $bashrc
+	mv $hive_home/lib/log4j-slf4j-impl*.jar $hive_home/
 	[ "$redhat_os" ] && {
 		which hive && bule_echo "\nHive is install Success.\n" || red_echo "\nHive is install Fail.\n"
 		}
