@@ -4,8 +4,19 @@
 #### 说明： Hadoop及组件相关配置文件存放
 
 ```
-临时记录:
+国内下载源地址：
+https://mirrors.aliyun.com/apache/hadoop/
+https://mirrors.aliyun.com/apache/hbase/
+https://mirrors.aliyun.com/apache/hive/
+https://mirrors.aliyun.com/apache/zookeeper/
+https://mirrors.aliyun.com/apache/kafka/
+https://mirrors.aliyun.com/apache/flume/
 
+官方文档：
+https://hadoop.apache.org/docs/r2.10.1/
+https://hadoop.apache.org/docs/r3.2.2/
+
+临时记录:
 hadoop hbase hive spark都安装在 /usr/local 目录下
 mysql 用户密码 root/root  hive/hive
 
