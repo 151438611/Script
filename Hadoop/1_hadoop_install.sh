@@ -41,7 +41,7 @@ spark_home=$install_dir/spark
 spark_conf_dir=$spark_home/conf
 spark_master=$host_name
 spark_slaves="$host_name "
-# spark版本支持: 2.4.7 3.0.2
+# spark版本支持: 2.4.7 3.1.1
 spark_version=2.4.7
 if [ -n "$(echo $spark_version | grep ^3)" ]; then
 	echo $hadoop_version | grep -q ^2 && spark_url="https://mirrors.aliyun.com/apache/spark/spark-${spark_version}/spark-${spark_version}-bin-hadoop2.7.tgz"
