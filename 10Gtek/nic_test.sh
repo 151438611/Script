@@ -169,10 +169,16 @@ fun_get_net_hardware_2() {
 			elif [ $nic_port_num -eq 4 ]; then nic_model="XL710-10G-4S"
 			else nic_model="X710_model_unknow"
 			fi
+		elif [ -n "$(echo "$net_hardware" | grep -i X722)" ]; then
+			nic_port_num=$(echo "$net_hardware" | grep -ci X722)
+			if [ $nic_port_num -eq 2 ]; then nic_model="X722-10G-2S"
+			elif [ $nic_port_num -eq 4 ]; then nic_model="X722-10G-4S"
+			else nic_model="X722_model_unknow"
+			fi
 		elif [ -n "$(echo "$net_hardware" | grep -i E810)" ]; then
 			nic_port_num=$(echo "$net_hardware" | grep -ci E810)
-			if [ $nic_port_num -eq 2 ]; then nic_model="E810-100G-2Q"
-			elif [ $nic_port_num -eq 1 ]; then nic_model="E810-100G-1Q"
+			if [ $nic_port_num -eq 2 ]; then nic_model="E810-CQDA2"
+			elif [ $nic_port_num -eq 1 ]; then nic_model="E810-CQDA1"
 			else nic_model="E810_model_unknow"
 			fi
 		else nic_model="model_unknow"
