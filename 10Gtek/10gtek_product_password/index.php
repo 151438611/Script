@@ -16,6 +16,7 @@
 	<a href="http://192.168.200.21/phpmyadmin" target="_blank"><img border="0" src="./mariadb.jpg" /></a>
 	<a href="https://192.168.200.21" target="_self"><img border="0" src="./kodexplorer.jpg" /></a>
 	<a href="https://github.com/151438611/Script/" target="_blank"><img border="0" src="./github.jpg" /></a>
+	<a href="http://192.168.200.21/os/" target="_blank"><img border="0" src="./os/os.jpg" /></a>
 	<a href="https://mirrors.aliyun.com/apache/hadoop/common/" target="_blank"><img border="0" src="./hadoop.jpg" /></a>
 	<a href="https://mirrors.aliyun.com/apache/hbase/" target="_blank"><img border="0" src="./hbase.jpg" /></a>
 	<a href="https://mirrors.aliyun.com/apache/hive/" target="_blank"><img border="0" src="./hive.jpg" /></a>
