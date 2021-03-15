@@ -1,0 +1,61 @@
+body { 
+    background: #F8F8F8; 
+}
+div {
+    
+}
+p {
+    color: #0099FF;
+    font-size: 30px;
+	font-family: DejaVu Sans Mono;
+	letter-spacing: -2px;
+	position: relative;
+	top: 50px;
+	left: 280px;
+}			
+.inputKeywords {
+    width: 200px;
+	height: 35px;
+	margin: 0px;
+	color: #000000;
+	font-size: 100%;
+	font-weight: none;
+	font-family: Sans-serif;
+	position: relative;
+	top: 50px;
+	left: 280px;
+}
+.button {
+	color: #CC6633;
+	margin: 0px;
+	height: 35px;
+	font-size: 100%;
+	font-weight: bold; 
+	font-family: Sans-serif;
+	position: relative;
+	top: 50px;
+	left: 290px;
+}
+fieldset {
+	margin: 200px;
+	position: relative;
+	top: -50px;
+}
+.row1 {
+    color: none;
+    height: 40px;
+    background: #BCD2EE;
+    text-align: left;
+}
+.row2 {
+    color: blue;
+    text-align: left;
+}
+.unsupport { 
+    color: red; 
+    background: #FFFF66;
+}
+.support { 
+    color: green; 
+}
+
