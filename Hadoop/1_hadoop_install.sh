@@ -4,10 +4,14 @@
 # 前提： 1、关闭selinux和防火墙; 2、配置/etc/hosts、(可选)配置主机名; 3、配置ssh免密码登陆; 4、下载解压java, 最好下载并解压好相关软件
 # Hadoop及组件国内镜像下载地址: https://mirrors.aliyun.com/apache/ 
 
-# 以下变量可自行修改; 注意：1、路径写绝对路径;  2、install_dir安装目录需要有读写权限
+# 以下变量可自行修改; 注意：1路径写绝对路径;  2install_dir安装目录需要有读写权限；3,完全分布式时slaves注意去掉master
 host_name=master
-bashrc="/home/ha/.bashrc"
-install_dir=/home/ha
+hadoop_slaves="$host_name "
+spark_slaves="$host_name "
+zookeeper_hosts="$host_name "
+
+bashrc="/root/.bashrc"
+install_dir=/root
 java_home=$install_dir/java
 
 hadoop_home=$install_dir/hadoop
@@ -17,7 +21,6 @@ hadoop_datanode_dir=$hadoop_home/hdfs/data
 hadoop_tmp_dir=$hadoop_home/tmp
 hadoop_logs_dir=$hadoop_home/logs
 hadoop_master=$host_name
-hadoop_slaves="$host_name "
 # hadoop版本支持: 2.10.1 3.2.2 3.3.0
 hadoop_version=2.10.1
 hadoop_url="https://mirrors.aliyun.com/apache/hadoop/common/hadoop-${hadoop_version}/hadoop-${hadoop_version}.tar.gz"
@@ -26,7 +29,7 @@ hbase_home=$install_dir/hbase
 hbase_conf_dir=$hbase_home/conf
 hbase_zkdata_dir=$hbase_home/zkdata
 hbase_regionservers="$host_name "
-# hbase版本支持: 2.2.6 2.3.4 2.4.1
+# hbase版本支持: 2.2.6 2.4.1
 hbase_version=2.4.1
 hbase_url="https://mirrors.aliyun.com/apache/hbase/${hbase_version}/hbase-${hbase_version}-bin.tar.gz"
 
@@ -40,7 +43,6 @@ mysql_connector_java_url="http://mirrors.163.com/mysql/Downloads/Connector-J/mys
 spark_home=$install_dir/spark
 spark_conf_dir=$spark_home/conf
 spark_master=$host_name
-spark_slaves="$host_name "
 # spark版本支持: 2.4.7 3.1.1
 spark_version=2.4.7
 if [ -n "$(echo $spark_version | grep ^3)" ]; then
@@ -54,20 +56,19 @@ zookeeper_home=$install_dir/zookeeper
 zookeeper_conf_dir=$zookeeper_home/conf
 zookeeper_data_dir=$zookeeper_home/data
 zookeeper_logs_dir=$zookeeper_home/logs
-zookeeper_hosts="$host_name slave1 slave2"
 # zookeeper版本支持: 3.5.9 3.6.2
-zookeeper_version=3.5.9
+zookeeper_version=3.6.2
 zookeeper_url="https://mirrors.aliyun.com/apache/zookeeper/zookeeper-${zookeeper_version}/apache-zookeeper-${zookeeper_version}-bin.tar.gz"
 
 # 临时下载和解压目录
-tmp_download=/tmp/hadoop_download
-tmp_untar=/tmp/hadoop_untar
+tmp_download=/tmp/td
+tmp_untar=/tmp/tu
 rm -rf $tmp_untar 
 mkdir -p $tmp_download $tmp_untar
 # ==================== 以上自定义变量 ====================
 
 # 控制台日志颜色输出
-bule_echo() {
+blue_echo() {
 	echo -e "\033[36m$1\033[0m"
 	}
 yellow_echo() {
@@ -89,7 +90,7 @@ debian_os=$(grep -iE "debian|ubuntu" /etc/os-release)
 install_hadoop() {
 	[ -d "$hadoop_home" ] || {
 		wget -c -P $tmp_download $hadoop_url
-		bule_echo "\nDecompressing ${hadoop_url##*/}\n"
+		blue_echo "\nDecompressing ${hadoop_url##*/}\n"
 		tar -zxf $tmp_download/${hadoop_url##*/} -C $tmp_untar
 		mv -f ${tmp_untar}/hadoop-$hadoop_version $hadoop_home
 		}
@@ -266,17 +267,17 @@ EOL
 	# 在ubuntu中运行source $bashrc会自动检测是否在交互界面,不在则退出
 	source $bashrc
 	[ "$redhat_os" ] && {
-		hadoop version && bule_echo "\nHadoop is install Success.\n" || red_echo "\nHadoop is install Fail.\n"
+		hadoop version && blue_echo "\nHadoop is install Success.\n" || red_echo "\nHadoop is install Fail.\n"
 		}
-	[ "$debian_os" ] && bule_echo "\nHadoop is install completed; \nPlease run command: source ~/.bashrc \n"
-	bule_echo "First run Hadoop need format hdfs : hdfs namenode -format\n"
+	[ "$debian_os" ] && blue_echo "\nHadoop is install completed; \nPlease run command: source ~/.bashrc \n"
+	blue_echo "First run Hadoop need format hdfs : hdfs namenode -format\n"
 }
 
 # 安装 HBase 封装函数
 install_hbase() {
 	[ -d "$hbase_home" ] || {
 		wget -c -P $tmp_download $hbase_url
-		bule_echo "\nDecompressing ${hbase_url##*/}\n"
+		blue_echo "\nDecompressing ${hbase_url##*/}\n"
 		tar -zxf $tmp_download/${hbase_url##*/} -C $tmp_untar
 		mv -f ${tmp_untar}/hbase-${hbase_version} $hbase_home
 		}
@@ -338,16 +339,16 @@ EOL
 	source $bashrc
 	mv $hbase_home/lib/client-facing-thirdparty/slf4j-log4j*.jar $hbase_home/
 	[ "$redhat_os" ] && {
-		hbase version && bule_echo "\nHBase is install Success.\n" || red_echo "\nHBase is install Fail.\n"
+		hbase version && blue_echo "\nHBase is install Success.\n" || red_echo "\nHBase is install Fail.\n"
 		}
-	[ "$debian_os" ] && bule_echo "\nHBase is install completed; \nPlease run command: source ~/.bashrc \n"
+	[ "$debian_os" ] && blue_echo "\nHBase is install completed; \nPlease run command: source ~/.bashrc \n"
 }
 
 # 安装 Hive 封装函数
 install_hive() {
 	[ -d "$hive_home" ] || {
 		wget -c -P $tmp_download $hive_url
-		bule_echo "\nDecompressing ${hive_url##*/}\n"
+		blue_echo "\nDecompressing ${hive_url##*/}\n"
 		tar -zxf $tmp_download/${hive_url##*/} -C $tmp_untar
 		mv -f ${tmp_untar}/apache-hive-${hive_version}-bin $hive_home
 		}
@@ -355,7 +356,7 @@ install_hive() {
 		wget -c -P $tmp_download $mysql_connector_java_url
 		mysql_connector_java_name_tgz=${mysql_connector_java_url##*/}
 		mysql_connector_java_name=${mysql_connector_java_name_tgz%%.t*}
-		bule_echo "\nDecompressing $mysql_connector_java_name_tgz\n"
+		blue_echo "\nDecompressing $mysql_connector_java_name_tgz\n"
 		tar -zxf $tmp_download/$mysql_connector_java_name_tgz -C $tmp_untar
 		cp -f $tmp_untar/$mysql_connector_java_name/${mysql_connector_java_name}.jar $hive_home/lib
 		}
@@ -402,19 +403,19 @@ EOL
 	source $bashrc
 	mv $hive_home/lib/log4j-slf4j-impl*.jar $hive_home/
 	[ "$redhat_os" ] && {
-		which hive && bule_echo "\nHive is install Success.\n" || red_echo "\nHive is install Fail.\n"
+		which hive && blue_echo "\nHive is install Success.\n" || red_echo "\nHive is install Fail.\n"
 		}
-	[ "$debian_os" ] && bule_echo "\nHive is install completed; \nPlease run command: source ~/.bashrc \n"
+	[ "$debian_os" ] && blue_echo "\nHive is install completed; \nPlease run command: source ~/.bashrc \n"
 	yellow_echo "\n注意：Hive 还需要安装 Mysql ,并创建用户和密码都为hive, 并添加权限: "
 	yellow_echo 'grant all privileges on *.* to "hive"@"%" identified by "hive";'"\nflush privileges; \n"
-	bule_echo "First run Hive need initialization Schema : schematool -dbType mysql -initSchema \n"
+	blue_echo "First run Hive need initialization Schema : schematool -dbType mysql -initSchema \n"
 }
 
 # 安装 Spark 封装函数
 install_spark() {
 	[ -d "$spark_home" ] || {
 		wget -c -P $tmp_download $spark_url
-		bule_echo "\nDecompressing ${spark_url##*/}\n"
+		blue_echo "\nDecompressing ${spark_url##*/}\n"
 		tar -zxf $tmp_download/${spark_url##*/} -C $tmp_untar
 		mv -f ${tmp_untar}/spark-* $spark_home
 		}
@@ -457,22 +458,59 @@ install_spark() {
 	echo '#export PYTHONPATH=$PYTHONPATH:$SPARK_HOME/python:$SPARK_HOME/python/lib/py4j-0.10.7-src.zip' >> $bashrc
 	source $bashrc
 	[ "$redhat_os" ] && {
-		which spark-shell && bule_echo "\nSpark is install Success.\n" || red_echo "\nSpark is install Fail.\n"
+		which spark-shell && blue_echo "\nSpark is install Success.\n" || red_echo "\nSpark is install Fail.\n"
 		}
-	[ "$debian_os" ] && bule_echo "\nSpark is install completed; \nPlease run command: source ~/.bashrc \n"
+	[ "$debian_os" ] && blue_echo "\nSpark is install completed; \nPlease run command: source ~/.bashrc \n"
 }
 
 # 安装 Zookeeper 封装函数
 install_zookeeper() {
 	zookeeper_host_num=$(echo $zookeeper_hosts | awk '{print NF}')
-	if [ $zookeeper_host_num -ge 3 ] ; then
-		[ -d "$zookeeper_home" ] || {
-			wget -c -P $tmp_download $zookeeper_url
-			bule_echo "\nDecompressing ${zookeeper_url##*/}\n"
-			tar -zxf $tmp_download/${zookeeper_url##*/} -C $tmp_untar
-			mv -f ${tmp_untar}/apache-zookeeper-* $zookeeper_home
+	[ -d "$zookeeper_home" ] || {
+		wget -c -P $tmp_download $zookeeper_url
+		blue_echo "\nDecompressing ${zookeeper_url##*/}\n"
+		tar -zxf $tmp_download/${zookeeper_url##*/} -C $tmp_untar
+		mv -f ${tmp_untar}/apache-zookeeper-* $zookeeper_home
+		}
+	[ -d "$zookeeper_conf_dir" ] || { red_echo "\n$zookeeper_conf_dir : No such directory, error exit \n"; exit 25; }
+	if [ $zookeeper_host_num -eq 1 ] ; then
+		zookeeper_hosts="zk1 zk2 zk3"
+		zookeeper_host_num=$(echo $zookeeper_hosts | awk '{print NF}')
+		clientPort=2181 && serverPort1=2887 && serverPort2=3887
+		zk_id=1
+		for server_num in $(seq $zookeeper_host_num)
+		do
+			echo server.$server_num=localhost:$serverPort1:$serverPort1 >> /tmp/server_conf_tmp
+			let serverPort1+=1
+			let serverPort2+=1
+		done
+		for zookeeper_host in $zookeeper_hosts
+		do
+			mkdir -p $zookeeper_home/$zookeeper_host/data $zookeeper_home/$zookeeper_host/logs
+			cat << EOL > $zookeeper_conf_dir/zoo$zk_id.cfg
+tickTime=2000
+initLimit=10
+syncLimit=5
+dataDir=$zookeeper_home/$zookeeper_host/data
+dataLogDir=$zookeeper_home/$zookeeper_host/logs
+clientPort=$clientPort
+$(cat /tmp/server_conf_tmp)
+EOL
+			echo $zk_id > $zookeeper_home/$zookeeper_host/data/myid
+			let zk_id+=1
+			let clientPort+=1
+		done
+		rm -f /tmp/server_conf_tmp
+		echo >> $bashrc
+		echo "export ZOOKEEPER_HOME=$zookeeper_home" >> $bashrc
+		echo 'export PATH=$PATH:$ZOOKEEPER_HOME/bin' >> $bashrc
+		source $bashrc
+		[ "$redhat_os" ] && {
+			which zkServer.sh && blue_echo "\nZookeeper is install Success.\n" || red_echo "\nZookeeper is install Fail.\n"
 			}
-		[ -d "$zookeeper_conf_dir" ] || { red_echo "\n$zookeeper_conf_dir : No such directory, error exit \n"; exit 25; }
+		[ "$debian_os" ] && blue_echo "\nZookeeper is install completed; \nPlease run command: source ~/.bashrc \n"
+		blue_echo "\nzookeeper操作：zkServer.sh [start | status | stop] $zookeeper_conf_dir/zoox.cfg \n"
+	elif [ $zookeeper_host_num -ge 3 ] ; then
 		mkdir -p $zookeeper_data_dir $zookeeper_logs_dir
 		[ -f "$zookeeper_conf_dir/zoo.cfg" ] || mv -f $zookeeper_conf_dir/zoo_sample.cfg $zookeeper_conf_dir/zoo.cfg
 		zookeeper_data_dirDir_line=$(grep -ni "dataDir=" $zookeeper_conf_dir/zoo.cfg | awk -F ":" '{print $1}')
@@ -484,17 +522,17 @@ install_zookeeper() {
 		echo 1 > $zookeeper_data_dir/myid
 		for zookeeper_host in $zookeeper_hosts
 		do
-			echo "server.${zh_num:=1}=${zookeeper_host}:2888:3888" >> $zookeeper_conf_dir/zoo.cfg
-			let zh_num+=1
+			echo "server.${zk_id:=1}=${zookeeper_host}:2888:3888" >> $zookeeper_conf_dir/zoo.cfg
+			let zk_id+=1
 		done
 		echo >> $bashrc
 		echo "export ZOOKEEPER_HOME=$zookeeper_home" >> $bashrc
 		echo 'export PATH=$PATH:$ZOOKEEPER_HOME/bin' >> $bashrc
 		source $bashrc
 		[ "$redhat_os" ] && {
-			which zkServer.sh && bule_echo "\nZookeeper is install Success.\n" || red_echo "\nZookeeper is install Fail.\n"
+			which zkServer.sh && blue_echo "\nZookeeper is install Success.\n" || red_echo "\nZookeeper is install Fail.\n"
 			}
-		[ "$debian_os" ] && bule_echo "\nZookeeper is install completed; \nPlease run command: source ~/.bashrc \n"
+		[ "$debian_os" ] && blue_echo "\nZookeeper is install completed; \nPlease run command: source ~/.bashrc \n"
 		yellow_echo "\n注意：分发后需要修改 $zookeeper_data_dir/myid \n"
 	else
 		red_echo "\nZookeeper安装失败,Zookeeper主机数量至少需要3个,现只有${zookeeper_host_num}个\n"
@@ -522,7 +560,7 @@ echo
 [ "$(grep -i "JAVA_HOME=" $bashrc)" ] || echo "export JAVA_HOME=$java_home" >> $bashrc
 [ "$(grep -i "PATH=" $bashrc | grep -i JAVA_HOME/bin)" ] || echo 'export PATH=$PATH:$JAVA_HOME/bin' >> $bashrc
 source $bashrc
-java -version && bule_echo "\nJAVA is already installed\n" || { red_echo "\nJAVA is not installed. error exit \n"; exit 28; }
+java -version && blue_echo "\nJAVA is already installed\n" || { red_echo "\nJAVA is not installed. error exit \n"; exit 28; }
 
 [ "$(echo $is_hadoop | grep -i yes)" ] && install_hadoop
 [ "$(echo $is_hbase | grep -i yes)" ] && install_hbase
