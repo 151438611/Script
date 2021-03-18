@@ -433,6 +433,7 @@ install_spark() {
 	[ -f $spark_conf_dir/spark-defaults.conf  ] || \
 		mv -f $spark_conf_dir/spark-defaults.conf.template $spark_conf_dir/spark-defaults.conf
 	echo >> $spark_conf_dir/spark-defaults.conf
+	echo "# 若开启此选项,则要提前创建历史日志文件夹： hdfs dfs -mkdir -p /spark/historyserver " >> $spark_conf_dir/spark-defaults.conf
 	echo "#spark.eventLog.enabled		true" >> $spark_conf_dir/spark-defaults.conf
 	echo "#spark.eventLog.dir		hdfs://$hadoop_master:9000/spark/historyserver" >> $spark_conf_dir/spark-defaults.conf
 	echo "#spark.yarn.historyServer.address		$hadoop_master:18080" >> $spark_conf_dir/spark-defaults.conf
@@ -449,14 +450,19 @@ install_spark() {
 	echo "export HADOOP_HOME=$hadoop_home" >> $spark_conf_dir/spark-env.sh
 	echo 'export HADOOP_CONF_DIR=$HADOOP_HOME/etc/hadoop' >> $spark_conf_dir/spark-env.sh
 	echo 'export SPARK_DIST_CLASSPATH=$($HADOOP_HOME/bin/hadoop classpath)' >> $spark_conf_dir/spark-env.sh
+	echo "# 若 spark-defaults.conf 中配置 spark.eventLog.enabled	true 则开启此历史服务器选项 " >> $spark_conf_dir/spark-env.sh
 	echo '#export SPARK_HISTORY_OPTS="-Dspark.history.ui.port=18080 -Dspark.history.fs.logDirectory=hdfs://'$hadoop_master':9000/spark/historyserver -Dspark.history.retainedApplications=30"' >> $spark_conf_dir/spark-env.sh
+	echo "# 以下为 spark HA 高可用配置；若开启此选项则需要注释 export SPARK_MASTER_HOST 值" >> $spark_conf_dir/spark-env.sh
+	echo '#export SPARK_DAEMON_JAVA_OPTS="-Dspark.deploy.recoveryMode=ZOOKEEPER -Dspark.deploy.zookeeper.url=slave1:2181,slave2:2181,slave3:2181 -Dspark.deploy.zookeeper.dir=/spark"' >> $spark_conf_dir/spark-env.sh
 	echo >> $spark_conf_dir/spark-env.sh
 	
 	# config slaves
-	rm -f $spark_conf_dir/slaves
+	rm -f $spark_conf_dir/slaves $spark_conf_dir/workers
 	for spark_slave in $spark_slaves
 	do
-		echo $spark_slave >> $spark_conf_dir/slaves
+		echo $spark_version | grep -q ^2. && \
+		echo $spark_slave >> $spark_conf_dir/slaves || \
+		echo $spark_slave >> $spark_conf_dir/workers
 	done
 	
 	# config ~/.bashrc
