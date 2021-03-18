@@ -10,5 +10,6 @@ export HADOOP_HOME=/usr/local/hadoop
 export HADOOP_CONF_DIR=$HADOOP_HOME/etc/hadoop
 export SPARK_DIST_CLASSPATH=$($HADOOP_HOME/bin/hadoop classpath)
 
-export SPARK_HISTORY_OPTS="-Dspark.history.ui.port=18080 -Dspark.history.fs.logDirectory=hdfs://master:9000/spark/historyserver -Dspark.history.retainedApplications=30"
+# 若 spark-defaults.conf 中配置 spark.eventLog.enabled	true 则开启此选项
+# export SPARK_HISTORY_OPTS="-Dspark.history.ui.port=18080 -Dspark.history.fs.logDirectory=hdfs://master:9000/spark/historyserver -Dspark.history.retainedApplications=30"
 
