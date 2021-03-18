@@ -3,7 +3,7 @@
 # 仅支持CPU为x86_64架构的Linux系统：Centos、Ubuntu; 运行需求依赖：wget
 # 前提：1、关闭selinux和防火墙; 2、配置/etc/hosts、(可选)配置主机名; 3、配置ssh免密码登陆; 4、下载解压java, 最好下载并解压好
 # Hadoop及组件国内镜像下载地址: https://mirrors.aliyun.com/apache/ 
-# 20210318 更新： 添加zookeeper伪集群安装配置
+# 20210318 更新： 添加zookeeper伪集群安装配置：zk1、zoo1.cfg /zk2、zoo2.cfg / zk3、zoo3.cfg
 
 # 以下变量可自行修改; 注意：1、写绝对路径； 2、install_dir安装目录需要有读写权限；
 host_name="master"
