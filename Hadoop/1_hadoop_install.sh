@@ -433,9 +433,9 @@ install_spark() {
 	[ -f $spark_conf_dir/spark-defaults.conf  ] || \
 		mv -f $spark_conf_dir/spark-defaults.conf.template $spark_conf_dir/spark-defaults.conf
 	echo >> $spark_conf_dir/spark-defaults.conf
-	echo "spark.eventLog.enabled		true" >> $spark_conf_dir/spark-defaults.conf
-	echo "spark.eventLog.dir		hdfs://$hadoop_master:9000/spark/historyserver" >> $spark_conf_dir/spark-defaults.conf
-	echo "spark.yarn.historyServer.address		$hadoop_master:18080" >> $spark_conf_dir/spark-defaults.conf
+	echo "#spark.eventLog.enabled		true" >> $spark_conf_dir/spark-defaults.conf
+	echo "#spark.eventLog.dir		hdfs://$hadoop_master:9000/spark/historyserver" >> $spark_conf_dir/spark-defaults.conf
+	echo "#spark.yarn.historyServer.address		$hadoop_master:18080" >> $spark_conf_dir/spark-defaults.conf
 	echo >> $spark_conf_dir/spark-defaults.conf
 	yellow_echo "Please Run Command: 'hdfs dfs -mkdir -p /spark/historyserver'"
 	
