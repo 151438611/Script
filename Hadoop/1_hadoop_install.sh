@@ -4,15 +4,25 @@
 # 前提： 1、关闭selinux和防火墙; 2、配置/etc/hosts、(可选)配置主机名; 3、配置ssh免密码登陆; 4、下载解压java, 最好下载并解压好相关软件
 # Hadoop及组件国内镜像下载地址: https://mirrors.aliyun.com/apache/ 
 
-# 以下变量可自行修改; 注意：1路径写绝对路径;  2install_dir安装目录需要有读写权限；3,完全分布式时slaves注意去掉master
-host_name=master
+# 以下变量可自行修改; 注意：1、路径写绝对路径;  2、install_dir安装目录需要有读写权限；3、完全分布式时slaves注意去掉master
+host_name="master"
 hadoop_slaves="$host_name "
+hbase_regionservers="$host_name "
 spark_slaves="$host_name "
 zookeeper_hosts="$host_name "
 
 bashrc="/root/.bashrc"
 install_dir=/root
 java_home=$install_dir/java
+
+# Hadoop 版本支持: 2.10.1 3.2.2 3.3.0
+hadoop_version=2.10.1
+# HBase 版本支持: 2.2.6 2.4.1
+hbase_version=2.4.1
+# Hive 版本支持: 2.3.8 3.1.2
+hive_version=2.3.8
+# Spark 版本支持: 2.4.7 3.1.1
+spark_version=2.4.7
 
 hadoop_home=$install_dir/hadoop
 hadoop_conf_dir=$hadoop_home/etc/hadoop
@@ -21,33 +31,26 @@ hadoop_datanode_dir=$hadoop_home/hdfs/data
 hadoop_tmp_dir=$hadoop_home/tmp
 hadoop_logs_dir=$hadoop_home/logs
 hadoop_master=$host_name
-# hadoop版本支持: 2.10.1 3.2.2 3.3.0
-hadoop_version=2.10.1
 hadoop_url="https://mirrors.aliyun.com/apache/hadoop/common/hadoop-${hadoop_version}/hadoop-${hadoop_version}.tar.gz"
 
 hbase_home=$install_dir/hbase
 hbase_conf_dir=$hbase_home/conf
 hbase_zkdata_dir=$hbase_home/zkdata
-hbase_regionservers="$host_name "
-# hbase版本支持: 2.2.6 2.4.1
-hbase_version=2.4.1
-hbase_url="https://mirrors.aliyun.com/apache/hbase/${hbase_version}/hbase-${hbase_version}-bin.tar.gz"
 
+hbase_url="https://mirrors.aliyun.com/apache/hbase/${hbase_version}/hbase-${hbase_version}-bin.tar.gz"
 hive_home=$install_dir/hive
 hive_conf_dir=$hive_home/conf
-# hive版本支持: 2.3.8 3.1.2
-hive_version=2.3.8
 hive_url="https://mirrors.aliyun.com/apache/hive/hive-${hive_version}/apache-hive-${hive_version}-bin.tar.gz"
 mysql_connector_java_url="http://mirrors.163.com/mysql/Downloads/Connector-J/mysql-connector-java-5.1.49.tar.gz"
 
 spark_home=$install_dir/spark
 spark_conf_dir=$spark_home/conf
 spark_master=$host_name
-# spark版本支持: 2.4.7 3.1.1
-spark_version=2.4.7
 if [ -n "$(echo $spark_version | grep ^3)" ]; then
-	echo $hadoop_version | grep -q ^2 && spark_url="https://mirrors.aliyun.com/apache/spark/spark-${spark_version}/spark-${spark_version}-bin-hadoop2.7.tgz"
-	echo $hadoop_version | grep -q ^3 && spark_url="https://mirrors.aliyun.com/apache/spark/spark-${spark_version}/spark-${spark_version}-bin-hadoop3.2.tgz"
+	echo $hadoop_version | grep -q ^2 && \
+		spark_url="https://mirrors.aliyun.com/apache/spark/spark-${spark_version}/spark-${spark_version}-bin-hadoop2.7.tgz"
+	echo $hadoop_version | grep -q ^3 && \
+		spark_url="https://mirrors.aliyun.com/apache/spark/spark-${spark_version}/spark-${spark_version}-bin-hadoop3.2.tgz"
 elif [ -n "$(echo $spark_version | grep ^2)" ]; then
 	spark_url="https://mirrors.aliyun.com/apache/spark/spark-${spark_version}/spark-${spark_version}-bin-hadoop2.7.tgz"
 fi
@@ -82,8 +85,10 @@ red_echo() {
 redhat_os=$(grep -iE "centos|redhat" /etc/os-release)
 debian_os=$(grep -iE "debian|ubuntu" /etc/os-release)
 [ "$redhat_os" ] && {
-	[ $(getenforce) = "Disabled" ] || red_echo "Use root run command: \n  setenforce 0 ; sed -i 's/SELINUX=enforcing/SELINUX=disabled/' /etc/selinux/config"
-	[ "$(systemctl status firewalld | grep running)" ] && red_echo "Use root run command: \n  systemctl stop firewalld ; systemctl disable firewalld"
+	[ $(getenforce) = "Disabled" ] || \
+		red_echo "Use root run command: \n  setenforce 0 ; sed -i 's/SELINUX=enforcing/SELINUX=disabled/' /etc/selinux/config"
+	[ "$(systemctl status firewalld | grep running)" ] && \
+		red_echo "Use root run command: \n  systemctl stop firewalld ; systemctl disable firewalld"
 	}
 
 # 安装 Hadoop 封装函数
@@ -94,11 +99,13 @@ install_hadoop() {
 		tar -zxf $tmp_download/${hadoop_url##*/} -C $tmp_untar
 		mv -f ${tmp_untar}/hadoop-$hadoop_version $hadoop_home
 		}
-	[ -d "$hadoop_conf_dir" ] || { red_echo "\n$hadoop_conf_dir : No such directory, error exit \n"; exit 20; }
+	[ -d "$hadoop_conf_dir" ] || \
+		{ red_echo "\n$hadoop_conf_dir : No such directory, error exit \n"; exit 20; }
 	mkdir -p $hadoop_namenode_dir $hadoop_datanode_dir $hadoop_tmp_dir $hadoop_logs_dir
 	
 	# config hadoop-env.sh
-	[ -f "$hadoop_conf_dir/hadoop-env.sh" ] || { red_echo "$hadoop_conf_dir/hadoop-env.sh : No such file,exit "; exit 21; }
+	[ -f "$hadoop_conf_dir/hadoop-env.sh" ] || \
+		{ red_echo "$hadoop_conf_dir/hadoop-env.sh : No such file,exit "; exit 21; }
 	hadoop_env_java_line=$(grep -n "export JAVA_HOME=" $hadoop_conf_dir/hadoop-env.sh | awk -F ":" '{print $1}')
 	sed_info="export JAVA_HOME=$java_home"
 	fuhao="'"
@@ -422,7 +429,8 @@ install_spark() {
 	[ -d "$spark_conf_dir" ] || { red_echo "\n$spark_conf_dir : No such directory, error exit \n"; exit 24; }
 	
 	# config spark-defaults.conf
-	[ -f $spark_conf_dir/spark-defaults.conf  ] || mv -f $spark_conf_dir/spark-defaults.conf.template $spark_conf_dir/spark-defaults.conf
+	[ -f $spark_conf_dir/spark-defaults.conf  ] || \
+		mv -f $spark_conf_dir/spark-defaults.conf.template $spark_conf_dir/spark-defaults.conf
 	echo >> $spark_conf_dir/spark-defaults.conf
 	echo "spark.eventLog.enabled		true" >> $spark_conf_dir/spark-defaults.conf
 	echo "spark.eventLog.dir		hdfs://$hadoop_master:9000/spark/historyserver" >> $spark_conf_dir/spark-defaults.conf
@@ -440,7 +448,7 @@ install_spark() {
 	echo "export HADOOP_HOME=$hadoop_home" >> $spark_conf_dir/spark-env.sh
 	echo 'export HADOOP_CONF_DIR=$HADOOP_HOME/etc/hadoop' >> $spark_conf_dir/spark-env.sh
 	echo 'export SPARK_DIST_CLASSPATH=$($HADOOP_HOME/bin/hadoop classpath)' >> $spark_conf_dir/spark-env.sh
-	echo 'export SPARK_HISTORY_OPTS="-Dspark.history.ui.port=18080 -Dspark.history.fs.logDirectory=hdfs://'$hadoop_master':9000/spark/historyserver -Dspark.history.retainedApplications=30"' >> $spark_conf_dir/spark-env.sh
+	echo '#export SPARK_HISTORY_OPTS="-Dspark.history.ui.port=18080 -Dspark.history.fs.logDirectory=hdfs://'$hadoop_master':9000/spark/historyserver -Dspark.history.retainedApplications=30"' >> $spark_conf_dir/spark-env.sh
 	echo >> $spark_conf_dir/spark-env.sh
 	
 	# config slaves
