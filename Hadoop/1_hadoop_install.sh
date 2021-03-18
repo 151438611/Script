@@ -1,10 +1,11 @@
 #!/bin/bash
-# 适用于单机伪集群的自动下载、安装、配置脚本；若安装完全分布式,需要手动分发
+# 适用于完全分布式和伪分布式集群的自动下载、安装、配置脚本；若安装完全分布式,需要手动分发
 # 仅支持CPU为x86_64架构的Linux系统：Centos、Ubuntu; 运行需求依赖：wget
-# 前提： 1、关闭selinux和防火墙; 2、配置/etc/hosts、(可选)配置主机名; 3、配置ssh免密码登陆; 4、下载解压java, 最好下载并解压好相关软件
+# 前提：1、关闭selinux和防火墙; 2、配置/etc/hosts、(可选)配置主机名; 3、配置ssh免密码登陆; 4、下载解压java, 最好下载并解压好
 # Hadoop及组件国内镜像下载地址: https://mirrors.aliyun.com/apache/ 
+# 20210318 更新： 添加zookeeper伪集群安装配置
 
-# 以下变量可自行修改; 注意：1、路径写绝对路径;  2、install_dir安装目录需要有读写权限；3、完全分布式时slaves注意去掉master
+# 以下变量可自行修改; 注意：1、写绝对路径； 2、install_dir安装目录需要有读写权限；
 host_name="master"
 hadoop_slaves="$host_name "
 hbase_regionservers="$host_name "
@@ -488,7 +489,7 @@ install_zookeeper() {
 		zk_id=1
 		for server_num in $(seq $zookeeper_host_num)
 		do
-			echo server.$server_num=localhost:$serverPort1:$serverPort1 >> /tmp/server_conf_tmp
+			echo server.$server_num=localhost:$serverPort1:$serverPort2 >> /tmp/server_conf_tmp
 			let serverPort1+=1
 			let serverPort2+=1
 		done
