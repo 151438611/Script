@@ -1,27 +1,24 @@
 #### 说明： Hadoop及组件相关配置文件存放
 
 ```
-国内下载源地址：
-https://mirrors.aliyun.com/apache/hadoop/
-https://mirrors.aliyun.com/apache/hbase/
-https://mirrors.aliyun.com/apache/hive/
-https://mirrors.aliyun.com/apache/spark/
-https://mirrors.aliyun.com/apache/zookeeper/
-https://mirrors.aliyun.com/apache/kafka/
-https://mirrors.aliyun.com/apache/flume/
-
 官方文档：
-https://hadoop.apache.org/docs/r2.10.1/
-https://hadoop.apache.org/docs/r3.2.2/
+	https://hadoop.apache.org/docs/r2.10.1/
+	https://hadoop.apache.org/docs/r3.2.2/
+国内下载源地址：
+	https://mirrors.aliyun.com/apache/hadoop/
+	https://mirrors.aliyun.com/apache/hbase/
+	https://mirrors.aliyun.com/apache/hive/
+	https://mirrors.aliyun.com/apache/spark/
+	https://mirrors.aliyun.com/apache/zookeeper/
+	https://mirrors.aliyun.com/apache/kafka/
+	https://mirrors.aliyun.com/apache/flume/
 
 准备操作:
 	setenforce 0 && sed -i 's/SELINUX=enforcing/SELINUX=disabled/' /etc/selinux/config 
 	systemctl disable firewalld && systemctl stop firewalld
 	ssh-keygen -t rsa -P ""
 	ssh-copy-id slavex
-
-临时记录:
-	mysql 用户密码 root/root  hive/hive
+	mysql用户密码 root/root  hive/hive
 
 启动 hadoop 操作:
 	start-dfs.sh
