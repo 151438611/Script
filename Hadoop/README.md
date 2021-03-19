@@ -14,6 +14,12 @@ https://mirrors.aliyun.com/apache/flume/
 https://hadoop.apache.org/docs/r2.10.1/
 https://hadoop.apache.org/docs/r3.2.2/
 
+准备操作:
+	setenforce 0 && sed -i 's/SELINUX=enforcing/SELINUX=disabled/' /etc/selinux/config 
+	systemctl disable firewalld && systemctl stop firewalld
+	ssh-keygen -t rsa -P ""
+	ssh-copy-id slavex
+
 临时记录:
 hadoop hbase hive spark都安装在 /usr/local 目录下
 mysql 用户密码 root/root  hive/hive
