@@ -18,12 +18,17 @@
 	systemctl disable firewalld && systemctl stop firewalld
 	ssh-keygen -t rsa -P ""
 	ssh-copy-id slavex
+	(可选)hostnamectl set-hostname xxx
+	vi /etc/hosts
 	mysql用户密码 root/root  hive/hive
 
 启动 hadoop 操作:
 	start-dfs.sh
 	start-yarn.sh
 	(可选)mr-jobhistory-daemon.sh start historyserver
+测试 hadoop 操作:
+	hadoop jar /usr/local/hadoop/share/hadoop/mapreduce/hadoop-mapreduce-examples-2.10.1.jar pi 3 80
+	hadoop jar /usr/local/hadoop/share/hadoop/mapreduce/hadoop-mapreduce-examples-2.10.1.jar wordcount /input /output
 停止 hadoop 操作:
 	stop-dfs.sh
 	stop-yarn.sh
@@ -40,6 +45,9 @@
 	start-master.sh
 	start-slaves.sh
 	(可选)start-history-server.sh
+测试 spark 操作:
+	spark-submit --master spark://master:7077 --class org.apache.spark.examples.SparkPi /usr/local/spark/examples/jars/spark-examples_2.12-3.0.1.jar 10
+	spark-submit --master yarn --deploy-mode cluster --class org.apache.spark.examples.SparkPi /usr/local/spark/examples/jars/spark-examples_2.12-3.0.1.jar 10
 停止 spark 操作:
 	stop-master.sh
 	stop-slaves.sh
