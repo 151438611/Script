@@ -27,8 +27,8 @@ spark_version=2.4.7
 
 hadoop_home=$install_dir/hadoop
 hadoop_conf_dir=$hadoop_home/etc/hadoop
-hadoop_namenode_dir=$hadoop_home/hdfs/name
-hadoop_datanode_dir=$hadoop_home/hdfs/data
+hadoop_namenode_dir=$hadoop_home/dfs/name
+hadoop_datanode_dir=$hadoop_home/dfs/data
 hadoop_tmp_dir=$hadoop_home/tmp
 hadoop_logs_dir=$hadoop_home/logs
 hadoop_master=$host_name
@@ -235,7 +235,6 @@ EOL
 	cat << EOL > $hadoop_conf_dir/yarn-site.xml
 <?xml version="1.0"?>
 <configuration>
-<!-- Site specific YARN configuration properties -->
 
 	<property>
 		<name>yarn.resourcemanager.hostname</name>
@@ -280,9 +279,7 @@ EOL
 	echo 'export PATH=$PATH:$HADOOP_HOME/bin:$HADOOP_HOME/sbin' >> $bashrc
 	# 在ubuntu中运行source $bashrc会自动检测是否在交互界面,不在则退出
 	source $bashrc
-	[ "$redhat_os" ] && {
-		hadoop version && blue_echo "\nHadoop is install Success.\n" || red_echo "\nHadoop is install Fail.\n"
-		}
+	[ "$redhat_os" ] && { hadoop version && blue_echo "\nHadoop is install Success.\n" || red_echo "\nHadoop is install Fail.\n" ; }
 	[ "$debian_os" ] && blue_echo "\nHadoop is install completed; \nPlease run command: source ~/.bashrc \n"
 	blue_echo "First run Hadoop need format hdfs : hdfs namenode -format\n"
 }
@@ -295,7 +292,7 @@ install_hbase() {
 		tar -zxf $tmp_download/${hbase_url##*/} -C $tmp_untar
 		mv -f ${tmp_untar}/hbase-${hbase_version} $hbase_home
 		}
-	[ -d "$hbase_conf_dir" ] || { red_echo "$hbase_conf_dir : No such directory, error exit "; exit 22; }
+	[ -d "$hbase_conf_dir" ] || { red_echo "$hbase_conf_dir : No such directory, error exit "; exit 22 ; }
 	hbase_env_java_line=$(grep -n "export JAVA_HOME=" $hbase_conf_dir/hbase-env.sh | awk -F ":" '{print $1}')
 	sed_info="export JAVA_HOME=$java_home"
 	fuhao="'"
