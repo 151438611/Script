@@ -134,7 +134,9 @@ EOL
 	# config hdfs-site.xml
 	dfs_replication=$(echo $hadoop_slaves | awk '{print NF}')
 	[ $dfs_replication -eq 1 ] && dfs_replication=1 || dfs_replication=3
-	echo $hadoop_version | grep -q ^2 && dfs_nn_secondary_http_port=50090 || dfs_nn_secondary_http_port=9868
+	echo $hadoop_version | grep -q ^2 && \
+		{ dfs_nn_http_port=50070 ; dfs_nn_secondary_http_port=50090 ; } || \
+		{ dfs_nn_http_port=9870 ; dfs_nn_secondary_http_port=9868 ; }
 	cat << EOL > $hadoop_conf_dir/hdfs-site.xml
 <?xml version="1.0" encoding="UTF-8"?>
 <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
@@ -147,6 +149,10 @@ EOL
 	<property>
 		<name>dfs.datanode.data.dir</name>
 		<value>${hadoop_datanode_dir}</value>      
+	</property>
+	<property>
+		<name>dfs.namenode.http-address</name>
+		<value>${hadoop_master}:${dfs_nn_http_port}</value>
 	</property>
 	<property>
 		<name>dfs.namenode.secondary.http-address</name>
