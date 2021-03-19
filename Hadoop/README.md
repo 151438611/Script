@@ -17,7 +17,7 @@
 	setenforce 0 && sed -i 's/SELINUX=enforcing/SELINUX=disabled/' /etc/selinux/config 
 	systemctl disable firewalld && systemctl stop firewalld
 	ssh-keygen -t rsa -P ""
-	ssh-copy-id slavex
+	ssh-copy-id xxx
 	(可选)hostnamectl set-hostname xxx
 	vi /etc/hosts
 	mysql用户密码 root/root  hive/hive
