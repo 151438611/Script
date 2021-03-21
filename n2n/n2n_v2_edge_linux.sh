@@ -9,10 +9,10 @@ export PATH=/usr/sbin:/usr/bin:/sbin:/bin:$PATH
 # 设置 supernode 超级节点信息
 supernode_ip_port=n2n.xxy1.ltd:xxx
 # 设置 edge 节点信息
+ipadd=10.5.5.x
+#netmask=255.255.255.0
 vmnic_name=edge
 community_name=n2nEdge
-ipadd=10.5.5.x
-netmask=255.255.255.0
 # 是否加密(加密后仅密码一致的节点可互相通信) --- 会影响速度，不建议使用此选项
 N2N_KEY=	
 
@@ -102,12 +102,12 @@ if [ ! -x $edge ]; then
 	chmod +x $edge
 fi
 
-ping -c 2 114.114.114.114 && \
+ping -w 3 114.114.114.114 && \
 if [ -n "$(pidof $(basename $edge))" ]; then
 	echo "$(date +"%F %T")	$edge $ipadd is runing , Don't do anything !" >> $log
 else
 	[ $N2N_KEY ] && \
-	$edge -r -d $vmnic_name -c $community_name -A1 -a $ipadd -s $netmask -l $supernode_ip_port -k $N2N_KEY || \
-	$edge -r -d $vmnic_name -c $community_name -A1 -a $ipadd -s $netmask -l $supernode_ip_port
+	$edge -Er -d $vmnic_name -c $community_name -A1 -a $ipadd -l $supernode_ip_port -k $N2N_KEY || \
+	$edge -Er -d $vmnic_name -c $community_name -A1 -a $ipadd -l $supernode_ip_port
 	echo "$(date +"%F %T")	$edge $ipadd was not runing ; start $edge ..." >> $log
 fi && sleep 3 && addIptables
