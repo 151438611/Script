@@ -19,6 +19,15 @@ export HADOOP_COMMON_LIB_NATIVE_DIR=$HADOOP_HOME/lib/native
 export JAVA_LIBRARY_PATH=$HADOOP_HOME/lib/native
 export PATH=$PATH:$HADOOP_HOME/bin:$HADOOP_HOME/sbin
 
+# Hadoop 3.x中使用 root 用户运行时还需要进行下面配置;不建议使用root用户运行Hadoop
+export HDFS_NAMENODE_USER=root
+export HDFS_DATANODE_USER=root
+export HDFS_JOURNALNODE_USER=root
+export HDFS_ZKFC_USER=root
+export HDFS_SECONDARYNAMENODE_USER=root
+export YARN_RESOURCEMANAGER_USER=root
+export YARN_NODEMANAGER_USER=root
+
 export HBASE_HOME=/usr/local/hbase
 export PATH=$PATH:$HBASE_HOME/bin
 
