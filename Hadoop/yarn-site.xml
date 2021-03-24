@@ -19,5 +19,19 @@
         <name>yarn.nodemanager.aux-services</name> 
         <value>mapreduce_shuffle</value>
     </property> 
+
+<!-- 配置 Yarn 的日志聚合 -->
+	<property>
+        <name>yarn.log-aggregation-enable</name>
+        <value>true</value>
+    </property>
+	<property>
+        <name>yarn.log-aggregation.retain-seconds</name>
+        <value>86400</value>
+    </property>
+	<property>
+        <name>yarn.log.server.url</name>
+        <value>http://master:50070/jobhistory/logs</value>
+    </property>
 	
 </configuration>
