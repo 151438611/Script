@@ -25,7 +25,6 @@ hive_version=2.3.8
 # Spark 版本支持: 2.4.7 3.1.1
 spark_version=2.4.7
 
-hadoop_user=$(whoami)
 hadoop_home=$install_dir/hadoop
 hadoop_conf_dir=$hadoop_home/etc/hadoop
 hadoop_namenode_dir=$hadoop_home/dfs/name
@@ -33,14 +32,14 @@ hadoop_datanode_dir=$hadoop_home/dfs/data
 hadoop_tmp_dir=$hadoop_home/tmp
 hadoop_logs_dir=$hadoop_home/logs
 hadoop_master=$host_name
-
+hadoop_user=$(whoami)
 hadoop_url="https://mirrors.aliyun.com/apache/hadoop/common/hadoop-${hadoop_version}/hadoop-${hadoop_version}.tar.gz"
 
 hbase_home=$install_dir/hbase
 hbase_conf_dir=$hbase_home/conf
 hbase_zkdata_dir=$hbase_home/zkdata
-
 hbase_url="https://mirrors.aliyun.com/apache/hbase/${hbase_version}/hbase-${hbase_version}-bin.tar.gz"
+
 hive_home=$install_dir/hive
 hive_conf_dir=$hive_home/conf
 hive_url="https://mirrors.aliyun.com/apache/hive/hive-${hive_version}/apache-hive-${hive_version}-bin.tar.gz"
