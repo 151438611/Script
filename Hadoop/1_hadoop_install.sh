@@ -1,9 +1,9 @@
 #!/bin/bash
 # 适用于完全分布式和伪分布式集群的自动下载、安装、配置脚本；若安装完全分布式,需要手动分发
 # 仅支持CPU为x86_64架构的Linux系统：Centos、Ubuntu; 运行需求依赖：wget
-# 前提：1、关闭selinux和防火墙; 2、配置/etc/hosts、(可选)配置主机名; 3、配置ssh免密码登陆; 4、下载解压java, 最好下载并解压好
+# 前提：1、关闭selinux和防火墙; 2、配置/etc/hosts、(可选)配置主机名; 3、配置ssh免密码登陆; 4、Java下载并解压好
 # Hadoop及组件国内镜像下载地址: https://mirrors.aliyun.com/apache/ 
-# 20210318 更新： 添加zookeeper伪集群安装配置：zk1、zoo1.cfg /zk2、zoo2.cfg / zk3、zoo3.cfg
+# 20210318 更新： 添加zookeeper伪集群自动安装配置：zk1、zoo1.cfg / zk2、zoo2.cfg / zk3、zoo3.cfg
 
 # 以下变量可自行修改; 注意：1、写绝对路径； 2、install_dir安装目录需要有读写权限；
 host_name="master"
@@ -24,6 +24,8 @@ hbase_version=2.4.1
 hive_version=2.3.8
 # Spark 版本支持: 2.4.7 3.1.1
 spark_version=2.4.7
+# zookeeper版本支持: 3.5.9 3.6.2
+zookeeper_version=3.6.2
 
 hadoop_home=$install_dir/hadoop
 hadoop_conf_dir=$hadoop_home/etc/hadoop
@@ -61,8 +63,6 @@ zookeeper_home=$install_dir/zookeeper
 zookeeper_conf_dir=$zookeeper_home/conf
 zookeeper_data_dir=$zookeeper_home/data
 zookeeper_logs_dir=$zookeeper_home/logs
-# zookeeper版本支持: 3.5.9 3.6.2
-zookeeper_version=3.6.2
 zookeeper_url="https://mirrors.aliyun.com/apache/zookeeper/zookeeper-${zookeeper_version}/apache-zookeeper-${zookeeper_version}-bin.tar.gz"
 
 # 临时下载和解压目录
@@ -86,12 +86,22 @@ red_echo() {
 # 系统版本
 redhat_os=$(grep -iE "centos|redhat" /etc/os-release)
 debian_os=$(grep -iE "debian|ubuntu" /etc/os-release)
-[ "$redhat_os" ] && {
-	[ $(getenforce) = "Disabled" ] || \
-		red_echo "Use root run command: \n  setenforce 0 ; sed -i 's/SELINUX=enforcing/SELINUX=disabled/' /etc/selinux/config"
-	[ "$(systemctl status firewalld | grep running)" ] && \
-		red_echo "Use root run command: \n  systemctl stop firewalld ; systemctl disable firewalld"
+if [ -n "$redhat_os" ] ; then
+	[ $(getenforce) != "Disabled" ] && {
+		if [ "$(whoami)" = "root" ] ; then
+			setenforce 0 ; sed -i 's/SELINUX=enforcing/SELINUX=disabled/' /etc/selinux/config
+		else
+			red_echo "Use root run command:\n  setenforce 0 ; sed -i 's/SELINUX=enforcing/SELINUX=disabled/' /etc/selinux/config"
+		fi
 	}
+	[ "$(systemctl status firewalld | grep running)" ] && {
+		if [ "$(whoami)" = "root" ] ; then
+			systemctl stop firewalld ; systemctl disable firewalld
+		else
+			red_echo "Use root run command:\n  systemctl stop firewalld ; systemctl disable firewalld"
+		fi
+	}
+fi
 
 # 安装 Hadoop 封装函数
 install_hadoop() {
@@ -268,7 +278,6 @@ EOL
 
 	# config ~/.bashrc
 	cat << EOL >> $bashrc
-
 export HADOOP_HOME=$hadoop_home
 export HADOOP_CONF_DIR=\$HADOOP_HOME/etc/hadoop
 export HADOOP_COMMON_HOME=\$HADOOP_HOME
@@ -282,8 +291,8 @@ export JAVA_LIBRARY_PATH=\$HADOOP_HOME/lib/native
 export PATH=\$PATH:\$HADOOP_HOME/bin:\$HADOOP_HOME/sbin
 
 EOL
-	if [ $hadoop_user = "root" ]; then
-		cat << EOL >> $bashrc
+	[ $hadoop_user = "root" ] && \
+	cat << EOL >> $bashrc
 export HDFS_NAMENODE_USER=$hadoop_user
 export HDFS_SECONDARYNAMENODE_USER=$hadoop_user
 export HDFS_DATANODE_USER=$hadoop_user
@@ -293,7 +302,6 @@ export YARN_RESOURCEMANAGER_USER=$hadoop_user
 export YARN_NODEMANAGER_USER=$hadoop_user
 
 EOL
-	fi
 	# 在ubuntu中运行source $bashrc会自动检测是否在交互界面,不在则退出
 	source $bashrc
 	[ "$redhat_os" ] && { hadoop version && blue_echo "\nHadoop is install Success.\n" || red_echo "\nHadoop is install Fail.\n" ; }
@@ -592,7 +600,8 @@ echo
 
 [ "$(echo $is_firewall | grep -i yes)" ] && [ "$(echo $is_ssh_hosts | grep -i yes)" ] && [ "$(echo $is_java | grep -i yes)" ] || \
 	{ red_echo "\n程序退出；请检查 防火墙、/etc/hosts、SSH公钥登陆、Java 等环境是否已配置好；\n"; exit 26; }
-# 检查Java; 所有Hadoop生态都是基于Java, 若Java未安装或不存在,则无法进行下面安装
+
+# 检查Java环境配置; 所有Hadoop生态都是基于Java, 若Java未安装或不存在,则无法进行下面安装
 [ -d "$java_home" ] || { red_echo "$java_home : No such directory, error exit "; exit 27; }
 [ "$(grep -i "JAVA_HOME=" $bashrc)" ] || echo "export JAVA_HOME=$java_home" >> $bashrc
 [ "$(grep -i "PATH=" $bashrc | grep -i JAVA_HOME/bin)" ] || echo 'export PATH=$PATH:$JAVA_HOME/bin' >> $bashrc
