@@ -601,7 +601,7 @@ echo
 [ "$(echo $is_firewall | grep -i yes)" ] && [ "$(echo $is_ssh_hosts | grep -i yes)" ] && [ "$(echo $is_java | grep -i yes)" ] || \
 	{ red_echo "\n程序退出；请检查 防火墙、/etc/hosts、SSH公钥登陆、Java 等环境是否已配置好；\n"; exit 26; }
 
-# 检查Java环境配置; 所有Hadoop生态都是基于Java, 若Java未安装或不存在,则无法进行下面安装
+# 检查Java安装目录及环境配置; 所有Hadoop生态都是基于Java, 若Java安装目录不存在,则无法进行软件安装操作
 [ -d "$java_home" ] || { red_echo "$java_home : No such directory, error exit "; exit 27; }
 [ "$(grep -i "JAVA_HOME=" $bashrc)" ] || echo "export JAVA_HOME=$java_home" >> $bashrc
 [ "$(grep -i "PATH=" $bashrc | grep -i JAVA_HOME/bin)" ] || echo 'export PATH=$PATH:$JAVA_HOME/bin' >> $bashrc
