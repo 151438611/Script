@@ -1,7 +1,7 @@
 #!/bin/bash
 # 适用于完全分布式和伪分布式集群的自动下载、安装、配置脚本；若安装完全分布式,需要手动分发
 # 仅支持CPU为x86_64架构的Linux系统：Centos、Ubuntu; 运行需求依赖：wget
-# 前提：1、关闭selinux和防火墙; 2、配置/etc/hosts、(可选)配置主机名; 3、配置ssh免密码登陆; 4、Java下载并解压好
+# 前提：1、关闭selinux和防火墙; 2、配置/etc/hosts、配置主机名; 3、配置ssh免密码登陆; 4、Java下载并解压好
 # Hadoop及组件国内镜像下载地址: https://mirrors.aliyun.com/apache/ 
 # 20210318 更新： 添加zookeeper伪集群自动安装配置：zk1、zoo1.cfg / zk2、zoo2.cfg / zk3、zoo3.cfg
 
