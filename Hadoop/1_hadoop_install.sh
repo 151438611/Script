@@ -18,8 +18,8 @@ java_home=$install_dir/java
 
 # Hadoop 版本支持: 2.10.1 3.2.2 3.3.0
 hadoop_version=2.10.1
-# HBase 版本支持: 2.2.6 2.4.1
-hbase_version=2.4.1
+# HBase 版本支持: 2.2.6 2.3.4 2.4.2
+hbase_version=2.4.2
 # Hive 版本支持: 2.3.8 3.1.2
 hive_version=2.3.8
 # Spark 版本支持: 2.4.7 3.1.1
@@ -484,7 +484,7 @@ export SPARK_MASTER_PORT=7077
 export SPARK_MASTER_WEBUI_PORT=8080
 export HADOOP_HOME=$hadoop_home
 export HADOOP_CONF_DIR=\$HADOOP_HOME/etc/hadoop
-export SPARK_DIST_CLASSPATH=$(\$HADOOP_HOME/bin/hadoop classpath)
+export SPARK_DIST_CLASSPATH=\$(\$HADOOP_HOME/bin/hadoop classpath)
 # 若 spark-defaults.conf 中配置 spark.eventLog.enabled	true 则开启此历史服务器选项 
 #export SPARK_HISTORY_OPTS="-Dspark.history.ui.port=18080 -Dspark.history.fs.logDirectory=hdfs://$hadoop_master:9000/spark/historyserver -Dspark.history.retainedApplications=30"
 # 以下为 spark HA 高可用配置；若开启此选项则需要注释 export SPARK_MASTER_HOST 值
