@@ -3,9 +3,6 @@ export JAVA_HOME=/usr/local/java
 export JRE_HOME=$JAVA_HOME/jre
 export PATH=$PATH:$JAVA_HOME/bin
 
-export ZOOKEEPER_HOME=/usr/local/zookeeper
-export PATH=$PATH:$ZOOKEEPER_HOME/bin
-
 # Hadoop v2.10.1 v3.3.0 test ok
 export HADOOP_HOME=/usr/local/hadoop
 export HADOOP_CONF_DIR=$HADOOP_HOME/etc/hadoop
@@ -34,16 +31,19 @@ export PATH=$PATH:$HBASE_HOME/bin
 export HIVE_HOME=/usr/local/hive
 export PATH=$PATH:$HIVE_HOME/bin
 
-export SQOOP_HOME=/usr/local/sqoop
-export PATH=$PATH:$SQOOP_HOME/bin
-
 export SPARK_HOME=/usr/local/spark
 export PATH=$PATH:$SPARK_HOME/bin:$SPARK_HOME/sbin
 #export PYTHONPATH=$PYTHONPATH:$SPARK_HOME/python:$SPARK_HOME/python/lib/py4j-0.10.7-src.zip
 #export PYSPARK_PYTHON=python3
 
+export ZOOKEEPER_HOME=/usr/local/zookeeper
+export PATH=$PATH:$ZOOKEEPER_HOME/bin
+
 export KAFKA_HOME=/usr/local/kafka
 export PATH=$PATH:$KAFKA_HOME/bin
+
+export SQOOP_HOME=/usr/local/sqoop
+export PATH=$PATH:$SQOOP_HOME/bin
 
 export MAHOUT_HOME=/usr/local/mahout
 export PATH=$PATH:$MAHOUT_HOME/bin
