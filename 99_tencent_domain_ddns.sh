@@ -4,8 +4,8 @@
 Domain=xxy1.ltd
 SubDomain=wzt
 # ===== Change SecretId / SecretKey ===========
-SecretId="xx"
-SecretKey="xx"
+SecretId="AKIDKZhmrmwGH661s2xUOoxulTv5oOhj46xx"
+SecretKey="82yeDYP4TciiRIu3xb0BGCTZVCfrpExx"
 # =============================================
 Timestamp=$(date +%s)
 Nonce=$(head -n 8 /dev/urandom | tr -cd 0-9 | head -c 5)
