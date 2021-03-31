@@ -38,7 +38,7 @@ changeRecordModify() {
 	[ "$RecordValue" ] || RecordValue=$(curl -q ip.cip.cc)
 	
     	if [ "$RecordValue" = "$RecordIP" -o -z "$RecordValue" ]; then
-		echo "$(date +"%F %T") The Record_IP($RecordIP) is same as Public_IP($RecordValue) " >> $Log
+		echo "$(date +"%F %T") Record_IP($RecordIP) is same as Public_IP($RecordValue) " >> $Log
 	else
 		SRC=$(printf "GETcns.api.qcloud.com/v2/index.php?Action=%s&Nonce=%s&SecretId=%s&SignatureMethod=%s&Timestamp=%s&domain=%s&recordId=%s&recordLine=%s&recordType=%s&subDomain=%s&value=%s" \
 			$Action $Nonce $SecretId $SignatureMethod $Timestamp $Domain $RecordID $RecordLine $RecordType $SubDomain $RecordValue)
@@ -46,8 +46,8 @@ changeRecordModify() {
 		Params=$(printf "Action=%s&Nonce=%s&SecretId=%s&SignatureMethod=%s&Timestamp=%s&domain=%s&recordId=%s&recordLine=%s&recordType=%s&subDomain=%s&value=%s" \
 			$Action $Nonce $SecretId $SignatureMethod $Timestamp $Domain $RecordID $RecordLine $RecordType $SubDomain $RecordValue)
 		curl -G -d "$Params" --data-urlencode "Signature=$Signature" "$URL"
-		[ $? -eq 0 ] && echo "$(date +"%F %T") The Record_IP($RecordIP) is different as Public_IP($RecordValue) , changeRecordModify success !" >> $Log || \
-			echo "$(date +"%F %T") The Record_IP($RecordIP) is different as Public_IP($RecordValue) , but changeRecordModify fail !!!" >> $Log 
+		[ $? -eq 0 ] && echo "$(date +"%F %T") Record_IP($RecordIP) is different as Public_IP($RecordValue) , changeRecordModify success !" >> $Log || \
+			echo "$(date +"%F %T") Record_IP($RecordIP) is different as Public_IP($RecordValue) , but changeRecordModify fail !!!" >> $Log 
 	fi
 }
 changeRecordModify
