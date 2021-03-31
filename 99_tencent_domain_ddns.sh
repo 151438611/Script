@@ -3,7 +3,7 @@
 # Dependencies command: curl、openssl、base64、printf
 
 Domain=xxy1.ltd
-SubDomain=wzt
+SubDomain=n2n
 # ===== Change SecretId / SecretKey ===========
 SecretId="AKIDKZhmrmwGH661s2xUOoxulTv5oOhj46xx"
 SecretKey="82yeDYP4TciiRIu3xb0BGCTZVCfrpExx"
