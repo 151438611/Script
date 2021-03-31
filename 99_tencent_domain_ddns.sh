@@ -1,6 +1,6 @@
 #!/bin/bash
-# tencent domain ddns , Only support x86_64/arm64 Linux
-# need command: curl、openssl、base64、printf
+# Tencent Domain ddns API, Only support x86_64/arm64 Linux
+# Dependencies command: curl、openssl、base64、printf
 
 Domain=xxy1.ltd
 SubDomain=wzt
