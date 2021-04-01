@@ -1,4 +1,4 @@
-
+// 测试失败，报错：File target/MRdemo-1.0-SNAPSHOT.jar does not exist
 package common;
 
 import org.apache.hadoop.conf.Configuration;
