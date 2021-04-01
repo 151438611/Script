@@ -23,3 +23,5 @@ public class HDFS_test {
             e.printStackTrace();
         }
     }
+}
+
