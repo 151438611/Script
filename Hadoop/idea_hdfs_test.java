@@ -8,8 +8,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 public class HDFS_test {
-
-    
     public static void main(String[] args) {
         FileSystem fileSystem = null;
         try {
