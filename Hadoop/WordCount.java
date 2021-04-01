@@ -54,6 +54,8 @@ public class WordCount {
         //设置hdfs和yarn地址
         conf.set("fs.defaultFS", "hdfs://master:9000");
         conf.set("yarn.resourcemanager.hostname","master");
+        conf.set("mapreduce.app-submission.cross-platform", "true");    //意思是跨平台提交，在windows下如果没有这句代码会报错 "/bin/bash: line 0: fg: no job control"，去网上搜答案很多都说是linux和windows环境不同导致的一般都是修改YarnRunner.java，但是其实添加了这行代码就可以了。
+        conf.set("mapreduce.framework.name", "yarn");   //集群的方式运行，非本地运行
 
         Job job = Job.getInstance(conf, "word count");
         job.setJarByClass(WordCount.class);
