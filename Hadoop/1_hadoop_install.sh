@@ -237,7 +237,11 @@ EOL
 		<name>yarn.app.mapreduce.am.env</name>
 		<value>HADOOP_MAPRED_HOME=${hadoop_home}</value>
 	</property>
-	
+	<property>
+		<name>mapreduce.app-submission.cross-platform</name>
+		<value>true</value>
+	</property>
+
 </configuration>
 EOL
 	fi
