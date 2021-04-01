@@ -1,4 +1,4 @@
-// Hadoop官方代码；测试失败，报错：File target/MRdemo-1.0-SNAPSHOT.jar does not exist
+// Hadoop官方代码；Hadoop 2.9.2 测试OK
 
 import java.io.IOException;
 import java.util.StringTokenizer;
