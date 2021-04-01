@@ -1,4 +1,4 @@
-// Hadoop官方代码；Hadoop 2.9.2 测试OK
+// Hadoop官方代码；Hadoop 2.10.1 测试OK
 
 import java.io.IOException;
 import java.util.StringTokenizer;
@@ -50,6 +50,7 @@ public class WordCount {
     public static void main(String[] args) throws Exception {
         //设置访问HDFS的用户名
         System.setProperty("HADOOP_USER_NAME", "centos");
+        System.setProperty("hadoop.home.dir", "D:\\IntelliJ_IDEA2020.3.3\\hadoop-2.10.1");
         Configuration conf = new Configuration();
         //设置hdfs和yarn地址
         conf.set("fs.defaultFS", "hdfs://master:9000");
