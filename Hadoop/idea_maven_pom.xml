@@ -12,7 +12,7 @@
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
     </properties>
- 
+  <dependencies>
 <!-- 这里只需要用到基础依赖hadoop-core和hadoop-common；如果需要读写HDFS，则还需要依赖hadoop-hdfs和hadoop-client；如果需要读写HBase，则还需要依赖hbase-client -->
     <dependency>
         <groupId>org.apache.hadoop</groupId>
@@ -39,11 +39,22 @@
         <artifactId>commons-logging</artifactId>
         <version>1.2</version>
     </dependency>
-
+ </dependencies>
     <repositories>
         <repository>
             <id>apache</id>
             <url>http://maven.apache.org</url>
+        </repository>
+        <repository>
+            <id>nexus-aliyun</id>
+            <name>nexus-aliyun</name>
+            <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
         </repository>
     </repositories>
 
