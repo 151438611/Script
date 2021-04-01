@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.example</groupId>
-    <artifactId>MRdemo</artifactId>
+    <artifactId>hadoop_2.10.1</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <properties>
@@ -14,36 +14,36 @@
     </properties>
 
    <dependencies>
-<!-- 这里只需要用到基础依赖hadoop-core和hadoop-common；如果需要读写HDFS，则还需要依赖hadoop-hdfs和hadoop-client；如果需要读写HBase，则还需要依赖hbase-client -->
+<!-- 基础依赖hadoop-core和hadoop-common；如果需要读写HDFS，则还需要依赖hadoop-hdfs和hadoop-client；如果需要读写HBase，则还需要依赖hbase-client -->
     <dependency>
         <groupId>org.apache.hadoop</groupId>
         <artifactId>hadoop-common</artifactId>
-        <version>2.9.2</version>
+        <version>2.10.1</version>
     </dependency>
     <dependency>
         <groupId>org.apache.hadoop</groupId>
         <artifactId>hadoop-hdfs</artifactId>
-        <version>2.9.2</version>
+        <version>2.10.1</version>
     </dependency>
     <dependency>
         <groupId>org.apache.hadoop</groupId>
         <artifactId>hadoop-client</artifactId>
-        <version>2.9.2</version>
+        <version>2.10.1</version>
     </dependency>
     <dependency>
         <groupId>org.apache.hadoop</groupId>
         <artifactId>hadoop-yarn-common</artifactId>
-        <version>2.9.2</version>
+        <version>2.10.1</version>
     </dependency>
     <dependency>
         <groupId>org.apache.hadoop</groupId>
         <artifactId>hadoop-mapreduce-client-core</artifactId>
-        <version>2.9.2</version>
+        <version>2.10.1</version>
     </dependency>
     <dependency>
         <groupId>org.apache.hadoop</groupId>
         <artifactId>hadoop-auth</artifactId>
-        <version>2.9.2</version>
+        <version>2.10.1</version>
     </dependency>
  </dependencies>
 
