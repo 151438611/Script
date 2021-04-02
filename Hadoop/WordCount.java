@@ -59,7 +59,11 @@ public class WordCount {
         conf.set("mapreduce.framework.name", "yarn");   //集群的方式运行，非本地运行
 
         Job job = Job.getInstance(conf, "word count");
-        job.setJarByClass(WordCount.class);
+        //job.setJarByClass(WordCount.class);
+        // 需要提前在IDEA中Build好：
+        // Project Structure---Artifacts---"+"Jar/From modules with dependencies/Manin class/OK; Build---Build Artifacts---Build 
+        // 然后在相应的目录中会生成xx.jar，job.setJar("")中设置相应的文件绝对路径即可
+        job.setJar("D:\\IntelliJ_IDEA2020.3.3\\Hadoop\\out\\artifacts\\Hadoop_jar\\Hadoop.jar");
         job.setMapperClass(TokenizerMapper.class);
         job.setCombinerClass(IntSumReducer.class);
         job.setReducerClass(IntSumReducer.class);
