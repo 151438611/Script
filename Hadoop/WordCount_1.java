@@ -1,4 +1,4 @@
-// Hadoop 2.9.2 测试 OK
+// Hadoop 2.10.1 测试 OK
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.FileSystem;
