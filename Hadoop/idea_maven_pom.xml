@@ -11,6 +11,10 @@
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
+        <!-- 设置编码为 UTF-8 可选 -->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
     </properties>
 
    <dependencies>
@@ -50,7 +54,18 @@
        <artifactId>zookeeper</artifactId>
        <version>3.4.8</version>
     </dependency>
-
+    <!-- 连接MySQL数据库的依赖 -->
+    <dependency>
+        <groupId>mysql</groupId>
+        <artifactId>mysql-connector-java</artifactId>
+        <version>8.0.15</version>
+    </dependency>
+    <dependency>
+        <groupId>org.apache.spark</groupId>
+        <artifactId>spark-core_2.12</artifactId>
+        <version>2.4.7</version>
+    </dependency>
+       
  </dependencies>
 
     <repositories>
