@@ -63,8 +63,8 @@ public class WordCount {
         Build---Build Artifacts---Build 
         然后在相应的目录中会生成xx.jar，job.setJar("")中设置相应的文件绝对路径即可
         */
-        //job.setJarByClass(WordCount.class);
         job.setJar("D:\\IntelliJ_IDEA2020.3.3\\Hadoop\\out\\artifacts\\Hadoop_jar\\Hadoop.jar");
+        job.setJarByClass(WordCount.class);
         job.setMapperClass(TokenizerMapper.class);
         job.setCombinerClass(IntSumReducer.class);
         job.setReducerClass(IntSumReducer.class);
