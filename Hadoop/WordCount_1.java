@@ -51,6 +51,7 @@ public class WordCount extends Configured implements Tool {
 
         //设置程序的主类
         job.setJarByClass(this.getClass());
+        job.setJar("D:\\IntelliJ_IDEA2020.3.3\\Hadoop\\out\\artifacts\\Hadoop_jar\\Hadoop.jar");
 
         //设置Map和Reduce   程序代码
         job.setMapperClass(WordCountMapper.class);
