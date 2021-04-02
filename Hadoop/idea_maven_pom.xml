@@ -18,7 +18,7 @@
     </properties>
 
    <dependencies>
-    <!-- jdk --> <!-- 添加以下全部 -->
+    <!-- jdk -->
     <dependency>
       <groupId>jdk.tools</groupId>
       <artifactId>jdk.tools</artifactId>
