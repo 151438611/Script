@@ -28,6 +28,7 @@
         <name>datanucleus.schema.autoCreateAll</name>
         <value>true</value> 
     </property>
+    
 <!-- 以下为高级设置,可选;需要提前操作: hdfs dfs -mkdir -p /hive/warehouse /hive/tmp /hive/logs && hdfs dfs -chmod -R 777 /hive -->
     <property>
         <name>hive.exec.scratchdir</name>
@@ -41,4 +42,35 @@
         <name>hive.querylog.location</name>
         <value>/hive/logs</value>
     </property>
+    
+<!-- 以下为 metastore hiveserver2 服务端配置；启动命令：hive --service metastore & ; hive --service hiveserver2 -->
+    <property>
+        <name>datanucleus.schema.autoCreateAll</name>
+        <value>true</value> 
+    </property>
+    <property>
+        <name>hive.metastore.event.db.notification.api.auth</name>
+        <value>false</value>
+    </property>
+    <property>
+        <name>hive.metastore.local</name>
+        <value>false</value>
+    </property>
+    <property>
+        <name>hive.metastore.uris</name>
+        <value>thrift://master:9083</value>
+    </property>
+    <property>
+        <name>hive.server2.thrift.bind.host</name>
+        <value>master</value>
+    </property>
+    <property>
+        <name>hive.server2.thrift.port</name>
+        <value>10000</value>
+    </property>
+    <property>
+        <name>hive.server2.active.passive.ha.enable</name>
+        <value>true</value>
+    </property>	
+
 </configuration>
