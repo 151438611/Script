@@ -1,4 +1,4 @@
-// Hadoop官方代码；Hadoop 2.10.1 测试OK
+// Hadoop官方代码；Hadoop 2.10.1在 IDEA_2020-3 Eclipse_java_202012 中测试OK
 
 import java.io.IOException;
 import java.util.StringTokenizer;
@@ -54,8 +54,6 @@ public class WordCount {
         conf.set("yarn.resourcemanager.hostname","master");
         //意思是跨平台提交，在windows下如果没有这句代码会报错 "/bin/bash: line 0: fg: no job control"
         conf.set("mapreduce.app-submission.cross-platform", "true");
-        conf.set("mapreduce.framework.name", "yarn"); 
-        conf.set("mapreduce.job.ubertask.enable", "true");
 
         Job job = Job.getInstance(conf, "word count");
         /* 需要提前在IDEA中Build好：
