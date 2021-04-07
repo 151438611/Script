@@ -88,14 +88,14 @@ redhat_os=$(grep -iE "centos|redhat" /etc/os-release)
 debian_os=$(grep -iE "debian|ubuntu" /etc/os-release)
 if [ -n "$redhat_os" ] ; then
 	[ $(getenforce) != "Disabled" ] && {
-		if [ "$(whoami)" = "root" ] ; then
+		if [ "$hadoop_user" = "root" ] ; then
 			setenforce 0 ; sed -i 's/SELINUX=enforcing/SELINUX=disabled/' /etc/selinux/config
 		else
 			red_echo "Use root run command:\n  setenforce 0 ; sed -i 's/SELINUX=enforcing/SELINUX=disabled/' /etc/selinux/config"
 		fi
 	}
 	[ "$(systemctl status firewalld | grep running)" ] && {
-		if [ "$(whoami)" = "root" ] ; then
+		if [ "$hadoop_user" = "root" ] ; then
 			systemctl stop firewalld ; systemctl disable firewalld
 		else
 			red_echo "Use root run command:\n  systemctl stop firewalld ; systemctl disable firewalld"
@@ -138,7 +138,22 @@ install_hadoop() {
 		<name>hadoop.tmp.dir</name>
 		<value>${hadoop_tmp_dir}</value>
 	</property>
-	
+	<property>     
+	    <name>hadoop.proxyuser.root.hosts</name>     
+	    <value>*</value>
+    </property> 
+    <property>     
+        <name>hadoop.proxyuser.root.groups</name>    
+        <value>*</value> 
+    </property>
+    <property>     
+        <name>hadoop.proxyuser.$hadoop_user.hosts</name>     
+        <value>*</value>
+     </property> 
+    <property>     
+        <name>hadoop.proxyuser.$hadoop_user.groups</name>    
+        <value>*</value> 
+    </property>
 </configuration>
 EOL
 
@@ -258,6 +273,14 @@ EOL
 	<property>
 		<name>yarn.resourcemanager.hostname</name>
 		<value>$hadoop_master</value>
+	</property>
+	<property>
+		<name>yarn.resourcemanager.address</name>
+		<value>$hadoop_master:8032</value>
+	</property>
+	<property>
+		<name>yarn.resourcemanager.webapp.address</name>
+		<value>$hadoop_master:8088</value>
 	</property>
 	<property>
 		<name>yarn.nodemanager.pmem-check-enabled</name>
@@ -612,7 +635,7 @@ echo
 # 检查Java安装目录及环境配置; 所有Hadoop生态都是基于Java, 若Java安装目录不存在,则无法进行软件安装操作
 [ -d "$java_home" ] || { red_echo "$java_home : No such directory, error exit "; exit 27; }
 [ "$(grep -i "JAVA_HOME=" $bashrc)" ] || echo "export JAVA_HOME=$java_home" >> $bashrc
-[ "$(grep -i "PATH=" $bashrc | grep -i JAVA_HOME/bin)" ] || echo 'export PATH=$PATH:$JAVA_HOME/bin' >> $bashrc
+[ "$(grep -i "PATH=" $bashrc | grep -i JAVA_HOME/bin)" ] || echo 'export PATH=$JAVA_HOME/bin:$PATH' >> $bashrc
 source $bashrc
 java -version && blue_echo "\nJAVA is already installed\n" || { red_echo "\nJAVA is not installed. error exit \n"; exit 28; }
 
