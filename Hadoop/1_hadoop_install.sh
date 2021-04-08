@@ -18,13 +18,13 @@ java_home=$install_dir/java
 
 # Hadoop 版本支持: 2.10.1 3.2.2 3.3.0
 hadoop_version=2.10.1
-# HBase 版本支持: 2.2.6 2.3.4 2.4.2
-hbase_version=2.4.2
+# HBase 版本支持: 2.2.6 2.3.5 2.4.2
+hbase_version=2.3.5
 # Hive 版本支持: 2.3.8 3.1.2
 hive_version=2.3.8
 # Spark 版本支持: 2.4.7 3.1.1
 spark_version=2.4.7
-# zookeeper版本支持: 3.5.9 3.6.2
+# zookeeper版本支持: 3.6.2 3.7.0
 zookeeper_version=3.6.2
 
 hadoop_home=$install_dir/hadoop
@@ -124,6 +124,7 @@ install_hadoop() {
 	sed_cmd="sed -i ${fuhao}${hadoop_env_java_line}c ${sed_info}$fuhao $hadoop_conf_dir/hadoop-env.sh"
 	eval ${sed_cmd}
 	
+	defaultFS_port=9000
 	# config core-site.xml
 	cat << EOL > $hadoop_conf_dir/core-site.xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -132,28 +133,30 @@ install_hadoop() {
 
 	<property>
 		<name>fs.defaultFS</name>
-		<value>hdfs://${hadoop_master}:9000</value> 
+		<value>hdfs://${hadoop_master}:${defaultFS_port}</value> 
 	</property>
 	<property>
 		<name>hadoop.tmp.dir</name>
 		<value>${hadoop_tmp_dir}</value>
 	</property>
+
 	<property>     
-	    <name>hadoop.proxyuser.root.hosts</name>     
-	    <value>*</value>
-    </property> 
-    <property>     
-        <name>hadoop.proxyuser.root.groups</name>    
-        <value>*</value> 
-    </property>
-    <property>     
-        <name>hadoop.proxyuser.$hadoop_user.hosts</name>     
-        <value>*</value>
-     </property> 
-    <property>     
-        <name>hadoop.proxyuser.$hadoop_user.groups</name>    
-        <value>*</value> 
-    </property>
+		<name>hadoop.proxyuser.root.hosts</name>     
+		<value>*</value>
+	</property> 
+	<property>     
+		<name>hadoop.proxyuser.root.groups</name>    
+		<value>*</value> 
+	</property>
+	<property>     
+		<name>hadoop.proxyuser.$hadoop_user.hosts</name>     
+		<value>*</value>
+	 </property> 
+	<property>     
+		<name>hadoop.proxyuser.$hadoop_user.groups</name>    
+		<value>*</value> 
+	</property>
+
 </configuration>
 EOL
 
@@ -227,6 +230,7 @@ EOL
 		<name>mapreduce.reduce.env</name>
 		<value>HADOOP_MAPRED_HOME=${hadoop_home}</value>
 	</property>
+
 	<property>
 		<name>mapreduce.app-submission.cross-platform</name>
 		<value>true</value>
@@ -256,6 +260,7 @@ EOL
 		<name>yarn.app.mapreduce.am.env</name>
 		<value>HADOOP_MAPRED_HOME=${hadoop_home}</value>
 	</property>
+
 	<property>
 		<name>mapreduce.app-submission.cross-platform</name>
 		<value>true</value>
@@ -369,7 +374,7 @@ install_hbase() {
     </property>
     <property>
         <name>hbase.rootdir</name> 
-        <value>hdfs://${hadoop_master}:9000/hbase</value>
+        <value>hdfs://${hadoop_master}:${defaultFS_port}/hbase</value>
     </property>
     <property>
         <name>hbase.zookeeper.property.dataDir</name>
@@ -404,6 +409,7 @@ EOL
 	cat << EOL >> $bashrc
 export HBASE_HOME=$hbase_home
 export PATH=\$PATH:\$HBASE_HOME/bin
+
 EOL
 	source $bashrc
 	mv $hbase_home/lib/client-facing-thirdparty/slf4j-log4j*.jar $hbase_home/
@@ -467,8 +473,10 @@ install_hive() {
 EOL
 	# config ~/.bashrc
 	cat << EOL >> $bashrc
+
 export HIVE_HOME=$hive_home
 export PATH=\$PATH:\$HIVE_HOME/bin
+
 EOL
 	source $bashrc
 	mv $hive_home/lib/log4j-slf4j-impl*.jar $hive_home/
@@ -495,10 +503,9 @@ install_spark() {
 	[ -f $spark_conf_dir/spark-defaults.conf  ] || \
 		mv -f $spark_conf_dir/spark-defaults.conf.template $spark_conf_dir/spark-defaults.conf
 	cat << EOL >> $spark_conf_dir/spark-defaults.conf
-
 # 若开启此选项,则要提前创建历史日志文件夹： hdfs dfs -mkdir -p /spark/historyserver 
 #spark.eventLog.enabled    true
-#spark.eventLog.dir    hdfs://$hadoop_master:9000/spark/historyserver
+#spark.eventLog.dir    hdfs://$hadoop_master:${defaultFS_port}/spark/historyserver
 #spark.yarn.historyServer.address    $hadoop_master:18080
 
 EOL
@@ -508,7 +515,6 @@ EOL
 	[ -f $spark_conf_dir/spark-env.sh  ] || mv -f $spark_conf_dir/spark-env.sh.template $spark_conf_dir/spark-env.sh
 	echo >> $spark_conf_dir/spark-env.sh
 	cat << EOL >> $spark_conf_dir/spark-env.sh
-
 export JAVA_HOME=$java_home
 export SPARK_MASTER_HOST=$hadoop_master
 export SPARK_MASTER_PORT=7077
@@ -517,7 +523,7 @@ export HADOOP_HOME=$hadoop_home
 export HADOOP_CONF_DIR=\$HADOOP_HOME/etc/hadoop
 export SPARK_DIST_CLASSPATH=\$(\$HADOOP_HOME/bin/hadoop classpath)
 # 若 spark-defaults.conf 中配置 spark.eventLog.enabled	true 则开启此历史服务器选项 
-#export SPARK_HISTORY_OPTS="-Dspark.history.ui.port=18080 -Dspark.history.fs.logDirectory=hdfs://$hadoop_master:9000/spark/historyserver -Dspark.history.retainedApplications=30"
+#export SPARK_HISTORY_OPTS="-Dspark.history.ui.port=18080 -Dspark.history.fs.logDirectory=hdfs://$hadoop_master:${defaultFS_port}/spark/historyserver -Dspark.history.retainedApplications=30"
 # 以下为 spark HA 高可用配置；若开启此选项则需要注释 export SPARK_MASTER_HOST 值
 #export SPARK_DAEMON_JAVA_OPTS="-Dspark.deploy.recoveryMode=ZOOKEEPER -Dspark.deploy.zookeeper.url=slave1:2181,slave2:2181,slave3:2181 -Dspark.deploy.zookeeper.dir=/spark"
 
@@ -537,6 +543,7 @@ export SPARK_HOME=$spark_home
 export PATH=\$PATH:\$SPARK_HOME/bin:\$SPARK_HOME/sbin
 #export PYSPARK_PYTHON=python3
 #export PYTHONPATH=\$PYTHONPATH:\$SPARK_HOME/python:\$SPARK_HOME/python/lib/py4j-0.10.7-src.zip
+
 EOL
 	source $bashrc
 	[ "$redhat_os" ] && {
@@ -577,6 +584,7 @@ dataDir=$zookeeper_home/$zookeeper_host/data
 dataLogDir=$zookeeper_home/$zookeeper_host/logs
 clientPort=$clientPort
 $(cat /tmp/server_conf_tmp)
+
 EOL
 			echo $zk_id > $zookeeper_home/$zookeeper_host/data/myid
 			let zk_id+=1
@@ -608,6 +616,7 @@ EOL
 	cat << EOL >> $bashrc
 export ZOOKEEPER_HOME=$zookeeper_home
 export PATH=\$PATH:\$ZOOKEEPER_HOME/bin
+
 EOL
 	source $bashrc
 	[ "$redhat_os" ] && {
