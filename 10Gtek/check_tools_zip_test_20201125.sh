@@ -11,7 +11,7 @@
 # 20200408 新增检查码中的起始SN和末尾SN是否和码文件SN命名一致
 # 20200512 修改兼容性检查,不再区分50pcs数量来使用不同的兼容码;统一更改所有都按兼容要求编码
 #	新增CAB-1GSFP-PxM检查模板,和SFP-MCU放码模块类似,只是无Password.txt
-# 20200512 新增添加PN列(因VN会有类似Skylane Optics空格格式的要求，无法正确提取)；现在code.txt结构：1-日期 2-销售单号 3-生产单号 4-产品名称 5-生产数量 6-起始SN 7-结束SN 8-PN 9-备注
+# 20201125 新增添加PN列(因VN会有类似Skylane Optics空格格式的要求，无法正确提取)；现在code.txt结构：1-日期 2-销售单号 3-生产单号 4-产品名称 5-生产数量 6-起始SN 7-结束SN 8-PN 9-备注
 
 clear
 # 获取脚本当前路径,并进入脚本目录
@@ -451,6 +451,7 @@ case $speed in
 	;;
 	"1g")
 	swtich="Arista-7050
+	Brocade-VDX6740
 	Cisco-2960
 	Cisco-2960G
 	Cisco-3560
@@ -473,6 +474,7 @@ case $speed in
 	;;
 	"10g"|"25g")
 	swtich="Arista-7050
+	Brocade-VDX6740
 	Cisco-3064
 	Cisco-5548
 	Cisco-3232C
@@ -490,6 +492,7 @@ case $speed in
 	;;
 	"40g"|"56g")
 	swtich="Arista-7050
+	Brocade-VDX6740
 	Cisco-3064
 	Cisco-5548
 	Cisco-3232C
@@ -513,6 +516,7 @@ case $speed in
 	echo -e "\n请输入正确的速率类型！！！\n" && exit
 	# 现在交换机汇总列表
 	swtich="Arista-7050
+	Brocade-VDX6740
 	Cisco-2960
 	Cisco-2960G
 	Cisco-3560
