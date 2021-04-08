@@ -141,14 +141,6 @@ install_hadoop() {
 	</property>
 
 	<property>     
-		<name>hadoop.proxyuser.root.hosts</name>     
-		<value>*</value>
-	</property> 
-	<property>     
-		<name>hadoop.proxyuser.root.groups</name>    
-		<value>*</value> 
-	</property>
-	<property>     
 		<name>hadoop.proxyuser.$hadoop_user.hosts</name>     
 		<value>*</value>
 	 </property> 
