@@ -52,8 +52,6 @@ public class WordCount {
         //设置hdfs和yarn地址
         conf.set("fs.defaultFS", "hdfs://master:9000");
         conf.set("yarn.resourcemanager.hostname","master");
-        //意思是跨平台提交，在windows下如果没有这句代码会报错 "/bin/bash: line 0: fg: no job control"
-        conf.set("mapreduce.app-submission.cross-platform", "true");
 
         Job job = Job.getInstance(conf, "word count");
         /* 需要提前在IDEA中Build好：
