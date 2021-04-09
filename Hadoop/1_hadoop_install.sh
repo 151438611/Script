@@ -143,7 +143,7 @@ install_hadoop() {
 	<property>     
 		<name>hadoop.proxyuser.$hadoop_user.hosts</name>     
 		<value>*</value>
-	 </property> 
+	</property> 
 	<property>     
 		<name>hadoop.proxyuser.$hadoop_user.groups</name>    
 		<value>*</value> 
@@ -187,7 +187,7 @@ EOL
 		<name>dfs.permissions.enabled</name>
 		<value>false</value>
 	</property>
-	
+
 </configuration>
 EOL
 
@@ -225,7 +225,8 @@ EOL
 
 	<property>
 		<name>mapreduce.app-submission.cross-platform</name>
-		<value>true</value>
+		<value>false</value>
+		<description>Change to true in Windows</description>
 	</property>
 	
 </configuration>
@@ -255,7 +256,8 @@ EOL
 
 	<property>
 		<name>mapreduce.app-submission.cross-platform</name>
-		<value>true</value>
+		<value>false</value>
+		<description>Change to true in Windows</description>
 	</property>
 
 </configuration>
