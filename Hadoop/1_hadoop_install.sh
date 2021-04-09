@@ -3,9 +3,12 @@
 # 仅支持CPU为x86_64架构的Linux系统：Centos、Ubuntu; 运行需求依赖：wget
 # 前提：1、关闭selinux和防火墙; 2、配置/etc/hosts、配置主机名; 3、配置ssh免密码登陆; 4、Java下载并解压好
 # Hadoop及组件国内镜像下载地址: https://mirrors.aliyun.com/apache/ 
-# 20210318 更新： 添加zookeeper伪集群自动安装配置：zk1、zoo1.cfg / zk2、zoo2.cfg / zk3、zoo3.cfg
+# 20210318 更新：添加zookeeper伪集群自动安装配置：zk1、zoo1.cfg / zk2、zoo2.cfg / zk3、zoo3.cfg
+# 20210409 更新：修改hadoop的hdfs-site.xml配置中的name/data存储路径格式由 /xx/xx 改为 file:/xx/xx ; 以兼容Hadoop 2.8及以下版本,否则namenode日志中会有相关WARN信息
+# 测试OK : Hadoop 2.7.7/2.8.5/2.9.2/2.10.1/3.1.3/3.2.2/3.3.0; Spark 2.4.7/3.1.1
+# 
 
-# 以下变量可自行修改; 注意：1、写绝对路径； 2、install_dir安装目录需要有读写权限；
+# 以下变量可自行修改; 注意：1、写绝对路径； 2、install_dir安装目录需有读写权限；
 host_name="master"
 hadoop_slaves="$host_name "
 hbase_regionservers="$host_name "
