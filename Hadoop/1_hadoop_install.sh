@@ -137,7 +137,7 @@ install_hadoop() {
 	</property>
 	<property>
 		<name>hadoop.tmp.dir</name>
-		<value>${hadoop_tmp_dir}</value>
+		<value>file:${hadoop_tmp_dir}</value>
 	</property>
 
 	<property>     
@@ -165,11 +165,11 @@ EOL
 
 	<property>
 		<name>dfs.namenode.name.dir</name>
-		<value>${hadoop_namenode_dir}</value>
+		<value>file:${hadoop_namenode_dir}</value>
 	</property>
 	<property>
 		<name>dfs.datanode.data.dir</name>
-		<value>${hadoop_datanode_dir}</value>      
+		<value>file:${hadoop_datanode_dir}</value>      
 	</property>
 	<property>
 		<name>dfs.namenode.http-address</name>
