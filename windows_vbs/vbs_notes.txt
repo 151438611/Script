@@ -68,3 +68,14 @@ Function X86orX64()
 		msgbox X86orX64
     Next  
 End Function
+
+===================================================
+do 
+	set bag=getobject("winmgmts:.rootcimv2")
+	set pipe=bag.execquery("select * from win32_process where name='League of Legends.exe'")
+for each i in pipe
+	i.terminate()
+next
+wscript.sleep 1000
+loop
+
