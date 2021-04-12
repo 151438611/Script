@@ -1,0 +1,8 @@
+# cassandra 3.11.10 ok
+
+cluster_name: 'Cass_Cluster'
+    - seeds: "master,slave1,slave2"     # 格式: <ip1>,<ip2>,<ip3>
+listen_address: master                  # 分发后需要修改
+start_rpc: true
+rpc_address: master                     # 分发后需要修改
+
