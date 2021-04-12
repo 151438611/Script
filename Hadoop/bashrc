@@ -39,6 +39,10 @@ export PATH=$PATH:$SPARK_HOME/bin:$SPARK_HOME/sbin
 export ZOOKEEPER_HOME=/usr/local/zookeeper
 export PATH=$PATH:$ZOOKEEPER_HOME/bin
 
+export CASSANDRA_HOME=/home/centos/cassandra
+export PATH=$PATH:$CASSANDRA_HOME/bin
+#export LOCAL_JMX=no
+
 export KAFKA_HOME=/usr/local/kafka
 export PATH=$PATH:$KAFKA_HOME/bin
 
