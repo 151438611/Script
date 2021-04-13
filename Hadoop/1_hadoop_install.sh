@@ -5,8 +5,8 @@
 # Hadoop及组件国内镜像下载地址: https://mirrors.aliyun.com/apache/ 
 # 20210318 更新：添加zookeeper伪集群自动安装配置：zk1、zoo1.cfg / zk2、zoo2.cfg / zk3、zoo3.cfg
 # 20210409 更新：修改hadoop的hdfs-site.xml配置中的name/data存储路径格式由 /xx/xx 改为 file:/xx/xx ; 以兼容Hadoop 2.8及以下版本,否则namenode日志中会有相关WARN信息
+# 20210413 更新：添加Cassandra安装配置功能
 # 测试OK : Hadoop 2.7.7/2.8.5/2.9.2/2.10.1/3.1.3/3.2.2/3.3.0; Spark 2.4.7/3.1.1
-# 
 
 # 以下变量可自行修改; 注意：1、写绝对路径； 2、install_dir安装目录需有读写权限；
 host_name="$(hostname)"
@@ -78,6 +78,7 @@ cassandra_commitlog_dir=$cassandra_home/data/commitlog
 cassandra_saved_caches_dir=$cassandra_home/data/saved_caches
 cassandra_hints_dir=$cassandra_home/data/hints
 cassandra_logs_dir=$cassandra_home/logs
+
 cassandra_url="https://mirrors.aliyun.com/apache/cassandra/${cassandra_version}/apache-cassandra-${cassandra_version}-bin.tar.gz"
 
 # 临时下载和解压目录
