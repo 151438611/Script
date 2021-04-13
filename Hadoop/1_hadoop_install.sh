@@ -1,11 +1,11 @@
 #!/bin/bash
 # 适用于完全分布式和伪分布式集群的自动下载、安装、配置脚本；若安装完全分布式,需要手动分发
-# 仅支持CPU为x86_64架构的Linux系统：Centos、Ubuntu; 运行需求依赖：wget
-# 前提：1、关闭selinux和防火墙; 2、配置/etc/hosts、配置主机名; 3、配置ssh免密码登陆; 4、Java下载并解压好
+# 仅支持 CPU x86_64 架构的 Linux 系统：Centos、Ubuntu; 运行需求依赖：wget
+# 前提：1、关闭 selinux 和防火墙; 2、配置 /etc/hosts、hostname; 3、配置 ssh 免密码登陆; 4、Java下载并解压好
 # Hadoop及组件国内镜像下载地址: https://mirrors.aliyun.com/apache/ 
-# 20210318 更新：添加zookeeper伪集群自动安装配置：zk1、zoo1.cfg / zk2、zoo2.cfg / zk3、zoo3.cfg
-# 20210409 更新：修改hadoop的hdfs-site.xml配置中的name/data存储路径格式由 /xx/xx 改为 file:/xx/xx ; 以兼容Hadoop 2.8及以下版本,否则namenode日志中会有相关WARN信息
-# 20210413 更新：添加Cassandra安装配置功能
+# 20210318 更新：添加 Zookeeper 伪集群自动安装配置：zk1、zoo1.cfg / zk2、zoo2.cfg / zk3、zoo3.cfg
+# 20210409 更新：修改 Hadoop 的 hdfs-site.xml 配置中的 name/data 存储路径格式由 /xx/xx 改为 file:/xx/xx ; 以兼容 Hadoop 2.8 及以下版本,否则 namenode 日志中会有相关WARN信息
+# 20210413 更新：添加 Cassandra 安装配置功能
 # 测试OK : Hadoop 2.7.7/2.8.5/2.9.2/2.10.1/3.1.3/3.2.2/3.3.0; Spark 2.4.7/3.1.1
 
 # 以下变量可自行修改; 注意：1、写绝对路径； 2、install_dir安装目录需有读写权限；
