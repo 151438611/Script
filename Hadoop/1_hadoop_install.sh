@@ -649,7 +649,7 @@ install_cassandra() {
 		{ red_echo "$cassandra_conf_dir/cassandra.yaml : No such file,exit \n"; exit 27; }
 	cassandra_yaml_seeds_line=$(grep -n "\- seeds:" $cassandra_conf_dir/cassandra.yaml | awk -F ":" '{print $1}')
 	cassandra_yaml_seeds_value=$(grep "\- seeds:" $cassandra_conf_dir/cassandra.yaml | awk '{print $3}')
-	sed -i ''"$cassandra_yaml_seeds_line"'s;'"$cassandra_yaml_seeds_value"';'"$cassandra_seeds"';' $cassandra_conf_dir/cassandra.yaml
+	sed -i ''"$cassandra_yaml_seeds_line"'s;'"$cassandra_yaml_seeds_value"';\"'"$cassandra_seeds"'\";' $cassandra_conf_dir/cassandra.yaml
 	cassandra_yaml_listen_address_line=$(grep -n "^listen_address:" $cassandra_conf_dir/cassandra.yaml | awk -F ":" '{print $1}')
 	cassandra_yaml_listen_address_value=$(grep "^listen_address:" $cassandra_conf_dir/cassandra.yaml | awk '{print $2}')
 	sed -i ''"$cassandra_yaml_listen_address_line"'s;'"$cassandra_yaml_listen_address_value"';'"$host_name"';' $cassandra_conf_dir/cassandra.yaml
@@ -661,10 +661,15 @@ install_cassandra() {
 	sed -i ''"$cassandra_yaml_rpc_address_line"'s;'"$cassandra_yaml_rpc_address_value"';'"$host_name"';' $cassandra_conf_dir/cassandra.yaml
 	
 	cassandra_env_jmxremote_password_file_line=$(grep -n "com.sun.management.jmxremote.password.file" $cassandra_conf_dir/cassandra-env.sh | awk -F ":" '{print $1}')
-	cassandra_env_jmxremote_password_file_value=$(grep "com.sun.management.jmxremote.password.file" $cassandra_conf_dir/cassandra-env.sh | awk -F ":" '{print $1}' | cut -d \" -f 1)
+	cassandra_env_jmxremote_password_file_value=$(grep "com.sun.management.jmxremote.password.file" $cassandra_conf_dir/cassandra-env.sh | awk -F "=" '{print $3}' | cut -d \" -f 1)
 	jmxremote_password_file=$cassandra_conf_dir/jmxremote.password
-	#sed -i ''"$cassandra_env_jmxremote_password_file_line"';'"$cassandra_env_jmxremote_password_file_value"';'"$jmxremote_password_file"';g' $cassandra_conf_dir/cassandra-env.sh
+	#sed -i ''"$cassandra_env_jmxremote_password_file_line"'s;'"$cassandra_env_jmxremote_password_file_value"';'"$jmxremote_password_file"';g' $cassandra_conf_dir/cassandra-env.sh
 	#echo "cassandra cassandra" >> $jmxremote_password_file
+	cassandra_env_jmxremote_access_file_line=$(grep -n "com.sun.management.jmxremote.access.file" $cassandra_conf_dir/cassandra-env.sh | awk -F ":" '{print $1}')
+	cassandra_env_jmxremote_access_file_value=$(grep "com.sun.management.jmxremote.access.file" $cassandra_conf_dir/cassandra-env.sh | awk -F "=" '{print $3}' | cut -d \" -f 1)
+	jmxremote_access_file=$cassandra_conf_dir/jmxremote.access
+	#sed -i ''"$cassandra_env_jmxremote_access_file_line"'s;'"$cassandra_env_jmxremote_access_file_value"';'"$jmxremote_access_file"';g' $cassandra_conf_dir/cassandra-env.sh
+	#echo "cassandra readwrite" >> $jmxremote_access_file
 	
 	# config ~/.bashrc
 	cat << EOL >> $bashrc
