@@ -20,7 +20,6 @@
         <name>javax.jdo.option.ConnectionPassword</name>
         <value>root</value>
     </property>
-    
 <!-- 以下为高级设置,可选;需要提前操作: 
 hdfs dfs -mkdir -p /hive/warehouse /hive/tmp /hive/logs && hdfs dfs -chmod -R 777 /hive -->
     <property>
