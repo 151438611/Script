@@ -4,7 +4,7 @@
 # 示例: bash run_command_for_hadoop.sh "uname -a"
 
 # 自行填写: 被操作运行命令的主机名或IP地址; 多个用空格分隔; 
-hosts="slave1 slave2 192.168.200.251"
+hosts="slave1 slave2 master"
 
 blue_echo() {
 	echo -e "\033[36m$1\033[0m"

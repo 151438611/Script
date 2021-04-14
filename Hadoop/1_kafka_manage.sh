@@ -5,17 +5,18 @@
 
 # 自行填写：主机名或IP地址; 多个用空格分隔
 hosts="slave1 slave2 master"
-kafka_server_sh_dir="/home/hadoop/kafka/bin"
 
 yellow_echo() {
 	echo -e "\033[33m$1\033[0m"
 }
 
+kafka_home=/home/hadoop/kafka
+
 kafka_server_start_sh=$(which kafka-server-start.sh)
-[ "$kafka_server_start_sh" ] || kafka_server_start_sh=$kafka_server_sh_dir/kafka-server-start.sh
+[ "$kafka_server_start_sh" ] || kafka_server_start_sh=$kafka_home/bin/kafka-server-start.sh
 
 kafka_server_stop_sh=$(which kafka-server-stop.sh)
-[ "$kafka_server_stop_sh" ] || kafka_server_stop_sh=$kafka_server_sh_dir/kafka-server-stop.sh
+[ "$kafka_server_stop_sh" ] || kafka_server_stop_sh=$kafka_home/bin/kafka-server-stop.sh
 
 case $1 in
 	"start")

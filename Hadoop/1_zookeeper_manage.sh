@@ -4,8 +4,11 @@
 # 提前: master和其他主机配置好SSH免密登陆, zookeeper 集群配置正确
 
 # 自行填写：zookeeper集群中的主机名或IP地址; 多个主机用空格分隔
-hosts="slave1 slave2 slave3"
-zkServer_sh_path="/home/hadoop/zookeeper/bin/zkServer.sh"
+hosts="slave1 slave2 master"
+
+zookeeper_home=/home/hadoop/zookeeper
+zkServer_sh=$(which zkServer.sh)
+[ "$zkServer_sh" ] || zkServer_sh=$zookeeper_home/bin/zkServer.sh
 
 blue_echo() {
 	echo -e "\033[36m$1\033[0m"
@@ -14,8 +17,6 @@ yellow_echo() {
 	echo -e "\033[33m$1\033[0m"
 }
 
-zkServer_sh=$(which zkServer.sh)
-[ "$zkServer_sh" ] || zkServer_sh=$zkServer_sh_path
 
 case $1 in
 	"start")
