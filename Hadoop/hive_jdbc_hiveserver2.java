@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.DriverManager;
 
-public class Hive_jdbc_hiveserver2 {
+public class hive_jdbc_hiveserver2 {
  private static String drivername = "org.apache.hive.jdbc.HiveDriver";
  public static void main(String[] args) throws 	SQLException, ClassNotFoundException{
 	 //register driver and create driver instance
