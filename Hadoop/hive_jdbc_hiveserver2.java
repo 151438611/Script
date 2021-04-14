@@ -12,7 +12,7 @@ public class hive_jdbc_hiveserver2 {
 		//register driver and create driver instance
 		Class.forName(hiveDriverName);
 		//get connection 
-		Connection con = DriverManager.getConnection("jdbc:hive2://192.168.200.168:10000/default","","");
+		Connection con = DriverManager.getConnection("jdbc:hive2://192.168.200.168:10000/default","","");	//后面"" ""表示连接的用户名和密码
 		Statement stmt = con.createStatement();
 		stmt.execute("create database testHivedb123");
 		System.out.println("Database userdb createed successfully");
