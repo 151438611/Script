@@ -4,19 +4,25 @@
 # 提前: master和其他主机配置好SSH免密登陆, kafka 集群配置正确
 
 # 自行填写：主机名或IP地址; 多个用空格分隔
-hosts="slave1 slave2 slave3"
-exec_dir="/usr/local/kafka/bin"
+hosts="slave1 slave2 master"
+kafka_server_sh_dir="/home/hadoop/kafka/bin"
 
 yellow_echo() {
 	echo -e "\033[33m$1\033[0m"
 }
 
+kafka_server_start_sh=$(which kafka-server-start.sh)
+[ "$kafka_server_start_sh" ] || kafka_server_start_sh=$kafka_server_sh_dir/kafka-server-start.sh
+
+kafka_server_stop_sh=$(which kafka-server-stop.sh)
+[ "$kafka_server_stop_sh" ] || kafka_server_stop_sh=$kafka_server_sh_dir/kafka-server-stop.sh
+
 case $1 in
 	"start")
-		exec_command="$exec_dir/kafka-server-start.sh -daemon $exec_dir/../config/server.properties"
+		exec_command="$kafka_server_start_sh -daemon $(dirname $kafka_server_start_sh)/../config/server.properties"
 	;;
 	"stop")
-		exec_command="$exec_dir/kafka-server-stop.sh"
+		exec_command="$kafka_server_stop_sh"
 	;;
 	*)
 		yellow_echo "Usage : $0 [ start | stop ]"

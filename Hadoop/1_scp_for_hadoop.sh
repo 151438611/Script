@@ -3,7 +3,7 @@
 # 提前: master和其他主机配置好SSH免密登陆
 
 # 自行填写: 需要分发的主机名或IP地址; 多个用空格隔开
-hosts="slave1 slave2 slave3"
+hosts="slave1 slave2 master"
 
 bule_echo() {
 	echo -e "\033[36m$1\033[0m"

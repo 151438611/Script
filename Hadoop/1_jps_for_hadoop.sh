@@ -16,6 +16,7 @@ red_echo() {
 }
 
 jps=$(which jps)
+
 if [ -n "$jps" ]; then
 	for host in $hosts
 	do

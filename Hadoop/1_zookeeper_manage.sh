@@ -5,7 +5,7 @@
 
 # 自行填写：zookeeper集群中的主机名或IP地址; 多个主机用空格分隔
 hosts="slave1 slave2 slave3"
-exec_dir="/usr/local/zookeeper/bin"
+zkServer_sh_path="/home/hadoop/zookeeper/bin/zkServer.sh"
 
 blue_echo() {
 	echo -e "\033[36m$1\033[0m"
@@ -14,19 +14,22 @@ yellow_echo() {
 	echo -e "\033[33m$1\033[0m"
 }
 
+zkServer_sh=$(which zkServer.sh)
+[ "$zkServer_sh" ] || zkServer_sh=$zkServer_sh_path
+
 case $1 in
 	"start")
-		[ -d $exec_dir ] && exec_command="${exec_dir}/zkServer.sh start" || exec_command="zkServer.sh start"
+		exec_command="$zkServer_sh start" 
 	;;
 	"stop")
-		[ -d $exec_dir ] && exec_command="${exec_dir}/zkServer.sh stop" || exec_command="zkServer.sh stop"
+		exec_command="$zkServer_sh stop" 
 	;;
 	"status")
-		[ -d $exec_dir ] && exec_command="${exec_dir}/zkServer.sh status" || exec_command="zkServer.sh status"
+		exec_command="$zkServer_sh status" 
 	;;
 	*)
 		yellow_echo "Usage : $0 [ start | stop | status ]"
-		exit
+		exit 5
 	;;
 esac
 
