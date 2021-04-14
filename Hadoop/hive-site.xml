@@ -20,14 +20,6 @@
         <name>javax.jdo.option.ConnectionPassword</name>
         <value>root</value>
     </property>
-    <property>
-        <name>hive.metastore.schema.verification</name>
-        <value>false</value>
-    </property>
-    <property>
-        <name>datanucleus.schema.autoCreateAll</name>
-        <value>true</value> 
-    </property>
     
 <!-- 以下为高级设置,可选;需要提前操作: 
 hdfs dfs -mkdir -p /hive/warehouse /hive/tmp /hive/logs && hdfs dfs -chmod -R 777 /hive -->
@@ -62,6 +54,14 @@ hdfs dfs -mkdir -p /hive/warehouse /hive/tmp /hive/logs && hdfs dfs -chmod -R 77
         <name>hive.metastore.uris</name>
         <value>thrift://master:9083</value>
     </property>
+        <property>
+        <name>hive.metastore.schema.verification</name>
+        <value>false</value>
+    </property>
+    <property>
+        <name>datanucleus.schema.autoCreateAll</name>
+        <value>true</value> 
+    </property>
     <property>
         <name>hive.server2.thrift.bind.host</name>
         <value>master</value>
@@ -77,7 +77,6 @@ hdfs dfs -mkdir -p /hive/warehouse /hive/tmp /hive/logs && hdfs dfs -chmod -R 77
     <property>
         <name>hive.server2.webui.port</name>
         <value>10002</value>
-    </property>
     <property>
         <name>hive.server2.active.passive.ha.enable</name>
         <value>true</value>
