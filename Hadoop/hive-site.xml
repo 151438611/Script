@@ -20,19 +20,20 @@
         <name>javax.jdo.option.ConnectionPassword</name>
         <value>root</value>
     </property>
+
 <!-- 以下为高级设置,可选;需要提前操作: 
-hdfs dfs -mkdir -p /hive/warehouse /hive/tmp /hive/logs && hdfs dfs -chmod -R 777 /hive -->
+hdfs dfs -mkdir -p /usr/hive/warehouse /usr/hive/tmp /usr/hive/logs && hdfs dfs -chmod -R 777 /usr/hive -->
     <property>
         <name>hive.exec.scratchdir</name>
-        <value>/hive/tmp</value>
+        <value>/usr/hive/tmp</value>
     </property>
     <property>
         <name>hive.metastore.warehouse.dir</name>
-        <value>/hive/warehouse</value>
+        <value>/usr/hive/warehouse</value>
     </property>
     <property>
         <name>hive.querylog.location</name>
-        <value>/hive/logs</value>
+        <value>/usr/hive/logs</value>
     </property>
     
 <!-- 以下为 metastore hiveserver2 服务端配置；
