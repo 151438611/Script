@@ -7,10 +7,10 @@ import java.sql.Statement;
 import java.sql.DriverManager;
 
 public class hive_jdbc_hiveserver2 {
- private static String drivername = "org.apache.hive.jdbc.HiveDriver";
+ private static String hiveDriverName = "org.apache.hive.jdbc.HiveDriver";
  public static void main(String[] args) throws 	SQLException, ClassNotFoundException{
 	 //register driver and create driver instance
-	 Class.forName(drivername);
+	 Class.forName(hiveDriverName);
 	 //get connection 
 	 Connection con = DriverManager.getConnection("jdbc:hive2://192.168.200.168:10000/default","","");
 	 Statement stmt = con.createStatement();
