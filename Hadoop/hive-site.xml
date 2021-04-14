@@ -29,7 +29,8 @@
         <value>true</value> 
     </property>
     
-<!-- 以下为高级设置,可选;需要提前操作: hdfs dfs -mkdir -p /hive/warehouse /hive/tmp /hive/logs && hdfs dfs -chmod -R 777 /hive -->
+<!-- 以下为高级设置,可选;需要提前操作: 
+hdfs dfs -mkdir -p /hive/warehouse /hive/tmp /hive/logs && hdfs dfs -chmod -R 777 /hive -->
     <property>
         <name>hive.exec.scratchdir</name>
         <value>/hive/tmp</value>
@@ -43,7 +44,8 @@
         <value>/hive/logs</value>
     </property>
     
-<!-- 以下为 metastore hiveserver2 服务端配置；启动命令：hive --service metastore & ; hive --service hiveserver2 -->
+<!-- 以下为 metastore hiveserver2 服务端配置；
+启动命令：hive --service metastore & ; hive --service hiveserver2 -->
     <property>
         <name>datanucleus.schema.autoCreateAll</name>
         <value>true</value> 
