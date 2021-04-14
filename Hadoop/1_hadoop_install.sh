@@ -461,10 +461,9 @@ install_hive() {
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
 <configuration>
-    
     <property>
-	<name>javax.jdo.option.ConnectionURL</name>
-	<value>jdbc:mysql://localhost:3306/hive_metastore?createDatabaseIfNotExist=true&amp;characterEncoding=UTF-8&amp;useSSL=false</value>
+		<name>javax.jdo.option.ConnectionURL</name>
+		<value>jdbc:mysql://localhost:3306/hive_metastore?createDatabaseIfNotExist=true&amp;characterEncoding=UTF-8&amp;useSSL=false</value>
     </property>
     <property>
         <name>javax.jdo.option.ConnectionDriverName</name>
@@ -479,11 +478,25 @@ install_hive() {
         <value>hive</value>
     </property>
 	
+<!-- hdfs dfs -mkdir -p /usr/hive/warehouse /usr/hive/tmp /usr/hive/logs && hdfs dfs -chmod -R 777 /usr/hive
+    <property>
+        <name>hive.exec.scratchdir</name>
+        <value>/usr/hive/tmp</value>
+    </property>
+    <property>
+        <name>hive.metastore.warehouse.dir</name>
+        <value>/usr/hive/warehouse</value>
+    </property>
+    <property>
+        <name>hive.querylog.location</name>
+        <value>/usr/hive/logs</value>
+    </property>
+-->
+
 </configuration>
 EOL
 	# config ~/.bashrc
 	cat << EOL >> $bashrc
-
 export HIVE_HOME=$hive_home
 export PATH=\$PATH:\$HIVE_HOME/bin
 
@@ -608,14 +621,14 @@ EOL
 		zookeeper_dataDir_line=$(grep -ni "dataDir=" $zookeeper_conf_dir/zoo.cfg | awk -F ":" '{print $1}')
 		zookeeper_dataDir_value=$(grep -ni "dataDir=" $zookeeper_conf_dir/zoo.cfg | awk -F "=" '{print $2}')
 		sed -i ''"$zookeeper_dataDir_line"'s;'"$zookeeper_dataDir_value"';'"$zookeeper_data_dir"';g' $zookeeper_conf_dir/zoo.cfg
-
+		
 		echo "dataLogDir=$zookeeper_logs_dir" >> $zookeeper_conf_dir/zoo.cfg
-		echo 1 > $zookeeper_data_dir/myid
 		for zookeeper_host in $zookeeper_hosts
 		do
 			echo "server.${zk_id:=1}=${zookeeper_host}:2888:3888" >> $zookeeper_conf_dir/zoo.cfg
 			let zk_id+=1
 		done
+		echo 1 > $zookeeper_data_dir/myid
 		yellow_echo "\n注意：分发后需要修改 $zookeeper_data_dir/myid \n"
 	else
 		red_echo "\nZookeeper安装失败,Zookeeper主机数量至少需要3个,现只有${zookeeper_host_num}个\n"
@@ -647,15 +660,19 @@ install_cassandra() {
 	mkdir -p $cassandra_logs_dir $cassandra_data_dir $cassandra_commitlog_dir $cassandra_saved_caches_dir $cassandra_hints_dir
 	[ -f "$cassandra_conf_dir/cassandra.yaml" ] || \
 		{ red_echo "$cassandra_conf_dir/cassandra.yaml : No such file,exit \n"; exit 27; }
+
 	cassandra_yaml_seeds_line=$(grep -n "\- seeds:" $cassandra_conf_dir/cassandra.yaml | awk -F ":" '{print $1}')
 	cassandra_yaml_seeds_value=$(grep "\- seeds:" $cassandra_conf_dir/cassandra.yaml | awk '{print $3}')
 	sed -i ''"$cassandra_yaml_seeds_line"'s;'"$cassandra_yaml_seeds_value"';\"'"$cassandra_seeds"'\";' $cassandra_conf_dir/cassandra.yaml
+	
 	cassandra_yaml_listen_address_line=$(grep -n "^listen_address:" $cassandra_conf_dir/cassandra.yaml | awk -F ":" '{print $1}')
 	cassandra_yaml_listen_address_value=$(grep "^listen_address:" $cassandra_conf_dir/cassandra.yaml | awk '{print $2}')
 	sed -i ''"$cassandra_yaml_listen_address_line"'s;'"$cassandra_yaml_listen_address_value"';'"$host_name"';' $cassandra_conf_dir/cassandra.yaml
+	
 	cassandra_yaml_start_rpc_line=$(grep -n "^start_rpc:" $cassandra_conf_dir/cassandra.yaml | awk -F ":" '{print $1}')
 	cassandra_yaml_start_rpc_value=$(grep "^start_rpc:" $cassandra_conf_dir/cassandra.yaml | awk '{print $2}')
 	sed -i ''"$cassandra_yaml_start_rpc_line"'s;'"$cassandra_yaml_start_rpc_value"';true;' $cassandra_conf_dir/cassandra.yaml
+	
 	cassandra_yaml_rpc_address_line=$(grep -n "^rpc_address:" $cassandra_conf_dir/cassandra.yaml | awk -F ":" '{print $1}')
 	cassandra_yaml_rpc_address_value=$(grep "^rpc_address:" $cassandra_conf_dir/cassandra.yaml | awk '{print $2}')
 	sed -i ''"$cassandra_yaml_rpc_address_line"'s;'"$cassandra_yaml_rpc_address_value"';'"$host_name"';' $cassandra_conf_dir/cassandra.yaml
@@ -665,6 +682,7 @@ install_cassandra() {
 	jmxremote_password_file=$cassandra_conf_dir/jmxremote.password
 	#sed -i ''"$cassandra_env_jmxremote_password_file_line"'s;'"$cassandra_env_jmxremote_password_file_value"';'"$jmxremote_password_file"';g' $cassandra_conf_dir/cassandra-env.sh
 	#echo "cassandra cassandra" >> $jmxremote_password_file
+
 	cassandra_env_jmxremote_access_file_line=$(grep -n "com.sun.management.jmxremote.access.file" $cassandra_conf_dir/cassandra-env.sh | awk -F ":" '{print $1}')
 	cassandra_env_jmxremote_access_file_value=$(grep "com.sun.management.jmxremote.access.file" $cassandra_conf_dir/cassandra-env.sh | awk -F "=" '{print $3}' | cut -d \" -f 1)
 	jmxremote_access_file=$cassandra_conf_dir/jmxremote.access
