@@ -20,24 +20,27 @@
         <name>javax.jdo.option.ConnectionPassword</name>
         <value>root</value>
     </property>
+    <property>
+        <name>hive.metastore.schema.verification</name>
+        <value>false</value>
+    </property>
 
 <!-- 以下为高级设置,可选;需要提前操作: 
-hdfs dfs -mkdir -p /usr/hive/warehouse /usr/hive/tmp /usr/hive/logs && hdfs dfs -chmod -R 777 /usr/hive -->
+hdfs dfs -mkdir -p /user/hive/warehouse /user/hive/tmp /user/hive/logs && hdfs dfs -chmod -R 777 /user/hive -->
     <property>
         <name>hive.exec.scratchdir</name>
-        <value>/usr/hive/tmp</value>
+        <value>/user/hive/tmp</value>
     </property>
     <property>
         <name>hive.metastore.warehouse.dir</name>
-        <value>/usr/hive/warehouse</value>
+        <value>/user/hive/warehouse</value>
     </property>
     <property>
         <name>hive.querylog.location</name>
-        <value>/usr/hive/logs</value>
+        <value>/user/hive/logs</value>
     </property>
     
-<!-- 以下为 metastore hiveserver2 服务端配置；
-启动命令：hive --service metastore & ; hive --service hiveserver2 -->
+<!-- 以下为 metastore 服务端配置；启动命令：hive --service metastore &  -->
     <property>
         <name>datanucleus.schema.autoCreateAll</name>
         <value>true</value> 
@@ -54,14 +57,12 @@ hdfs dfs -mkdir -p /usr/hive/warehouse /usr/hive/tmp /usr/hive/logs && hdfs dfs 
         <name>hive.metastore.uris</name>
         <value>thrift://master:9083</value>
     </property>
-        <property>
-        <name>hive.metastore.schema.verification</name>
-        <value>false</value>
-    </property>
     <property>
         <name>datanucleus.schema.autoCreateAll</name>
         <value>true</value> 
     </property>
+
+<!-- 以下为 hiveserver2 服务端配置；启动命令：hive --service hiveserver2 -->
     <property>
         <name>hive.server2.thrift.bind.host</name>
         <value>master</value>
