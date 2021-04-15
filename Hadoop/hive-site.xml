@@ -78,6 +78,10 @@ hdfs dfs -mkdir -p /usr/hive/warehouse /usr/hive/tmp /usr/hive/logs && hdfs dfs 
         <name>hive.server2.webui.port</name>
         <value>10002</value>
     <property>
+        <name>hive.server2.authentication</name>
+        <value>NONE</value>
+    </property>	
+    <property>
         <name>hive.server2.active.passive.ha.enable</name>
         <value>true</value>
     </property>	
