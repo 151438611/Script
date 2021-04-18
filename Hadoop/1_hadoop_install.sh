@@ -153,7 +153,7 @@ install_hadoop() {
 	</property>
 	<property>
 		<name>hadoop.tmp.dir</name>
-		<value>file:${hadoop_tmp_dir}</value>
+		<value>file://${hadoop_tmp_dir}</value>
 	</property>
 
 	<property>     
@@ -181,11 +181,11 @@ EOL
 
 	<property>
 		<name>dfs.namenode.name.dir</name>
-		<value>file:${hadoop_namenode_dir}</value>
+		<value>file://${hadoop_namenode_dir}</value>
 	</property>
 	<property>
 		<name>dfs.datanode.data.dir</name>
-		<value>file:${hadoop_datanode_dir}</value>      
+		<value>file://${hadoop_datanode_dir}</value>      
 	</property>
 	<property>
 		<name>dfs.namenode.http-address</name>
@@ -332,7 +332,6 @@ export HADOOP_YARN_HOME=\$HADOOP_HOME
 export HADOOP_MAPRED_HOME=\$HADOOP_HOME
 export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:\$HADOOP_HOME/lib/native
 export HADOOP_COMMON_LIB_NATIVE_DIR=\$HADOOP_HOME/lib/native
-#export HADOOP_OPTS="-Djava.library.path=\$HADOOP_HOME/lib"
 export JAVA_LIBRARY_PATH=\$HADOOP_HOME/lib/native
 export PATH=\$PATH:\$HADOOP_HOME/bin:\$HADOOP_HOME/sbin
 
@@ -388,7 +387,7 @@ install_hbase() {
     </property>
     <property>
         <name>hbase.zookeeper.property.dataDir</name>
-        <value>${hbase_zkdata_dir}</value> 
+        <value>file://${hbase_zkdata_dir}</value> 
     </property>
     <property>  
         <name>hbase.zookeeper.quorum</name>  
@@ -477,21 +476,51 @@ install_hive() {
         <name>javax.jdo.option.ConnectionPassword</name>
         <value>hive</value>
     </property>
-	
-<!-- hdfs dfs -mkdir -p /usr/hive/warehouse /usr/hive/tmp /usr/hive/logs && hdfs dfs -chmod -R 777 /usr/hive
+
+	<property>
+		<name>hive.metastore.schema.verification</name>
+		<value>false</value>
+	</property>
+	<property>
+		<name>hive.cli.print.header</name>
+		<value>true</value>
+	</property>
+	<property>
+		<name>hive.cli.print.current.db</name>
+		<value>true</value>
+	</property>
+
+<!-- hdfs dfs -mkdir -p /user/hive/warehouse /user/hive/tmp /user/hive/logs && hdfs dfs -chmod -R 777 /user/hive /tmp -->
+<!-- 
     <property>
         <name>hive.exec.scratchdir</name>
-        <value>/usr/hive/tmp</value>
+        <value>/user/hive/tmp</value>
     </property>
     <property>
         <name>hive.metastore.warehouse.dir</name>
-        <value>/usr/hive/warehouse</value>
+        <value>/user/hive/warehouse</value>
     </property>
     <property>
         <name>hive.querylog.location</name>
-        <value>/usr/hive/logs</value>
+        <value>/user/hive/logs</value>
     </property>
 -->
+	<property>
+		<name>hive.server2.thrift.bind.host</name>
+		<value>$host_name</value>
+	</property>
+	<property>
+		<name>hive.server2.thrift.port</name>
+		<value>10000</value>
+	</property>
+	<property>
+		<name>hive.server2.thrift.http.port</name>
+		<value>10001</value>
+	</property>
+	<property>
+		<name>hive.server2.webui.port</name>
+		<value>10002</value>
+    </property>
 
 </configuration>
 EOL
