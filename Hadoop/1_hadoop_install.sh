@@ -16,8 +16,8 @@ spark_slaves="$host_name "
 zookeeper_hosts="$host_name "
 cassandra_seeds="$host_name,slave1,slave2"		# seeds格式<ip1>,<ip2>,<ip3>
 
-bashrc="/root/.bashrc"
-install_dir=/root
+bashrc="$HOME/.bashrc"
+install_dir=$HOME
 java_home=$install_dir/java
 
 # Hadoop 版本支持: 2.10.1 3.2.2 3.3.0
@@ -370,7 +370,9 @@ install_hbase() {
 	eval ${sed_cmd}
 	
 	[ -d "$hbase_zkdata_dir" ] || mkdir -p $hbase_zkdata_dir
-
+	
+	hbase_dfs_replication=$(echo $hbase_regionserver | awk '{print NF}')
+	[ $hbase_dfs_replication -eq 1 ] && hbase_dfs_replication=1 || hbase_dfs_replication=3
 	# config hbase-site.xml
 	cat << EOL > $hbase_conf_dir/hbase-site.xml
 <?xml version="1.0"?>
@@ -387,7 +389,7 @@ install_hbase() {
     </property>
     <property>
         <name>hbase.zookeeper.property.dataDir</name>
-        <value>file://${hbase_zkdata_dir}</value> 
+        <value>${hbase_zkdata_dir}</value> 
     </property>
     <property>  
         <name>hbase.zookeeper.quorum</name>  
@@ -403,7 +405,7 @@ install_hbase() {
     </property>
     <property>
         <name>dfs.replication</name>       
-        <value>1</value>
+        <value>${hbase_dfs_replication}</value>
     </property>
     
 </configuration>
@@ -421,7 +423,10 @@ export PATH=\$PATH:\$HBASE_HOME/bin
 
 EOL
 	source $bashrc
-	mv $hbase_home/lib/client-facing-thirdparty/slf4j-log4j*.jar $hbase_home/
+	hbase_slf4j_log4j=$(ls $hbase_home/lib/client-facing-thirdparty/slf4j-log4j*.jar)
+	[ "$hbase_slf4j_log4j" ] && [ $(echo "$hbase_slf4j_log4j" | wc -l) -eq 1 ] && \
+	mv $hbase_slf4j_log4j{,.bak}
+	
 	[ "$redhat_os" ] && {
 		hbase version && blue_echo "\nHBase is install Success.\n" || red_echo "\nHBase is install Fail.\n"
 		}
