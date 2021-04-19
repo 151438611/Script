@@ -14,7 +14,7 @@ import com.sun.rowset.internal.InsertRow;
 import java.io.IOException;
 import java.util.Iterator;
 
-public class hbaseDemo {
+public class hbase_demo {
 	
 	public static Configuration configuration;
 	public static Connection connection;
