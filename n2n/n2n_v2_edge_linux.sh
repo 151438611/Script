@@ -7,7 +7,7 @@
 export PATH=/usr/sbin:/usr/bin:/sbin:/bin:$PATH
 
 # 设置 supernode 超级节点信息
-supernode_host=n2n.xxy1.ltd
+supernode_host="n2n.xxy1.ltd"
 supernode_port=8000
 # 设置 edge 节点信息
 ipadd=10.5.5.x
