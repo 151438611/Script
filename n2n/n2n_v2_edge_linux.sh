@@ -7,7 +7,8 @@
 export PATH=/usr/sbin:/usr/bin:/sbin:/bin:$PATH
 
 # 设置 supernode 超级节点信息
-supernode_ip_port=n2n.xxy1.ltd:xxx
+supernode_host=n2n.xxy1.ltd
+supernode_port=8000
 # 设置 edge 节点信息
 ipadd=10.5.5.x
 #netmask=255.255.255.0
@@ -107,7 +108,7 @@ if [ -n "$(pidof $(basename $edge))" ]; then
 	echo "$(date +"%F %T")	$edge $ipadd is runing , Don't do anything !" >> $log
 else
 	[ $N2N_KEY ] && \
-	$edge -d $vmnic_name -c $community_name -a $ipadd -Er -k $N2N_KEY -l $supernode_ip_port || \
-	$edge -d $vmnic_name -c $community_name -a $ipadd -Er -A1 -l $supernode_ip_port
+	$edge -d $vmnic_name -c $community_name -a $ipadd -Er -k $N2N_KEY -l $supernode_host:$supernode_port || \
+	$edge -d $vmnic_name -c $community_name -a $ipadd -Er -A1 -l $supernode_host:$supernode_port
 	echo "$(date +"%F %T")	$edge $ipadd was not runing ; start $edge ..." >> $log
 fi && sleep 3 && addIptables
