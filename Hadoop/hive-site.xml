@@ -86,5 +86,16 @@ hdfs dfs -mkdir -p /user/hive/warehouse /user/hive/tmp /user/hive/logs && hdfs d
         <name>hive.server2.active.passive.ha.enable</name>
         <value>true</value>
     </property>	
+        
+<!-- 以下为 hive和hbase整合 -->
+    <property>
+        <name>hive.zookeeper.quorum</name>
+        <value>slave1,slve2,slave3</value>
+    </property>
+    <property>
+        <name>hive.zookeeper.client.port</name>
+        <value>2181</value>
+    </property>
+
 
 </configuration>
