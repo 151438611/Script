@@ -17,16 +17,16 @@
         <value>slave2:2181,slave3:2181,slave1:2181</value>
     </property>
     <property>
-        <name>dfs.replication</name>       
-        <value>3</value>
-    </property>
-    <property>
         <name>hbase.zookeeper.property.dataDir</name> 
         <value>/usr/local/zookeeper/data</value>
     </property>
     <property>
         <name>hbase.unsafe.stream.capability.enforce</name>
         <value>false</value>
+    </property>
+    <property>
+        <name>dfs.replication</name>       
+        <value>3</value>
     </property>
 
 </configuration>
