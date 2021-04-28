@@ -20,10 +20,19 @@
         <name>javax.jdo.option.ConnectionPassword</name>
         <value>root</value>
     </property>
+    
     <property>
         <name>hive.metastore.schema.verification</name>
         <value>false</value>
     </property>
+    <property>
+		<name>hive.cli.print.header</name>
+		<value>true</value>
+	</property>
+	<property>
+		<name>hive.cli.print.current.db</name>
+		<value>true</value>
+	</property>
 
 <!-- 以下为高级设置,可选;需要提前操作: 
 hdfs dfs -mkdir -p /user/hive/warehouse /user/hive/tmp /user/hive/logs && hdfs dfs -chmod -R 777 /user/hive 
