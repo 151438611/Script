@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
-<!-- Hive 2.3.7 -->
+<!-- Hive 2.3.7 test OK -->
 
 <configuration>
     
@@ -26,7 +26,8 @@
     </property>
 
 <!-- 以下为高级设置,可选;需要提前操作: 
-hdfs dfs -mkdir -p /user/hive/warehouse /user/hive/tmp /user/hive/logs && hdfs dfs -chmod -R 777 /user/hive -->
+hdfs dfs -mkdir -p /user/hive/warehouse /user/hive/tmp /user/hive/logs && hdfs dfs -chmod -R 777 /user/hive 
+-->
     <property>
         <name>hive.exec.scratchdir</name>
         <value>/user/hive/tmp</value>
@@ -87,7 +88,10 @@ hdfs dfs -mkdir -p /user/hive/warehouse /user/hive/tmp /user/hive/logs && hdfs d
         <value>true</value>
     </property>	
         
-<!-- 以下为 hive和hbase整合 -->
+<!-- 以下为 hive 和 hbase 整合配置，直接运行 hive 命令即可，可不用配置 metastore 和 hiveserver2
+注意：hadoop 3.x 时需用普通用户运行；若用 root 运行会出现 org.apache.hadoop.hbase.AuthUtil.loginClient 异常，MapReduce 无法正常运行
+cd hbase/lib && cp hbase-common*.jar hbase-server*.jar hbase-client*.jar hbase-protocol*.jar ../hive/lib/ 
+-->       
     <property>
         <name>hive.zookeeper.quorum</name>
         <value>slave1,slve2,slave3</value>
@@ -96,6 +100,17 @@ hdfs dfs -mkdir -p /user/hive/warehouse /user/hive/tmp /user/hive/logs && hdfs d
         <name>hive.zookeeper.client.port</name>
         <value>2181</value>
     </property>
-
+    <property>
+        <name>hive.aux.jars.path</name>
+        <value>
+            file:///home/centos/hive/lib/hbase-client-2.3.5.jar,
+            file:///home/centos/hive/lib/hbase-common-2.3.5.jar,
+            file:///home/centos/hive/lib/hbase-common-2.3.5-tests.jar,
+            file:///home/centos/hive/lib/hbase-server-2.3.5.jar,
+            file:///home/centos/hive/lib/hbase-server-2.3.5-tests.jar,
+            file:///home/centos/hive/lib/hbase-protocol-2.3.5.jar,
+            file:///home/centos/hive/lib/hbase-protocol-shaded-2.3.5.jar
+        </value>
+    </property>
 
 </configuration>
