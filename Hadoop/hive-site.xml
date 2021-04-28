@@ -63,7 +63,7 @@ hdfs dfs -mkdir -p /user/hive/warehouse /user/hive/tmp /user/hive/logs && hdfs d
         <value>true</value> 
     </property>
 
-<!-- 以下为 hiveserver2 服务端配置；启动命令：hive --service hiveserver2 -->
+<!-- 以下为 hiveserver2 服务端配置；启动命令：hiveserver2 & 或 hive --service hiveserver2 & -->
     <property>
         <name>hive.server2.thrift.bind.host</name>
         <value>master</value>
