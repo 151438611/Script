@@ -25,7 +25,7 @@
         <name>hive.metastore.schema.verification</name>
         <value>false</value>
     </property>
-    <property>
+	<property>
 		<name>hive.cli.print.header</name>
 		<value>true</value> 
 	</property>
