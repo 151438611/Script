@@ -65,6 +65,8 @@ hive_home=$install_dir/hive
 hive_conf_dir=$hive_home/conf
 hive_url="https://mirrors.aliyun.com/apache/hive/hive-${hive_version}/apache-hive-${hive_version}-bin.tar.gz"
 mysql_connector_java_url="http://mirrors.163.com/mysql/Downloads/Connector-J/mysql-connector-java-5.1.49.tar.gz"
+mysql_user="hive"
+mysql_passwd="hive"
 
 spark_home=$install_dir/spark
 spark_conf_dir=$spark_home/conf
@@ -136,7 +138,7 @@ install_hadoop() {
 		wget -c -P $tmp_download $hadoop_url
 		blue_echo "\nDecompressing ${hadoop_url##*/}\n"
 		tar -zxf $tmp_download/${hadoop_url##*/} -C $tmp_untar
-		mv -f ${tmp_untar}/hadoop-$hadoop_version $hadoop_home
+		mv -f $tmp_untar/hadoop-$hadoop_version $hadoop_home
 		}
 	[ -d "$hadoop_conf_dir" ] || \
 		{ red_echo "\n$hadoop_conf_dir : No such directory, error exit \n"; exit 20; }
@@ -160,6 +162,11 @@ install_hadoop() {
 		dfs_nn_http_port=9870
 		dfs_nn_secondary_http_port=9868
 	fi
+	yarn_rm_port=8032
+	yarn_rm_web_port=8088
+	mapreduce_history_port=10020
+	mapreduce_history_web_port=19888
+	
 	
 	if [ $hadoop_ha -eq 0 ]; then
 		# config core-site.xml
@@ -178,11 +185,11 @@ install_hadoop() {
 	</property>
 
 	<property>     
-		<name>hadoop.proxyuser.$hadoop_user.hosts</name>     
+		<name>hadoop.proxyuser.${hadoop_user}.hosts</name>     
 		<value>*</value>
 	</property> 
 	<property>     
-		<name>hadoop.proxyuser.$hadoop_user.groups</name>    
+		<name>hadoop.proxyuser.${hadoop_user}.groups</name>    
 		<value>*</value> 
 	</property>
 
@@ -232,15 +239,15 @@ EOL
 
 	<property>
 		<name>yarn.resourcemanager.hostname</name>
-		<value>$hadoop_master</value>
+		<value>${hadoop_master}</value>
 	</property>
 	<property>
 		<name>yarn.resourcemanager.address</name>
-		<value>$hadoop_master:8032</value>
+		<value>${hadoop_master}:${yarn_rm_port}</value>
 	</property>
 	<property>
 		<name>yarn.resourcemanager.webapp.address</name>
-		<value>$hadoop_master:8088</value>
+		<value>${hadoop_master}:${yarn_rm_web_port}</value>
 	</property>
 	<property>
 		<name>yarn.nodemanager.pmem-check-enabled</name>
@@ -417,11 +424,11 @@ EOL
     </property>
     <property>
         <name>yarn.resourcemanager.webapp.address.rm1</name>
-        <value>${hadoop_master}:8088</value>
+        <value>${hadoop_master}:${yarn_rm_web_port}</value>
     </property>
     <property>
         <name>yarn.resourcemanager.webapp.address.rm2</name>
-        <value>${hadoop_ha_master2}:8088</value>
+        <value>${hadoop_ha_master2}:${yarn_rm_web_port}</value>
     </property>
     
     <property>
@@ -464,11 +471,11 @@ EOL
 	</property>	
 	<property>
 		<name>mapreduce.jobhistory.address</name>
-		<value>${hadoop_master}:10020</value>
+		<value>${hadoop_master}:${mapreduce_history_port}</value>
 	</property>
 	<property>
 		<name>mapreduce.jobhistory.webapp.address</name>
-		<value>${hadoop_master}:19888</value>
+		<value>${hadoop_master}:${mapreduce_history_web_port}</value>
 	</property>
 	<property>
 		<name>yarn.app.mapreduce.am.env</name>
@@ -503,11 +510,11 @@ EOL
 	</property>	
 	<property>
 		<name>mapreduce.jobhistory.address</name>
-		<value>${hadoop_master}:10020</value>
+		<value>${hadoop_master}:${mapreduce_history_port}</value>
 	</property>
 	<property>
 		<name>mapreduce.jobhistory.webapp.address</name>
-		<value>${hadoop_master}:19888</value>
+		<value>${hadoop_master}:${mapreduce_history_web_port}</value>
 	</property>
 	<property>
 		<name>yarn.app.mapreduce.am.env</name>
@@ -571,7 +578,7 @@ install_hbase() {
 		wget -c -P $tmp_download $hbase_url
 		blue_echo "\nDecompressing ${hbase_url##*/}\n"
 		tar -zxf $tmp_download/${hbase_url##*/} -C $tmp_untar
-		mv -f ${tmp_untar}/hbase-${hbase_version} $hbase_home
+		mv -f $tmp_untar/hbase-$hbase_version $hbase_home
 		}
 	[ -d "$hbase_conf_dir" ] || { red_echo "$hbase_conf_dir : No such directory, error exit "; exit 22 ; }
 	hbase_env_java_line=$(grep -n "export JAVA_HOME=" $hbase_conf_dir/hbase-env.sh | awk -F ":" '{print $1}')
@@ -694,7 +701,7 @@ install_hive() {
 		wget -c -P $tmp_download $hive_url
 		blue_echo "\nDecompressing ${hive_url##*/}\n"
 		tar -zxf $tmp_download/${hive_url##*/} -C $tmp_untar
-		mv -f ${tmp_untar}/apache-hive-${hive_version}-bin $hive_home
+		mv -f $tmp_untar/apache-hive-${hive_version}-bin $hive_home
 		}
 	[ -f "$(ls $hive_home/lib | grep -i mysql-connector-java))" ] || {
 		wget -c -P $tmp_download $mysql_connector_java_url
@@ -730,11 +737,11 @@ install_hive() {
     </property>
     <property>
         <name>javax.jdo.option.ConnectionUserName</name>
-        <value>hive</value>   
+        <value>${mysql_user}</value>   
     </property>
     <property>
         <name>javax.jdo.option.ConnectionPassword</name>
-        <value>hive</value>
+        <value>${mysql_passwd}</value>
     </property>
 
 	<property>
@@ -781,7 +788,7 @@ install_hive() {
     </property>
     <property>
         <name>hive.metastore.uris</name>
-        <value>thrift://$hadoop_master:9083</value>
+        <value>thrift://${hadoop_master}:9083</value>
     </property>
     <property>
         <name>datanucleus.schema.autoCreateAll</name>
@@ -793,7 +800,7 @@ install_hive() {
 <!-- 
 	<property>
 		<name>hive.server2.thrift.bind.host</name>
-		<value>$hadoop_master</value>
+		<value>${hadoop_master}</value>
 	</property>
 	<property>
 		<name>hive.server2.thrift.port</name>
@@ -823,9 +830,9 @@ EOL
 		which hive && blue_echo "\nHive is install Success.\n" || red_echo "\nHive is install Fail.\n"
 		}
 	[ "$debian_os" ] && blue_echo "\nHive is install completed; \nPlease run command: source ~/.bashrc \n"
-	yellow_echo "\n注意：Hive 还需要安装 Mysql ,并创建用户和密码都为hive, 并添加权限: "
+	yellow_echo "\n注意：Hive 还需要安装 Mysql ,并创建用户和密码都为$mysql_user, 并添加权限: "
 	yellow_echo 'grant all privileges on *.* to "hive"@"%" identified by "hive";'"\nflush privileges; \n"
-	blue_echo "First run Hive need initialization Schema : schematool -dbType mysql -initSchema \n"
+	blue_echo "First run Hive need initialization : schematool -dbType mysql -initSchema \n"
 }
 
 # 安装 Spark 封装函数
@@ -834,7 +841,7 @@ install_spark() {
 		wget -c -P $tmp_download $spark_url
 		blue_echo "\nDecompressing ${spark_url##*/}\n"
 		tar -zxf $tmp_download/${spark_url##*/} -C $tmp_untar
-		mv -f ${tmp_untar}/spark-* $spark_home
+		mv -f $tmp_untar/spark-* $spark_home
 		}
 	[ -d "$spark_conf_dir" ] || { red_echo "\n$spark_conf_dir : No such directory, error exit \n"; exit 24; }
 	
@@ -880,13 +887,13 @@ EOL
 		echo $spark_slave >> $spark_conf_dir/workers
 	done
 	
-	spark_py4j=
+	spark_py4j=$(basename $SPARK_HOME/python/lib/py4j-*.zip)
 	# config ~/.bashrc
 	cat << EOL >> $bashrc
 export SPARK_HOME=$spark_home
 export PATH=\$PATH:\$SPARK_HOME/bin:\$SPARK_HOME/sbin
 #export PYSPARK_PYTHON=python3
-#export PYTHONPATH=\$PYTHONPATH:\$SPARK_HOME/python:\$SPARK_HOME/python/lib/py4j-0.10.7-src.zip
+#export PYTHONPATH=\$PYTHONPATH:\$SPARK_HOME/python:\$SPARK_HOME/python/lib/$spark_py4j
 
 EOL
 	source $bashrc
@@ -903,7 +910,7 @@ install_zookeeper() {
 		wget -c -P $tmp_download $zookeeper_url
 		blue_echo "\nDecompressing ${zookeeper_url##*/}\n"
 		tar -zxf $tmp_download/${zookeeper_url##*/} -C $tmp_untar
-		mv -f ${tmp_untar}/apache-zookeeper-* $zookeeper_home
+		mv -f $tmp_untar/apache-zookeeper-* $zookeeper_home
 		}
 	[ -d "$zookeeper_conf_dir" ] || { red_echo "\n$zookeeper_conf_dir : No such directory, error exit \n"; exit 25; }
 	if [ $zookeeper_host_num -eq 1 ] ; then
@@ -974,7 +981,7 @@ install_cassandra() {
 		wget -c -P $tmp_download $cassandra_url
 		blue_echo "\nDecompressing ${cassandra_url##*/}\n"
 		tar -zxf $tmp_download/${cassandra_url##*/} -C $tmp_untar
-		mv -f ${tmp_untar}/apache-cassandra-$cassandra_version $cassandra_home
+		mv -f $tmp_untar/apache-cassandra-$cassandra_version $cassandra_home
 		}
 	[ -d "$cassandra_conf_dir" ] || \
 		{ red_echo "\n$cassandra_conf_dir : No such directory, error exit \n"; exit 26; }
