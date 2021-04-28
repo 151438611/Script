@@ -10,7 +10,7 @@
 # 测试OK : Hadoop 2.7.7/2.8.5/2.9.2/2.10.1/3.1.3/3.2.2/3.3.0; Spark 2.4.7/3.1.1
 
 # 以下变量可自行修改; 注意：1、写绝对路径； 2、install_dir安装目录需有读写权限；
-hadoop_master="$(hostname)"
+hadoop_master=$(hostname)
 hadoop_slaves="$hadoop_master "
 hbase_regionservers="$hadoop_master "
 spark_master=$hadoop_master
@@ -46,12 +46,12 @@ hadoop_defaultFS_port=9000
 hadoop_url="https://mirrors.aliyun.com/apache/hadoop/common/hadoop-${hadoop_version}/hadoop-${hadoop_version}.tar.gz"
 # Hadoop HA Config; Examples: master1 master2 slave1 slave2 slave3
 hadoop_ha=0						# [0 | 1]
-hadoop_ha_name="ha_cluster"
-hadoop_ha_master2="master2"
+hadoop_ha_name=ha_cluster
+hadoop_ha_master2=master2
 hadoop_ha_zk_address="slave1:2181,slave2:2181,slave3:2181"
 hadoop_ha_nn_shared_edits_dir="slave1:8485,slave2:8485,slave3:8485"
 hadoop_ha_journal_edits_dir="$HADOOP_HOME/journal"
-hadoop_ha_rm_cluster_id="rm_cluster"
+hadoop_ha_rm_cluster_id=rm_cluster
 
 hbase_home=$install_dir/hbase
 hbase_conf_dir=$hbase_home/conf
@@ -59,14 +59,14 @@ hbase_zkdata_dir=$hbase_home/zkdata
 hbase_url="https://mirrors.aliyun.com/apache/hbase/${hbase_version}/hbase-${hbase_version}-bin.tar.gz"
 # HBase HA Config
 hbase_ha=0				# [0 | 1]
-hbase_ha_master2="master2"
+hbase_ha_master2=master2
 
 hive_home=$install_dir/hive
 hive_conf_dir=$hive_home/conf
 hive_url="https://mirrors.aliyun.com/apache/hive/hive-${hive_version}/apache-hive-${hive_version}-bin.tar.gz"
 mysql_connector_java_url="http://mirrors.163.com/mysql/Downloads/Connector-J/mysql-connector-java-5.1.49.tar.gz"
-mysql_user="hive"
-mysql_passwd="hive"
+mysql_user=hive
+mysql_passwd=hive
 
 spark_home=$install_dir/spark
 spark_conf_dir=$spark_home/conf
