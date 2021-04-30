@@ -6,7 +6,7 @@
 # 20210318 更新：添加 Zookeeper 伪集群自动安装配置：zk1、zoo1.cfg / zk2、zoo2.cfg / zk3、zoo3.cfg
 # 20210409 更新：修改 Hadoop 的 hdfs-site.xml 配置中的 name/data 存储路径格式由 /xx/xx 改为 file:///xx/xx ; 以兼容 Hadoop 2.8 及以下版本,否则 namenode 日志中会有相关WARN信息
 # 20210413 更新：添加 Cassandra 安装配置功能
-# 20210428 更新：添加 Hadoop HBase 的HA高可用配置
+# 20210413 更新：添加 Hadoop HBase 的HA高可用配置
 # 测试OK : Hadoop 2.7.7/2.8.5/2.9.2/2.10.1/3.1.3/3.2.2/3.3.0; Spark 2.4.7/3.1.1
 
 # 以下变量可自行修改; 注意：1、写绝对路径； 2、install_dir安装目录需有读写权限；
@@ -591,6 +591,12 @@ install_hbase() {
 		[ -d "$hbase_zkdata_dir" ] || mkdir -p $hbase_zkdata_dir
 		dfs_replication=$(echo "$hbase_regionservers" | awk '{print NF}')
 		[ $dfs_replication -eq 1 ] && dfs_replication=1 || dfs_replication=3
+		if [ $hadoop_ha -eq 0 ]; then
+			hbase_rootdir=$hadoop_master:$hadoop_defaultFS_port
+		elif [ $hadoop_ha -eq 1 ]; then
+			hbase_rootdir=$hadoop_ha_name
+			cp -f $hadoop_conf_dir/core-site.xml $hadoop_conf_dir/hdfs-site.xml $hbase_conf_dir/
+		fi
 		# config hbase-site.xml
 		cat << EOL > $hbase_conf_dir/hbase-site.xml
 <?xml version="1.0"?>
@@ -603,7 +609,7 @@ install_hbase() {
     </property>
     <property>
         <name>hbase.rootdir</name> 
-        <value>hdfs://${hadoop_master}:${hadoop_defaultFS_port}/hbase</value>
+        <value>hdfs://${hbase_rootdir}/hbase</value>
     </property>
     <property>
         <name>hbase.zookeeper.property.dataDir</name>
@@ -629,7 +635,6 @@ install_hbase() {
 </configuration>
 EOL
 	elif [ ${hbase_ha} -eq 1 ]; then
-		cp -f $hadoop_conf_dir/core-site.xml $hadoop_conf_dir/hdfs-site.xml $hbase_conf_dir/
 		# HA config hbase-site.xml
 		cat << EOL > $hbase_conf_dir/hbase-site.xml
 <?xml version="1.0"?>
@@ -642,7 +647,7 @@ EOL
     </property>
     <property>
         <name>hbase.rootdir</name> 
-        <value>hdfs://${hadoop_ha_name}/hbase</value>
+        <value>hdfs://${hbase_rootdir}/hbase</value>
     </property>
 
     <property>  
