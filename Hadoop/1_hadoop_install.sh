@@ -48,8 +48,8 @@ hadoop_url="https://mirrors.aliyun.com/apache/hadoop/common/hadoop-${hadoop_vers
 hadoop_ha=0						# [0 | 1]
 hadoop_ha_name=ha_cluster
 hadoop_ha_master2=master2
-hadoop_ha_zk_address="slave1:2181,slave2:2181,slave3:2181"
-hadoop_ha_nn_shared_edits_dir="slave1:8485,slave2:8485,slave3:8485"
+hadoop_ha_zk_address="slave1:2181,slave2:2181,slave3:2181"					# 注意：多个用,逗号隔开
+hadoop_ha_nn_shared_edits_dir="slave1:8485;slave2:8485;slave3:8485"			# 注意：多个用;分号隔开
 hadoop_ha_journal_edits_dir="$hadoop_home/journal"
 hadoop_ha_rm_cluster_id=rm_cluster
 
