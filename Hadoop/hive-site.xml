@@ -88,7 +88,8 @@ hdfs dfs -mkdir -p /user/hive/warehouse /user/hive/tmp /user/hive/logs && hdfs d
     <property>
         <name>hive.server2.webui.port</name>
         <value>10002</value>
-    <property>
+	</property>
+	<property>
         <name>hive.server2.authentication</name>
         <value>NONE</value>
     </property>	
