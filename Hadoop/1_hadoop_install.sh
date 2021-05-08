@@ -597,6 +597,7 @@ install_hbase() {
 		if [ $hadoop_ha -eq 0 ]; then
 			hbase_rootdir=$hadoop_master:$hadoop_defaultFS_port
 		elif [ $hadoop_ha -eq 1 ]; then
+			# 若Hadoop配置了HA高可用,还需要将 core-site.xml、hdfs-site.xml 复制到 hbase/conf 目录下
 			hbase_rootdir=$hadoop_ha_name
 			cp -f $hadoop_conf_dir/core-site.xml $hadoop_conf_dir/hdfs-site.xml $hbase_conf_dir/
 		fi
@@ -831,6 +832,7 @@ export HIVE_HOME=$hive_home
 export PATH=\$PATH:\$HIVE_HOME/bin
 
 EOL
+	
 	source $bashrc
 	mv $hive_home/lib/log4j-slf4j-impl*.jar $hive_home/
 	[ "$redhat_os" ] && {
