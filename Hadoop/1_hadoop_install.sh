@@ -45,20 +45,23 @@ hadoop_user=$(whoami)
 hadoop_defaultFS_port=9000
 hadoop_url="https://mirrors.aliyun.com/apache/hadoop/common/hadoop-${hadoop_version}/hadoop-${hadoop_version}.tar.gz"
 # Hadoop HA Config; Examples: master1 master2 slave1 slave2 slave3
-hadoop_ha=0						# [0 | 1]
+hadoop_ha=0			# [0 | 1]
 hadoop_ha_name=ha_cluster
-hadoop_ha_master2=master2
-hadoop_ha_zk_address="slave1:2181,slave2:2181,slave3:2181"					# 注意：多个用,逗号隔开
-hadoop_ha_nn_shared_edits_dir="slave1:8485;slave2:8485;slave3:8485"			# 注意：多个用;分号隔开
+hadoop_ha_namenode1=$hadoop_master
+hadoop_ha_namenode2=master2
+hadoop_ha_zk_address="slave1:2181,slave2:2181,slave3:2181"				# 注意：多个用,逗号隔开
+hadoop_ha_nn_shared_edits_dir="slave1:8485;slave2:8485;slave3:8485"		# 注意：多个用;分号隔开
 hadoop_ha_journal_edits_dir="$hadoop_home/journal"
 hadoop_ha_rm_cluster_id=rm_cluster
+hadoop_ha_rm1=$hadoop_master
+hadoop_ha_rm2=master2
 
 hbase_home=$install_dir/hbase
 hbase_conf_dir=$hbase_home/conf
 hbase_zkdata_dir=$hbase_home/zkdata
 hbase_url="https://mirrors.aliyun.com/apache/hbase/${hbase_version}/hbase-${hbase_version}-bin.tar.gz"
 # HBase HA Config
-hbase_ha=0				# [0 | 1]
+hbase_ha=0			# [0 | 1]
 hbase_ha_master2=master2
 
 hive_home=$install_dir/hive
@@ -324,19 +327,19 @@ EOL
     </property>
 	<property>
         <name>dfs.namenode.rpc-address.${hadoop_ha_name}.nn1</name> 
-        <value>${hadoop_master}:${dfs_nn_rpc_port}</value>
+        <value>${hadoop_ha_namenode1}:${dfs_nn_rpc_port}</value>
     </property>
 	<property>
         <name>dfs.namenode.rpc-address.${hadoop_ha_name}.nn2</name>
-        <value>${hadoop_ha_master2}:${dfs_nn_rpc_port}</value>
+        <value>${hadoop_ha_namenode2}:${dfs_nn_rpc_port}</value>
     </property>
     <property>
         <name>dfs.namenode.http-address.${hadoop_ha_name}.nn1</name>
-        <value>${hadoop_master}:${dfs_nn_http_port}</value>                                           
+        <value>${hadoop_ha_namenode1}:${dfs_nn_http_port}</value>                                           
     </property>
     <property>
         <name>dfs.namenode.http-address.${hadoop_ha_name}.nn2</name>
-        <value>${hadoop_ha_master2}:${dfs_nn_http_port}</value>
+        <value>${hadoop_ha_namenode2}:${dfs_nn_http_port}</value>
     </property>
 	
 	<property>
@@ -416,19 +419,19 @@ EOL
     </property>
     <property>
         <name>yarn.resourcemanager.hostname.rm1</name>
-        <value>${hadoop_master}</value>
+        <value>${hadoop_ha_rm1}</value>
     </property>
     <property>
         <name>yarn.resourcemanager.hostname.rm2</name>
-        <value>${hadoop_ha_master2}</value>
+        <value>${hadoop_ha_rm2}</value>
     </property>
     <property>
         <name>yarn.resourcemanager.webapp.address.rm1</name>
-        <value>${hadoop_master}:${yarn_rm_web_port}</value>
+        <value>${hadoop_ha_rm1}:${yarn_rm_web_port}</value>
     </property>
     <property>
         <name>yarn.resourcemanager.webapp.address.rm2</name>
-        <value>${hadoop_ha_master2}:${yarn_rm_web_port}</value>
+        <value>${hadoop_ha_rm2}:${yarn_rm_web_port}</value>
     </property>
     
     <property>
@@ -471,11 +474,11 @@ EOL
 	</property>	
 	<property>
 		<name>mapreduce.jobhistory.address</name>
-		<value>${hadoop_master}:${mapreduce_history_port}</value>
+		<value>${hadoop_ha_namenode1}:${mapreduce_history_port}</value>
 	</property>
 	<property>
 		<name>mapreduce.jobhistory.webapp.address</name>
-		<value>${hadoop_master}:${mapreduce_history_web_port}</value>
+		<value>${hadoop_ha_namenode1}:${mapreduce_history_web_port}</value>
 	</property>
 	<property>
 		<name>yarn.app.mapreduce.am.env</name>
@@ -510,11 +513,11 @@ EOL
 	</property>	
 	<property>
 		<name>mapreduce.jobhistory.address</name>
-		<value>${hadoop_master}:${mapreduce_history_port}</value>
+		<value>${hadoop_ha_namenode1}:${mapreduce_history_port}</value>
 	</property>
 	<property>
 		<name>mapreduce.jobhistory.webapp.address</name>
-		<value>${hadoop_master}:${mapreduce_history_web_port}</value>
+		<value>${hadoop_ha_namenode1}:${mapreduce_history_web_port}</value>
 	</property>
 	<property>
 		<name>yarn.app.mapreduce.am.env</name>
@@ -691,8 +694,7 @@ export PATH=\$PATH:\$HBASE_HOME/bin
 EOL
 	source $bashrc
 	hbase_slf4j_log4j=$(ls $hbase_home/lib/client-facing-thirdparty/slf4j-log4j*.jar)
-	[ "$hbase_slf4j_log4j" ] && [ $(echo "$hbase_slf4j_log4j" | wc -l) -eq 1 ] && \
-	mv $hbase_slf4j_log4j{,.bak}
+	[ "$hbase_slf4j_log4j" ] && [ $(echo "$hbase_slf4j_log4j" | wc -l) -eq 1 ] && mv $hbase_slf4j_log4j{,.bak}
 	
 	[ "$redhat_os" ] && {
 		hbase version && blue_echo "\nHBase is install Success.\n" || red_echo "\nHBase is install Fail.\n"
