@@ -181,7 +181,7 @@ install_hadoop() {
 	</property>
 	<property>
 		<name>hadoop.tmp.dir</name>
-		<value>file://${hadoop_tmp_dir}</value>
+		<value>${hadoop_tmp_dir}</value>
 	</property>
 
 	<property>     
@@ -279,7 +279,7 @@ EOL
 	</property>
 	<property>
 		<name>hadoop.tmp.dir</name>
-		<value>file://${hadoop_tmp_dir}</value>
+		<value>${hadoop_tmp_dir}</value>
 	</property>
 	
 	<property>
