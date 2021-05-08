@@ -362,7 +362,7 @@ EOL
     </property>
     <property>
         <name>dfs.journalnode.edits.dir</name>              
-        <value>file://${hadoop_ha_journal_edits_dir}</value>
+        <value>${hadoop_ha_journal_edits_dir}</value>
     </property>
 	
 	<property>
