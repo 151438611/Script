@@ -67,8 +67,12 @@ public class WordCount {
         job.setReducerClass(IntSumReducer.class);
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(IntWritable.class);
+        
         FileInputFormat.addInputPath(job, new Path(args[0]));
         FileOutputFormat.setOutputPath(job, new Path(args[1]));
+        //FileInputFormat.setInputPaths(job, new Path("hdfs://master:9000/input/characters.txt"));
+		//FileOutputFormat.setOutputPath(job, new Path("hdfs://master:9000/characterCount1"));
+        
         System.exit(job.waitForCompletion(true) ? 0 : 1);
     }
 }
