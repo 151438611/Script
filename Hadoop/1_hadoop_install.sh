@@ -24,14 +24,14 @@ java_home=$install_dir/java
 
 # Hadoop 版本支持: 2.10.1 3.2.2 3.3.0
 hadoop_version=2.10.1
-# HBase 版本支持: 2.2.6 2.3.5 2.4.2
+# HBase 版本支持: 2.2.7 2.3.5 2.4.2
 hbase_version=2.3.5
 # Hive 版本支持: 2.3.8 3.1.2
 hive_version=2.3.8
 # Spark 版本支持: 2.4.7 3.1.1
 spark_version=2.4.7
-# zookeeper版本支持: 3.6.2 3.7.0
-zookeeper_version=3.6.2
+# zookeeper版本支持: 3.5.9 3.6.3 3.7.0
+zookeeper_version=3.6.3
 # cassandra版本支持: 2.2.19 3.11.10
 cassandra_version=3.11.10
 
@@ -46,13 +46,13 @@ hadoop_defaultFS_port=9000
 hadoop_url="https://mirrors.aliyun.com/apache/hadoop/common/hadoop-${hadoop_version}/hadoop-${hadoop_version}.tar.gz"
 # Hadoop HA Config; Examples: master1 master2 slave1 slave2 slave3
 hadoop_ha=0			# [0 | 1]
-hadoop_ha_name=hacluster					# 名称不能使用_下划线
+hadoop_ha_name=hacluster				# 名称不能使用_下划线,否则启动会提示未知的主机名
 hadoop_ha_namenode1=$hadoop_master
 hadoop_ha_namenode2=master2
 hadoop_ha_zk_address="slave1:2181,slave2:2181,slave3:2181"				# 注意：多个用,逗号隔开
 hadoop_ha_nn_shared_edits_dir="slave1:8485;slave2:8485;slave3:8485"		# 注意：多个用;分号隔开
 hadoop_ha_journal_edits_dir="$hadoop_home/journal"
-hadoop_ha_rm_cluster_id=rmcluster			# 名称不能使用_下划线
+hadoop_ha_rm_cluster_id=rmcluster		# 名称不能使用_下划线
 hadoop_ha_rm1=$hadoop_master
 hadoop_ha_rm2=master2
 
