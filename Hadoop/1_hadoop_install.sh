@@ -46,13 +46,13 @@ hadoop_defaultFS_port=9000
 hadoop_url="https://mirrors.aliyun.com/apache/hadoop/common/hadoop-${hadoop_version}/hadoop-${hadoop_version}.tar.gz"
 # Hadoop HA Config; Examples: master1 master2 slave1 slave2 slave3
 hadoop_ha=0			# [0 | 1]
-hadoop_ha_name=ha_cluster
+hadoop_ha_name=hacluster					# 名称不能使用_下划线
 hadoop_ha_namenode1=$hadoop_master
 hadoop_ha_namenode2=master2
 hadoop_ha_zk_address="slave1:2181,slave2:2181,slave3:2181"				# 注意：多个用,逗号隔开
 hadoop_ha_nn_shared_edits_dir="slave1:8485;slave2:8485;slave3:8485"		# 注意：多个用;分号隔开
 hadoop_ha_journal_edits_dir="$hadoop_home/journal"
-hadoop_ha_rm_cluster_id=rm_cluster
+hadoop_ha_rm_cluster_id=rmcluster			# 名称不能使用_下划线
 hadoop_ha_rm1=$hadoop_master
 hadoop_ha_rm2=master2
 
@@ -896,7 +896,7 @@ EOL
 		echo $spark_slave >> $spark_conf_dir/workers
 	done
 	
-	spark_py4j=$(basename $SPARK_HOME/python/lib/py4j-*.zip)
+	spark_py4j=$(basename $(ls $SPARK_HOME/python/lib/py4j-*.zip))
 	# config ~/.bashrc
 	cat << EOL >> $bashrc
 export SPARK_HOME=$spark_home
