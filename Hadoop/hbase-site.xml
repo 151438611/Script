@@ -20,7 +20,7 @@
         <name>hbase.zookeeper.quorum</name>  
         <value>master</value>  
     </property> 
- <--
+
     <property>
         <name>hbase.unsafe.stream.capability.enforce</name>
         <value>false</value>
@@ -29,6 +29,7 @@
         <name>hbase.wal.provider</name>
         <value>filesystem</value>
     </property>
+  <--
     <property>
         <name>dfs.replication</name>       
         <value>1</value>
