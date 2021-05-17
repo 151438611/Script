@@ -15,7 +15,7 @@ public class WordCountDriver {
 		//创建环境变量参数
 		Configuration conf = new Configuration();
 		conf.set("fs.defaultFS", "hdfs://master:9000");
-        //conf.set("yarn.resourcemanager.hostname","master");
+        	//conf.set("yarn.resourcemanager.hostname","master");
         
 		//创建MapReduce任务
 		Job job = Job.getInstance(conf, "WordCount");
