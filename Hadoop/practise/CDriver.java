@@ -1,3 +1,4 @@
+// 单字符统计
 package practise;
 
 import org.apache.hadoop.conf.Configuration;
