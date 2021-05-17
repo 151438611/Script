@@ -14,43 +14,43 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 public class WordCountDriver {
 
 	public static void main(String[] args) throws Exception {
-		//´´½¨»·¾³±äÁ¿²ÎÊı
+		//åˆ›å»ºç¯å¢ƒå˜é‡å‚æ•°
 		Configuration conf = new Configuration();
 		conf.set("fs.defaultFS", "hdfs://master:9000");
         //conf.set("yarn.resourcemanager.hostname","master");
         
-		//´´½¨MapReduceÈÎÎñ
+		//åˆ›å»ºMapReduceä»»åŠ¡
 		Job job = Job.getInstance(conf, "WordCount");
 		job.setJar("D:\\eclipse\\export_tmp\\wordCount.jar");
 		
 		job.setJarByClass(cn.tedu.wordCount.WordCountDriver.class);
 		// TODO: specify a mapper
-		//ÉèÖÃmapperµÄÀàĞÍ
+		//è®¾ç½®mapperçš„ç±»å‹
 		job.setMapperClass(WordCountMapper.class);
 		// TODO: specify a reducer
-		//ÉèÖÃreducerµÄÀàĞÍ
+		//è®¾ç½®reducerçš„ç±»å‹
 		job.setReducerClass(WordCountReducer.class);
 		
-		//Èç¹ûmapperºÍreducerµÄÊä³öÀàĞÍ²»Ò»ÖÂ£¬
-		//ÔòĞèÒªÔÙ¶ÔMapperµÄÊä³öÀàĞÍ½øĞĞĞŞ¸Ä
+		//å¦‚æœmapperå’Œreducerçš„è¾“å‡ºç±»å‹ä¸ä¸€è‡´ï¼Œ
+		//åˆ™éœ€è¦å†å¯¹Mapperçš„è¾“å‡ºç±»å‹è¿›è¡Œä¿®æ”¹
 		job.setMapOutputKeyClass(Text.class);
 		job.setMapOutputValueClass(IntWritable.class);
 		// TODO: specify output types
-		//ÉèÖÃReducerµÄÊä³öÀàĞÍ
-		//Èç¹ûmapperºÍreducerµÄÊä³öÀàĞÍÒ»ÖÂ£¬
-		//ÔòÖ»ĞèĞŞ¸ÄÏÂÃæÁ½ĞĞ´úÂë¼´¿É
+		//è®¾ç½®Reducerçš„è¾“å‡ºç±»å‹
+		//å¦‚æœmapperå’Œreducerçš„è¾“å‡ºç±»å‹ä¸€è‡´ï¼Œ
+		//åˆ™åªéœ€ä¿®æ”¹ä¸‹é¢ä¸¤è¡Œä»£ç å³å¯
 		job.setOutputKeyClass(Text.class);
 		job.setOutputValueClass(IntWritable.class);
 		
 		// TODO: specify input and output DIRECTORIES (not files)
-		//ÉèÖÃÊäÈëµÄÎÄ¼şÂ·¾¶ºÍÊä³öµÄÎÄ¼şÄ¿Â¼
-		//¶øÇÒÊä³öµÄÎÄ¼şÄ¿Â¼Ò»¶¨²»ÄÜ´æÔÚ
+		//è®¾ç½®è¾“å…¥çš„æ–‡ä»¶è·¯å¾„å’Œè¾“å‡ºçš„æ–‡ä»¶ç›®å½•
+		//è€Œä¸”è¾“å‡ºçš„æ–‡ä»¶ç›®å½•ä¸€å®šä¸èƒ½å­˜åœ¨
 		FileInputFormat.setInputPaths(job,
 				new Path("hdfs://master:9000/words.txt"));
 		FileOutputFormat.setOutputPath(job, 
 				new Path("hdfs://master/wordCountResult"));
 		//FileInputFormat.addInputPath(job, new Path(args[0]));
-        //FileOutputFormat.setOutputPath(job, new Path(args[1]));
+        	//FileOutputFormat.setOutputPath(job, new Path(args[1]));
 		
 		System.exit(job.waitForCompletion(true) ? 0 : 1);
 		//if (!job.waitForCompletion(true))
