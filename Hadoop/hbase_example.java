@@ -17,7 +17,7 @@ public class hbase_example {
         getData("student", "zhangsan", "score","English");
 	//deleteTable("student");
 	}
-	//建立连接
+	// 建立连接
 	public static void init() {
 		configuration=HBaseConfiguration.create();
 		configuration.set("hbase.rootdir", "hdfs://master:9000/hbase");
@@ -28,7 +28,7 @@ public class hbase_example {
 			e.printStackTrace();
 		}
 	}
-	//关闭连接
+	// 关闭连接
 	public static void close() {
 		try {
 			if(admin != null) {
@@ -40,9 +40,8 @@ public class hbase_example {
 		}catch (Exception e) {
 			e.printStackTrace();
 		}
-		
 	}
-	//建立表
+	// 建立表
 	public static void createTable(String myTableName,String[] colFamily) throws IOException {
 		init();
 		TableName tableName=TableName.valueOf(myTableName);
@@ -58,7 +57,7 @@ public class hbase_example {
 		}
 		close();
 	}
-	//删除表
+	// 删除表
 	public static void deleteTable(String tableName) throws IOException {
 		init();
 		TableName tn=TableName.valueOf(tableName);
@@ -68,7 +67,7 @@ public class hbase_example {
 		}
 		close();
 	}
-	//查看其他表
+	// 查看表
 	public static void listTable() throws IOException {
 		init();
 		HTableDescriptor hTableDescriptors[]=admin.listTables();
@@ -77,7 +76,7 @@ public class hbase_example {
 		}
 		close();
 	}
-	//插入数据
+	// 插入数据
 	public static void insertRow(String tableName,String rowKey,String colFamily,String col,String val)
 	throws IOException {
 		init();
@@ -88,20 +87,20 @@ public class hbase_example {
 		table.close();
 		close();
 	}	
-	//删除数据
+	// 删除数据
 	public static void deleteRow(String tableName,String rowKey,String colFamily,String col) throws IOException {
 		init();
 		Table table=connection.getTable(TableName.valueOf(tableName));
 		Delete delete=new Delete(rowKey.getBytes());
-		//删除指定列族
+		// 删除指定列族
 		//delete.addFamily(Bytes.toBytes(colFamily));
-		//删除指定列
+		// 删除指定列
 		//delete.addColumn(Bytes.toBytes(colFamily), Bytes.toBytes(col));
 		table.delete(delete);
 		table.close();
 		close();
 	}
-	//根据rowkey查找数据
+	// 根据rowkey查找数据
 	public static void getData(String tableName,String rowKey,String colFamily,String col) throws IOException {
 		init();
 		Table table=connection.getTable(TableName.valueOf(tableName));
@@ -112,7 +111,7 @@ public class hbase_example {
 		table.close();
 		close();
 	}
-	//格式化输出
+	// 格式化输出
 	public static void showCell(Result result) {
 		Cell[] cells=result.rawCells();
 		for(Cell cell:cells) {
