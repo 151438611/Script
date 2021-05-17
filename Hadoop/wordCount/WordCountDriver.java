@@ -11,7 +11,6 @@ import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
 public class WordCountDriver {
-
 	public static void main(String[] args) throws Exception {
 		//创建环境变量参数
 		Configuration conf = new Configuration();
