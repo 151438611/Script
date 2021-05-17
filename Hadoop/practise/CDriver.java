@@ -12,7 +12,6 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.log4j.BasicConfigurator;
 
 public class CDriver {
-
 	public static void main(String[] args) throws Exception {
 		BasicConfigurator.configure();
 		
