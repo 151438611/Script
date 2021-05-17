@@ -29,7 +29,7 @@ public class WordCount {
         }
     }
 
-    public static class IntSumReducer
+    public static class IntSumReducer 
             extends Reducer<Text, IntWritable, Text, IntWritable> {
         private IntWritable result = new IntWritable();
 
@@ -51,7 +51,7 @@ public class WordCount {
         Configuration conf = new Configuration();
         //设置hdfs和yarn地址
         conf.set("fs.defaultFS", "hdfs://master:9000");
-        conf.set("yarn.resourcemanager.hostname","master");
+        //conf.set("yarn.resourcemanager.hostname","master");
 
         Job job = Job.getInstance(conf, "word count");
         /* 需要提前在IDEA中Build好：
