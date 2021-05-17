@@ -10,12 +10,12 @@ public class hbase_example {
 	public static Connection connection;
 	public static Admin admin;
 	public static void main (String[] args) throws IOException {
-		createTable("student",new String[]{"score"});
-        insertData("student","zhangsan","score","English","69");
-        insertData("student","zhangsan","score","Math","86");
-        insertData("student","zhangsan","score","Computer","77");
+	createTable("student",new String[]{"score"});
+        insertRow("student","zhangsan","score","English","69");
+        insertRow("student","zhangsan","score","Math","86");
+        insertRow("student","zhangsan","score","Computer","77");
         getData("student", "zhangsan", "score","English");
-		//deleteTable("student");
+	//deleteTable("student");
 	}
 	//建立连接
 	public static void init() {
