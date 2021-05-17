@@ -39,6 +39,8 @@ public class CDriver {
 		// TODO: specify input and output DIRECTORIES (not files)
 		FileInputFormat.setInputPaths(job, new Path("hdfs://master:9000/input/characters.txt"));
 		FileOutputFormat.setOutputPath(job, new Path("hdfs://master:9000/characterCount1"));
+		//FileInputFormat.addInputPath(job, new Path(args[0]));
+        	//FileOutputFormat.setOutputPath(job, new Path(args[1]));
 
 		if (!job.waitForCompletion(true))
 			return;
