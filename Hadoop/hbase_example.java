@@ -1,3 +1,4 @@
+// HBase 操作示例代码； 测试 HBase 1.6、2.3.5 OK
 package HBaseExample;
 
 import org.apache.hadoop.conf.Configuration;
