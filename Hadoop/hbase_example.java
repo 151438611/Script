@@ -20,7 +20,8 @@ public class hbase_example {
 	// 建立连接
 	public static void init() {
 		configuration=HBaseConfiguration.create();
-		configuration.set("hbase.rootdir", "hdfs://master:9000/hbase");
+		// 注意：需要将 hbase-site.xml 放入项目的 src 目录下
+		//configuration.set("hbase.rootdir", "hdfs://master:9000/hbase");
 		try {
 			connection=ConnectionFactory.createConnection(configuration);
 			admin=connection.getAdmin();
