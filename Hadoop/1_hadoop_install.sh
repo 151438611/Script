@@ -5,7 +5,6 @@
 # Hadoop及组件国内镜像下载地址: https://mirrors.aliyun.com/apache/ 
 # 20210318 更新：添加 Zookeeper 伪集群自动安装配置：zk1、zoo1.cfg / zk2、zoo2.cfg / zk3、zoo3.cfg
 # 20210409 更新：修改 Hadoop 的 hdfs-site.xml 配置中的 name/data 存储路径格式由 /xx/xx 改为 file:///xx/xx ; 以兼容 Hadoop 2.8 及以下版本,否则 namenode 日志中会有相关WARN信息
-# 20210413 更新：添加 Cassandra 安装配置功能
 # 20210428 更新：添加 Hadoop HBase 的HA高可用配置
 # 测试OK : Hadoop 2.7.7/2.8.5/2.9.2/2.10.1/3.1.3/3.2.2/3.3.0; Spark 2.4.7/3.1.1
 
@@ -32,8 +31,6 @@ hive_version=2.3.8
 spark_version=2.4.7
 # zookeeper版本支持: 3.5.9 3.6.3 3.7.0
 zookeeper_version=3.6.3
-# cassandra版本支持: 2.2.19 3.11.10
-cassandra_version=3.11.10
 
 hadoop_home=$install_dir/hadoop
 hadoop_conf_dir=$hadoop_home/etc/hadoop
@@ -87,15 +84,6 @@ zookeeper_conf_dir=$zookeeper_home/conf
 zookeeper_data_dir=$zookeeper_home/data
 zookeeper_logs_dir=$zookeeper_home/logs
 zookeeper_url="https://mirrors.aliyun.com/apache/zookeeper/zookeeper-${zookeeper_version}/apache-zookeeper-${zookeeper_version}-bin.tar.gz"
-
-cassandra_home=$install_dir/cassandra
-cassandra_conf_dir=$cassandra_home/conf
-cassandra_data_dir=$cassandra_home/data/data
-cassandra_commitlog_dir=$cassandra_home/data/commitlog
-cassandra_saved_caches_dir=$cassandra_home/data/saved_caches
-cassandra_hints_dir=$cassandra_home/data/hints
-cassandra_logs_dir=$cassandra_home/logs
-cassandra_url="https://mirrors.aliyun.com/apache/cassandra/${cassandra_version}/apache-cassandra-${cassandra_version}-bin.tar.gz"
 
 # 临时下载和解压目录
 tmp_download=/tmp/td
@@ -979,63 +967,6 @@ EOL
 	[ "$debian_os" ] && blue_echo "\nZookeeper is install completed; \nPlease run command: source ~/.bashrc \n"
 }
 
-# 安装 Cassandra 封装函数
-install_cassandra() {
-	[ -d "$cassandra_home" ] || {
-		wget -c -P $tmp_download $cassandra_url
-		blue_echo "\nDecompressing ${cassandra_url##*/}\n"
-		tar -zxf $tmp_download/${cassandra_url##*/} -C $tmp_untar
-		mv -f $tmp_untar/apache-cassandra-$cassandra_version $cassandra_home
-		}
-	[ -d "$cassandra_conf_dir" ] || \
-		{ red_echo "\n$cassandra_conf_dir : No such directory, error exit \n"; exit 26; }
-	mkdir -p $cassandra_logs_dir $cassandra_data_dir $cassandra_commitlog_dir $cassandra_saved_caches_dir $cassandra_hints_dir
-	[ -f "$cassandra_conf_dir/cassandra.yaml" ] || \
-		{ red_echo "$cassandra_conf_dir/cassandra.yaml : No such file,exit \n"; exit 27; }
-
-	cassandra_yaml_seeds_line=$(grep -n "\- seeds:" $cassandra_conf_dir/cassandra.yaml | awk -F ":" '{print $1}')
-	cassandra_yaml_seeds_value=$(grep "\- seeds:" $cassandra_conf_dir/cassandra.yaml | awk '{print $3}')
-	sed -i ''"$cassandra_yaml_seeds_line"'s;'"$cassandra_yaml_seeds_value"';\"'"$cassandra_seeds"'\";' $cassandra_conf_dir/cassandra.yaml
-	
-	cassandra_yaml_listen_address_line=$(grep -n "^listen_address:" $cassandra_conf_dir/cassandra.yaml | awk -F ":" '{print $1}')
-	cassandra_yaml_listen_address_value=$(grep "^listen_address:" $cassandra_conf_dir/cassandra.yaml | awk '{print $2}')
-	sed -i ''"$cassandra_yaml_listen_address_line"'s;'"$cassandra_yaml_listen_address_value"';'"$hadoop_master"';' $cassandra_conf_dir/cassandra.yaml
-	
-	cassandra_yaml_start_rpc_line=$(grep -n "^start_rpc:" $cassandra_conf_dir/cassandra.yaml | awk -F ":" '{print $1}')
-	cassandra_yaml_start_rpc_value=$(grep "^start_rpc:" $cassandra_conf_dir/cassandra.yaml | awk '{print $2}')
-	sed -i ''"$cassandra_yaml_start_rpc_line"'s;'"$cassandra_yaml_start_rpc_value"';true;' $cassandra_conf_dir/cassandra.yaml
-	
-	cassandra_yaml_rpc_address_line=$(grep -n "^rpc_address:" $cassandra_conf_dir/cassandra.yaml | awk -F ":" '{print $1}')
-	cassandra_yaml_rpc_address_value=$(grep "^rpc_address:" $cassandra_conf_dir/cassandra.yaml | awk '{print $2}')
-	sed -i ''"$cassandra_yaml_rpc_address_line"'s;'"$cassandra_yaml_rpc_address_value"';'"$hadoop_master"';' $cassandra_conf_dir/cassandra.yaml
-	
-	cassandra_env_jmxremote_password_file_line=$(grep -n "com.sun.management.jmxremote.password.file" $cassandra_conf_dir/cassandra-env.sh | awk -F ":" '{print $1}')
-	cassandra_env_jmxremote_password_file_value=$(grep "com.sun.management.jmxremote.password.file" $cassandra_conf_dir/cassandra-env.sh | awk -F "=" '{print $3}' | cut -d \" -f 1)
-	jmxremote_password_file=$cassandra_conf_dir/jmxremote.password
-	#sed -i ''"$cassandra_env_jmxremote_password_file_line"'s;'"$cassandra_env_jmxremote_password_file_value"';'"$jmxremote_password_file"';g' $cassandra_conf_dir/cassandra-env.sh
-	#echo "cassandra cassandra" >> $jmxremote_password_file
-
-	cassandra_env_jmxremote_access_file_line=$(grep -n "com.sun.management.jmxremote.access.file" $cassandra_conf_dir/cassandra-env.sh | awk -F ":" '{print $1}')
-	cassandra_env_jmxremote_access_file_value=$(grep "com.sun.management.jmxremote.access.file" $cassandra_conf_dir/cassandra-env.sh | awk -F "=" '{print $3}' | cut -d \" -f 1)
-	jmxremote_access_file=$cassandra_conf_dir/jmxremote.access
-	#sed -i ''"$cassandra_env_jmxremote_access_file_line"'s;'"$cassandra_env_jmxremote_access_file_value"';'"$jmxremote_access_file"';g' $cassandra_conf_dir/cassandra-env.sh
-	#echo "cassandra readwrite" >> $jmxremote_access_file
-	
-	# config ~/.bashrc
-	cat << EOL >> $bashrc
-export CASSANDRA_HOME=$cassandra_home
-export PATH=\$PATH:\$CASSANDRA_HOME/bin
-#export LOCAL_JMX=no
-
-EOL
-	yellow_echo "\n注意：分发后需要修改 $cassandra_conf_dir/cassandra.yaml 中 listen_address：、rpc_address：为本机的主机名 \n"
-	source $bashrc
-	[ "$redhat_os" ] && {
-		which cassandra && blue_echo "\nCassandra is install Success.\n" || red_echo "\nCassandra is install Fail.\n"
-		}
-	[ "$debian_os" ] && blue_echo "\nCassandra is install completed; \nPlease run command: source ~/.bashrc \n"
-}
-
 # 开始操作安装流程
 echo
 read -p "请检查是否已关闭 Selinux 和 防火墙 : < Yes / No > : " is_firewall
@@ -1047,7 +978,6 @@ read -p "是否需要安装 HBase < Yes / No > : " is_hbase
 read -p "是否需要安装 Hive < Yes / No > : " is_hive
 read -p "是否需要安装 Spark < Yes / No > : " is_spark
 read -p "是否需要安装 Zookeeper < Yes / No > : " is_zookeeper
-read -p "是否需要安装 Cassandra < Yes / No > : " is_cassandra
 echo
 
 [ "$(echo $is_firewall | grep -i yes)" ] && [ "$(echo $is_ssh_hosts | grep -i yes)" ] && [ "$(echo $is_java | grep -i yes)" ] || \
@@ -1065,5 +995,4 @@ java -version && blue_echo "\nJAVA is already installed\n" || { red_echo "\nJAVA
 [ "$(echo $is_hive | grep -i yes)" ] && install_hive
 [ "$(echo $is_spark | grep -i yes)" ] && install_spark
 [ "$(echo $is_zookeeper | grep -i yes)" ] && install_zookeeper
-[ "$(echo $is_cassandra | grep -i yes)" ] && install_cassandra
 
