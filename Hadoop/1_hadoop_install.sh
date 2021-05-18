@@ -46,7 +46,7 @@ hadoop_ha=0			# [0 | 1]
 hadoop_ha_name=hacluster				# 名称不能使用_下划线,否则启动会提示未知的主机名
 hadoop_ha_namenode1=$hadoop_master
 hadoop_ha_namenode2=master2
-hadoop_ha_zk_address="slave1:2181,slave2:2181,master:2181"				# 注意：多个用,逗号隔开
+hadoop_ha_zk_address="slave1:2181,slave2:2181,master:2181"			# 注意：多个用,逗号隔开
 hadoop_ha_nn_shared_edits_dir="slave1:8485;slave2:8485;master:8485"		# 注意：多个用;分号隔开
 hadoop_ha_journal_edits_dir="$hadoop_home/journal"
 hadoop_ha_rm_cluster_id=rmcluster		# 名称不能使用_下划线
@@ -90,7 +90,6 @@ tmp_download=/tmp/td
 tmp_untar=/tmp/tu
 rm -rf $tmp_untar 
 mkdir -p $tmp_download $tmp_untar
-# ==================== 以上自定义变量 ====================
 
 # 控制台日志颜色输出
 blue_echo() {
@@ -175,12 +174,12 @@ install_hadoop() {
 		<value>${hadoop_tmp_dir}</value>
 	</property>
 
-	<property>     
-		<name>hadoop.proxyuser.${hadoop_user}.hosts</name>     
+	<property>
+		<name>hadoop.proxyuser.${hadoop_user}.hosts</name>
 		<value>*</value>
-	</property> 
-	<property>     
-		<name>hadoop.proxyuser.${hadoop_user}.groups</name>    
+	</property>
+	<property>
+		<name>hadoop.proxyuser.${hadoop_user}.groups</name> 
 		<value>*</value> 
 	</property>
 
@@ -201,7 +200,7 @@ EOL
 	</property>
 	<property>
 		<name>dfs.datanode.data.dir</name>
-		<value>file://${hadoop_datanode_dir}</value>      
+		<value>file://${hadoop_datanode_dir}</value>
 	</property>
 	<property>
 		<name>dfs.namenode.http-address</name>
@@ -213,7 +212,7 @@ EOL
 	</property>
 	<property>
 		<name>dfs.replication</name>
-		<value>${dfs_replication}</value>                       
+		<value>${dfs_replication}</value> 
 	</property>
 	<property>
 		<name>dfs.permissions.enabled</name>
@@ -266,7 +265,7 @@ EOL
 
 	<property>
 		<name>fs.defaultFS</name>
-		<value>hdfs://${hadoop_ha_name}</value> 
+		<value>hdfs://${hadoop_ha_name}</value>
 	</property>
 	<property>
 		<name>hadoop.tmp.dir</name>
@@ -275,19 +274,19 @@ EOL
 	
 	<property>
         <name>ha.zookeeper.quorum</name>
-        <value>${hadoop_ha_zk_address}</value> 
+        <value>${hadoop_ha_zk_address}</value>
     </property>
     <property>
-        <name>ha.zookeeper.session-timeout.ms</name> 
+        <name>ha.zookeeper.session-timeout.ms</name>
         <value>3000</value>
     </property>
 
-	<property>     
-		<name>hadoop.proxyuser.$hadoop_user.hosts</name>     
+	<property> 
+		<name>hadoop.proxyuser.$hadoop_user.hosts</name> 
 		<value>*</value>
-	</property> 
-	<property>     
-		<name>hadoop.proxyuser.$hadoop_user.groups</name>    
+	</property>
+	<property>
+		<name>hadoop.proxyuser.$hadoop_user.groups</name> 
 		<value>*</value> 
 	</property>
 
@@ -306,7 +305,7 @@ EOL
         <value>${hadoop_ha_name}</value>
     </property>
 	<property>
-        <name>dfs.ha.automatic-failover.enabled</name>     
+        <name>dfs.ha.automatic-failover.enabled</name> 
         <value>true</value>
     </property>
     <property>
@@ -323,7 +322,7 @@ EOL
     </property>
     <property>
         <name>dfs.namenode.http-address.${hadoop_ha_name}.nn1</name>
-        <value>${hadoop_ha_namenode1}:${dfs_nn_http_port}</value>                                           
+		<value>${hadoop_ha_namenode1}:${dfs_nn_http_port}</value> 
     </property>
     <property>
         <name>dfs.namenode.http-address.${hadoop_ha_name}.nn2</name>
@@ -331,16 +330,16 @@ EOL
     </property>
 	
 	<property>
-        <name>dfs.namenode.name.dir</name>                              
+        <name>dfs.namenode.name.dir</name> 
         <value>file://${hadoop_namenode_dir}</value> 
     </property>
     <property>
-        <name>dfs.datanode.data.dir</name>                   
+        <name>dfs.datanode.data.dir</name> 
         <value>file://${hadoop_datanode_dir}</value> 
     </property>
 	<property>
 		<name>dfs.replication</name>
-		<value>3</value>                       
+		<value>3</value> 
 	</property>
 	<property>
 		<name>dfs.permissions.enabled</name>
@@ -352,7 +351,7 @@ EOL
         <value>qjournal://${hadoop_ha_nn_shared_edits_dir}/${hadoop_ha_name}</value>  
     </property>
     <property>
-        <name>dfs.journalnode.edits.dir</name>              
+        <name>dfs.journalnode.edits.dir</name>
         <value>${hadoop_ha_journal_edits_dir}</value>
     </property>
 	
@@ -762,7 +761,7 @@ install_hive() {
         <name>hive.querylog.location</name>
         <value>/user/hive/logs</value>
     </property>
--->
+	-->
 <!-- 以下为 metastore 服务端配置；启动命令：hive --service metastore &  -->
 <!-- 
     <property>
@@ -785,7 +784,7 @@ install_hive() {
         <name>datanucleus.schema.autoCreateAll</name>
         <value>true</value> 
     </property>
--->
+	-->
 
 <!-- 以下为 hiveserver2 服务端配置；启动命令：hive --service hiveserver2 -->
 <!-- 
@@ -805,7 +804,7 @@ install_hive() {
 		<name>hive.server2.webui.port</name>
 		<value>10002</value>
     </property>
--->
+	-->
 
 </configuration>
 EOL
@@ -861,6 +860,8 @@ export SPARK_MASTER_WEBUI_PORT=8080
 export HADOOP_HOME=$hadoop_home
 export HADOOP_CONF_DIR=\$HADOOP_HOME/etc/hadoop
 export SPARK_DIST_CLASSPATH=\$(\$HADOOP_HOME/bin/hadoop classpath)
+#export SPARK_WORKER_MEMORY=1g
+#export SPARK_WORKER_CORES=2
 
 # 若 spark-defaults.conf 中配置 spark.eventLog.enabled	true 则开启此历史服务器选项 
 #export SPARK_HISTORY_OPTS="-Dspark.history.ui.port=18080 -Dspark.history.fs.logDirectory=hdfs://$hadoop_master:${hadoop_defaultFS_port}/spark/historyserver -Dspark.history.retainedApplications=30"
