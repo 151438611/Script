@@ -27,8 +27,8 @@ hadoop_version=2.10.1
 hbase_version=2.3.5
 # Hive 版本支持: 2.3.8 3.1.2
 hive_version=2.3.8
-# Spark 版本支持: 2.4.7 3.1.1
-spark_version=2.4.7
+# Spark 版本支持: 2.4.8 3.1.1
+spark_version=2.4.8
 # zookeeper版本支持: 3.5.9 3.6.3 3.7.0
 zookeeper_version=3.6.3
 
