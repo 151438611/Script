@@ -4,7 +4,8 @@
 # 测试：sqoop version
 
 # 从 Mysql 中导出 db1.tb1 表到 HDFS 的 /tmp/tb1 目录中
-sqoop import --connect jdbc:mysql://master:3306/db1 --username root --password root --table tb1 --target-dir "/tmp/tb1" --delete-target-dir -m 1 --fields-terminated-by "\t"
+sqoop import --connect jdbc:mysql://master:3306/db1 --username root --password root --table tb1 \
+--target-dir "/tmp/tb1" --delete-target-dir -m 1 --fields-terminated-by "\t"
 
 # 从 Mysql 中导出 db1.tb1 表到 Hive 中; 需要提前创建Hive数据库,或使用默认数据库default
 sqoop import --connect jdbc:mysql://master:3306/db1 --username root --password root --table tb1 --delete-target-dir -m 1 \
