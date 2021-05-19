@@ -31,3 +31,4 @@ export HIVE_HOME=/home/centos/hive
 
 #Set the path for where zookeper config dir is
 #export ZOOCFGDIR=/home/centos/zookeeper/conf
+
