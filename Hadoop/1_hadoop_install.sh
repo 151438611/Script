@@ -77,6 +77,8 @@ if [ -n "$(echo $spark_version | grep ^3)" ]; then
 elif [ -n "$(echo $spark_version | grep ^2)" ]; then
 	spark_url="https://mirrors.aliyun.com/apache/spark/spark-${spark_version}/spark-${spark_version}-bin-hadoop2.7.tgz"
 fi
+# 20210519起测试without-hadoop的spark安装操作，二月内无异常问题则正式使用
+spark_url="https://mirrors.aliyun.com/apache/spark/spark-${spark_version}/spark-${spark_version}-bin-without-hadoop.tgz"
 
 zookeeper_home=$install_dir/zookeeper
 zookeeper_conf_dir=$zookeeper_home/conf
@@ -745,65 +747,6 @@ install_hive() {
 		<name>hive.cli.print.current.db</name>
 		<value>true</value>
 	</property>
-
-<!-- hdfs dfs -mkdir -p /user/hive/warehouse /user/hive/tmp /user/hive/logs && hdfs dfs -chmod -R 777 /user/hive /tmp -->
-<!-- 
-    <property>
-        <name>hive.exec.scratchdir</name>
-        <value>/user/hive/tmp</value>
-    </property>
-    <property>
-        <name>hive.metastore.warehouse.dir</name>
-        <value>/user/hive/warehouse</value>
-    </property>
-    <property>
-        <name>hive.querylog.location</name>
-        <value>/user/hive/logs</value>
-    </property>
-	-->
-<!-- 以下为 metastore 服务端配置；启动命令：hive --service metastore &  -->
-<!-- 
-    <property>
-        <name>datanucleus.schema.autoCreateAll</name>
-        <value>true</value> 
-    </property>
-    <property>
-        <name>hive.metastore.event.db.notification.api.auth</name>
-        <value>false</value>
-    </property>
-    <property>
-        <name>hive.metastore.local</name>
-        <value>false</value>
-    </property>
-    <property>
-        <name>hive.metastore.uris</name>
-        <value>thrift://${hadoop_master}:9083</value>
-    </property>
-    <property>
-        <name>datanucleus.schema.autoCreateAll</name>
-        <value>true</value> 
-    </property>
-	-->
-
-<!-- 以下为 hiveserver2 服务端配置；启动命令：hive --service hiveserver2 -->
-<!-- 
-	<property>
-		<name>hive.server2.thrift.bind.host</name>
-		<value>${hadoop_master}</value>
-	</property>
-	<property>
-		<name>hive.server2.thrift.port</name>
-		<value>10000</value>
-	</property>
-	<property>
-		<name>hive.server2.thrift.http.port</name>
-		<value>10001</value>
-	</property>
-	<property>
-		<name>hive.server2.webui.port</name>
-		<value>10002</value>
-    </property>
-	-->
 
 </configuration>
 EOL
