@@ -15,7 +15,6 @@ hbase_regionservers="$hadoop_master "
 spark_master=$hadoop_master
 spark_slaves="$hadoop_master "
 zookeeper_hosts="$hadoop_master slave1 slave2"
-cassandra_seeds="$hadoop_master,slave1,slave2"		# seeds格式<ip1>,<ip2>,<ip3>
 
 bashrc="$HOME/.bashrc"
 install_dir=$HOME
@@ -880,7 +879,7 @@ EOL
 		echo $spark_slave >> $spark_conf_dir/workers
 	done
 	
-	spark_py4j=$(basename $(ls $SPARK_HOME/python/lib/py4j-*.zip))
+	spark_py4j=$(basename $(ls $spark_home/python/lib/py4j-*.zip))
 	# config ~/.bashrc
 	cat << EOL >> $bashrc
 export SPARK_HOME=$spark_home
