@@ -969,9 +969,11 @@ EOL
 
 # 开始操作安装流程
 echo
+read -p "请检查集群主机时间是否一致 : < Yes / No > : " is_ntp
 read -p "请检查是否已关闭 Selinux 和 防火墙 : < Yes / No > : " is_firewall
 read -p "请检查是否已配置 /etc/hosts 和 SSH 免密码登陆 : < Yes / No > : " is_ssh_hosts
 read -p "请检查是否已下载并解压 Java 软件包 : < Yes / No > : " is_java
+
 echo
 read -p "是否需要安装 Hadoop < Yes / No > : " is_hadoop
 read -p "是否需要安装 HBase < Yes / No > : " is_hbase
@@ -980,8 +982,8 @@ read -p "是否需要安装 Spark < Yes / No > : " is_spark
 read -p "是否需要安装 Zookeeper < Yes / No > : " is_zookeeper
 echo
 
-[ "$(echo $is_firewall | grep -i yes)" ] && [ "$(echo $is_ssh_hosts | grep -i yes)" ] && [ "$(echo $is_java | grep -i yes)" ] || \
-	{ red_echo "\n程序退出；请检查 防火墙、/etc/hosts、SSH公钥登陆、Java 等环境是否已配置好；\n"; exit 26; }
+[ "$(echo $is_ntp | grep -i yes)" ] && [ "$(echo $is_firewall | grep -i yes)" ] && [ "$(echo $is_ssh_hosts | grep -i yes)" ] && [ "$(echo $is_java | grep -i yes)" ] || \
+	{ red_echo "\n程序退出；请检查时间同步、防火墙、/etc/hosts、SSH公钥登陆、Java 等环境是否已配置好；\n"; exit 26; }
 
 # 检查Java安装目录及环境配置; 所有Hadoop生态都是基于Java, 若Java安装目录不存在,则无法进行软件安装操作
 [ -d "$java_home" ] || { red_echo "$java_home : No such directory, error exit "; exit 27; }
