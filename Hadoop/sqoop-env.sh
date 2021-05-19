@@ -1,6 +1,6 @@
 # for sqoop-1.4.7
 # 注意：
-# cp hive/lib/hive-common-*.jar hive/lib/mysql-connector-java-*.jar sqoop-1.4.7/lib/
+# cp hive/lib/hive-common-*.jar hive/lib/mysql-connector-java-*.jar sqoop/lib/
 # 
 #Set path to where bin/hadoop is available
 export HADOOP_COMMON_HOME=/home/centos/hadoop
