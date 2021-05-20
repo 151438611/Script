@@ -1,9 +1,10 @@
 ### &#10161; **大数据实例:网站用户行为分析**
-
+```
 参考文档：https://blog.csdn.net/oLinBSoft/article/details/104633178
 https://www.doc88.com/p-0751396475997.html
 
 # 客户要求安装环境：Ubuntu 16、hadoop-2.10、hbase-1.6.0、hive-2.3.8、sqoop-1.4.7、mysql-server、R
+
 
 # 使用普通用户安装
 sudo apt install mysql-server
@@ -204,4 +205,6 @@ for(n in provinces){ x[length(x)+1] = nrow(subset(temp,(province==n))) }
 mapData <- data.frame(province=rel$Var1,count=x, stringsAsFactors=F)
 print(mapData)
 eMap(mapData, mapData$province,mapData$count)	
+
+```
 
