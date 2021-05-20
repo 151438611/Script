@@ -8,5 +8,5 @@ databases="product os"
 
 for db in $databases
 do
-  /usr/bin/mysqldump -u$mysql_user -p$mysql_password -h $mysql_host --events --master-data=2 -x -F -B $db > /opt/mysqldump_$db_$(date +%Y%m%d).sql
+  /usr/bin/mysqldump -u$mysql_user -p$mysql_password -h $mysql_host --events --master-data=2 -x -F -B $db > /opt/mysqldump_${db}_$(date +%Y%m%d).sql
 done
