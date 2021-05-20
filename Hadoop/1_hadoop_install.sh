@@ -302,13 +302,13 @@ EOL
 <configuration>
 	
 	<property>
-        <name>dfs.nameservices</name>
-        <value>${hadoop_ha_name}</value>
-    </property>
+		<name>dfs.nameservices</name>
+		<value>${hadoop_ha_name}</value>
+	</property>
 	<property>
-        <name>dfs.ha.automatic-failover.enabled</name> 
-        <value>true</value>
-    </property>
+		<name>dfs.ha.automatic-failover.enabled</name> 
+		<value>true</value>
+	</property>
     <property>
         <name>dfs.ha.namenodes.${hadoop_ha_name}</name>
         <value>nn1,nn2</value>
@@ -321,23 +321,23 @@ EOL
         <name>dfs.namenode.rpc-address.${hadoop_ha_name}.nn2</name>
         <value>${hadoop_ha_namenode2}:${dfs_nn_rpc_port}</value>
     </property>
-    <property>
-        <name>dfs.namenode.http-address.${hadoop_ha_name}.nn1</name>
+	<property>
+		<name>dfs.namenode.http-address.${hadoop_ha_name}.nn1</name>
 		<value>${hadoop_ha_namenode1}:${dfs_nn_http_port}</value> 
-    </property>
+	</property>
     <property>
         <name>dfs.namenode.http-address.${hadoop_ha_name}.nn2</name>
         <value>${hadoop_ha_namenode2}:${dfs_nn_http_port}</value>
     </property>
 	
 	<property>
-        <name>dfs.namenode.name.dir</name> 
-        <value>file://${hadoop_namenode_dir}</value> 
-    </property>
-    <property>
-        <name>dfs.datanode.data.dir</name> 
-        <value>file://${hadoop_datanode_dir}</value> 
-    </property>
+		<name>dfs.namenode.name.dir</name> 
+		<value>file://${hadoop_namenode_dir}</value> 
+	</property>
+	<property>
+		<name>dfs.datanode.data.dir</name> 
+		<value>file://${hadoop_datanode_dir}</value> 
+	</property>
 	<property>
 		<name>dfs.replication</name>
 		<value>3</value> 
@@ -346,35 +346,35 @@ EOL
 		<name>dfs.permissions.enabled</name>
 		<value>false</value>
 	</property>
-	
-	 <property>
-        <name>dfs.namenode.shared.edits.dir</name> 
-        <value>qjournal://${hadoop_ha_nn_shared_edits_dir}/${hadoop_ha_name}</value>  
-    </property>
-    <property>
-        <name>dfs.journalnode.edits.dir</name>
-        <value>${hadoop_ha_journal_edits_dir}</value>
-    </property>
-	
+
 	<property>
-        <name>dfs.client.failover.proxy.provider.hacluster</name> 
-        <value>org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider</value>
-    </property>
-    <property>
-        <name>dfs.ha.fencing.methods</name>  
-        <value>
-            sshfence
-            shell(/bin/true)
-        </value>
-    </property>
-    <property>
-        <name>dfs.ha.fencing.ssh.private-key-files</name> 
-        <value>${HOME}/.ssh/id_rsa</value>
-    </property>
-    <property>
-        <name>dfs.ha.fencing.ssh.connect-timeout</name> 
-        <value>30000</value>
-    </property>
+		<name>dfs.namenode.shared.edits.dir</name> 
+		<value>qjournal://${hadoop_ha_nn_shared_edits_dir}/${hadoop_ha_name}</value>  
+	</property>
+	<property>
+		<name>dfs.journalnode.edits.dir</name>
+		<value>${hadoop_ha_journal_edits_dir}</value>
+	</property>
+
+	<property>
+		<name>dfs.client.failover.proxy.provider.hacluster</name> 
+		<value>org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider</value>
+	</property>
+	<property>
+		<name>dfs.ha.fencing.methods</name>  
+		<value>
+			sshfence
+			shell(/bin/true)
+		</value>
+	</property>
+	<property>
+		<name>dfs.ha.fencing.ssh.private-key-files</name> 
+		<value>${HOME}/.ssh/id_rsa</value>
+	</property>
+	<property>
+		<name>dfs.ha.fencing.ssh.connect-timeout</name> 
+		<value>30000</value>
+	</property>
 
 </configuration>
 EOL
@@ -385,64 +385,64 @@ EOL
 <configuration>
 
 	<property>
-        <name>yarn.resourcemanager.ha.enabled</name>
-        <value>true</value>
-    </property>
-    <property>
-        <name>yarn.resourcemanager.recovery.enabled</name>
-        <value>true</value>
-    </property>
-    <property>
-        <name>yarn.resourcemanager.ha.automatic-failover.enabled</name>
-        <value>true</value>
-    </property>
-	
+		<name>yarn.resourcemanager.ha.enabled</name>
+		<value>true</value>
+	</property>
 	<property>
-        <name>yarn.resourcemanager.cluster-id</name>
-        <value>${hadoop_ha_rm_cluster_id}</value>
-    </property>
-    <property>
-        <name>yarn.resourcemanager.ha.rm-ids</name>
-        <value>rm1,rm2</value>
-    </property>
-    <property>
-        <name>yarn.resourcemanager.hostname.rm1</name>
-        <value>${hadoop_ha_rm1}</value>
-    </property>
-    <property>
-        <name>yarn.resourcemanager.hostname.rm2</name>
-        <value>${hadoop_ha_rm2}</value>
-    </property>
-    <property>
-        <name>yarn.resourcemanager.webapp.address.rm1</name>
-        <value>${hadoop_ha_rm1}:${yarn_rm_web_port}</value>
-    </property>
-    <property>
-        <name>yarn.resourcemanager.webapp.address.rm2</name>
-        <value>${hadoop_ha_rm2}:${yarn_rm_web_port}</value>
-    </property>
-    
-    <property>
-        <name>yarn.resourcemanager.zk-address</name>
-        <value>${hadoop_ha_zk_address}</value>
-    </property>
+		<name>yarn.resourcemanager.recovery.enabled</name>
+		<value>true</value>
+	</property>
 	<property>
-        <name>yarn.resourcemanager.zk.state-store.address</name>
-        <value>${hadoop_ha_zk_address}</value>
-    </property>
-    <property>
-        <name>yarn.resourcemanager.store.class</name>
-        <value>org.apache.hadoop.yarn.server.resourcemanager.recovery.ZKRMStateStore</value>
-    </property>
-    <property>
-        <name>yarn.resourcemanager.ha.automatic-failover.zk-base-path</name>
-        <value>/yarn-leader-election</value>
-    </property>
-    
-    <property>
-        <name>yarn.nodemanager.aux-services</name>
-        <value>mapreduce_shuffle</value>
-    </property>
+		<name>yarn.resourcemanager.ha.automatic-failover.enabled</name>
+		<value>true</value>
+	</property>
+
+	<property>
+		<name>yarn.resourcemanager.cluster-id</name>
+		<value>${hadoop_ha_rm_cluster_id}</value>
+	</property>
+	<property>
+		<name>yarn.resourcemanager.ha.rm-ids</name>
+		<value>rm1,rm2</value>
+	</property>
+	<property>
+		<name>yarn.resourcemanager.hostname.rm1</name>
+		<value>${hadoop_ha_rm1}</value>
+	</property>
+	<property>
+		<name>yarn.resourcemanager.hostname.rm2</name>
+		<value>${hadoop_ha_rm2}</value>
+	</property>
+	<property>
+		<name>yarn.resourcemanager.webapp.address.rm1</name>
+		<value>${hadoop_ha_rm1}:${yarn_rm_web_port}</value>
+	</property>
+	<property>
+		<name>yarn.resourcemanager.webapp.address.rm2</name>
+		<value>${hadoop_ha_rm2}:${yarn_rm_web_port}</value>
+	</property>
+
+	<property>
+		<name>yarn.resourcemanager.zk-address</name>
+		<value>${hadoop_ha_zk_address}</value>
+	</property>
+	<property>
+		<name>yarn.resourcemanager.zk.state-store.address</name>
+		<value>${hadoop_ha_zk_address}</value>
+	</property>
+	<property>
+		<name>yarn.resourcemanager.store.class</name>
+		<value>org.apache.hadoop.yarn.server.resourcemanager.recovery.ZKRMStateStore</value>
+	</property>
+	<property>
+		<name>yarn.resourcemanager.ha.automatic-failover.zk-base-path</name>
+		<value>/yarn-leader-election</value>
+	</property>
+
+	<property>
+		<name>yarn.nodemanager.aux-services</name>
+		<value>mapreduce_shuffle</value>
+	</property>
 	
 </configuration>
 EOL
