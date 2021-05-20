@@ -578,17 +578,15 @@ install_hbase() {
 	sed_cmd="sed -i ${fuhao}${hbase_env_java_line}c ${sed_info}$fuhao $hbase_conf_dir/hbase-env.sh"
 	eval ${sed_cmd}
 	
+	if [ $hadoop_ha -eq 0 ]; then
+		hbase_rootdir=$hadoop_master:$hadoop_defaultFS_port
+	elif [ $hadoop_ha -eq 1 ]; then
+		# 若Hadoop配置了HA高可用,还需要将 core-site.xml、hdfs-site.xml 复制到 hbase/conf 目录下
+		hbase_rootdir=$hadoop_ha_name
+		cp -f $hadoop_conf_dir/core-site.xml $hadoop_conf_dir/hdfs-site.xml $hbase_conf_dir/
+	fi
 	if [ ${hbase_ha} -eq 0 ]; then
 		[ -d "$hbase_zkdata_dir" ] || mkdir -p $hbase_zkdata_dir
-		dfs_replication=$(echo "$hbase_regionservers" | awk '{print NF}')
-		[ $dfs_replication -eq 1 ] && dfs_replication=1 || dfs_replication=3
-		if [ $hadoop_ha -eq 0 ]; then
-			hbase_rootdir=$hadoop_master:$hadoop_defaultFS_port
-		elif [ $hadoop_ha -eq 1 ]; then
-			# 若Hadoop配置了HA高可用,还需要将 core-site.xml、hdfs-site.xml 复制到 hbase/conf 目录下
-			hbase_rootdir=$hadoop_ha_name
-			cp -f $hadoop_conf_dir/core-site.xml $hadoop_conf_dir/hdfs-site.xml $hbase_conf_dir/
-		fi
 		# config hbase-site.xml
 		cat << EOL > $hbase_conf_dir/hbase-site.xml
 <?xml version="1.0"?>
@@ -654,10 +652,6 @@ EOL
         <name>hbase.wal.provider</name>
         <value>filesystem</value>
     </property>
-    <property>
-        <name>dfs.replication</name>       
-        <value>3</value>
-    </property>
     
 </configuration>
 EOL
@@ -677,9 +671,6 @@ export PATH=\$PATH:\$HBASE_HOME/bin
 
 EOL
 	source $bashrc
-	hbase_slf4j_log4j=$(ls $hbase_home/lib/client-facing-thirdparty/slf4j-log4j*.jar)
-	[ "$hbase_slf4j_log4j" ] && [ $(echo "$hbase_slf4j_log4j" | wc -l) -eq 1 ] && mv $hbase_slf4j_log4j{,.bak}
-	
 	[ "$redhat_os" ] && {
 		hbase version && blue_echo "\nHBase is install Success.\n" || red_echo "\nHBase is install Fail.\n"
 		}
@@ -758,7 +749,7 @@ export PATH=\$PATH:\$HIVE_HOME/bin
 EOL
 	
 	source $bashrc
-	mv $hive_home/lib/log4j-slf4j-impl*.jar $hive_home/
+	#mv $hive_home/lib/log4j-slf4j-impl*.jar $hive_home/
 	[ "$redhat_os" ] && {
 		which hive && blue_echo "\nHive is install Success.\n" || red_echo "\nHive is install Fail.\n"
 		}
