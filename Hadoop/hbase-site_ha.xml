@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
 <!-- HBase 2.3.3 -->
+<!-- 注意： cp hadoop/etc/hadoop/core-site.xml hadoop/etc/hadoop/hdfs-site.xml hbase/conf -->
 
 <configuration>
  
@@ -23,10 +24,6 @@
     <property>
         <name>hbase.unsafe.stream.capability.enforce</name>
         <value>false</value>
-    </property>
-    <property>
-        <name>dfs.replication</name>       
-        <value>3</value>
     </property>
 
 </configuration>
