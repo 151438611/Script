@@ -274,20 +274,20 @@ EOL
 	</property>
 	
 	<property>
-        <name>ha.zookeeper.quorum</name>
-        <value>${hadoop_ha_zk_address}</value>
-    </property>
-    <property>
-        <name>ha.zookeeper.session-timeout.ms</name>
-        <value>3000</value>
-    </property>
+		<name>ha.zookeeper.quorum</name>
+		<value>${hadoop_ha_zk_address}</value>
+	</property>
+	<property>
+		<name>ha.zookeeper.session-timeout.ms</name>
+		<value>3000</value>
+	</property>
 
 	<property> 
 		<name>hadoop.proxyuser.$hadoop_user.hosts</name> 
 		<value>*</value>
 	</property>
 	<property>
-		<name>hadoop.proxyuser.$hadoop_user.groups</name> 
+		<name>hadoop.poxyuser.$hadoop_user.groups</name> 
 		<value>*</value> 
 	</property>
 
