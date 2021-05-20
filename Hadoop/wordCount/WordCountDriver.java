@@ -1,3 +1,4 @@
+// 单词语统计，字数统计
 package wordCount;
 
 import org.apache.hadoop.conf.Configuration;
