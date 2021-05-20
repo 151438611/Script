@@ -720,7 +720,7 @@ install_hive() {
 <configuration>
     <property>
 		<name>javax.jdo.option.ConnectionURL</name>
-		<value>jdbc:mysql://localhost:3306/hive_metastore?createDatabaseIfNotExist=true&amp;characterEncoding=UTF-8&amp;useSSL=false</value>
+		<value>jdbc:mysql://localhost:3306/hive_meta?createDatabaseIfNotExist=true&amp;characterEncoding=UTF-8&amp;useSSL=false</value>
     </property>
     <property>
         <name>javax.jdo.option.ConnectionDriverName</name>
@@ -822,7 +822,7 @@ EOL
 		echo $spark_slave >> $spark_conf_dir/workers
 	done
 	
-	spark_py4j=$(basename $(ls $spark_home/python/lib/py4j-*.zip))
+	spark_py4j=$(basename $spark_home/python/lib/py4j-*.zip)
 	# config ~/.bashrc
 	cat << EOL >> $bashrc
 export SPARK_HOME=$spark_home
