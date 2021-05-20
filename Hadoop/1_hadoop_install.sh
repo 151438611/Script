@@ -134,13 +134,11 @@ install_hadoop() {
 		tar -zxf $tmp_download/${hadoop_url##*/} -C $tmp_untar
 		mv -f $tmp_untar/hadoop-$hadoop_version $hadoop_home
 		}
-	[ -d "$hadoop_conf_dir" ] || \
-		{ red_echo "\n$hadoop_conf_dir : No such directory, error exit \n"; exit 20; }
+	[ -d "$hadoop_conf_dir" ] || { red_echo "\n$hadoop_conf_dir : No such directory, error exit \n"; exit 20; }
 	mkdir -p $hadoop_namenode_dir $hadoop_datanode_dir $hadoop_tmp_dir $hadoop_logs_dir 
 	
 	# config hadoop-env.sh
-	[ -f "$hadoop_conf_dir/hadoop-env.sh" ] || \
-		{ red_echo "$hadoop_conf_dir/hadoop-env.sh : No such file,exit "; exit 21; }
+	[ -f "$hadoop_conf_dir/hadoop-env.sh" ] || { red_echo "$hadoop_conf_dir/hadoop-env.sh : No such file,exit "; exit 21; }
 	hadoop_env_java_line=$(grep -n "export JAVA_HOME=" $hadoop_conf_dir/hadoop-env.sh | awk -F ":" '{print $1}')
 	sed_info="export JAVA_HOME=$java_home"
 	fuhao="'"
@@ -530,8 +528,7 @@ EOL
 	for hadoop_slave in $hadoop_slaves
 	do
 		echo $hadoop_version | grep -q ^2. && \
-		echo $hadoop_slave >> $hadoop_conf_dir/slaves || \
-		echo $hadoop_slave >> $hadoop_conf_dir/workers
+		echo $hadoop_slave >> $hadoop_conf_dir/slaves || echo $hadoop_slave >> $hadoop_conf_dir/workers
 	done
 
 	# config ~/.bashrc
@@ -821,8 +818,7 @@ EOL
 	for spark_slave in $spark_slaves
 	do
 		echo $spark_version | grep -q ^2. && \
-		echo $spark_slave >> $spark_conf_dir/slaves || \
-		echo $spark_slave >> $spark_conf_dir/workers
+		echo $spark_slave >> $spark_conf_dir/slaves || echo $spark_slave >> $spark_conf_dir/workers
 	done
 	
 	spark_py4j=$(basename $spark_home/python/lib/py4j-*.zip)
