@@ -1,33 +1,29 @@
 package wordCount;
 
 import java.io.IOException;
-
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 
-//·ºĞÍÄÚÈİ
+//æ³›å‹å†…å®¹
 public class WordCountMapper extends Mapper<LongWritable, Text, Text, IntWritable> {
-
-	//ikey:Ö¸µÄÊÇÎÄ¼şÆ«ÒÆÁ¿
-	//ivalue£ºÖ¸µÄÊÇÎÄ¼şÄÚÈİ£¬°´ĞĞ¶ÁÈ¡µÄ
-	//context£ºÅäÖÃµÄ²ÎÊı
+	//ikey:æŒ‡çš„æ˜¯æ–‡ä»¶åç§»é‡
+	//ivalueï¼šæŒ‡çš„æ˜¯æ–‡ä»¶å†…å®¹ï¼ŒæŒ‰è¡Œè¯»å–çš„
+	//contextï¼šé…ç½®çš„å‚æ•°
 	public void map(LongWritable ikey, Text ivalue, Context context) throws IOException, InterruptedException {
-		//»ñÈ¡ÎÄ¼şÄÚÈİ£¬°´ĞĞ¶ÁÈ¡
-		//¸ù¾İ¿Õ¸ñ½øĞĞÇĞ·Ö£¬»ñÈ¡Ã¿¸öµ¥´Ê
+		//è·å–æ–‡ä»¶å†…å®¹ï¼ŒæŒ‰è¡Œè¯»å–
+		//æ ¹æ®ç©ºæ ¼è¿›è¡Œåˆ‡åˆ†ï¼Œè·å–æ¯ä¸ªå•è¯
 		String line=ivalue.toString();
-		//line£º¡°hello tom¡±
+		//lineï¼šâ€œhello tomâ€
 		String[] arr=line.split(" ");
 		//arr[]={hello,tom}
 		for(String str:arr) {
 			context.write(new Text(str),new IntWritable(1));
-		}
-		
+		}		
 		//hello,1
 		//tom,1
 		//hellp,1
 		//joy,1
 	}
-
 }
