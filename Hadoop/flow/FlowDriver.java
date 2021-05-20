@@ -13,13 +13,12 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.log4j.BasicConfigurator;
 
 public class CDriver {
-
 	public static void main(String[] args) throws Exception {
 		BasicConfigurator.configure();
 		
 		Configuration conf = new Configuration();
 		conf.set("fs.defaultFS", "hdfs://master:9000");
-        //conf.set("yarn.resourcemanager.hostname","master");
+        	//conf.set("yarn.resourcemanager.hostname","master");
         
 		Job job = Job.getInstance(conf, "CharacterCount");
 		job.setJar("D:\\eclipse\\export_tmp\\CDriver.jar");
