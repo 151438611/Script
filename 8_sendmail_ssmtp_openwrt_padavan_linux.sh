@@ -1,8 +1,7 @@
 #!/bin/sh
 # support padavan(sendmail) and openwrt(ssmtp)
 # Notes: 
-#	ssmtp need to config /etc/sstmp/sstmp.conf ---> mailhub FromLineOverride=YES AuthUser AuthPass
-
+# ssmtp need to config /etc/sstmp/sstmp.conf ---> mailhub FromLineOverride=YES AuthUser AuthPass
 
 from_add=xiongjun0928@163.com
 smtp_add=smtp.${from_add#*@}
@@ -43,7 +42,7 @@ $(tail -n 48 /tmp/autoChangeAp.log | grep -E ":00:|WIFI")
 $(ip address | grep inet)
 "
 
-	cat << END > $mailtxt
+cat << END > $mailtxt
 From:$from_add
 To:$to_add
 CC:$cc_add
@@ -75,13 +74,9 @@ Subject:$subject
 
 $message
 END
-	
-	
-	
-	ssmtp $to_add < $mailtxt
-	
-	
-	
+
+ssmtp $to_add < $mailtxt
+
 else 
 	os_type=linux
 fi
