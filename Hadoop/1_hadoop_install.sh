@@ -40,15 +40,18 @@ hadoop_logs_dir=$hadoop_home/logs
 hadoop_user=$(whoami)
 hadoop_defaultFS_port=9000
 hadoop_url="https://mirrors.aliyun.com/apache/hadoop/common/hadoop-${hadoop_version}/hadoop-${hadoop_version}.tar.gz"
-# Hadoop HA Config; Examples: master1 master2 slave1 slave2 slave3
-hadoop_ha=0			# [0 | 1]
-hadoop_ha_name=hacluster				# 名称不能使用_下划线,否则启动会提示未知的主机名
+# Hadoop HA Config: [0 | 1]
+hadoop_ha=0
+# hadoop_ha_name、hadoop_ha_rm_cluster_id名称不能使用_下划线,否则启动会提示未知的主机名
+hadoop_ha_name=hacluster
 hadoop_ha_namenode1=$hadoop_master
 hadoop_ha_namenode2=master2
-hadoop_ha_zk_address="slave1:2181,slave2:2181,master:2181"			# 注意：多个用,逗号隔开
-hadoop_ha_nn_shared_edits_dir="slave1:8485;slave2:8485;master:8485"		# 注意：多个用;分号隔开
+# 注意：多个zk_address用,逗号隔开
+hadoop_ha_zk_address="slave1:2181,slave2:2181,master:2181"
+# 注意：多个shared_edits_dir用;分号隔开
+hadoop_ha_nn_shared_edits_dir="slave1:8485;slave2:8485;master:8485"
 hadoop_ha_journal_edits_dir="$hadoop_home/journal"
-hadoop_ha_rm_cluster_id=rmcluster		# 名称不能使用_下划线
+hadoop_ha_rm_cluster_id=rmcluster
 hadoop_ha_rm1=$hadoop_master
 hadoop_ha_rm2=master2
 
@@ -56,8 +59,8 @@ hbase_home=$install_dir/hbase
 hbase_conf_dir=$hbase_home/conf
 hbase_zkdata_dir=$hbase_home/zkdata
 hbase_url="https://mirrors.aliyun.com/apache/hbase/${hbase_version}/hbase-${hbase_version}-bin.tar.gz"
-# HBase HA Config
-hbase_ha=0			# [0 | 1]
+# HBase HA Config：[0 | 1]
+hbase_ha=0
 hbase_ha_master2=master2
 
 hive_home=$install_dir/hive
