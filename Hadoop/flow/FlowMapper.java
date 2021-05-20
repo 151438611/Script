@@ -7,7 +7,6 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 
 public class FlowMapper extends Mapper<LongWritable, Text, Text, Flow> {
-
 	public void map(LongWritable ikey, Text ivalue, Context context) throws IOException, InterruptedException {
 		String line = ivalue.toString();
 		String[] arr = line.split(" ");
@@ -19,7 +18,5 @@ public class FlowMapper extends Mapper<LongWritable, Text, Text, Flow> {
 		flow.setFlow(Integer.parseInt(arr[3]));
 		
 		context.write(new Text(flow.getPhone()), flow);
-
 	}
-
 }
