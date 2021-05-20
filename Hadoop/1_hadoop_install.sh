@@ -580,84 +580,52 @@ install_hbase() {
 	
 	if [ $hadoop_ha -eq 0 ]; then
 		hbase_rootdir=$hadoop_master:$hadoop_defaultFS_port
+		hbase_zk_quorum=$hadoop_master
+		hbase_zk_dataDir=$hbase_zkdata_dir
+		[ -d "$hbase_zk_dataDir" ] || mkdir -p $hbase_zk_dataDir
 	elif [ $hadoop_ha -eq 1 ]; then
+		hbase_zk_quorum=$hadoop_ha_zk_address
+		hbase_zk_dataDir=$zookeeper_data_dir
 		# 若Hadoop配置了HA高可用,还需要将 core-site.xml、hdfs-site.xml 复制到 hbase/conf 目录下
 		hbase_rootdir=$hadoop_ha_name
 		cp -f $hadoop_conf_dir/core-site.xml $hadoop_conf_dir/hdfs-site.xml $hbase_conf_dir/
-	fi
-	if [ ${hbase_ha} -eq 0 ]; then
-		[ -d "$hbase_zkdata_dir" ] || mkdir -p $hbase_zkdata_dir
-		# config hbase-site.xml
-		cat << EOL > $hbase_conf_dir/hbase-site.xml
-<?xml version="1.0"?>
-<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
-<configuration>
- 
-    <property>
-        <name>hbase.cluster.distributed</name>
-        <value>true</value>
-    </property>
-    <property>
-        <name>hbase.rootdir</name> 
-        <value>hdfs://${hbase_rootdir}/hbase</value>
-    </property>
-    <property>
-        <name>hbase.zookeeper.property.dataDir</name>
-        <value>${hbase_zkdata_dir}</value> 
-    </property>
-    <property>  
-        <name>hbase.zookeeper.quorum</name>  
-        <value>${hadoop_master}</value>  
-    </property> 
-    <property>
-        <name>hbase.unsafe.stream.capability.enforce</name>
-        <value>false</value>
-    </property>
-    <property>
-        <name>hbase.wal.provider</name>
-        <value>filesystem</value>
-    </property>
-</configuration>
-EOL
-	elif [ ${hbase_ha} -eq 1 ]; then
-		# HA config hbase-site.xml
-		cat << EOL > $hbase_conf_dir/hbase-site.xml
-<?xml version="1.0"?>
-<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
-<configuration>
- 
-    <property>
-        <name>hbase.cluster.distributed</name>
-        <value>true</value>
-    </property>
-    <property>
-        <name>hbase.rootdir</name> 
-        <value>hdfs://${hbase_rootdir}/hbase</value>
-    </property>
-
-    <property>  
-        <name>hbase.zookeeper.quorum</name>  
-        <value>${hadoop_ha_zk_address}</value>  
-    </property> 
-	<property>
-        <name>hbase.zookeeper.property.dataDir</name>
-        <value>${zookeeper_data_dir}</value> 
-    </property>
-
-    <property>
-        <name>hbase.unsafe.stream.capability.enforce</name>
-        <value>false</value>
-    </property>
-    <property>
-        <name>hbase.wal.provider</name>
-        <value>filesystem</value>
-    </property>
-    
-</configuration>
-EOL
-	echo $hbase_ha_master2 > $hbase_conf_dir/backup-masters 
+		# 配置hbase-env.sh中的export HBASE_MANAGES_ZK=false
+		hbase_manages_zk_line=$(grep -ni "HBASE_MANAGES_ZK=" $hbase_conf_dir/hbase-env.sh | awk -F ":" '{print $1}')
+		sed -i ''"$hbase_manages_zk_line"'c export HBASE_MANAGES_ZK=false' $hbase_conf_dir/hbase-env.sh 
 	fi
 	
+	cat << EOL > $hbase_conf_dir/hbase-site.xml
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+<configuration>
+ 
+    <property>
+        <name>hbase.cluster.distributed</name>
+        <value>true</value>
+    </property>
+    <property>
+        <name>hbase.rootdir</name> 
+        <value>hdfs://${hbase_rootdir}/hbase</value>
+    </property>
+    <property>
+        <name>hbase.zookeeper.property.dataDir</name>
+        <value>${hbase_zk_dataDir}</value> 
+    </property>
+    <property>  
+        <name>hbase.zookeeper.quorum</name>  
+        <value>${hbase_zk_quorum}</value>  
+    </property> 
+    <property>
+        <name>hbase.unsafe.stream.capability.enforce</name>
+        <value>false</value>
+    </property>
+    <property>
+        <name>hbase.wal.provider</name>
+        <value>filesystem</value>
+    </property>
+</configuration>
+EOL
+	[ ${hbase_ha} -eq 1 ] && echo $hbase_ha_master2 > $hbase_conf_dir/backup-masters 
 	# config regionservers
 	rm -f $hbase_conf_dir/regionservers
 	for hbase_regionserver in $hbase_regionservers
