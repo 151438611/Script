@@ -1,5 +1,5 @@
 #!/bin/bash
-# 因crontab中直接运行mysqldump命令不生效，使用脚本操作正常
+# 测试 crontab 中直接运行 mysqldump 命令不生效，使用脚本操作正常
 
 mysql_user=root
 mysql_password=root
