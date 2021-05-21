@@ -57,8 +57,8 @@ hadoop_ha_rm2=master2
 
 hbase_home=$install_dir/hbase
 hbase_conf_dir=$hbase_home/conf
-hbase_zk_quorum=$hadoop_master
-hbase_zk_dataDir=$hbase_home/zkdata
+# hbase_manages_zk: true表示hbase使用自带zookeeper; false表示hbase使用独立的zookeeper集群
+hbase_manages_zk=true
 hbase_url="https://mirrors.aliyun.com/apache/hbase/${hbase_version}/hbase-${hbase_version}-bin.tar.gz"
 # HBase HA Config：[0 | 1]
 hbase_ha=0
@@ -86,7 +86,7 @@ spark_url="https://mirrors.aliyun.com/apache/spark/spark-${spark_version}/spark-
 
 zookeeper_home=$install_dir/zookeeper
 zookeeper_conf_dir=$zookeeper_home/conf
-zookeeper_data_dir=$zookeeper_home/data
+zookeeper_data_dir=$zookeeper_home/zkdata
 zookeeper_logs_dir=$zookeeper_home/logs
 zookeeper_url="https://mirrors.aliyun.com/apache/zookeeper/zookeeper-${zookeeper_version}/apache-zookeeper-${zookeeper_version}-bin.tar.gz"
 
@@ -579,18 +579,25 @@ install_hbase() {
 	sed_cmd="sed -i ${fuhao}${hbase_env_java_line}c ${sed_info}$fuhao $hbase_conf_dir/hbase-env.sh"
 	eval ${sed_cmd}
 	
+	if [ $hbase_manages_zk = true ]; then
+		hbase_zk_quorum=$hadoop_master
+		hbase_zk_dataDir=$hbase_home/zkdata
+		mkdir -p $hbase_home/zkdata
+	elif [ $hbase_manages_zk = false ]; then
+		hbase_zk_quorum=$hadoop_ha_zk_address
+		hbase_zk_dataDir=$zookeeper_data_dir
+		# 修改hbase-env.sh中的export HBASE_MANAGES_ZK=false
+		hbase_manages_zk_line=$(grep -ni "HBASE_MANAGES_ZK=" $hbase_conf_dir/hbase-env.sh | awk -F ":" '{print $1}')
+		sed -i ''"$hbase_manages_zk_line"'c export HBASE_MANAGES_ZK=false' $hbase_conf_dir/hbase-env.sh 
+	fi
+	
 	if [ $hadoop_ha -eq 0 ]; then
 		hbase_rootdir=$hadoop_master:$hadoop_defaultFS_port
 		[ -d "$hbase_zk_dataDir" ] || mkdir -p $hbase_zk_dataDir
 	elif [ $hadoop_ha -eq 1 ]; then
-		hbase_zk_quorum=$hadoop_ha_zk_address
-		hbase_zk_dataDir=$zookeeper_data_dir
 		# 若Hadoop配置了HA高可用,还需要将 core-site.xml、hdfs-site.xml 复制到 hbase/conf 目录下
 		hbase_rootdir=$hadoop_ha_name
 		cp -f $hadoop_conf_dir/core-site.xml $hadoop_conf_dir/hdfs-site.xml $hbase_conf_dir/
-		# 修改hbase-env.sh中的export HBASE_MANAGES_ZK=false
-		hbase_manages_zk_line=$(grep -ni "HBASE_MANAGES_ZK=" $hbase_conf_dir/hbase-env.sh | awk -F ":" '{print $1}')
-		sed -i ''"$hbase_manages_zk_line"'c export HBASE_MANAGES_ZK=false' $hbase_conf_dir/hbase-env.sh 
 	fi
 	
 	cat << EOL > $hbase_conf_dir/hbase-site.xml
@@ -606,14 +613,14 @@ install_hbase() {
 		<name>hbase.rootdir</name> 
 		<value>hdfs://${hbase_rootdir}/hbase</value>
 	</property>
-	<property>
-		<name>hbase.zookeeper.property.dataDir</name>
-		<value>${hbase_zk_dataDir}</value> 
-	</property>
 	<property>  
 		<name>hbase.zookeeper.quorum</name>  
 		<value>${hbase_zk_quorum}</value>  
 	</property> 
+	<property>
+		<name>hbase.zookeeper.property.dataDir</name>
+		<value>${hbase_zk_dataDir}</value> 
+	</property>
 	<property>
 		<name>hbase.unsafe.stream.capability.enforce</name>
 		<value>false</value>
@@ -819,18 +826,18 @@ install_zookeeper() {
 		done
 		for zookeeper_host in $zookeeper_hosts
 		do
-			mkdir -p $zookeeper_home/$zookeeper_host/data $zookeeper_home/$zookeeper_host/logs
+			mkdir -p $zookeeper_home/$zookeeper_host/zkdata $zookeeper_home/$zookeeper_host/logs
 			cat << EOL > $zookeeper_conf_dir/zoo$zk_id.cfg
 tickTime=2000
 initLimit=10
 syncLimit=5
-dataDir=$zookeeper_home/$zookeeper_host/data
+dataDir=$zookeeper_home/$zookeeper_host/zkdata
 dataLogDir=$zookeeper_home/$zookeeper_host/logs
 clientPort=$clientPort
 $(cat /tmp/server_conf_tmp)
 
 EOL
-			echo $zk_id > $zookeeper_home/$zookeeper_host/data/myid
+			echo $zk_id > $zookeeper_home/$zookeeper_host/zkdata/myid
 			let zk_id+=1
 			let clientPort+=1
 		done
@@ -852,7 +859,7 @@ EOL
 		echo 1 > $zookeeper_data_dir/myid
 		yellow_echo "\n注意：分发后需要修改 $zookeeper_data_dir/myid \n"
 	else
-		red_echo "\nZookeeper安装失败,Zookeeper主机数量至少需要3个,现只有${zookeeper_host_num}个\n"
+		red_echo "\nZookeeper安装失败,Zookeeper主机数量需要等于1个或3个以上,现只有${zookeeper_host_num}个\n"
 		exit 2
 	fi
 	# config ~/.bashrc
