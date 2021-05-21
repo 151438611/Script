@@ -1,6 +1,7 @@
 // 测试OK
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.Path;
 
 import java.io.IOException;
@@ -9,12 +10,15 @@ import java.net.URISyntaxException;
 
 public class hdfs_test {
     public static void main(String[] args) {
-        FileSystem fileSystem = null;
+        System.setProperty("HADOOP_USER_NAME", "centos");
+        Configuration conf = new Configuration();
+        conf.set("fs.defaultFS", "hdfs://master:9000");
+        FileSystem fileSystem = FileSystem.get(conf);;
         try {
             // 在 HDFS 中新建一个 test_dir 文件夹; centos表示hadoop用户名
-            fileSystem = FileSystem.get(new URI("hdfs://master:9000"),new Configuration(),"centos");
+            //fileSystem = FileSystem.get(new URI("hdfs://master:9000"),new Configuration(),"centos");
             fileSystem.mkdirs(new Path("/test_dir"));
-            System.out.println("create dir suesscess! ");
+            System.out.println("create dir suesscess!");
             fileSystem.close();
         } catch (IOException e) {
             e.printStackTrace();
