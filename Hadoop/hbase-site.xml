@@ -12,15 +12,14 @@
         <name>hbase.rootdir</name> 
         <value>hdfs://master:9000/hbase</value>
     </property>
-    <property>
-        <name>hbase.zookeeper.property.dataDir</name>
-        <value>/usr/local/hbase/zkdata</value> 
-    </property>
     <property>  
         <name>hbase.zookeeper.quorum</name>  
         <value>master</value>  
     </property> 
-
+     <property>
+        <name>hbase.zookeeper.property.dataDir</name>
+        <value>/usr/local/hbase/zkdata</value> 
+    </property>
     <property>
         <name>hbase.unsafe.stream.capability.enforce</name>
         <value>false</value>
