@@ -59,6 +59,13 @@ hbase_home=$install_dir/hbase
 hbase_conf_dir=$hbase_home/conf
 # hbase_manages_zk: true表示hbase使用自带zookeeper; false表示hbase使用独立的zookeeper集群
 hbase_manages_zk=true
+if [ $hbase_manages_zk = true ]; then
+	hbase_zk_quorum=$hadoop_master
+	hbase_zk_dataDir=$hbase_home/zkdata
+elif [ $hbase_manages_zk = false ]; then
+	hbase_zk_quorum=$hadoop_ha_zk_address
+	hbase_zk_dataDir=$zookeeper_data_dir
+fi
 hbase_url="https://mirrors.aliyun.com/apache/hbase/${hbase_version}/hbase-${hbase_version}-bin.tar.gz"
 # HBase HA Config：[0 | 1]
 hbase_ha=0
@@ -112,14 +119,14 @@ redhat_os=$(grep -iE "centos|redhat" /etc/os-release)
 debian_os=$(grep -iE "debian|ubuntu" /etc/os-release)
 if [ -n "$redhat_os" ] ; then
 	[ $(getenforce) != "Disabled" ] && {
-		if [ "$hadoop_user" = "root" ] ; then
+		if [ "$(whoami)" = "root" ] ; then
 			setenforce 0 ; sed -i 's/SELINUX=enforcing/SELINUX=disabled/' /etc/selinux/config
 		else
 			red_echo "Use root run command:\n  setenforce 0 ; sed -i 's/SELINUX=enforcing/SELINUX=disabled/' /etc/selinux/config"
 		fi
 	}
 	[ "$(systemctl status firewalld | grep running)" ] && {
-		if [ "$hadoop_user" = "root" ] ; then
+		if [ "$(whoami)" = "root" ] ; then
 			systemctl stop firewalld ; systemctl disable firewalld
 		else
 			red_echo "Use root run command:\n  systemctl stop firewalld ; systemctl disable firewalld"
@@ -127,7 +134,7 @@ if [ -n "$redhat_os" ] ; then
 	}
 fi
 
-# 安装 Hadoop 封装函数
+# ==================== 安装 Hadoop 封装函数 ====================
 install_hadoop() {
 	[ -d "$hadoop_home" ] || {
 		wget -c -P $tmp_download $hadoop_url
@@ -564,7 +571,7 @@ EOL
 	blue_echo "First run Hadoop need format hdfs : hdfs namenode -format\n"
 }
 
-# 安装 HBase 封装函数
+# ==================== 安装 HBase 封装函数 ====================
 install_hbase() {
 	[ -d "$hbase_home" ] || {
 		wget -c -P $tmp_download $hbase_url
@@ -580,12 +587,8 @@ install_hbase() {
 	eval ${sed_cmd}
 	
 	if [ $hbase_manages_zk = true ]; then
-		hbase_zk_quorum=$hadoop_master
-		hbase_zk_dataDir=$hbase_home/zkdata
 		mkdir -p $hbase_home/zkdata
 	elif [ $hbase_manages_zk = false ]; then
-		hbase_zk_quorum=$hadoop_ha_zk_address
-		hbase_zk_dataDir=$zookeeper_data_dir
 		# 修改hbase-env.sh中的export HBASE_MANAGES_ZK=false
 		hbase_manages_zk_line=$(grep -ni "HBASE_MANAGES_ZK=" $hbase_conf_dir/hbase-env.sh | awk -F ":" '{print $1}')
 		sed -i ''"$hbase_manages_zk_line"'c export HBASE_MANAGES_ZK=false' $hbase_conf_dir/hbase-env.sh 
@@ -652,7 +655,7 @@ EOL
 	[ "$debian_os" ] && blue_echo "\nHBase is install completed; \nPlease run command: source ~/.bashrc \n"
 }
 
-# 安装 Hive 封装函数
+# ==================== 安装 Hive 封装函数 ====================
 install_hive() {
 	[ -d "$hive_home" ] || {
 		wget -c -P $tmp_download $hive_url
@@ -734,7 +737,7 @@ EOL
 	blue_echo "First run Hive need initialization : schematool -dbType mysql -initSchema \n"
 }
 
-# 安装 Spark 封装函数
+# ==================== 安装 Spark 封装函数 ====================
 install_spark() {
 	[ -d "$spark_home" ] || {
 		wget -c -P $tmp_download $spark_url
@@ -803,7 +806,7 @@ EOL
 	[ "$debian_os" ] && blue_echo "\nSpark is install completed; \nPlease run command: source ~/.bashrc \n"
 }
 
-# 安装 Zookeeper 封装函数
+# ==================== 安装 Zookeeper 封装函数 ====================
 install_zookeeper() {
 	zookeeper_host_num=$(echo $zookeeper_hosts | awk '{print NF}')
 	[ -d "$zookeeper_home" ] || {
@@ -875,7 +878,7 @@ EOL
 	[ "$debian_os" ] && blue_echo "\nZookeeper is install completed; \nPlease run command: source ~/.bashrc \n"
 }
 
-# 开始操作安装流程
+# ==================== 开始操作安装流程 ====================
 echo
 read -p "请检查集群主机时间是否一致 : < Yes / No > : " is_ntp
 read -p "请检查是否已关闭 Selinux 和 防火墙 : < Yes / No > : " is_firewall
