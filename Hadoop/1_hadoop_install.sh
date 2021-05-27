@@ -675,13 +675,16 @@ install_hive() {
 	
 	# config hive-env.sh
 	[ -f "$hive_conf_dir/hive-env.sh" ] || mv -f $hive_conf_dir/hive-env.sh.template $hive_conf_dir/hive-env.sh
-	echo >> $hive_conf_dir/hive-env.sh
-	echo "export JAVA_HOME=$java_home" >> $hive_conf_dir/hive-env.sh
-	echo "export HADOOP_HOME=$hadoop_home" >> $hive_conf_dir/hive-env.sh
-	echo "export HIVE_HOME=$hive_home" >> $hive_conf_dir/hive-env.sh
-	echo "export HIVE_CONF_DIR=$hive_conf_dir" >> $hive_conf_dir/hive-env.sh
-	echo >> $hive_conf_dir/hive-env.sh
-	
+	cat << EOL >>  $hive_conf_dir/hive-env.sh
+export JAVA_HOME=$java_home
+export HADOOP_HOME=$hadoop_home
+export HIVE_HOME=$hive_home
+export HIVE_CONF_DIR=\$HIVE_HOME/conf
+# 用于 hive 和 hbase 整合配置
+#export HBASE_HOME=$hbase_home
+#export HBASE_CONF_DIR=\$HBASE_HOME/conf
+
+EOL
 	# config hive-site.xml
 	cat << EOL > $hive_conf_dir/hive-site.xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
@@ -732,7 +735,7 @@ EOL
 		which hive && blue_echo "\nHive is install Success.\n" || red_echo "\nHive is install Fail.\n"
 		}
 	[ "$debian_os" ] && blue_echo "\nHive is install completed; \nPlease run command: source ~/.bashrc \n"
-	yellow_echo "\n注意：Hive 还需要安装 Mysql ,并创建用户和密码都为$mysql_user, 并添加权限: "
+	yellow_echo "\n注意：Hive 还需要安装 MySQL ,并创建用户和密码都为 $mysql_user 和添加权限: "
 	yellow_echo 'grant all privileges on *.* to "hive"@"%" identified by "hive";'"\nflush privileges; \n"
 	blue_echo "First run Hive need initialization : schematool -dbType mysql -initSchema \n"
 }
