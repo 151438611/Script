@@ -3,7 +3,6 @@ package flow;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
-
 import org.apache.hadoop.io.Writable;
 
 public class Flow implements Writable{
@@ -11,7 +10,6 @@ public class Flow implements Writable{
 	private String city;
 	private String name;
 	private int flow;
-	
 	
 	public String getPhone() {
 		return phone;
@@ -45,8 +43,7 @@ public class Flow implements Writable{
 		this.phone = in.readUTF();
 		this.city = in.readUTF();
 		this.name = in.readUTF();
-		this.flow = in.readInt();
-		
+		this.flow = in.readInt();	
 	}
 	@Override
 	public void write(DataOutput out) throws IOException {
@@ -56,7 +53,4 @@ public class Flow implements Writable{
 		out.writeUTF(name);
 		out.writeInt(flow);
 	}
-	
-	
-
 }
