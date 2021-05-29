@@ -21,30 +21,29 @@ public class hbase_api_inport_csv {
 	public static Connection connection;
 	public static Admin admin;
 	public static void main (String[] args) throws IOException {
-	
+
 	String csvFilePath="E:\\download\\20210529_hbase_api_csv\\zhihu_201701.csv";
-    CsvReader r = new CsvReader(csvFilePath, ',', Charset.forName("utf-8"));
-    r.readHeaders();					//跳过表头
-    String[] head = r.getHeaders(); 	//获取表头
-   
-    String tb_name="zhihu_1";
-    String tb_row="data";
-    createTable(tb_name, new String[]{tb_row});
-    
+	CsvReader r = new CsvReader(csvFilePath, ',', Charset.forName("utf-8"));
+	r.readHeaders();					//跳过表头
+	String[] head = r.getHeaders(); 	//获取表头
+	//System.out.println(head[1]);
+	
+	String tb_name="zhihu";
+	String tb_row="data";
+	createTable(tb_name, new String[]{tb_row});
+    //use_format: insertRow("tb_name","rowkey","row","info","value");
+	
     while(r.readRecord()){
         //System.out.println(r.getRawRecord());
         for(int i = 1; i < head.length; i++){
         	String rowKey=r.get(0);
-            System.out.println(rowKey);
             insertRow(tb_name, rowKey, tb_row, head[i], r.get(i));
         }
         //break;
     }
     r.close();
     
-    //createTable("zhihu",new String[]{"data"});
-    //insertRow("student","zhangsan","score","Computer","77");
-    //getData("zhihi", "587598f89f11daf90617fb7a", "data","关注的问题");
+    //getData("zhihu", "587598f89f11daf90617fb7a", "data","关注的问题");
     //deleteTable("student");
 	}
 	//建立连接
