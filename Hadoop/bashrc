@@ -54,3 +54,7 @@ export PATH=$PATH:$MAHOUT_HOME/bin
 export CLASSPATH=$CLASSPATH:$MAHOUT_HOME/lib
 export MAHOUT_LOCAL=
 
+export PHOENIX_HOME=/usr/local/phoenix-hbase
+export PHOENIX_CLASSPATH=$PHOENIX_HOME
+export PATH=$PATH:$PHOENIX_HOME/bin
+
