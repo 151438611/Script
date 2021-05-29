@@ -1,4 +1,9 @@
 // 需要javacsv.jar包，可使用mavan自动下载，或手动下载https://sourceforge.net/projects/javacsv/files/
+// zhihu.csv格式示例：
+// id,关注的收藏夹,关注,关注者,关注的问题,关注的话题,关注的专栏,职业1,职业2,回答,提问,收藏,个人简介,居住地,所在行业,教育经历,职业经历
+// 587598f89f11daf90617fb7a,52,17,1,30,58,2,交通仓储,邮政,0,0,3,nan,,邮政,nan,
+// 587598f89f11daf90617fb7c,27,73,15,87,26,1,高新科技,互联网,56,4,14,nan,重庆,互联网,重庆邮电大学,
+
 package HBaseExample;
 
 import org.apache.hadoop.conf.Configuration;
