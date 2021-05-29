@@ -24,25 +24,25 @@ public class hbase_api_inport_csv {
 
 	String csvFilePath="E:\\download\\20210529_hbase_api_csv\\zhihu_201701.csv";
 	CsvReader r = new CsvReader(csvFilePath, ',', Charset.forName("utf-8"));
-	r.readHeaders();					//跳过表头
+	r.readHeaders();			//跳过表头
 	String[] head = r.getHeaders(); 	//获取表头
 	//System.out.println(head[1]);
 	
 	String tb_name="zhihu";
 	String tb_row="data";
 	createTable(tb_name, new String[]{tb_row});
-    //use_format: insertRow("tb_name","rowkey","row","info","value");
+    	//use_format: insertRow("tb_name","rowkey","row","info","value");
 	
     while(r.readRecord()){
-        //System.out.println(r.getRawRecord());
-        for(int i = 1; i < head.length; i++){
-        	String rowKey=r.get(0);
-            insertRow(tb_name, rowKey, tb_row, head[i], r.get(i));
-        }
-        //break;
+	//System.out.println(r.getRawRecord());
+	for(int i = 1; i < head.length; i++){
+		String rowKey=r.get(0);
+	    insertRow(tb_name, rowKey, tb_row, head[i], r.get(i));
+	}
+	//break;
     }
     r.close();
-    
+
     //getData("zhihu", "587598f89f11daf90617fb7a", "data","关注的问题");
     //deleteTable("student");
 	}
