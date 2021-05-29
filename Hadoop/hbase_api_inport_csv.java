@@ -22,7 +22,7 @@ public class hbase_api_inport_csv {
 	public static Admin admin;
 	public static void main (String[] args) throws IOException {
 	
-	String csvFilePath="E:\\download\\20210529_hbase_api_phe\\zhihu_201701.csv";
+	String csvFilePath="E:\\download\\20210529_hbase_api_csv\\zhihu_201701.csv";
     CsvReader r = new CsvReader(csvFilePath, ',', Charset.forName("utf-8"));
     r.readHeaders();					//跳过表头
     String[] head = r.getHeaders(); 	//获取表头
