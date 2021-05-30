@@ -73,7 +73,7 @@ public class WordCount {
         try {
             FileSystem fs=FileSystem.get(conf);
             fs.delete(new Path(outputPath));
-            System.out.println("delete dir "+outputPath+" suesscess!");
+            System.out.println("delete path "+outputPath+" suesscess!");
             fs.close();
         } catch (IOException e) {
             e.printStackTrace();
