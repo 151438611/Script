@@ -75,7 +75,13 @@
     </dependency>
        
  </dependencies>
-
+    <!-- 添加 javacsv 依赖 -->
+    <dependency>
+        <groupId>net.sourceforge.javacsv</groupId>
+        <artifactId>javacsv</artifactId>
+        <version>2.1</version>
+    </dependency>
+    <!-- apache源 -->
     <repositories>
         <repository>
             <id>apache</id>
