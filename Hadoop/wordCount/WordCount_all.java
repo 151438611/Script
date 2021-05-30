@@ -48,11 +48,9 @@ public class WordCount {
 
     public static void main(String[] args) throws Exception {
         System.setProperty("HADOOP_USER_NAME", "centos");
-        //System.setProperty("hadoop.home.dir", "D:\\IntelliJ_IDEA2020.3.3\\hadoop-2.10.1");
         Configuration conf = new Configuration();
         //设置hdfs和yarn地址
         conf.set("fs.defaultFS", "hdfs://master:9000");
-        //conf.set("yarn.resourcemanager.hostname","master");
 
         Job job = Job.getInstance(conf, "word count");
         /* 需要提前在IDEA中Build好：
@@ -80,13 +78,11 @@ public class WordCount {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
 	FileInputFormat.setInputPaths(job, new Path(inputPath));
         FileOutputFormat.setOutputPath(job, new Path(outputPath));
         //FileInputFormat.addInputPath(job, new Path(args[0]));
         //FileOutputFormat.setOutputPath(job, new Path(args[1]));
 
-        
         System.exit(job.waitForCompletion(true) ? 0 : 1);
     }
 }
