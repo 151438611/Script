@@ -68,14 +68,22 @@ public class WordCount {
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(IntWritable.class);
         
-	FileSystem fs=FileSystem.get(conf);
-	fs.delete(new Path("/output"));
-	System.out.println("delete dir /output suesscess!");
-        
-        FileInputFormat.addInputPath(job, new Path(args[0]));
-        FileOutputFormat.setOutputPath(job, new Path(args[1]));
-        //FileInputFormat.setInputPaths(job, new Path("hdfs://master:9000/input/characters.txt"));
-	//FileOutputFormat.setOutputPath(job, new Path("hdfs://master:9000/output"));
+        String inputPath="hdfs://master:9000/words.txt";
+        String outputPath="hdfs://master:9000/output";
+        try {
+            FileSystem fs=FileSystem.get(conf);
+            fs.delete(new Path(outputPath));
+            System.out.println("delete dir "+outputPath+" suesscess!");
+            fs.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+	FileInputFormat.setInputPaths(job, new Path(inputPath));
+        FileOutputFormat.setOutputPath(job, new Path(outputPath));
+        //FileInputFormat.addInputPath(job, new Path(args[0]));
+        //FileOutputFormat.setOutputPath(job, new Path(args[1]));
+
         
         System.exit(job.waitForCompletion(true) ? 0 : 1);
     }
