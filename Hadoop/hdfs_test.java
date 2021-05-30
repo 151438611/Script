@@ -14,12 +14,13 @@ public class test_hdfs {
 		conf.set("fs.defaultFS", "hdfs://node1:9000");
 		System.setProperty("HADOOP_USER_NAME", "ubuntu");
 		FileSystem fs=FileSystem.get(conf);
+	
+		String filePath="/test_dir1";
+		fs.mkdirs(new Path(filePath));
+		System.out.println("create path "+filePath+" suesscess!");
 
-		fs.mkdirs(new Path("/test_dir1"));
-		System.out.println("create dir /test_dir1 suesscess!");
-
-		fs.delete(new Path("/test_dir2"));
-		System.out.println("delete path /test_dir2 suesscess!");
+		//fs.deleteOnExit(new Path(filePath));
+		System.out.println("delete path "+filePath+" suesscess!");
 		//fs.listStatus(new Path("/test_dir2"));	
 
 		fs.close();
