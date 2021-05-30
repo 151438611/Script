@@ -1,4 +1,5 @@
 // Hadoop官方代码；Hadoop 2.10.1在 IDEA_2020-3 Eclipse_java_202012 中测试OK
+package src.main.java;
 
 import java.io.IOException;
 import java.util.StringTokenizer;
@@ -70,6 +71,7 @@ public class WordCount {
         
         String inputPath="hdfs://master:9000/words.txt";
         String outputPath="hdfs://master:9000/output";
+	// 20210530 删除输出目录，避免报错:Output directory already exists
         try {
             FileSystem fs=FileSystem.get(conf);
             fs.delete(new Path(outputPath));
