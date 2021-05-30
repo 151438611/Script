@@ -23,7 +23,7 @@ public class hbase_example {
 		configuration=HBaseConfiguration.create();
 		// 注意：需要将 hbase-site.xml 放入项目的 src 目录下
 		//configuration.set("hbase.rootdir", "hdfs://master:9000/hbase");
-		//
+		//configuration.set("hbase.zookeeper.quorum", "master:2181,slave1:2181,slave2:2181");
 		try {
 			connection=ConnectionFactory.createConnection(configuration);
 			admin=connection.getAdmin();
