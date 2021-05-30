@@ -15,18 +15,19 @@ public class hdfs_test {
 		System.setProperty("HADOOP_USER_NAME", "ubuntu");
 		FileSystem fs=FileSystem.get(conf);
 	
+		
+		// 创建目录
 		String filePath="/test_dir";
-		# 创建目录
 		fs.mkdirs(new Path(filePath));
 		System.out.println("create path "+filePath+" suesscess!");
 		
-		# 从本地目录上传文件到HDFS
+		// 从本地目录上传文件到HDFS
 		String srcPath="E:\\download\\javacsv2.1.zip";
 		String destPath="/test_dir";
 		fs.copyFromLocalFile(new Path(srcPath), new Path(destPath));
 		System.out.println("copyFromLocalFile path "+filePath+" suesscess!");
 		
-		# 删除目录或文件
+		// 删除目录或文件
 		fs.deleteOnExit(new Path(filePath));
 		System.out.println("delete path "+filePath+" suesscess!");
 		//fs.listStatus(new Path(filePath));	
