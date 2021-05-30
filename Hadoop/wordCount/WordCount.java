@@ -69,6 +69,7 @@ public class WordCount {
         
         String inputPath="hdfs://master:9000/words.txt";
         String outputPath="hdfs://master:9000/output";
+	
 	// 20210530 删除输出目录，避免报错:Output directory already exists
         try {
             FileSystem fs=FileSystem.get(conf);
