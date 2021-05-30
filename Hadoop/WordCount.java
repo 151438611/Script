@@ -1,5 +1,5 @@
 // Hadoop官方代码；Hadoop 2.10.1在 IDEA_2020-3 Eclipse_java_202012 中测试OK
-// 20210530 添加功能：提前删除输出目录，避免报错:Output directory already exists
+// 20210530 添加：提前删除输出目录，避免报错:Output directory already exists
 package src.main.java;
 
 import java.io.IOException;
