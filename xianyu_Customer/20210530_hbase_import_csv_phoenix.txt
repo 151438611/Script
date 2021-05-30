@@ -29,19 +29,19 @@ RowKey：行号/序列号
 版本：保留3个版本
 分区：按序号首位 3| 6| 设计3个分区
 
-4、操作
+4、HBase操作
 hbase shell
 hbase:> create_namespace "zhihu"
 hbase:> create "zhihu:user_data",{NAME => "id", VERSIONS => 3},{NAME => "interest", VERSIONS => 3},{NAME => "jobs", VERSIONS => 3},{NAME => "action", VERSIONS => 3},{NAME => "base_info", VERSIONS => 3},{SPLITS => ['3|','6|']}
 
 
-4.1、命令行导入数据；命令行导入前删除标题行
+4.1、HBase命令行导入数据；命令行导入前删除标题行
 sed -i "1d" zhihu_tmp.csv
 hdfs dfs -mkdir /zh
 hdfs dfs -put zhihu_tmp.csv /zh/
 hbase org.apache.hadoop.hbase.mapreduce.ImportTsv -Dimporttsv.separator=',' -Dimporttsv.columns=HBASE_ROW_KEY,'id:user_id','interest:followed_favorites','interest:attention','interest:followers','interest:concerns','interest:topic_of_concern','interest:followed_column','jobs:job1','jobs:job2','action:answer','action:questions','action:favorites','base_info:personal_profile','base_info:address','base_info:industry','base_info:educational','base_info:career' "zhihu:user_data" /zh/zhihu_tmp.csv
 
-4.2、Java API导入数据
+4.2、HBase Java API导入数据
 
 package HBaseExample;
 import org.apache.hadoop.conf.Configuration;
