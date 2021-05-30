@@ -1,0 +1,170 @@
+价格200元
+
+# 原数据格式 :
+id,关注的收藏夹,关注,关注者,关注的问题,关注的话题,关注的专栏,职业1,职业2,回答,提问,收藏,个人简介,居住地,所在行业,教育经历,职业经历
+587598f89f11daf90617fb7a,52,17,1,30,58,2,交通仓储,邮政,0,0,3,nan,,邮政,nan,
+587598f89f11daf90617fb7c,27,73,15,87,26,1,高新科技,互联网,56,4,14,nan,重庆,互联网,重庆邮电大学,
+587598f89f11daf90617fb7e,72,94,1,112,20,4,,,1,0,21,nan,,nan,nan,
+587598f89f11daf90617fb80,174,84,8,895,30,7,金融,财务,0,0,22,nan,,财务,nan,
+
+预处理
+1、将中文标题 更换为 英文
+sed -i '1c user_id,followed_favorites,attention,followers,concerns,topic_of_concern,followed_column,job1,job2,answer,questions,favorites,personal_profile,address,industry,educational,career' zhihu_201701_500.csv
+
+2、在每列前面添加行号序号，用于方便分区
+#!/bin/bash
+infile=$1
+outfile=$2
+awk -F "," 'BEGIN{ id=0 } { id=id+1; print id","$1","$2","$3","$4","$5","$6","$7","$8","$9","$10","$11","$12","$13","$14","$15","$16 }' $infile > $outfile
+
+3、HBase表设计
+命名空间：zhihu:user_data
+RowKey：行号/序列号
+列簇：按列类型设计5个列簇 
+	id:user_id
+	interest (followed_favorites,attention,followers,concerns,topic_of_concern,followed_column)
+	jobs (job1,job2)
+	action (answer,questions,favorites)
+	base_info (personal_profile,address,industry,educational,career)
+版本：保留3个版本
+分区：按序号首位 3| 6| 设计3个分区
+
+4、操作
+hbase shell
+hbase:> create_namespace "zhihu"
+hbase:> create "zhihu:user_data",{NAME => "id", VERSIONS => 3},{NAME => "interest", VERSIONS => 3},{NAME => "jobs", VERSIONS => 3},{NAME => "action", VERSIONS => 3},{NAME => "base_info", VERSIONS => 3},{SPLITS => ['3|','6|']}
+
+
+4.1、命令行导入数据；命令行导入前删除标题行
+sed -i "1d" zhihu_tmp.csv
+hdfs dfs -mkdir /zh
+hdfs dfs -put zhihu_tmp.csv /zh/
+hbase org.apache.hadoop.hbase.mapreduce.ImportTsv -Dimporttsv.separator=',' -Dimporttsv.columns=HBASE_ROW_KEY,'id:user_id','interest:followed_favorites','interest:attention','interest:followers','interest:concerns','interest:topic_of_concern','interest:followed_column','jobs:job1','jobs:job2','action:answer','action:questions','action:favorites','base_info:personal_profile','base_info:address','base_info:industry','base_info:educational','base_info:career' "zhihu:user_data" /zh/zhihu_tmp.csv
+
+4.2、Java API导入数据
+
+package HBaseExample;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.hbase.*;
+import org.apache.hadoop.hbase.client.*;
+import java.io.IOException;
+import com.csvreader.CsvReader;
+import java.nio.charset.Charset;
+
+public class hbase_api_inport_csv {
+	public static Configuration configuration;
+	public static Connection connection;
+	public static Admin admin;
+	public static void main (String[] args) throws IOException {
+	
+	String csvFilePath="E:\\download\\20210529_hbase_api_phe\\zhihu_tmp.csv";
+    CsvReader r = new CsvReader(csvFilePath, ',', Charset.forName("utf-8"));
+    //r.readHeaders();					//跳过表头
+    //String[] head = r.getHeaders(); 	//获取表头
+    //System.out.println(head[1]);
+   
+    String tb_name="zhihu:user_data";
+    while(r.readRecord()){
+        System.out.println(r.getRawRecord());
+        
+        	String rowKey=r.get(0);
+        	//System.out.println(rowKey);
+            //insertRow(tb_name, rowKey, "id", "user_id", r.get(1));
+        	insertRow(tb_name, rowKey, "id", "user_id", r.get(1));
+        	insertRow(tb_name, rowKey, "interest", "followed_favorites", r.get(2));
+        	insertRow(tb_name, rowKey, "interest", "attention", r.get(3));
+        	insertRow(tb_name, rowKey, "interest", "followers", r.get(4));
+        	insertRow(tb_name, rowKey, "interest", "concerns", r.get(5));
+        	insertRow(tb_name, rowKey, "interest", "topic_of_concern", r.get(6));
+        	insertRow(tb_name, rowKey, "interest", "followed_column", r.get(7));
+        	insertRow(tb_name, rowKey, "jobs", "job1", r.get(8));
+        	insertRow(tb_name, rowKey, "jobs", "job2", r.get(9));
+        	insertRow(tb_name, rowKey, "action", "answer", r.get(10));
+        	insertRow(tb_name, rowKey, "action", "questions", r.get(11));
+        	insertRow(tb_name, rowKey, "action", "favorites", r.get(12));
+        	insertRow(tb_name, rowKey, "base_info", "personal_profile", r.get(13));
+        	insertRow(tb_name, rowKey, "base_info", "address", r.get(14));
+        	insertRow(tb_name, rowKey, "base_info", "industry", r.get(15));
+        	insertRow(tb_name, rowKey, "base_info", "educational", r.get(16));
+        	insertRow(tb_name, rowKey, "base_info", "career", r.get(17));	
+        //break;
+    }
+    r.close();
+	}
+	
+	//建立连接
+	public static void init() {
+		configuration=HBaseConfiguration.create();
+		//configuration.set("hbase.rootdir", "hdfs://8.135.113.164:9000/hbase");
+		configuration
+		try {
+			connection=ConnectionFactory.createConnection(configuration);
+			admin=connection.getAdmin();
+		}catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	//关闭连接
+	public static void close() {
+		try {
+			if(admin != null) {
+				admin.close();
+			}
+			if(null != connection) {
+				connection.close();
+			}
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+	//插入数据
+	public static void insertRow(String tableName,String rowKey,String colFamily,String col,String val)
+	throws IOException {
+		init();
+		Table table=connection.getTable(TableName.valueOf(tableName));
+		Put put=new Put(rowKey.getBytes());
+		put.addColumn(colFamily.getBytes(), col.getBytes(), val.getBytes());
+		table.put(put);
+		table.close();
+		close();
+	}
+}
+
+
+5、Phoenix操作
+前提：
+stop-hbase.sh
+vi $HBASE_HOME/conf/hbase-site.xml
+	<property>
+		<name>phoenix.schema.isNamespaceMappingEnabled</name>
+		<value>true</value>
+	</property>
+	<property>
+		<name>phoenix.schema.mapSystemTablesToNamespace</name>
+		<value>true</value>
+	</property>
+	<property>
+		<name>hbase.regionserver.wal.codec</name>
+		<value>org.apache.hadoop.hbase.regionserver.wal.IndexedWALEditCodec</value>
+	</property>
+分发hbase-site.xml至其他主机的phoenix/bin下
+start-hbase.sh
+
+5.1、创建视图
+sqlline.py master,slave1,slave2:2181
+jdbc:phoenix> create schema "zhihu";
+jdbc:phoenix> create view "zhihu"."user_data" ("line_num" varchar primary key, "id"."user_id" varchar, "interest"."followed_favorites" varchar, "interest"."attention" varchar, "interest"."followers" varchar, "interest"."concerns" varchar, "interest"."topic_of_concern" varchar, "interest"."followed_column" varchar, "jobs"."job1" varchar, "jobs"."job2" varchar, "action"."answer" varchar, "action"."questions" varchar, "action"."favorites" varchar, "base_info"."personal_profile" varchar, "base_info"."address" varchar, "base_info"."industry" varchar, "base_info"."educational" varchar, "base_info"."career" varchar ); 
+
+5.2、使用SQL查询 
+jdbc:phoenix> select * from "zhihu"."user_data" limit 10;
+jdbc:phoenix> select "line_num","user_id","job1","personal_profile" from "zhihu"."user_data" limit 10;
+jdbc:phoenix> select * from "zhihu"."user_data" where "user_id"='587598fb9f11daf90617ff3c';
+
+5.3、建立二级索引 
+sqlline.py master,slave1,slave2:2181
+jdbc:phoenix> create index "zh_index" on "zhihu"."user_data"("id"."user_id") include("personal_profile");
+jdbc:phoenix> select * from "zhihu"."zh_index" limit 10;
+jdbc:phoenix> select "user_id" from "zhihu"."user_data" where "user_id"='587598fb9f11daf90617ff3c';
+jdbc:phoenix> explain select * from "zhihu"."user_data" where "user_id"='587598fb9f11daf90617ff3c';
+jdbc:phoenix> drop index "user_data_index" on "zhihu"."user_data";
