@@ -7,7 +7,7 @@ import org.apache.hadoop.fs.Path;
 
 import java.io.IOException;
 
-public class test_hdfs {
+public class hdfs_test {
 	public static void main(String[] args) {
 	try {
 		Configuration conf=new Configuration();
