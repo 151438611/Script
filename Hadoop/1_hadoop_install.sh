@@ -5,8 +5,9 @@
 # Hadoop及组件国内镜像下载地址: https://mirrors.aliyun.com/apache/ 
 # 20210318 更新：添加 Zookeeper 伪集群自动安装配置：zk1、zoo1.cfg / zk2、zoo2.cfg / zk3、zoo3.cfg
 # 20210409 更新：修改 Hadoop 的 hdfs-site.xml 配置中的 name/data 存储路径格式由 /xx/xx 改为 file:///xx/xx ; 以兼容 Hadoop 2.8 及以下版本,否则 namenode 日志中会有相关WARN信息
-# 20210428 更新：添加 Hadoop HBase 的HA高可用配置
-# 测试OK : Hadoop 2.7.7/2.8.5/2.9.2/2.10.1/3.1.3/3.2.2/3.3.0; Spark 2.4.7/3.1.1
+# 20210428 更新：添加 Hadoop HBase 的HA高可用自动安装配置
+# 20210428 更新：添加 Kafka 单机伪集群和完全分布式自动安装配置
+# 测试OK : Hadoop 2.7.7~3.3.0; Spark 2.4.7~3.1.1
 
 # 以下变量可自行修改; 注意：1、写绝对路径； 2、install_dir安装目录需有读写权限；
 hadoop_master=$(hostname)
@@ -15,6 +16,7 @@ hbase_regionservers="$hadoop_master "
 spark_master=$hadoop_master
 spark_slaves="$hadoop_master "
 zookeeper_hosts="$hadoop_master slave1 slave2"
+kafka_hosts="$hadoop_master slave1 slave2"
 
 bashrc="$HOME/.bashrc"
 install_dir=$HOME
@@ -30,6 +32,8 @@ hive_version=2.3.8
 spark_version=2.4.8
 # zookeeper版本支持: 3.5.9 3.6.3 3.7.0
 zookeeper_version=3.6.3
+# kafka版本支持: 2.6.2 2.7.1 2.8.0
+kafka_version=2.8.0
 
 hadoop_home=$install_dir/hadoop
 hadoop_conf_dir=$hadoop_home/etc/hadoop
@@ -97,6 +101,12 @@ zookeeper_data_dir=$zookeeper_home/zkdata
 zookeeper_logs_dir=$zookeeper_home/logs
 zookeeper_url="https://mirrors.aliyun.com/apache/zookeeper/zookeeper-${zookeeper_version}/apache-zookeeper-${zookeeper_version}-bin.tar.gz"
 
+kafka_home=$install_dir/kafka
+kafka_conf_dir=$kafka_home/config
+kafka_log=$kafka_home/logs
+kafka_zk_connect=$hadoop_ha_zk_address
+kafka_url="https://mirrors.aliyun.com/apache/kafka/${kafka_version}/kafka_2.12-${kafka_version}.tgz"
+
 # 临时下载和解压目录
 tmp_download=/tmp/td
 tmp_untar=/tmp/tu
@@ -134,7 +144,7 @@ if [ -n "$redhat_os" ] ; then
 	}
 fi
 
-# ==================== 安装 Hadoop 封装函数 ====================
+# ==================== 安装 Hadoop 封装函数 (含单机伪集群、完全分布式和高可用) ====================
 install_hadoop() {
 	[ -d "$hadoop_home" ] || {
 		wget -c -P $tmp_download $hadoop_url
@@ -571,7 +581,7 @@ EOL
 	blue_echo "First run Hadoop need format hdfs : hdfs namenode -format\n"
 }
 
-# ==================== 安装 HBase 封装函数 ====================
+# ==================== 安装 HBase 封装函数 (含单机伪集群、完全分布式和高可用) ====================
 install_hbase() {
 	[ -d "$hbase_home" ] || {
 		wget -c -P $tmp_download $hbase_url
@@ -740,7 +750,7 @@ EOL
 	blue_echo "First run Hive need initialization : schematool -dbType mysql -initSchema \n"
 }
 
-# ==================== 安装 Spark 封装函数 ====================
+# ==================== 安装 Spark 封装函数 (含单机伪集群、完全分布式和高可用)====================
 install_spark() {
 	[ -d "$spark_home" ] || {
 		wget -c -P $tmp_download $spark_url
@@ -809,7 +819,7 @@ EOL
 	[ "$debian_os" ] && blue_echo "\nSpark is install completed; \nPlease run command: source ~/.bashrc \n"
 }
 
-# ==================== 安装 Zookeeper 封装函数 ====================
+# ==================== 安装 Zookeeper 封装函数 (含单机伪集群和完全分布式) ====================
 install_zookeeper() {
 	zookeeper_host_num=$(echo $zookeeper_hosts | awk '{print NF}')
 	[ -d "$zookeeper_home" ] || {
@@ -881,6 +891,85 @@ EOL
 	[ "$debian_os" ] && blue_echo "\nZookeeper is install completed; \nPlease run command: source ~/.bashrc \n"
 }
 
+# ==================== 安装 Kafka 封装函数 (含单机伪集群和完全分布式) ====================
+install_kafka() {
+	kafka_host_num=$(echo $kafka_hosts | awk '{print NF}')
+	[ -d "$kafka_home" ] || {
+		wget -c -P $tmp_download $kafka_url
+		blue_echo "\nDecompressing ${kafka_url##*/}\n"
+		tar -zxf $tmp_download/${kafka_url##*/} -C $tmp_untar
+		mv -f $tmp_untar/kafka_* $kafka_home
+		}
+	[ -d "$kafka_conf_dir" ] || { red_echo "\n$kafka_conf_dir : No such directory, error exit \n"; exit 25; }
+	
+	# 重构伪集群和完全分布式集群安装
+	if [ $kafka_host_num -eq 1 ] ; then
+		do_num=3
+	elif [ $kafka_host_num -ge 2 ] ; then
+		do_num=1
+	else
+		red_echo "\nKafka主机数量异常，退出程序，请检查！ \n" && exit 30
+	fi
+	
+	broker_id=92 && listeners_port=9092
+	
+	for bk_id in $(seq $do_num)
+	do
+		if [ $do_num -eq 1 ]; then 
+			kafka_server_conf=$kafka_conf_dir/server.properties
+		else 
+			kafka_server_conf=$kafka_conf_dir/server${bk_id}.properties
+			cp -f $kafka_conf_dir/server.properties $kafka_server_conf
+			kafka_log=$kafka_home/logs${bk_id}
+		fi
+		mkdir -p $kafka_log
+		
+		broker_id_line=$(grep -ni "broker.id=" $kafka_server_conf | awk -F ":" '{print $1}')
+		sed -i ''"$broker_id_line"'c broker.id='"$broker_id"'' $kafka_server_conf
+		
+		listeners_line=$(grep -ni "#listeners=PLAINTEXT" $kafka_server_conf | awk -F ":" '{print $1}')
+		sed -i ''"$listeners_line"'c listeners=PLAINTEXT://'"$hadoop_master"':'"$listeners_port"'' $kafka_server_conf
+		
+		adv_listeners_line=$(grep -ni "advertised.listeners=PLAINTEXT" $kafka_server_conf | awk -F ":" '{print $1}')
+		sed -i ''"$adv_listeners_line"'c advertised.listeners=PLAINTEXT://'"$hadoop_master"':'"$listeners_port"'' $kafka_server_conf
+		
+		log_dirs_line=$(grep -ni "log.dirs=" $kafka_server_conf | awk -F ":" '{print $1}')
+		sed -i ''"$log_dirs_line"'c log.dirs='"$kafka_log"'' $kafka_server_conf 
+
+		log_flush_msg_line=$(grep -ni "log.flush.interval.messages=" $kafka_server_conf | awk -F ":" '{print $1}')
+		sed -i ''"$log_flush_msg_line"'s;#;;' $kafka_server_conf
+		
+		log_flush_ms_line=$(grep -ni "log.flush.interval.ms=" $kafka_server_conf | awk -F ":" '{print $1}')
+		sed -i ''"$log_flush_ms_line"'s;#;;' $kafka_server_conf
+		
+		zk_con_line=$(grep -ni "zookeeper.connect=" $kafka_server_conf | awk -F ":" '{print $1}')
+		sed -i ''"$zk_con_line"'c zookeeper.connect='"$kafka_zk_connect"'' $kafka_server_conf 
+		
+		let broker_id+=1
+		let listeners_port+=1
+	done
+	
+	if [ $do_num -eq 1 ]; then
+		yellow_echo "\n注意：分发后需要将 $kafka_home/config/server.properties 中的 broker.id、listeners、advertised.listeners 修改为当前主机名。 \n"		
+		blue_echo "\nKafka启动操作：kafka-server-start.sh -daemon $kafka_home/config/server.properties \n"
+	elif [ $do_num -gt 1 ]; then
+		rm -f $kafka_conf_dir/server.properties
+		blue_echo "\nKafka启动操作：kafka-server-start.sh -daemon $kafka_home/config/server[1|2|3].properties \n"
+	fi
+
+	# config ~/.bashrc
+	cat << EOL >> $bashrc
+export KAFKA_HOME=$kafka_home
+export PATH=\$PATH:\$KAFKA_HOME/bin
+
+EOL
+	source $bashrc
+	[ "$redhat_os" ] && {
+		which kafka-server-start.sh && blue_echo "\nKafka is install Success.\n" || red_echo "\nKafka is install Fail.\n"
+		}
+	[ "$debian_os" ] && blue_echo "\nKafka is install completed; \nPlease run command: source ~/.bashrc \n"
+}
+
 # ==================== 开始操作安装流程 ====================
 echo
 read -p "请检查集群主机时间是否一致 : < Yes / No > : " is_ntp
@@ -894,6 +983,7 @@ read -p "是否需要安装 HBase < Yes / No > : " is_hbase
 read -p "是否需要安装 Hive < Yes / No > : " is_hive
 read -p "是否需要安装 Spark < Yes / No > : " is_spark
 read -p "是否需要安装 Zookeeper < Yes / No > : " is_zookeeper
+read -p "是否需要安装 Kafka < Yes / No > : " is_kafka
 echo
 
 [ "$(echo $is_ntp | grep -i yes)" ] && [ "$(echo $is_firewall | grep -i yes)" ] && [ "$(echo $is_ssh_hosts | grep -i yes)" ] && [ "$(echo $is_java | grep -i yes)" ] || \
@@ -911,4 +1001,5 @@ java -version && blue_echo "\nJAVA is already installed\n" || { red_echo "\nJAVA
 [ "$(echo $is_hive | grep -i yes)" ] && install_hive
 [ "$(echo $is_spark | grep -i yes)" ] && install_spark
 [ "$(echo $is_zookeeper | grep -i yes)" ] && install_zookeeper
+[ "$(echo $is_kafka | grep -i yes)" ] && install_kafka
 
