@@ -5,6 +5,10 @@
 # 自行填写：主机名或IP地址; 多个用空格分隔
 hosts="master slave1 slave2 slave3"
 
+java_home=/usr/local/java
+jps=$(which jps)
+[ "$jps" ] || jps=$java_home/bin/jps
+
 blue_echo() {
 	echo -e "\033[36m$1\033[0m"
 }
@@ -15,10 +19,9 @@ red_echo() {
 	echo -e "\033[31m$1\033[0m"
 }
 
-jps=$(which jps)
-
 for host in $hosts
 do
 	yellow_echo "---------- Host: $host ----------"
 	blue_echo "$(ssh $host $jps)\n"
 done
+
