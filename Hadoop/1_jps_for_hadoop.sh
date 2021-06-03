@@ -15,10 +15,7 @@ red_echo() {
 	echo -e "\033[31m$1\033[0m"
 }
 
-java_home=/usr/local/java
 jps=$(which jps)
-[ "$jps" ] || jps=$java_home/bin/jps
-
 
 for host in $hosts
 do
