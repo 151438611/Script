@@ -35,6 +35,9 @@ zookeeper_version=3.6.3
 # kafka版本支持: 2.6.2 2.7.1 2.8.0
 kafka_version=2.8.0
 
+download_url="https://mirrors.aliyun.com"
+#download_url="https://mirrors.tuna.tsinghua.edu.cn"
+
 hadoop_home=$install_dir/hadoop
 hadoop_conf_dir=$hadoop_home/etc/hadoop
 hadoop_namenode_dir=$hadoop_home/dfs/name
@@ -43,7 +46,7 @@ hadoop_tmp_dir=$hadoop_home/tmp
 hadoop_logs_dir=$hadoop_home/logs
 hadoop_user=$(whoami)
 hadoop_defaultFS_port=9000
-hadoop_url="https://mirrors.aliyun.com/apache/hadoop/common/hadoop-${hadoop_version}/hadoop-${hadoop_version}.tar.gz"
+hadoop_url="${download_url}/apache/hadoop/common/hadoop-${hadoop_version}/hadoop-${hadoop_version}.tar.gz"
 # Hadoop HA Config: [0 | 1]
 hadoop_ha=0
 # hadoop_ha_name、hadoop_ha_rm_cluster_id名称不能使用_下划线,否则启动会提示未知的主机名
@@ -70,14 +73,14 @@ elif [ $hbase_manages_zk = false ]; then
 	hbase_zk_quorum=$hadoop_ha_zk_address
 	hbase_zk_dataDir=$zookeeper_data_dir
 fi
-hbase_url="https://mirrors.aliyun.com/apache/hbase/${hbase_version}/hbase-${hbase_version}-bin.tar.gz"
+hbase_url="${download_url}/apache/hbase/${hbase_version}/hbase-${hbase_version}-bin.tar.gz"
 # HBase HA Config：[0 | 1]
 hbase_ha=0
 hbase_ha_master2=master2
 
 hive_home=$install_dir/hive
 hive_conf_dir=$hive_home/conf
-hive_url="https://mirrors.aliyun.com/apache/hive/hive-${hive_version}/apache-hive-${hive_version}-bin.tar.gz"
+hive_url="${download_url}/apache/hive/hive-${hive_version}/apache-hive-${hive_version}-bin.tar.gz"
 mysql_connector_java_url="http://mirrors.163.com/mysql/Downloads/Connector-J/mysql-connector-java-5.1.49.tar.gz"
 mysql_user=hive
 mysql_passwd=hive
@@ -86,26 +89,26 @@ spark_home=$install_dir/spark
 spark_conf_dir=$spark_home/conf
 if [ -n "$(echo $spark_version | grep ^3)" ]; then
 	echo $hadoop_version | grep -q ^2 && \
-		spark_url="https://mirrors.aliyun.com/apache/spark/spark-${spark_version}/spark-${spark_version}-bin-hadoop2.7.tgz"
+		spark_url="${download_url}/apache/spark/spark-${spark_version}/spark-${spark_version}-bin-hadoop2.7.tgz"
 	echo $hadoop_version | grep -q ^3 && \
-		spark_url="https://mirrors.aliyun.com/apache/spark/spark-${spark_version}/spark-${spark_version}-bin-hadoop3.2.tgz"
+		spark_url="${download_url}/apache/spark/spark-${spark_version}/spark-${spark_version}-bin-hadoop3.2.tgz"
 elif [ -n "$(echo $spark_version | grep ^2)" ]; then
-	spark_url="https://mirrors.aliyun.com/apache/spark/spark-${spark_version}/spark-${spark_version}-bin-hadoop2.7.tgz"
+	spark_url="${download_url}/apache/spark/spark-${spark_version}/spark-${spark_version}-bin-hadoop2.7.tgz"
 fi
 # 20210519起测试without-hadoop的spark安装操作，二月内无异常问题则正式使用
-spark_url="https://mirrors.aliyun.com/apache/spark/spark-${spark_version}/spark-${spark_version}-bin-without-hadoop.tgz"
+spark_url="${download_url}/apache/spark/spark-${spark_version}/spark-${spark_version}-bin-without-hadoop.tgz"
 
 zookeeper_home=$install_dir/zookeeper
 zookeeper_conf_dir=$zookeeper_home/conf
 zookeeper_data_dir=$zookeeper_home/zkdata
 zookeeper_logs_dir=$zookeeper_home/logs
-zookeeper_url="https://mirrors.aliyun.com/apache/zookeeper/zookeeper-${zookeeper_version}/apache-zookeeper-${zookeeper_version}-bin.tar.gz"
+zookeeper_url="${download_url}/apache/zookeeper/zookeeper-${zookeeper_version}/apache-zookeeper-${zookeeper_version}-bin.tar.gz"
 
 kafka_home=$install_dir/kafka
 kafka_conf_dir=$kafka_home/config
 kafka_log=$kafka_home/logs
 kafka_zk_connect=$hadoop_ha_zk_address
-kafka_url="https://mirrors.aliyun.com/apache/kafka/${kafka_version}/kafka_2.12-${kafka_version}.tgz"
+kafka_url="${download_url}/apache/kafka/${kafka_version}/kafka_2.12-${kafka_version}.tgz"
 
 # 临时下载和解压目录
 tmp_download=/tmp/td
