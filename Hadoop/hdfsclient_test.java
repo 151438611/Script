@@ -30,7 +30,14 @@ public class hdfs_test {
 	fs.copyFromLocalFile(new Path(srcPath), new Path(destPath));
 	System.out.println("copyFromLocalFile path "+filePath+" suesscess!");
 	//fs.moveFromLocalFile(new Path(srcPath), new Path(destPath));
-
+	
+	// 从HDFS下载文件到本地目录
+	String toPath="E:\\download";
+	String fromPath="/zh/zhihu_tmp.csv";
+	fs.copyToLocalFile(new Path(fromPath), new Path(toPath));
+	// copyToLocalFile(delSrc[false|true], srcpath, destpath) // 第一个参数delSrc表示是否删除源文件
+	//fs.copyToLocalFile(true, new Path(fromPath), new Path(toPath));
+	
 	// 删除目录或文件
 	fs.deleteOnExit(new Path(filePath));
 	System.out.println("delete path "+filePath+" suesscess!");	
