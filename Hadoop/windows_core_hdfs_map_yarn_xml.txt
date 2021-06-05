@@ -1,0 +1,79 @@
+1、添加环境变量
+添加系统变量：
+JAVA_HOME=C:\Program Files\Java\jdk1.8.0_171
+HADOOP_HOME=D:\hadoop
+编辑PATH系统变量 --- 新建
+%JAVA_HOME%\bin
+%HADOOP_HOME%\bin
+%HADOOP_HOME%\sbin
+
+2、编辑hadoop-env.cmd
+# PROGRA~1表示Program Files
+export JAVA_HOME=C:\PROGRA~1\Java\jdk1.8.0_291
+
+
+3、编辑core-site.xml
+    <property>
+        <name>fs.defaultFS</name>
+        <value>hdfs://localhost:9000</value> 
+    </property>
+    <property>
+        <name>hadoop.tmp.dir</name>
+        <value>/D:/hadoop/tmp</value>
+    </property>
+
+4、编辑hdfs-site.xml
+    <property>
+        <name>dfs.namenode.name.dir</name>
+        <value>/D:/hadoop/dfs/name</value>
+    </property>
+    <property>
+        <name>dfs.datanode.data.dir</name>
+        <value>/D:/hadoop/dfs/data</value>      
+    </property>
+    <property>
+        <name>dfs.namenode.http-address</name>
+        <value>master:50070</value>
+    </property>
+    <property>
+        <name>dfs.namenode.secondary.http-address</name>
+        <value>master:50090</value>
+    </property>
+    <property>
+        <name>dfs.replication</name>
+        <value>1</value>                       
+    </property>
+    <property>
+        <name>dfs.permissions.enabled</name>
+        <value>false</value>
+    </property>
+
+5、编辑mapred-site.xml 
+    <property>
+        <name>mapreduce.framework.name</name>
+        <value>yarn</value>
+    </property>	
+    </property>
+	    <property>
+		<name>mapreduce.app-submission.cross-platform</name>
+		<value>true</value>
+		<description>Change to true in Windows</description>
+	</property>
+	
+6、编辑yarn-site.xml
+    <property>
+        <name>yarn.resourcemanager.hostname</name>
+        <value>master</value>
+    </property>
+    <property>
+        <name>yarn.nodemanager.pmem-check-enabled</name>
+        <value>false</value>
+    </property>
+    <property>
+        <name>yarn.nodemanager.vmem-check-enabled</name>
+        <value>false</value>
+    </property>
+    <property>
+        <name>yarn.nodemanager.aux-services</name> 
+        <value>mapreduce_shuffle</value>
+    </property> 
