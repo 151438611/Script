@@ -54,6 +54,18 @@ public class hdfs_test {
 	    }
 	    System.out.println("--------分割线----------");
 	}
+	
+	// 判断路径是文件还是文件夹
+	FileStatus[] listStatus = fs.listStatus(new Path("/"));
+	for (FileStatus listState : listStatus) {
+	    //如果是文件
+	    if (listState.isFile()) {
+		    System.out.println("f:"+listState.getPath().getName());
+	    }else {
+		    System.out.println("d:"+listState.getPath().getName());
+	    }
+
+	}
 
 	// 删除目录或文件
 	fs.deleteOnExit(new Path(filePath));
