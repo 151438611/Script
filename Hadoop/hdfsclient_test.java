@@ -38,6 +38,23 @@ public class hdfs_test {
 	// copyToLocalFile(delSrc[false|true], srcpath, destpath) // 第一个参数delSrc表示是否删除源文件
 	//fs.copyToLocalFile(true, new Path(fromPath), new Path(toPath));
 	
+	// 获取文件名称、权限、长度、块信息存储主机
+	RemoteIterator<LocatedFileStatus> listFiles=fs.listFiles(new Path("/"),true);
+	while(listFiles.hasNext()) {
+	    LocatedFileStatus fileStatus = listFiles.next();
+	    System.out.println(fileStatus.getPath().getName());       // 获取文件名称
+	    System.out.println(fileStatus.getPermission());           // 获取文件权限
+	    System.out.println(fileStatus.getLen());            //获取文件长度
+	    BlockLocation[] blockLocations=fileStatus.getBlockLocations();      //获取文件块信息
+	    for (BlockLocation blockLocation : blockLocations) {
+		    String[] hosts = blockLocation.getHosts();
+		    for (String host : hosts) {
+			    System.out.println(host);
+		    }
+	    }
+	    System.out.println("--------分割线----------");
+	}
+
 	// 删除目录或文件
 	fs.deleteOnExit(new Path(filePath));
 	System.out.println("delete path "+filePath+" suesscess!");	
