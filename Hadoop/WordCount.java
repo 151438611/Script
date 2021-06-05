@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.StringTokenizer;
 
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
@@ -70,7 +71,6 @@ public class WordCount {
         
         String inputPath="hdfs://master:9000/words.txt";
         String outputPath="hdfs://master:9000/output";
-	
 	// 20210530 删除输出目录，避免报错:Output directory already exists
         try {
             FileSystem fs=FileSystem.get(conf);
