@@ -15,6 +15,13 @@
         <name>mapreduce.jobhistory.webapp.address</name>
         <value>master:19888</value>
     </property>
+    
+    <property>
+		<name>mapreduce.app-submission.cross-platform</name>
+		<value>false</value>
+		<description>Change to true in Windows</description>
+	</property>
+    
 <!-- Hadoop 3.3.0还需添加下面的代码，否则运行计算会报错; Hadoop 2.x可不用添加 -->
     <property>
         <!-- 此参数可添加到 Hadoop 2.x 中 -->
