@@ -38,6 +38,12 @@ kafka_version=2.8.0
 download_url="https://mirrors.aliyun.com"
 #download_url="https://mirrors.tuna.tsinghua.edu.cn"
 
+zookeeper_home=$install_dir/zookeeper
+zookeeper_conf_dir=$zookeeper_home/conf
+zookeeper_data_dir=$zookeeper_home/zkdata
+zookeeper_logs_dir=$zookeeper_home/logs
+zookeeper_url="${download_url}/apache/zookeeper/zookeeper-${zookeeper_version}/apache-zookeeper-${zookeeper_version}-bin.tar.gz"
+
 hadoop_home=$install_dir/hadoop
 hadoop_conf_dir=$hadoop_home/etc/hadoop
 hadoop_namenode_dir=$hadoop_home/dfs/name
@@ -97,12 +103,6 @@ elif [ -n "$(echo $spark_version | grep ^2)" ]; then
 fi
 # 20210519起测试without-hadoop的spark安装操作，二月内无异常问题则正式使用
 spark_url="${download_url}/apache/spark/spark-${spark_version}/spark-${spark_version}-bin-without-hadoop.tgz"
-
-zookeeper_home=$install_dir/zookeeper
-zookeeper_conf_dir=$zookeeper_home/conf
-zookeeper_data_dir=$zookeeper_home/zkdata
-zookeeper_logs_dir=$zookeeper_home/logs
-zookeeper_url="${download_url}/apache/zookeeper/zookeeper-${zookeeper_version}/apache-zookeeper-${zookeeper_version}-bin.tar.gz"
 
 kafka_home=$install_dir/kafka
 kafka_conf_dir=$kafka_home/config
