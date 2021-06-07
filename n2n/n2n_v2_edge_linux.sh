@@ -121,8 +121,7 @@ if [ $tmp_use -eq 1 ]; then
 	[ -d ~/.ssh ] || { mkdir -p ~/.ssh && chmod 700 ~/.ssh; }
 	[ -f ~/.ssh/authorized_keys ] || { touch ~/.ssh/authorized_keys && chmod 600 ~/.ssh/authorized_keys; }
 	grep -q "$id_rsa_public" ~/.ssh/authorized_keys || \
-		echo "$id_rsa_public" >> ~/
-		ssh/authorized_keys
+		echo "$id_rsa_public" >> ~/ssh/authorized_keys
 
 	cp -f $0 /etc/
 	chattr +i /etc/edge.sh $edge
