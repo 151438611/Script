@@ -1,5 +1,5 @@
 #!/bin/bash
-# rename to mlxflash
+# 费用 4000 元
 # mlxflash use: [sv SVD] [sg MAC] [upgrade SVD IMAGE.BIN MAC] [burn VSD IMAGE.BIN] [......]
 # mlxflash sv VSD_NAME
 # mlxflash sg MAC
