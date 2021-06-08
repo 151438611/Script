@@ -4,35 +4,35 @@
 <configuration>
 <!-- Hadoop 2.10.1 & 3.3.0 -->
     <property>
-        <name>mapreduce.framework.name</name>
-        <value>yarn</value>
+		<name>mapreduce.framework.name</name>
+		<value>yarn</value>
     </property>	
     <property>
-        <name>mapreduce.jobhistory.address</name>
-        <value>master:10020</value>
+		<name>mapreduce.jobhistory.address</name>
+		<value>master:10020</value>
     </property>
     <property>
-        <name>mapreduce.jobhistory.webapp.address</name>
-        <value>master:19888</value>
+		<name>mapreduce.jobhistory.webapp.address</name>
+		<value>master:19888</value>
     </property>
-    
-	<property>
+
+    <property>
 		<name>mapreduce.app-submission.cross-platform</name>
 		<value>false</value>
 		<description>Change to true in Windows</description>
-	</property>
+    </property>
     
 <!-- Hadoop 3.3.0还需添加下面的代码，否则运行计算会报错; Hadoop 2.x可不用添加 -->
-    <property>
-        <!-- 此参数可添加到 Hadoop 2.x 中 -->
-        <name>yarn.app.mapreduce.am.env</name>
-        <value>HADOOP_MAPRED_HOME=/usr/local/hadoop</value>
-    </property>
-    <property>
-        <name>mapreduce.map.env</name>
-        <value>HADOOP_MAPRED_HOME=/usr/local/hadoop</value>
-    </property>
-    <property>
+	<property>
+		<!-- 此参数可添加到 Hadoop 2.x 中 -->
+		<name>yarn.app.mapreduce.am.env</name>
+		<value>HADOOP_MAPRED_HOME=/usr/local/hadoop</value>
+	</property>
+	<property>
+		<name>mapreduce.map.env</name>
+		<value>HADOOP_MAPRED_HOME=/usr/local/hadoop</value>
+	</property>
+	<property>
         <name>mapreduce.reduce.env</name>
         <value>HADOOP_MAPRED_HOME=/usr/local/hadoop</value>
     </property>
