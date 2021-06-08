@@ -16,7 +16,7 @@
         <value>master:19888</value>
     </property>
     
-    <property>
+	<property>
 		<name>mapreduce.app-submission.cross-platform</name>
 		<value>false</value>
 		<description>Change to true in Windows</description>
