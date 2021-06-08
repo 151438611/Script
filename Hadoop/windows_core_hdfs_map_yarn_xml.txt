@@ -1,17 +1,17 @@
-1、添加环境变量
-添加系统变量：
+# 1、添加环境变量
+# 添加系统变量：
 JAVA_HOME=C:\Program Files\Java\jdk1.8.0_171
 HADOOP_HOME=D:\hadoop
-编辑PATH系统变量 --- 新建
+# 编辑PATH系统变量 --- 新建
 %JAVA_HOME%\bin
 %HADOOP_HOME%\bin
 %HADOOP_HOME%\sbin
 
-2、编辑hadoop-env.cmd
+# 2、编辑hadoop-env.cmd
 # PROGRA~1表示Program Files
 export JAVA_HOME=C:\PROGRA~1\Java\jdk1.8.0_291
 
-3、编辑core-site.xml
+# 3、编辑core-site.xml
     <property>
         <name>fs.defaultFS</name>
         <value>hdfs://localhost:9000</value> 
@@ -21,7 +21,7 @@ export JAVA_HOME=C:\PROGRA~1\Java\jdk1.8.0_291
         <value>/D:/hadoop/tmp</value>
     </property>
 
-4、编辑hdfs-site.xml ; 注意在hadoop目录下新建文件夹 dfs/name dfs/data tmp
+# 4、编辑hdfs-site.xml ; 注意在hadoop目录下新建文件夹 dfs/name dfs/data tmp
     <property>
         <name>dfs.namenode.name.dir</name>
         <value>/D:/hadoop/dfs/name</value>
@@ -47,7 +47,7 @@ export JAVA_HOME=C:\PROGRA~1\Java\jdk1.8.0_291
         <value>false</value>
     </property>
 
-5、编辑mapred-site.xml 
+# 5、编辑mapred-site.xml 
     <property>
         <name>mapreduce.framework.name</name>
         <value>yarn</value>
@@ -59,7 +59,7 @@ export JAVA_HOME=C:\PROGRA~1\Java\jdk1.8.0_291
 		<description>Change to true in Windows</description>
 	</property>
 	
-6、编辑yarn-site.xml
+# 6、编辑yarn-site.xml
     <property>
         <name>yarn.resourcemanager.hostname</name>
         <value>master</value>
@@ -76,3 +76,4 @@ export JAVA_HOME=C:\PROGRA~1\Java\jdk1.8.0_291
         <name>yarn.nodemanager.aux-services</name> 
         <value>mapreduce_shuffle</value>
     </property> 
+
