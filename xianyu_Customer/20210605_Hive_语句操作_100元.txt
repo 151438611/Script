@@ -14,15 +14,26 @@ job_content
 示例：
 3cf395f1d6f12de112d118c0349acbcd	景观主创设计师	530	园林/景观设计	2	25000	15000	20190325	20190524	1	本科	岗位职责：1、全面负责景观项目的概念设计和方案设计、扩初设计和施工图设计的工作，同时对方案文本、效果图、模型、多媒体进行全面把控（偏向方案）
 
+===========================================================
+# 数据清洗
+vi pre_data.sh
+#!/bin/bash
+# 预处理
+#下面设置输入文件，把用户执行pre_deal.sh命令时提供的第一个参数作为输入文件名称
+infile=$1
+#下面设置输出文件，把用户执行pre_deal.sh命令时提供的第二个参数作为输出文件名称
+outfile=$2
+#注意！！最后的$infile > $outfile必须跟在}' 这两个字符的后面
+awk '{print $1"\t"$2"\t"$4"\t"$5"\t"$6"\t"$7"\t"$8"\t"$9"\t"$10"\t"$11"\t"$14"\t"$18 }' $infile > $outfile
 
-=======================================
-hive 创建语句
+bash pre_data.sh data.txt data_pre.txt
+
+===========================================================
+# hive 创建语句
 create table if not exists job (job_id string, job_name string, city_code int, job_type string, number_of_recruits int, max_salary int, min_salary int, start_date int, end_date int, is_trip int, education string, job_content string) row format delimited fields terminated by "\t" ; 
-
+# 加载数据
 load data local inpath "/home/centos/20210605/data_pre.txt" into table job;
-
-select * from job;			# data.txt共130行
-
+select count(*) from job;			# data.txt共130行
 
 需求：
 1.对平均工资按3000以下 3000~4000 4000~5000 5000~6000 6000~7000 7000~8000 8000以上工资按学历高低排序。
@@ -34,7 +45,6 @@ select job_id,job_name,max_salary,education from job where max_salary > 6000 and
 select job_id,job_name,max_salary,education from job where max_salary > 7000 and max_salary <= 8000 order by education desc;
 select job_id,job_name,max_salary,education from job where max_salary > 8000 order by education desc;
 # select job_id,job_name,max_salary,education from job where max_salary > 8000 order by education desc;
-
 
 select job_id,job_name,min_salary,max_salary,(min_salary + max_salary)/2 avg_salary,education from job where (min_salary + max_salary)/2 <= 3000 order by avg_salary, education desc; 
 select job_id,job_name,min_salary,max_salary,(min_salary + max_salary)/2 avg_salary,education from job where (min_salary + max_salary)/2 > 3000 and (min_salary + max_salary)/2 <= 4000 order by (min_salary + max_salary)/2, education desc; 
@@ -74,7 +84,6 @@ insert into table tmp_date select "7_8month",count(*) jobcount from job where st
 insert into table tmp_date select "8_9month",count(*) jobcount from job where start_date between 20190801 and 20190931;
 select * from tmp_date order by jobcount desc;
 
-
 3，统计学历要求本科及以上的工作岗位，并按照平均工资的大小排序，取top30显示对应职业、岗位、最高工资，具体岗位 
 select job_id,job_name,min_salary,max_salary,(min_salary + max_salary)/2 avg_salary,job_type,education from job where education = "本科" order by avg_salary desc limit 30;
 
@@ -86,8 +95,7 @@ select job_id,job_name,min_salary,max_salary,(max_salary + min_salary)/2 avg_sal
 select job_id,job_name,min_salary,max_salary,(max_salary + min_salary)/2 avg_salary,number_of_recruits,is_trip from job where number_of_recruits > 10 and is_trip =0 order by avg_salary limit 20;
 
 
-
-=====================================================================================
+# =================== 以下为具体数据内容 ==================================================================
 3cf395f1d6f12de112d118c0349acbcd	景观主创设计师	-	530	园林/景观设计	2	25000	15000	20190325	20190524	1	510	null	本科	\N	\N	\N	岗位职责：1、全面负责景观项目的概念设计和方案设计、扩初设计和施工图设计的工作，同时对方案文本、效果图、模型、多媒体进行全面把控（偏向方案）；2、景观施工深化图纸、材料的审批及施工材料的认定；3、景观植物苗木的选择、配置、封样和现场认定；4、作为项目负责人，负责各方的沟通、联系，协调好和各方在技术上的矛盾；5、对整个设计的全过程进行把控，对景观工程项目工期、质量、安全、成本进行有效控制和对其全面负责，并解决相关技术问题；任职要求：1.风景园林、建筑学、环境艺术设计、城市规划等相关专业，本科及以上学历，5年以上工作经验,。2.能独立设计大型的，难度复杂的景观项目；能独立与客户进行良好的沟通交流，在此基础上确定总体方案和设计方向。3.有丰富的项目经验，主设计过行业或公司认可的项目。4.能对负责的项目有效进行方案汇报，能在专业技术会议或讨论会上准确清晰有效地表述专业问题和提出解决方案。5.有良好的专业素质和沟通能力，具备良好的团队协作精神和团队领导能力。
 4ce99de185f55bea127ccd74c4bbf0ad	土建工程造价员	-	551	工程造价/预结算	5	8000	4000	20190313	20190412	1	305	null	大专 	\N	\N		1、能够独立完成工程概、预、结算的编制及审核工作；2、熟悉重庆地区相关计价原则及计价文件；3、熟练使用办公软件（office、CAD、广联达等）；4、有较强的团队合作能力，并有较强的专业知识表达能力；5、领导安排的其他工作；6、认同企业文化。
 d1181ba44c2cba01523b143dbf264636	汽车销售	-	719	汽车销售	5	10000	8001	20190301	20190410	1	-1	null	\N	\N	\N		岗位职责：1、负责整车销售服务和进店客户咨询服务；2、负责整理各车型的销售资料及客户档案；3、负责开拓产品的销售市场，完成各项销售指标；4、负责挖掘客户需求，实现产品销售；5、负责售前业务跟进及售后客户维系工作。任职资格：1、形象好，气质佳，2、主动性强，工作态度积极，热爱汽车销售工作；3、有较强的事业心，勇于面对挑战；4、良好的沟通和表达能力、应变能力和解决问题的能力，心理素质佳；5、良好的团队协作精神和客户服务意识；6、欢迎优秀应届毕业生加入。
