@@ -17,7 +17,7 @@
     <property>     
         <name>hadoop.proxyuser.centos.hosts</name>     
         <value>*</value>
-     </property> 
+    </property> 
     <property>     
         <name>hadoop.proxyuser.centos.groups</name>    
         <value>*</value> 
