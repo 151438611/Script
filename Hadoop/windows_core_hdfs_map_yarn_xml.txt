@@ -52,8 +52,7 @@ export JAVA_HOME=C:\PROGRA~1\Java\jdk1.8.0_291
         <name>mapreduce.framework.name</name>
         <value>yarn</value>
     </property>	
-    </property>
-	    <property>
+	<property>
 		<name>mapreduce.app-submission.cross-platform</name>
 		<value>true</value>
 		<description>Change to true in Windows</description>
