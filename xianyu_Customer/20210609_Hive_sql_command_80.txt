@@ -1,0 +1,65 @@
+# =======数据格式===========================
+time,cityname,aqi,pm2_5,pm10,so2,no2,co,o3,primary_pollutant
+2014-12-31,阿坝州,53,33,55,3,23,1.0,35,PM10
+2015-01-31,阿坝州,31,18,29,7,10,0.5,45,
+2015-01-30,阿坝州,34,19,30,7,13,0.6,48,
+2015-01-29,阿坝州,31,18,31,7,15,0.5,32,
+2015-01-28,阿坝州,29,18,29,7,14,0.6,27,
+2015-01-27,阿坝州,29,20,29,6,15,0.6,26,
+# ==========================================
+
+# 1、数据预处理
+sed -i '1d' 20210609_aqi_data_u.csv 
+
+head 20210609_aqi_data_u.csv
+wc -l 20210609_aqi_data_u.csv 	# 显示有557424行
+
+# 2、创建hive表
+hive
+
+create table if not exists air (time string, cityname string, api int, pm2_5 int, pm10 int, so2 int, no2 int, co int, o3 int, primary_pollutant string) row format delimited fields terminated by ",";
+
+# 3、导入数据； 需要根据实际路径自行修改
+load data local inpath "/home/centos/20210605/20210609_aqi_data_u.csv" overwrite into table air;
+# 测试导入的数据是否成功
+select count(*) from air;			# 显示有557424行,导入成功 OK
+
+# 4、实现需求
+
+1.统计各个城市空气质量api处于各个等级的次数，并从高到低排序
+create table tmp1 (cityname string, api int, level string, note string) row format delimited fields terminated by ",";
+insert into table tmp1 select cityname, api, '一级', '优' from air where api between 0 and 50;
+insert into table tmp1 select cityname, api, '二级', '良' from air where api between 51 and 100;
+insert into table tmp1 select cityname, api, '三级', '轻度污染' from air where api between 101 and 150;
+insert into table tmp1 select cityname, api, '四级', '中度污染' from air where api between 151 and 200;
+insert into table tmp1 select cityname, api, '五级', '重度污染' from air where api between 201 and 300;
+insert into table tmp1 select cityname, api, '六级', '严重污染' from air where api > 300;
+select cityname,note,count(note) level_num from tmp1 group by cityname,note order by cityname, level_num desc;
+
+2.按各个列（aqi，pm2_5，pm10，so2，no2，co，o3）分别将数据集排序，统计出最高值和最低值
+select * from air order by api;				# 默认从低到高排序
+select * from air order by pm2_5;
+select * from air order by pm10;
+select * from air order by so2;
+select * from air order by no2;
+select * from air order by co;
+select * from air order by o3;
+select max(api) max_api, max(pm2_5) max_pm2_5, max(pm10) max_pm10, max(so2) max_so2, max(no2) max_no2, max(co) max_co, max(o3) max_o3 from air;
+select min(api) min_api, min(pm2_5) min_pm2_5, min(pm10) min_pm10, min(so2) min_so2, min(no2) min_no2, min(co) min_co, min(o3) min_o3 from air;
+
+3.筛选出2014，2015，2016，2017，2018各年的aqi均≤100的城市名
+create table tmp3 (year int, cityname string, api int) row format delimited fields terminated by ",";
+insert into table tmp3 select a.year[0],a.cityname,a.api from (select split(time,'-') year,cityname,api from air where api <= 100) a;
+select * from tmp3 order by year,cityname,api;		# 默认从小到大排序
+
+4.找出所有城市每年的aqi的最大值
+create table tmp4 (year int, cityname string, api int) row format delimited fields terminated by ",";
+insert into table tmp4 select a.year[0],a.cityname,a.api from (select split(time,'-') year,cityname,api from air) a;
+select cityname,year,max(api) max_api from tmp4 group by cityname,year order by cityname,year;
+
+5.将青岛的数据筛选出来，并分别统计在2014，2015，2016，2017，2018年的api≥一百的次数
+create table tmp5 (year int, cityname string, api int) row format delimited fields terminated by ",";
+insert into table tmp5 select a.year[0],a.cityname,a.api from (select split(time,'-') year,cityname,api from air where cityname = '青岛' and api >= 100) a;
+select cityname,year,count(*) api_num from tmp5 group by cityname,year;
+
+
