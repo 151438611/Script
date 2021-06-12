@@ -732,6 +732,31 @@ EOL
 		<name>hive.cli.print.current.db</name>
 		<value>true</value>
 	</property>
+	
+	<property>
+        <name>hive.server2.thrift.bind.host</name>
+        <value>$hadoop_master</value>
+    </property>
+    <property>
+        <name>hive.server2.thrift.port</name>
+        <value>10000</value>
+    </property>
+    <property>
+        <name>hive.server2.thrift.http.port</name>
+        <value>10001</value>
+    </property>
+    <property>
+        <name>hive.server2.webui.port</name>
+        <value>10002</value>
+	</property>
+	<property>
+        <name>hive.server2.authentication</name>
+        <value>NONE</value>
+    </property>	
+    <property>
+        <name>hive.server2.active.passive.ha.enable</name>
+        <value>true</value>
+    </property>	
 
 </configuration>
 EOL
