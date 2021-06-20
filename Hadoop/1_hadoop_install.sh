@@ -102,7 +102,8 @@ elif [ -n "$(echo $spark_version | grep ^2)" ]; then
 	spark_url="${download_url}/apache/spark/spark-${spark_version}/spark-${spark_version}-bin-hadoop2.7.tgz"
 fi
 # 20210519起测试without-hadoop的spark安装操作，二月内无异常问题则正式使用
-spark_url="${download_url}/apache/spark/spark-${spark_version}/spark-${spark_version}-bin-without-hadoop.tgz"
+# 20210620发现问题：使用without-hadoop的spark无法加载spark-sql操作，需要手动编译spark-hive-thriftserver.jar包；使用spark-with-hadoop则可正常
+#spark_url="${download_url}/apache/spark/spark-${spark_version}/spark-${spark_version}-bin-without-hadoop.tgz"
 
 kafka_home=$install_dir/kafka
 kafka_conf_dir=$kafka_home/config
