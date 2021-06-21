@@ -832,6 +832,12 @@ EOL
 		echo $spark_slave >> $spark_conf_dir/slaves || echo $spark_slave >> $spark_conf_dir/workers
 	done
 	
+	# config spark-sql 可选
+	[ "$(echo $is_hive | grep -i yes)" ] && {
+		cp -f $hive_home/lib/${mysql_connector_java_name}.jar $spark_home/jars
+		cp -f $hive_conf_dir/hive-site.xml $spark_conf_dir
+	}
+	
 	spark_py4j=$(basename $spark_home/python/lib/py4j-*.zip)
 	# config ~/.bashrc
 	cat << EOL >> $bashrc
@@ -842,6 +848,7 @@ export PATH=\$PATH:\$SPARK_HOME/bin:\$SPARK_HOME/sbin
 
 EOL
 	source $bashrc
+		
 	[ "$redhat_os" ] && {
 		which spark-shell && blue_echo "\nSpark is install Success.\n" || red_echo "\nSpark is install Fail.\n"
 		}
