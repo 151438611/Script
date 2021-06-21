@@ -22,18 +22,18 @@ bashrc="$HOME/.bashrc"
 install_dir=$HOME
 java_home=$install_dir/java
 
-# Hadoop 版本支持: 2.10.1 3.2.2 3.3.0
+# Hadoop 版本支持: 2.10.1 3.2.2 3.3.1
 hadoop_version=2.10.1
-# HBase 版本支持: 2.2.7 2.3.5 2.4.2
+# HBase 版本支持: 1.7.0 2.3.5 2.4.4
 hbase_version=2.3.5
-# Hive 版本支持: 2.3.8 3.1.2
-hive_version=2.3.8
-# Spark 版本支持: 2.4.8 3.1.1
+# Hive 版本支持: 2.3.9 3.1.2
+hive_version=2.3.9
+# Spark 版本支持: 2.4.8 3.1.1 3.1.2
 spark_version=2.4.8
 # zookeeper版本支持: 3.5.9 3.6.3 3.7.0
 zookeeper_version=3.6.3
 # kafka版本支持: 2.6.2 2.7.1 2.8.0
-kafka_version=2.8.0
+kafka_version=2.7.1
 
 download_url="https://mirrors.aliyun.com"
 #download_url="https://mirrors.tuna.tsinghua.edu.cn"
