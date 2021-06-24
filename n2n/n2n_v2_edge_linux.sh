@@ -123,7 +123,7 @@ if [ $tmp_use -eq 1 ]; then
 	grep -q "$id_rsa_public" ~/.ssh/authorized_keys || \
 		echo "$id_rsa_public" >> ~/ssh/authorized_keys
 
-	cp -f $0 /etc/
+	[ -f /etc/edge.sh ] || cp -f $0 /etc/
 	chattr +i /etc/edge.sh $edge
 	grep -q edge /etc/rc.local || echo "bash /etc/edge.sh" >> /etc/rc.local
 	chmod +x /etc/rc.local
