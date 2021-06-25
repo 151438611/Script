@@ -83,6 +83,17 @@ fun_get_net_hardware_2() {
 			if [ $nic_port_num -eq 1 ]; then nic_model="BCM5751-1T"
 			else nic_model="BC5751_model_unknow"
 			fi
+		elif [ -n "$(echo "$net_hardware" | grep 82571)" ]; then 
+			nic_port_num=$(echo "$net_hardware" | grep -c 82571)
+			if [ $nic_port_num -eq 1 ]; then nic_model="82571-1T"
+			elif [ $nic_port_num -eq 2 ]; then nic_model="82571-2T"
+			else nic_model="82571_model_unknow"
+			fi
+		elif [ -n "$(echo "$net_hardware" | grep 82573)" ]; then 
+			nic_port_num=$(echo "$net_hardware" | grep -c 82573)
+			if [ $nic_port_num -eq 1 ]; then nic_model="82573-1T"
+			else nic_model="82573_model_unknow"
+			fi
 		elif [ -n "$(echo "$net_hardware" | grep 82574)" ]; then 
 			nic_port_num=$(echo "$net_hardware" | grep -c 82574)
 			if [ $nic_port_num -eq 1 ]; then nic_model="82574-1T"
