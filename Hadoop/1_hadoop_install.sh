@@ -1,4 +1,5 @@
 #!/bin/bash
+# Author: Jun 
 # 适用于完全分布式和伪分布式集群的自动下载、安装、配置脚本；若安装完全分布式,需要手动分发
 # 仅支持 CPU x86_64 架构的 Linux 系统：Centos、Ubuntu; 运行需求依赖：wget
 # 前提：1、关闭 selinux 和防火墙; 2、配置 /etc/hosts、hostname; 3、配置 ssh 免密码登陆; 4、Java下载并解压好
