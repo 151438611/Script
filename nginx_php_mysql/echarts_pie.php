@@ -77,8 +77,15 @@
                 {
                 name: 'pie_demo',
                 type: 'pie',
-                radius: '50%',
+                radius: '50%',      // 表示饼图的大小比例
                 data: jsdata,
+            /*    data: [           // 圆饼图data类型为数组对象，则格式必须为 {name: 'xx',value: xx},
+                    {name: '搜索引擎',value: 1048},
+                    {value: 735, name: '直接访问'},
+                    {value: 580, name: '邮件营销'},
+                    {value: 484, name: '联盟广告'},
+                    {value: 300, name: '视频广告'}
+                    ],    */
                 emphasis: {
                 itemStyle: {
                     shadowBlur: 20,
