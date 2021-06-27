@@ -52,13 +52,7 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>       <!-- 需要在线连接echarts库 -->
     <!-- <script type="text/javascript" src="echarts.min.js"></script>             <!-- 离线使用echarts,将echarts.min.js文件放入代码当前目录中 -->
     <script type="text/javascript">
-        var jsrow1 = new Array(), jsrow2 = new Array();
         var jsdata = <?php echo $data_json?>;
-        jsdata.forEach(function(js_i){
-            console.log(js_i.name + '---' + js_i.value)
-            jsrow1.push(js_i.name);
-            jsrow2.push(js_i.value);
-        })
         console.log(jsdata)
         // 以上代码作用从php_sql中的数组转换
         var dom = document.getElementById("echarts_js");
