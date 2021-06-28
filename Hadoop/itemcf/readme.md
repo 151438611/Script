@@ -1,6 +1,6 @@
 一、项目介绍：
 ```
-名称:大数据Hadoop Mapreduce学习_基于物品的协同过滤算法实现物品推荐
+大数据Hadoop Mapreduce学习_基于物品的协同过滤算法实现物品推荐
 
 源代码地址：https://gitee.com/jlzl/hadoop-test/tree/master
 
