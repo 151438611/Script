@@ -23,7 +23,7 @@ CSDN地址：https://blog.csdn.net/xdkb159/article/details/108078516?utm_medium=
 		<value>true</value>
 		<description>Change to true in Windows</description>
 	</property>
-7、将代码文件夹itemcf复制到src目录下
+7、将代码文件夹itemcf下的java文件复制到src目录下
 8、右键itemcf---Export导出成jar包，并修改ItemCFDriver.java代码中的job.setJar("D:\\xx.jar")中的jar路径
 9、右键运行ItemCFDriver.java即可
 ```
