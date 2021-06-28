@@ -74,8 +74,12 @@ public class WordCount {
 	// 20210530 删除输出目录，避免报错:Output directory already exists
         try {
             FileSystem fs=FileSystem.get(conf);
-            fs.deleteOnExit(new Path(outputPath));
-            System.out.println("delete path "+outputPath+" suesscess!");
+	// 20210628增加判断输出目录是否存在, 存在则删除该目录 
+           if (fs.isDirectory(new Path(outputPath))) {
+            	fs.deleteOnExit(new Path(outputPath));
+                System.out.println("delete path "+args[1]+" suesscess!");
+            }
+		
             fs.close();
         } catch (IOException e) {
             e.printStackTrace();
