@@ -1,11 +1,13 @@
 一、项目介绍：
+```
 大数据Hadoop学习_基于物品的协同过滤算法实现物品推荐
 源代码地址：https://gitee.com/jlzl/hadoop-test/tree/master
 CSDN地址：https://blog.csdn.net/xdkb159/article/details/108078516?utm_medium=distribute.pc_relevant_download.none-task-blog-2~default~BlogCommendFromBaidu~default-6.test_version_3&depth_1-utm_source=distribute.pc_relevant_download.none-task-blog-2~default~BlogCommendFromBaidu~default-6.test_version_
+```
 
 
-
-二、操作流程，注意事项：
+二、操作流程，注意事项
+```
 1、启动hadoop
 2、配置好eclipse连接hadoop
 3、将user_test.txt用户数据上传到hdfs指定目录中(目录路径不能修改)：
@@ -24,3 +26,4 @@ CSDN地址：https://blog.csdn.net/xdkb159/article/details/108078516?utm_medium=
 7、将代码文件夹itemcf复制到src目录下
 8、右键itemcf---Export导出成jar包，并修改ItemCFDriver.java代码中的job.setJar("D:\\xx.jar")中的jar路径
 9、右键运行ItemCFDriver.java即可
+```
