@@ -1,0 +1,12 @@
+user2,item3,click
+user1,item1,click
+user1,item1,collect
+user1,item2,click
+user2,item2,collect
+user2,item3,click
+user3,item1,collect
+user3,item2,click
+user1,item2,click
+user3,item1,collect
+user1,item2,click
+user3,item3,click
