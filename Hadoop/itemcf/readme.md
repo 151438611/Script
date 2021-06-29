@@ -14,7 +14,7 @@ CSDN地址：https://blog.csdn.net/xdkb159/article/details/108078516?utm_medium=
 
 2、配置好 eclipse 连接 hadoop
 
-3、将 user.txt 用户数据上传到hdfs指定目录中(目录路径不能修改)：
+3、将 user.txt 用户数据上传到hdfs指定目录中(上传目录路径不能修改)：
 # 说明: user_test.txt 为测试数据,数据量小简单; user_item.txt 数据量大一些
 	hdfs dfs -mkdir -p /test/itemCF/input
 	hdfs dfs -put user.txt /test/itemCF/input
