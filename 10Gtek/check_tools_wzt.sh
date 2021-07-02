@@ -11,7 +11,7 @@
 # 20200408 新增检查码中的起始SN和末尾SN是否和码文件SN命名一致
 # 20200512 修改兼容性检查,不再区分50pcs数量来使用不同的兼容码;统一更改所有都按兼容要求编码
 #	新增CAB-1GSFP-PxM检查模板,和SFP-MCU放码模块类似,只是无Password.txt
-# 20201125 新增添加PN列(因VN会有类似Skylane Optics空格格式的要求，无法正确提取)；现在code.txt结构：1-日期 2-销售单号 3-生产单号 4-产品名称 5-生产数量 6-起始SN 7-结束SN 8-PN 9-备注
+# 20201125 新增添加VN、PN列(类似Sky Opt空格，需要使用双引号；默认无则为0)；现在code.txt结构：1-日期 2-销售单号 3-生产单号 4-产品名称 5-生产数量 6-起始SN 7-结束SN 8-VN 9-PN 10-备注
 # 20210701 新增交换机测试模板中的冷热启动模板
 
 clear
@@ -63,11 +63,15 @@ order_info() {
 	# 提取邮件中的产品名称，示例：CAB-10GSFP-P3M
 	order_type=$(echo $order_all | awk '{print $4}')
 	# 20201125 新增提取PN
+	# 提取邮件中的产品定制VN，示例：Optech
+	order_vn=$(echo $order_all | awk '{print $8}')
+	[ "$order_vn" = "0" ] && order_vn=
+	
 	# 提取邮件中的产品定制PN，示例：EXQSFP4SFPDJ3.5M
-	order_pn=$(echo $order_all | awk '{print $8}')
+	order_pn=$(echo $order_all | awk '{print $9}')
 	[ "$order_pn" = "0" ] && order_pn=
 	# 提取内容中的备注,示例：通用/OEM中性码，VN：Optech，PN：OPQSFP-T-05-PCB
-	order_remark=$(echo $order_all | awk '{print $9$10$11$12$13$14$15$16$17$18$19$20}')
+	order_remark=$(echo $order_all | awk '{print $10$11$12$13$14$15$16$17$18$19$20}')
 	[ -z "$order_remark" ] && order_remark="无备注"
 
 	# 提取邮件中的需求长度，单位CM/M; 判断特殊情况：CAB-10GSFP-P65CM和HP-Aruba的编码长度位为00
@@ -244,7 +248,14 @@ code_info() {
 			code_128btye=$(echo "$code_file_hex" | awk 'NR==9{print $2}')
 			code_145btye=$(echo "$code_file_hex" | awk 'NR==10{print $3}')
 			}
-		# 提示编码中的PN信息
+		# 提取编码中的VN信息
+		code_vn_line_start=$(echo "$code_file_hex" | awk -F "|" 'NR==2{print $2}')
+		code_vn_line_end=$(echo "$code_file_hex" | awk -F "|" 'NR==3{print $2}')
+		code_vn_start=${code_vn_line_start:4:12}
+		code_vn_end=${code_vn_line_end::4}
+		code_vn=$(echo $code_vn_start$code_vn_end)
+		
+		# 提取编码中的PN信息
 		code_pn_line_start=$(echo "$code_file_hex" | awk -F "|" 'NR==3{print $2}')
 		code_pn_line_end=$(echo "$code_file_hex" | awk -F "|" 'NR==4{print $2}')
 		code_pn_start=${code_pn_line_start:8:8}
@@ -255,8 +266,10 @@ code_info() {
 
 check_info() {
 	# 判断之前先初始化错误信息
-	error_time= ; error_type= ; error_num= ; error_kind= ; error_length= ; error_sn= ; error_pn=
-	result_time= ; result_type= ; result_num= ; result_kind= ; result_length= ; result_sn=  ; result_pn=
+	error_time= ; error_type= ; error_num= ; error_kind= 
+	error_length= ; error_sn= ; error_vn= ; error_pn=
+	result_time= ; result_type= ; result_num= ; result_kind= 
+	result_length= ; result_sn=  ; result_vn=  ; result_pn=
 	# 核对邮件内容中的日期和编码中的日期是否一致
 	[ "${order_time:2}" = "$code_time" ] && result_time="(ok)" || {
 		result_time="(-error!-)"
@@ -333,6 +346,15 @@ check_info() {
 		result_sn="(-error!-)"
 		error_sn="文件SN<$order_sn $order_sn_end>和编码SN<$code_start_sn $code_end_sn>不一致，请仔细编码中的SN是否正确！！！"
 	fi
+	# 20201125 检查编码文件中的VN是否与邮件中的定制VN一致
+	if [ -n "$order_vn" ]; then
+		[ "$order_vn" = "$code_vn" ] && result_vn="(ok)" || {
+			result_vn="(-error!-)"
+			error_vn="文件PN<$order_vn>和编码PN<$code_vn>不一致，请仔细编码中的VN是否正确！！！"
+		}
+	else
+		result_vn="(ok)"
+	fi
 	# 20201125 检查编码文件中的PN是否与邮件中的定制PN一致
 	if [ -n "$order_pn" ]; then
 		[ "$order_pn" = "$code_pn" ] && result_pn="(ok)" || {
@@ -374,9 +396,9 @@ do
 			check_info
 			# 输出检查结果信息
 			echo "邮件日期:${order_time} 产品名称:${order_type} 数量:${order_num_old} 备注:${order_remark}" >> $result
-			echo "编码日期:${code_time}${result_time} 产品类型:${code_type}${result_type} 长度:${code_length}米${result_length} 数量:${code_num}${result_num} 速率:${code_speed} SN:${result_sn}${error_sn} PN:${result_pn}${error_pn} 兼容:${code_kind}${result_kind}${error_kind}" >> $result
+			echo -e "编码日期:${code_time}${result_time} 产品类型:${code_type}${result_type} 长度:${code_length}米${result_length} 数量:${code_num}${result_num} \n    速率:${code_speed} SN:${result_sn}${error_sn} VN:${result_vn}${error_vn} PN:${result_pn}${error_pn} \n    兼容:${code_kind}${result_kind}${error_kind}" >> $result
 			# 判断是否出现编码错误，出错就输出错误信息和编码中的十六进制文件。
-			[ -n "${error_time}${error_type}${error_num}${error_kind}${error_length}${error_sn}${error_pn}" ] && {
+			[ -n "${error_time}${error_type}${error_num}${error_kind}${error_length}${error_sn}${error_vn}${error_pn}" ] && {
 				printmark >> $result
 				echo "$code_file_hex_all" | head -n16 >> $result
 				}
@@ -418,9 +440,9 @@ do
 			# 输出检查结果信息
 			echo "生产订单号：${order_id}"
 			echo "邮件日期:${order_time} 产品名称:${order_type} 数量:${order_num_old} 备注:${order_remark}"
-			echo -e "编码日期:${code_time}\033[43;30m${result_time}\033[0m 产品类型:${code_type}\033[43;30m${result_type}\033[0m 长度:${code_length}米\033[43;30m${result_length}\033[0m 数量:${code_num}\033[43;30m${result_num}\033[0m 速率:${code_speed} SN:\033[43;30m${result_sn}\033[0m${error_sn} PN:\033[43;30m${result_pn}\033[0m${error_pn} 兼容:${code_kind}\033[43;30m${result_kind}${error_kind}\033[0m"
+			echo -e "编码日期:${code_time}\033[43;30m${result_time}\033[0m 产品类型:${code_type}\033[43;30m${result_type}\033[0m 长度:${code_length}米\033[43;30m${result_length}\033[0m 数量:${code_num}\033[43;30m${result_num}\033[0m \n    速率:${code_speed} SN:\033[43;30m${result_sn}\033[0m${error_sn} VN:\033[43;30m${result_vn}\033[0m${error_vn} PN:\033[43;30m${result_pn}\033[0m${error_pn} \n    兼容:${code_kind}\033[43;30m${result_kind}${error_kind}\033[0m"
 			# 判断是否出现编码错误，出错就输出错误信息和编码中的十六进制文件。
-			[ -n "${error_time}${error_type}${error_num}${error_kind}${error_length}${error_sn}${error_pn}" ] && echo "${error_time}${error_type}${error_num}${error_kind}${error_length}${error_sn}${error_pn}"
+			[ -n "${error_time}${error_type}${error_num}${error_kind}${error_length}${error_sn}${error_vn}${error_pn}" ] && echo "${error_time}${error_type}${error_num}${error_kind}${error_length}${error_sn}${error_vn}${error_pn}"
 			printmark
 			# 输出编码中的十六进制文件，仅输出20行。
 			echo "$code_file_hex_all" | head -n16
