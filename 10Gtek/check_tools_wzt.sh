@@ -550,7 +550,7 @@ case $speed in
 	Juniper-QFX5100"
 	hot_startup_switch=$cold_startup_switch
 	;;
-	"100g"|"200g")
+	"100g")
 	switch="Cisco-C3232C
 	Cisco-C92160YC
 	Mellanox-SN2410
