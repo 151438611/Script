@@ -13,8 +13,8 @@ taskmanager.numberOfTaskSlots: 1
 # High Availability
 #============================================
 high-availability: zookeeper
-high-availability.storageDir: hdfs:///flink/ha/
-high-availability.zookeeper.quorum: localhost:2181
+high-availability.storageDir: hdfs://master:9000/flink/ha/
+high-availability.zookeeper.quorum: master:2181,slave1:2181,slave2:2181
 
 
 #============================================
