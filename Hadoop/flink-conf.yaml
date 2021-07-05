@@ -1,0 +1,50 @@
+
+#============================================
+# Common
+#============================================
+# JobManager runs.
+jobmanager.rpc.address: localhost
+# The RPC port where the JobManager is reachable.
+jobmanager.rpc.port: 6123
+# The number of task slots that each TaskManager offers. Each slot runs one parallel pipeline.
+taskmanager.numberOfTaskSlots: 1
+
+#============================================
+# High Availability
+#============================================
+high-availability: zookeeper
+high-availability.storageDir: hdfs:///flink/ha/
+high-availability.zookeeper.quorum: localhost:2181
+
+
+#============================================
+# Fault tolerance and checkpointing
+#============================================
+
+
+#============================================
+# Rest & web frontend
+#============================================
+rest.port: 8081
+# The address to which the REST client will connect to
+rest.address: 0.0.0.0
+
+#============================================
+# Advanced
+#============================================
+
+
+#============================================
+# Flink Cluster Security Configuration
+#============================================
+
+
+#============================================
+# ZK Security Configuration
+#============================================
+
+
+
+#============================================
+# HistoryServer
+#============================================
