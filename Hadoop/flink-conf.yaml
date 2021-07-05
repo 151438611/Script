@@ -48,3 +48,8 @@ rest.address: 0.0.0.0
 #============================================
 # HistoryServer
 #============================================
+#jobmanager.archive.fs.dir: hdfs:///completed-jobs/
+#historyserver.web.address: 0.0.0.0
+#historyserver.web.port: 8082
+#historyserver.archive.fs.dir: hdfs:///completed-jobs/
+#historyserver.archive.fs.refresh-interval: 10000
