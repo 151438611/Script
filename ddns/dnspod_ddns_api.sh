@@ -1,7 +1,8 @@
 #!/bin/bash
 # # create date: 20210707 by xj; for DNSPod ddns api
 # 1、依赖 curl(必需) jq(可选)；[yum | apt] install curl jq 
-# 2、在 dnspod.cn 帐号中心创建申请：API密钥 --- DNSPod Token: 
+# 2、在 dnspod.cn 帐号中心创建申请：API密钥 --- DNSPod Token
+# 若子域名不存在，则会自动创建
 
 # ======域名信息=====
 domain="xxy1.ltd"
