@@ -12,7 +12,7 @@ Timestamp=$(date +%s)
 Nonce=$(head -n 8 /dev/urandom | tr -cd 0-9 | head -c 5)
 SignatureMethod=HmacSHA1
 URL="https://cns.api.qcloud.com/v2/index.php"
-Log=/tmp/ddns.log
+DDNSLog=/tmp/tencent_ddns.log
 
 getRecordID() {
 	Action=RecordList
@@ -26,7 +26,7 @@ getRecordID() {
 	RecordIP=$(echo $AllRecord | awk -F [:,\"] '{print $13}')
 }
 getRecordID
-[ -z "$RecordID" -o -z "$RecordIP" ] && echo "Get Record ID or IP Fail !!!" >> $Log && exit 1
+[ -z "$RecordID" -o -z "$RecordIP" ] && echo "Get Record ID or IP Fail !!!" >> $DDNSLog && exit 1
 
 changeRecordModify() {
 	Action=RecordModify
@@ -38,7 +38,7 @@ changeRecordModify() {
 	[ "$RecordValue" ] || RecordValue=$(curl -4 -q ip.cip.cc)
 	
     	if [ "$RecordValue" = "$RecordIP" -o -z "$RecordValue" ]; then
-		echo "$(date +"%F %T") The Record_IP and Public_IP are the same is  $RecordIP " >> $Log
+		echo "$(date +"%F %T") The Record_IP and Public_IP are the same is  $RecordIP " >> $DDNSLog
 	else
 		SRC=$(printf "GETcns.api.qcloud.com/v2/index.php?Action=%s&Nonce=%s&SecretId=%s&SignatureMethod=%s&Timestamp=%s&domain=%s&recordId=%s&recordLine=%s&recordType=%s&subDomain=%s&value=%s" \
 			$Action $Nonce $SecretId $SignatureMethod $Timestamp $Domain $RecordID $RecordLine $RecordType $SubDomain $RecordValue)
@@ -46,8 +46,8 @@ changeRecordModify() {
 		Params=$(printf "Action=%s&Nonce=%s&SecretId=%s&SignatureMethod=%s&Timestamp=%s&domain=%s&recordId=%s&recordLine=%s&recordType=%s&subDomain=%s&value=%s" \
 			$Action $Nonce $SecretId $SignatureMethod $Timestamp $Domain $RecordID $RecordLine $RecordType $SubDomain $RecordValue)
 		curl -G -d "$Params" --data-urlencode "Signature=$Signature" "$URL"
-		[ $? -eq 0 ] && echo "$(date +"%F %T") The Record_IP: $RecordIP is different as Public_IP: $RecordValue , changeRecordModify success !" >> $Log || \
-			echo "$(date +"%F %T") The Record_IP: $RecordIP is different as Public_IP: $RecordValue , but changeRecordModify fail !!!" >> $Log 
+		[ $? -eq 0 ] && echo "$(date +"%F %T") The Record_IP: $RecordIP is different as Public_IP: $RecordValue , changeRecordModify success !" >> $DDNSLog || \
+			echo "$(date +"%F %T") The Record_IP: $RecordIP is different as Public_IP: $RecordValue , but changeRecordModify fail !!!" >> $DDNSLog 
 	fi
 }
 changeRecordModify
