@@ -34,8 +34,8 @@ changeRecordModify() {
 	RecordLine='默认'
 	
 	# get public ip address
-	RecordValue=$(curl -q ip.3322.net)
-	[ "$RecordValue" ] || RecordValue=$(curl -q ip.cip.cc)
+	RecordValue=$(curl -4 -q ip.3322.net)
+	[ "$RecordValue" ] || RecordValue=$(curl -4 -q ip.cip.cc)
 	
     	if [ "$RecordValue" = "$RecordIP" -o -z "$RecordValue" ]; then
 		echo "$(date +"%F %T") The Record_IP and Public_IP are the same is  $RecordIP " >> $Log
