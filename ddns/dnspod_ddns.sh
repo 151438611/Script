@@ -27,7 +27,7 @@ PublicIP=$(curl -4 -q ip.3322.net)
 [ "$PublicIP" ] || PublicIP=$(curl -4 -q ip.cip.cc)
 [ "$PublicIP" ] || { red_echo "$(date +"%F %T") get PublicIP is Null, Exit"; exit 3; }
 
-# 检测 jq 是否安装；；
+# 检测 jq 是否安装
 if [ -n "$(jq --version)" ]; then
 # ================== 若已安装 jq 则为完整Linux ==================
 	# 获取子域名RecordID、RecordValue
