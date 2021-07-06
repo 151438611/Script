@@ -1,5 +1,5 @@
 #!/bin/bash
-# Tencent Domain ddns API, Only support x86_64/arm64 Linux
+# Tencent Domain ddns API, Only support x86_64/arm64 Linux、Synogly-DSM 6.x
 # Dependencies command: curl、openssl、base64、printf
 
 Domain=xxy1.ltd
