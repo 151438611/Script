@@ -25,7 +25,7 @@ red_echo() {
 # get public ip address
 PublicIP=$(curl -4 -q ip.3322.net)
 [ "$PublicIP" ] || PublicIP=$(curl -4 -q ip.cip.cc)
-[ -z "$PublicIP" ] && red_echo "$(date +"%F %T") get PublicIP is Null, Exit" && exit 3
+[ "$PublicIP" ] || { red_echo "$(date +"%F %T") get PublicIP is Null, Exit"; exit 3; }
 
 # 检测 jq 是否安装；若已安装则为完整Linux；若未安装则为精简版Linux，例如：软硬路由系统、嵌入式...
 if [ -n "$(jq --version)" ]; then
