@@ -27,8 +27,9 @@ PublicIP=$(curl -4 -q ip.3322.net)
 [ "$PublicIP" ] || PublicIP=$(curl -4 -q ip.cip.cc)
 [ "$PublicIP" ] || { red_echo "$(date +"%F %T") get PublicIP is Null, Exit"; exit 3; }
 
-# 检测 jq 是否安装；若已安装则为完整Linux；若未安装则为精简版Linux，例如：软硬路由系统、嵌入式...
+# 检测 jq 是否安装；；
 if [ -n "$(jq --version)" ]; then
+# ================== 若已安装 jq 则为完整Linux ==================
 	# 获取子域名RecordID、RecordValue
 	RecordList=$(curl -X POST https://dnsapi.cn/Record.List -d "login_token=${login_token}&domain=${domain}&sub_domain=${sub_domain}&format=json&lang=en")
 	RecordListStatus=$(echo "$RecordList" | jq ".status.code" | sed 's/"//g')
@@ -63,7 +64,7 @@ if [ -n "$(jq --version)" ]; then
 	fi
 
 else
-	yellow_echo "jq : command not found! It is recommended to install it. "
+# ================== 若未安装 jq 则为精简版Linux，例如：软硬路由系统、嵌入式... ==================
 	# 获取子域名RecordID、RecordValue
 	RecordList=$(curl -X POST https://dnsapi.cn/Record.List -d "login_token=${login_token}&domain=${domain}&sub_domain=${sub_domain}&format=xml&lang=en")
 	RecordListStatus=$(echo "$RecordList" | awk -F "[\<\>]" '/<code>/ {print $3}')
