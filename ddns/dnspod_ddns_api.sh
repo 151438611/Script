@@ -40,9 +40,9 @@ if [ -n "$(jq --version)" ]; then
 		RecordCreate=$(curl -X POST https://dnsapi.cn/Record.Create -d "login_token=${login_token}&domain=${domain}&sub_domain=${sub_domain}&record_type=A&record_line_id=0&value=${PublicIP}&format=json&lang=en")
 		RecordCreateStatus=$(echo "$RecordCreate" | jq ".status.code" | sed 's/"//g')
 		if [ "$RecordCreateStatus" = 1 ]; then
-			blue_echo "$(date +"%F %T") Create $sub_domain Domain Record Success! Exit. \n$RecordCreate "
+			blue_echo "$(date +"%F %T") Create $sub_domain Domain Record $PublicIP Success! Exit. \n$RecordCreate "
 		else
-			red_echo "$(date +"%F %T") Create $sub_domain Domain Record Fail! Exit. \n$RecordCreate "
+			red_echo "$(date +"%F %T") Create $sub_domain Domain Record $PublicIP Fail! Exit. \n$RecordCreate "
 		fi
 		exit 1
 		
@@ -79,9 +79,9 @@ else
 		RecordCreate=$(curl -X POST https://dnsapi.cn/Record.Create -d "login_token=${login_token}&domain=${domain}&sub_domain=${sub_domain}&record_type=A&record_line_id=0&value=${PublicIP}&format=xml&lang=en")
 		RecordCreateStatus=$(echo "$RecordCreate" | awk -F "[\<\>]" '/<code>/ {print $3}')
 		if [ "$RecordCreateStatus" = 1 ]; then
-			blue_echo "$(date +"%F %T") Create $sub_domain Domain Record Success! Exit. \n$RecordCreate "
+			blue_echo "$(date +"%F %T") Create $sub_domain Domain Record $PublicIP Success! Exit. \n$RecordCreate "
 		else
-			red_echo "$(date +"%F %T") Create $sub_domain Domain Record Fail! Exit. \n$RecordCreate "
+			red_echo "$(date +"%F %T") Create $sub_domain Domain Record $PublicIP Fail! Exit. \n$RecordCreate "
 		fi
 		exit 1
 	else
