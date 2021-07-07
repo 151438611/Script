@@ -40,7 +40,7 @@ if [ -n "$(jq --version)" ]; then
 		RecordCreate=$(curl -X POST https://dnsapi.cn/Record.Create -d "login_token=${login_token}&domain=${domain}&sub_domain=${sub_domain}&record_type=A&record_line_id=0&value=${PublicIP}&format=json&lang=en")
 		RecordCreateStatus=$(echo "$RecordCreate" | jq ".status.code" | sed 's/"//g')
 		if [ "$RecordCreateStatus" = 1 ]; then
-			red_echo "$(date +"%F %T") Create $sub_domain Domain Record Success! Exit. \n$RecordCreate "
+			blue_echo "$(date +"%F %T") Create $sub_domain Domain Record Success! Exit. \n$RecordCreate "
 		else
 			red_echo "$(date +"%F %T") Create $sub_domain Domain Record Fail! Exit. \n$RecordCreate "
 		fi
@@ -78,9 +78,12 @@ else
 		yellow_echo "$(date +"%F %T") get RecordList Fail! Create $sub_domain Domain Record"
 		RecordCreate=$(curl -X POST https://dnsapi.cn/Record.Create -d "login_token=${login_token}&domain=${domain}&sub_domain=${sub_domain}&record_type=A&record_line_id=0&value=${PublicIP}&format=xml&lang=en")
 		RecordCreateStatus=$(echo "$RecordCreate" | awk -F "[\<\>]" '/<code>/ {print $3}')
-		[ "$RecordCreateStatus" = 1 ] || { red_echo "$(date +"%F %T") Create $sub_domain Domain Record Fail! Exit. \n$RecordCreate " ; exit 2; }
-		# 重装获取子域名解析记录
-		RecordList=$(curl -X POST https://dnsapi.cn/Record.List -d "login_token=${login_token}&domain=${domain}&sub_domain=${sub_domain}&format=xml&lang=en")
+		if [ "$RecordCreateStatus" = 1 ]; then
+			blue_echo "$(date +"%F %T") Create $sub_domain Domain Record Success! Exit. \n$RecordCreate "
+		else
+			red_echo "$(date +"%F %T") Create $sub_domain Domain Record Fail! Exit. \n$RecordCreate "
+		fi
+		exit 1
 	else
 		red_echo "$(date +"%F %T") get RecordList Fail! Exit. \n$RecordList "
 		exit 3
