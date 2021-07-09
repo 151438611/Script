@@ -33,16 +33,16 @@ red_echo() {
 	echo -e "\033[31m$1\033[0m" | tee -a $install_log
 }
 
-# 指定安装包名
-java_tgz="$(ls $dir_path/jdk-8*.tar.gz)"
+# 获取安装包文件的路径
+java_tgz="$(ls $dir_path/jdk-8*.tar.gz | head -n 1)"
 java_tgz_md5="66902b60fb9b45c0af9e90002ac3a711"
 #[ "$(md5sum $java_tgz | awk '{print $1}')" != "$java_tgz_md5" ] && red_echo "$(date +"%F %T") exit！ Check if the java.tgz installation package is complete. " && exit 2
 
-tomcat_tgz="$(ls $dir_path/apache-tomcat-8*.tar.gz)"
+tomcat_tgz="$(ls $dir_path/apache-tomcat-8*.tar.gz | head -n 1)"
 tomcat_tgz_md5="c2e6eca5a0642d1e30fbe3573b96ab75"
 #[ "$(md5sum $tomcat_tgz | awk '{print $1}')" != "$tomcat_tgz_md5" ] && red_echo "$(date +"%F %T") exit！ Check if the tomcat.tgz installation package is complete. " && exit 2
 
-mysql_tgz="$(ls $dir_path/mysql-5*.tar.gz)"
+mysql_tgz="$(ls $dir_path/mysql-5*.tar.gz | head -n 1)"
 mysql_tgz_md5="dc436a1bd4939a377ed50cf531a55782"
 #[ "$(md5sum $mysql_tgz | awk '{print $1}')" != "$mysql_tgz_md5" ] && red_echo "$(date +"%F %T") exit！ Check if the mysql.tgz installation package is complete. " && exit 2
 
