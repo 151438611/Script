@@ -6,8 +6,8 @@
 
 # ======域名信息=====
 domain="xxy1.ltd"
-sub_domain="tmp"
-login_token="xx,79a4628589385f5daaee91be6903a2xx"
+sub_domain="n2n"
+login_token="xx,79a4628589385f5daaee91be6903axxx"
 ddns_log=/tmp/dnspod_ddns.log
 
 blue_echo() {
@@ -29,7 +29,7 @@ PublicIP=$(curl -4 -q ip.3322.net)
 
 # check jq command
 if [ -n "$(jq --version)" ]; then
-# ================== 若已安装 jq 则为完整Linux ==================
+# ================== 已安装 jq 软件 ==================
 	# 获取子域名RecordID、RecordValue
 	RecordList=$(curl -X POST https://dnsapi.cn/Record.List -d "login_token=${login_token}&domain=${domain}&sub_domain=${sub_domain}&format=json&lang=en")
 	RecordListStatus=$(echo "$RecordList" | jq ".status.code" | sed 's/"//g')
@@ -68,16 +68,16 @@ if [ -n "$(jq --version)" ]; then
 	fi
 
 else
-# ================== 若未安装 jq 则为精简版Linux，例如：软硬路由系统、嵌入式... ==================
+# ================== 若未安装 jq 软件，则使用Linux自带命令操作，适用于：软硬路由系统、嵌入式... ==================
 	# 获取子域名RecordID、RecordValue
 	RecordList=$(curl -X POST https://dnsapi.cn/Record.List -d "login_token=${login_token}&domain=${domain}&sub_domain=${sub_domain}&format=xml&lang=en")
-	RecordListStatus=$(echo "$RecordList" | awk -F "[\<\>]" '/<code>/ {print $3}')
+	RecordListStatus=$(echo "$RecordList" | awk -F '[<>]' '/<code>/ {print $3}')
 	if [ "$RecordListStatus" = 1 ];then
 		blue_echo "$(date +"%F %T") get RecordList Success "
 	elif [ "$RecordListStatus" = 10 ];then
 		yellow_echo "$(date +"%F %T") get RecordList Fail! Create $sub_domain Domain Record"
 		RecordCreate=$(curl -X POST https://dnsapi.cn/Record.Create -d "login_token=${login_token}&domain=${domain}&sub_domain=${sub_domain}&record_type=A&record_line_id=0&value=${PublicIP}&format=xml&lang=en")
-		RecordCreateStatus=$(echo "$RecordCreate" | awk -F "[\<\>]" '/<code>/ {print $3}')
+		RecordCreateStatus=$(echo "$RecordCreate" | awk -F '[<>]' '/<code>/ {print $3}')
 		if [ "$RecordCreateStatus" = 1 ]; then
 			blue_echo "$(date +"%F %T") Create $sub_domain Domain Record $PublicIP Success! Exit. \n$RecordCreate "
 		else
@@ -88,14 +88,14 @@ else
 		red_echo "$(date +"%F %T") get RecordList Fail! Exit. \n$RecordList "
 		exit 3
 	fi
-	RecordID=$(echo "$RecordList" | grep \<id\> | awk -F "[\<\>]" 'NR==2 {print $3}')
-	RecordValue=$(echo "$RecordList" | awk -F "[\<\>]" '/<value>/ {print $3}')
+	RecordID=$(echo "$RecordList" | grep \<id\> | awk -F '[<>]' 'NR==2 {print $3}')
+	RecordValue=$(echo "$RecordList" | awk -F '[<>]' '/<value>/ {print $3}')
 	[ -z "$RecordID" -o -z "$RecordValue" ] && red_echo "$(date +"%F %T") get RecordID or RecordValue is Null, Exit" && exit 3
 	
 	if [ "$PublicIP" != "$RecordValue" ]; then
 		# 变更解析IP
 		RecordModify=$(curl -X POST https://dnsapi.cn/Record.Modify -d "login_token=${login_token}&domain=${domain}&record_id=${RecordID}&sub_domain=${sub_domain}&value=${PublicIP}&record_type=A&record_line_id=10%3D0&format=xml&lang=en")
-		RecordModifyStatus=$(echo "$RecordModify" | awk -F "[\<\>]" '/<code>/ {print $3}')
+		RecordModifyStatus=$(echo "$RecordModify" | awk -F '[<>]' '/<code>/ {print $3}')
 		if [ "$RecordModifyStatus" = 1 ]; then
 			blue_echo "$(date +"%F %T") The Record_Value: $RecordValue is different as Public_IP: $PublicIP , RecordModify Success "
 		else 
