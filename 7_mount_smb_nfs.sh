@@ -28,21 +28,33 @@ fun_mount_nfs_padavan() {
 }
 
 # === mount smb ======================
-user=GCB01 
-password="*WGQGf"
-src=//192.168.1.250/gc-fae/faeTest_bak/data_backup
-dest=/media/10gtek
-#fun_mount_smb $user $password $src $dest
+src_ip=192.168.1.250
+ping -w 3 $src_ip && {
+	user=GCB01 
+	password="*WGQGf"
+	src=//${src_ip}/gc-fae/faeTest_bak/data_backup
+	dest=/media/10gtek
+	#fun_mount_smb $user $password $src $dest
+}
 
 # === mount nfs ======================
-src=192.168.200.250:/volume1/smb_share
-dest=/media/nfs
-#fun_mount_nfs $src $dest
-src=192.168.200.250:/volume1/Rsync_Dir
-dest=/media/Rsync_Dir
-#fun_mount_nfs $src $dest
+src_ip=192.168.200.250
+ping -w 3 $src_ip && {
+	src=${src_ip}:/volume1/smb_share
+	dest=/media/nfs
+	#fun_mount_nfs $src $dest
+}
+src_ip=192.168.200.250
+ping -w 3 $src_ip && {
+	src=${src_ip}:/volume1/Rsync_Dir
+	dest=/media/Rsync_Dir
+	#fun_mount_nfs $src $dest
+}
 
 # === mount nfs on Padavan ===========
-src=192.168.75.1:/media/AiDisk_a2
-dest=/media/nfs
-#fun_mount_nfs_padavan $src $dest
+src_ip=192.168.75.1 
+ping -w 3 $src_ip && {
+	src=${src_ip}:/media/AiDisk_a2
+	dest=/media/nfs
+	#fun_mount_nfs_padavan $src $dest
+}
