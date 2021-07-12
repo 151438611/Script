@@ -94,7 +94,7 @@ else
 	
 	if [ "$PublicIP" != "$RecordValue" ]; then
 		# 变更解析IP
-		RecordModify=$(curl -X POST https://dnsapi.cn/Record.Modify -d "login_token=${login_token}&domain=${domain}&record_id=${RecordID}&sub_domain=${sub_domain}&value=${PublicIP}&record_type=A&record_line_id=10%3D0&format=xml&lang=en")
+		RecordModify=$(curl -X POST https://dnsapi.cn/Record.Modify -d "login_token=${login_token}&domain=${domain}&record_id=${RecordID}&sub_domain=${sub_domain}&value=${PublicIP}&record_type=A&record_line_id=0&format=xml&lang=en")
 		RecordModifyStatus=$(echo "$RecordModify" | awk -F '[<>]' '/<code>/ {print $3}')
 		if [ "$RecordModifyStatus" = 1 ]; then
 			blue_echo "$(date +"%F %T") The Record_Value: $RecordValue is different as Public_IP: $PublicIP , RecordModify Success "
