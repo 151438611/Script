@@ -23,8 +23,8 @@ red_echo() {
 [ -n "$(curl --version)" ] || { red_echo "$(date +"%F %T") curl : command not found! Please install it. Exit"; exit 2; }
 
 # get public ip address
-PublicIP=$(curl -4 -q ip.3322.net)
-[ "$PublicIP" ] || PublicIP=$(curl -4 -q ip.cip.cc)
+PublicIP=$(curl -4 -q ip.sb)
+[ "$PublicIP" ] || PublicIP=$(curl -4 -q ip.3322.net)
 [ "$PublicIP" ] || { red_echo "$(date +"%F %T") get PublicIP is Null, Exit"; exit 3; }
 
 # check jq command
